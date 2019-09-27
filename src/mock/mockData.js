@@ -6,7 +6,9 @@ import baike from '../assets/百科.png'
 import chubanwu from '../assets/出版物.png'
 import xuezhe from '../assets/学者.png'
 import tongji from '../assets/统计指标.png'
-
+import lawer from '../assets/lawer.png'
+import argricuture from '../assets/argricutrue.png'
+import doctor from '../assets/doctor.png'
 export default {
   homeHotExamples: [
     {
@@ -262,4 +264,20 @@ export default {
       ],
     },
   ],
+  subjects: [
+    {
+      title: '法律',
+      src: lawer,
+    },
+    {
+      title: '医学',
+      src: doctor,
+    },
+    {
+      title: '农业',
+      src: argricuture
+    }
+
+  ]
+
 };

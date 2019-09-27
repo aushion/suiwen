@@ -1,13 +1,18 @@
 .home {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
   background: #f0f2f5;
-  .hotExample {
+  .hotExample,
+  .newHelp,
+  .subject {
     width: 70%;
+    min-height: 315px;
     .title {
-      font-size: 40px;
+      font-size: 32px;
       font-family: Microsoft YaHei;
+      text-align: center;
       font-weight: 400;
       color: rgba(9, 106, 238, 1);
     }
@@ -15,18 +20,21 @@
       position: relative;
       height: 182px;
       cursor: pointer;
-      &:hover{
+      &:hover {
         background: #fff;
       }
       .slideImg {
         position: absolute;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-40%);
+        img {
+          width: 80%;
+        }
       }
       .name {
         font-weight: 400;
         font-size: 28px;
-        top: 152px;
+        top: 140px;
         position: absolute;
         text-align: center;
         width: 100%;
@@ -38,6 +46,33 @@
     :global(.slick-arrow:before) {
       color: #797979;
       font-size: 60px;
+    }
+  }
+  .newHelp {
+    :global(.ant-list) {
+      background: #fff;
+    }
+    :global(.ant-list-item) {
+      cursor: pointer;
+      &:hover {
+        color: rgba(9, 106, 238, 1);
+      }
+    }
+  }
+  .subject {
+    .wrap {
+      display: flex;
+      justify-content: space-between;
+      .item {
+        // width: 50%;
+        transition: all 1s ease;
+        -moz-transition: all 1s ease; /* Firefox 4 */
+        -webkit-transition: all 1s ease; /* Safari 和 Chrome */
+        -o-transition: all 1s ease;
+        &:hover {
+          transform: rotateY(360deg);
+        }
+      }
     }
   }
 }

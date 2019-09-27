@@ -1,0 +1,47 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.qaoverlay {
+  .overlay-item {
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ccc;
+    &:last-child {
+      border: none;
+    }
+    .circle {
+      display: 'inline-block';
+      margin-right: 10px;
+      width: 26px;
+      height: 26px;
+      text-align: center;
+      line-height: 26px;
+      background: #f39800;
+      border-radius: 50%;
+      color: #fff;
+    }
+    .ask {
+      font-size: 16px;
+      color: #333;
+    }
+    .answer {
+      flex: 1;
+      height: 40px;
+      font-size: 14px;
+      color: #999;
+      overflow: hidden;
+      word-wrap: normal;
+      text-overflow: ellipsis;
+    }
+    div:hover {
+      color: #3192e1;
+      cursor: pointer;
+    }
+  }
+}
