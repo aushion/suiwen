@@ -3,7 +3,6 @@ import BasicLayout from './BasicLayout'
 import HomeLayout from './HomeLayout'
 
 export default function (props) {
-  console.log(props)
   if(props.location.pathname === '/home'){
     return <HomeLayout>{props.children}</HomeLayout>
   }

@@ -8,8 +8,10 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'suiwen',
+      title: '知网随问',
       dll: true,
+      // links: [{ rel: 'stylesheet',charset:"UTF-8", href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css' },
+      // {rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'}],
       targets: {
         ie: 10
       },

@@ -1,0 +1,43 @@
+.home {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  background: #f0f2f5;
+  .hotExample {
+    width: 70%;
+    .title {
+      font-size: 40px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: rgba(9, 106, 238, 1);
+    }
+    .slideItem {
+      position: relative;
+      height: 182px;
+      cursor: pointer;
+      &:hover{
+        background: #fff;
+      }
+      .slideImg {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .name {
+        font-weight: 400;
+        font-size: 28px;
+        top: 152px;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+      }
+    }
+    :global(.slick-prev) {
+      left: -66px;
+    }
+    :global(.slick-arrow:before) {
+      color: #797979;
+      font-size: 60px;
+    }
+  }
+}

@@ -1,13 +1,37 @@
 .wrapper{
-  height: 100%;
   .header {
     background: url(../assets/banner.png) no-repeat;
     background-size: cover;
-    height: 400px;
+    height: 500px;
+    position: relative;
+    .logo1{
+      background: url(../assets/随问logo.png) no-repeat;
+      width: 265px;
+      height: 42px;
+      background-size: cover;
+      position: absolute;
+      top: 20px;
+    }
+    .logo2{
+      background: url(../assets/logo1.png) no-repeat;
+      height: 92px;
+      width: 150px;
+      background-size: cover;
+      position: absolute;
+      left: 50%;
+      top: 110px;
+      transform: translateX(-50%);
+    }
+    .inputWrap{
+      position: absolute;
+      top: 222px;
+      width: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
   .content {
-    min-height: calc(100% - 50px);
-    padding-bottom: 50px;
+    min-height: calc(100vh - 550px);
   }
   .footer {
     height: 50px;

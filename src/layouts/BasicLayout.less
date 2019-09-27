@@ -1,13 +1,34 @@
-.wrapper{
+.wrapper {
   .header {
-   background-color: antiquewhite;
+    background-color: lightblue;
+    height: 64px;
+    line-height: 0;
+    .inputGroup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      .logo {
+        background: url(../assets/logo1.png) no-repeat;
+        height: 32px;
+        width: 52px;
+        margin-right: 10px;
+        background-size: contain;
+        position: absolute;
+        left: 50%;
+        margin-left: -25%;
+      }
+      .inputWrap {
+        width: 40%;
+        position: absolute;
+
+      }
+    }
   }
   .content {
-    min-height: calc(100% - 50px);
-    padding-bottom: 50px;
+    min-height: calc(100vh - 50px - 64px);
   }
   .footer {
     height: 50px;
-  
   }
 }
