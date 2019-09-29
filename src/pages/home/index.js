@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Popover, List } from 'antd';
 import { connect } from 'dva';
+import router from 'umi/router';
 import Slider from 'react-slick';
 import homeStyles from './index.less';
 import 'slick-carousel/slick/slick.css';
@@ -8,9 +9,13 @@ import 'slick-carousel/slick/slick-theme.css';
 import mockData from '../../mock/mockData';
 
 class Home extends PureComponent {
+  handleClickItem(item) {
+    this.props.dispatch({ type: 'global/setQuestion', payload: { question: item.Content } }); 
+    router.push('/result');
+  }
+
   render() {
     const { newHelpList } = this.props;
-
     const settings = {
       infinite: true,
       speed: 500,
@@ -96,7 +101,9 @@ class Home extends PureComponent {
           <List
             bordered
             dataSource={newHelpList}
-            renderItem={item => <List.Item>{item.Content}</List.Item>}
+            renderItem={item => (
+              <List.Item onClick={this.handleClickItem.bind(this, item)}>{item.Content}</List.Item>
+            )}
           />
         </div>
 
@@ -105,9 +112,9 @@ class Home extends PureComponent {
         <div className={homeStyles.subject}>
           <h2 className={homeStyles.title}>专题问答</h2>
           <div className={homeStyles.wrap}>
-            {mockData.subjects.map((item,index) => (
+            {mockData.subjects.map((item, index) => (
               <div className={homeStyles.item} key={item.title}>
-                <img src={item.src} alt={item.title}  />
+                <img src={item.src} alt={item.title} />
               </div>
             ))}
           </div>
@@ -118,9 +125,10 @@ class Home extends PureComponent {
 }
 
 function mapStateToProps(state) {
-  const { newHelpList } = state.home;
+  // const { newHelpList } = state.home;
   return {
-    newHelpList,
+    ...state.home,
+    ...state.global,
   };
 }
 
