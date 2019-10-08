@@ -13,9 +13,7 @@ export default {
   getInputTips(value) {
     return new Promise(function(reslove, reject) {
       fetch(
-        `http://libai.seu.edu.cn/sug/su.ashx?action=getsmarttips&p=0.9044369541594852&kw=${encodeURI(
-          value,
-        )}&td=1560427140234&tdsourcetag=s_pcqq_aiomsg`,
+        `http://qa.cnki.net/qa.sug/su.ashx?action=getsmarttips&p=0.5842204899447518&kw=${value}&td=1570516528856`,
       )
         .then(function(response) {
           return response.text();

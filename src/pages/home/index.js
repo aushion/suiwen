@@ -10,8 +10,8 @@ import mockData from '../../mock/mockData';
 
 class Home extends PureComponent {
   handleClickItem(item) {
-    this.props.dispatch({ type: 'global/setQuestion', payload: { question: item.Content } }); 
-    router.push('/result');
+    this.props.dispatch({ type: 'global/setQuestion', payload: { question: item.Content } });
+    router.push('/result?question=' + item.Content);
   }
 
   render() {
@@ -102,7 +102,16 @@ class Home extends PureComponent {
             bordered
             dataSource={newHelpList}
             renderItem={item => (
-              <List.Item onClick={this.handleClickItem.bind(this, item)}>{item.Content}</List.Item>
+              <List.Item onClick={this.handleClickItem.bind(this, item)}>
+                <div className={homeStyles.item_content}>{item.Content}</div>
+                <div className={homeStyles.item_time}>
+                  已有回答:{item.CheckSum}
+                  <span>
+                    <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
+                    {item.Time}
+                  </span>
+                </div>
+              </List.Item>
             )}
           />
         </div>
@@ -114,7 +123,12 @@ class Home extends PureComponent {
           <div className={homeStyles.wrap}>
             {mockData.subjects.map((item, index) => (
               <div className={homeStyles.item} key={item.title}>
-                <img src={item.src} alt={item.title} />
+                <img className={homeStyles.subimg} src={item.src} alt={item.title} />
+                <ul className={homeStyles.subitem}>
+                  {item.questions.map(content => (
+                    <li>{content}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>

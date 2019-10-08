@@ -53,9 +53,15 @@
       background: #fff;
     }
     :global(.ant-list-item) {
-      cursor: pointer;
-      &:hover {
-        color: rgba(9, 106, 238, 1);
+      display: flex;
+      justify-content: space-between;
+      .item_content {
+        width: 60%;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #096aee;
       }
     }
   }
@@ -63,14 +69,40 @@
     .wrap {
       display: flex;
       justify-content: space-between;
+      div:nth-child(2) {
+        margin-top: 0;
+      }
       .item {
         // width: 50%;
-        transition: all 1s ease;
-        -moz-transition: all 1s ease; /* Firefox 4 */
-        -webkit-transition: all 1s ease; /* Safari 和 Chrome */
-        -o-transition: all 1s ease;
+        margin-top: 65px;
+        .subitem {
+          margin-top: -400px;
+          height: 400px;
+          cursor: pointer;
+          background: #fff;
+          transition: all 2s ease 1s;
+          -moz-transition: all 2s ease 1s; /* Firefox 4 */
+          -webkit-transition: all 2s ease 1s; /* Safari 和 Chrome */
+          -o-transition: all 2s ease 1s;
+          transform: scale(0, 0);
+          li{
+            padding: 20px;
+          }
+        }
+        .subimg {
+          display: block;
+          transition: all 2s;
+          -moz-transition: all 2s; /* Firefox 4 */
+          -webkit-transition: all 2s; /* Safari 和 Chrome */
+          -o-transition: all 2s;
+        }
         &:hover {
-          transform: rotateY(360deg);
+          .subimg {
+            transform: scale(0, 0);
+          }
+          .subitem {
+            transform: scale(1, 1);
+          }
         }
       }
     }

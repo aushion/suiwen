@@ -1,6 +1,12 @@
-function Result(props){
+
+import { connect } from 'dva';
+
+function Result(props) {
   const question = props.location.query.question;
-  return <div>{question}</div>
+  return <div>{question}</div>;
 }
 
-export default Result
+function mapStateToProps(state) {
+  return { ...state.result };
+}
+export default connect(mapStateToProps)(Result);

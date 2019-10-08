@@ -7,9 +7,11 @@ const { Header, Footer, Content } = Layout;
 
 function HomeLayout(props) {
   function handleClickEnter(value) {
+    props.dispatch({ type: 'global/setQuestion', payload: { question: value } });
     value && router.push(`/result?question=${value}`);
   }
   function handleClickItem(value) {
+    props.dispatch({ type: 'global/setQuestion', payload: { question: value } });
     value && router.push(`/result?question=${value}`);
   }
   return (
@@ -22,7 +24,7 @@ function HomeLayout(props) {
             question={props.question}
             onClickEnter={handleClickEnter}
             onClickItem={handleClickItem}
-          ></SmartInput>
+          />
         </div>
       </Header>
       <Content className={styles.content}>{props.children}</Content>
