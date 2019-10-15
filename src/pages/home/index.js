@@ -101,6 +101,16 @@ class Home extends PureComponent {
           <List
             bordered
             dataSource={newHelpList}
+            footer={
+              <div
+                onClick={() => {
+                  router.push('/help');
+                }}
+                className={homeStyles.more}
+              >
+                查看更多
+              </div>
+            }
             renderItem={item => (
               <List.Item onClick={this.handleClickItem.bind(this, item)}>
                 <div className={homeStyles.item_content}>{item.Content}</div>
@@ -126,7 +136,7 @@ class Home extends PureComponent {
                 <img className={homeStyles.subimg} src={item.src} alt={item.title} />
                 <ul className={homeStyles.subitem}>
                   {item.questions.map(content => (
-                    <li>{content}</li>
+                    <li key={content}>{content}</li>
                   ))}
                 </ul>
               </div>
