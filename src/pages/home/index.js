@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Popover, List } from 'antd';
+import { Popover, List, Row, Col } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
+import Link from 'umi/link';
 import Slider from 'react-slick';
 import homeStyles from './index.less';
 import 'slick-carousel/slick/slick.css';
@@ -112,8 +113,10 @@ class Home extends PureComponent {
               </div>
             }
             renderItem={item => (
-              <List.Item onClick={this.handleClickItem.bind(this, item)}>
-                <div className={homeStyles.item_content}>{item.Content}</div>
+              <List.Item>
+                <div className={homeStyles.item_content} onClick={this.handleClickItem}>
+                  <Link to={`/reply?question=${item.Content}&qid=${item.ID}`}>{item.Content}</Link>
+                </div>
                 <div className={homeStyles.item_time}>
                   已有回答:{item.CheckSum}
                   <span>
@@ -130,18 +133,26 @@ class Home extends PureComponent {
 
         <div className={homeStyles.subject}>
           <h2 className={homeStyles.title}>专题问答</h2>
-          <div className={homeStyles.wrap}>
+          <Row className={homeStyles.wrap} gutter={120}>
             {mockData.subjects.map((item, index) => (
-              <div className={homeStyles.item} key={item.title}>
+              <Col
+                xs={20}
+                sm={16}
+                md={8}
+                lg={8}
+                xl={8}
+                className={homeStyles.item}
+                key={item.title}
+              >
                 <img className={homeStyles.subimg} src={item.src} alt={item.title} />
                 <ul className={homeStyles.subitem}>
                   {item.questions.map(content => (
                     <li key={content}>{content}</li>
                   ))}
                 </ul>
-              </div>
+              </Col>
             ))}
-          </div>
+          </Row>
         </div>
       </div>
     );

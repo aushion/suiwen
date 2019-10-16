@@ -83,23 +83,25 @@
   }
   .subject {
     .wrap {
-      display: flex;
-      justify-content: space-between;
+      // display: flex;
+      // justify-content: space-between;
       div:nth-child(2) {
         margin-top: 0;
       }
       .item {
         // width: 50%;
         margin-top: 65px;
+        display: flex;
+        flex-direction: column;
         .subitem {
           margin-top: -400px;
           height: 400px;
           cursor: pointer;
           background: #fff;
-          transition: all 2s ease 1s;
-          -moz-transition: all 2s ease 1s; /* Firefox 4 */
-          -webkit-transition: all 2s ease 1s; /* Safari 和 Chrome */
-          -o-transition: all 2s ease 1s;
+          transition: all 1s ease 1s;
+          -moz-transition: all 1s ease 1s; /* Firefox 4 */
+          -webkit-transition: all 1s ease 1s; /* Safari 和 Chrome */
+          -o-transition: all 1s ease 1s;
           transform: scale(0, 0);
           li{
             padding: 20px;
@@ -107,10 +109,10 @@
         }
         .subimg {
           display: block;
-          transition: all 2s;
-          -moz-transition: all 2s; /* Firefox 4 */
-          -webkit-transition: all 2s; /* Safari 和 Chrome */
-          -o-transition: all 2s;
+          transition: all 1s;
+          -moz-transition: all 1s; /* Firefox 4 */
+          -webkit-transition: all 1s; /* Safari 和 Chrome */
+          -o-transition: all 1s;
         }
         &:hover {
           .subimg {

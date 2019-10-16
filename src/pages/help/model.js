@@ -7,13 +7,13 @@ export default {
     domainList: [],
     domain: '全部',
     size: 15,
-    index: 1
+    index: 1,
+    uid: localStorage.getItem('userInfo')? JSON.parse(localStorage.getItem('userInfo')).UserName: ''
   },
 
   effects: {
     *getNewQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getNewQuestions, payload);
-      console.log(payload)
       yield put({ type: 'saveList', payload: { newHelpData: res.data, ...payload } });
     },
 
@@ -24,9 +24,13 @@ export default {
 
     *getHotQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getHotQuestions, payload);
-
       yield put({ type: 'saveList', payload: { newHelpData: res.data, ...payload } });
     },
+
+    *getMyAnswerQuestions({payload}, {call,put}) {
+      const res = yield call(helpService.getMyAnswerQuestions, payload);
+      yield put({ type: 'saveList', payload: { newHelpData: res.data, ...payload } });
+    }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {

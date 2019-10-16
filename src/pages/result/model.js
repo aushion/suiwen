@@ -1,5 +1,4 @@
 import queryString from 'querystring';
-import helpServer from '../../services/help';
 
 export default {
   namespace: 'result',
@@ -15,8 +14,7 @@ export default {
   },
   effects: {
     *getNewHelpList({ payload }, { call, put }) {
-      // const res = yield call(helpServer.getNewQuestions, payload);
-      // yield put({ type: 'process', payload: res });
+
     },
   },
   subscriptions: {

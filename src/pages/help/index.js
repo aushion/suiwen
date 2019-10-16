@@ -7,63 +7,53 @@ import helpStyle from './index.less';
 
 function Help(props) {
   const [current, setCurrent] = useState('newHelp');
-  const { domainList, newHelpData, dispatch, domain, size, index } = props;
-  const uid = JSON.parse(localStorage.getItem('userInfo')).UserName;
+  const { domainList, newHelpData, dispatch, domain, size, index, uid } = props;
+  //点击菜单响应事件
   function handleClick(e) {
     setCurrent(e.key);
     if (e.key === 'hotHelp') {
-      dispatch({ type: 'help/getHotQuestions', payload: { domain } });
+      dispatch({ type: 'help/getHotQuestions', payload: { domain, size: 15, index: 1 } });
     } else if (e.key === 'newHelp') {
-      dispatch({ type: 'help/getNewQuestions', payload: { domain } });
+      dispatch({ type: 'help/getNewQuestions', payload: { domain, size: 15, index: 1 } });
     } else if (e.key === 'myHelp') {
-      dispatch({ type: 'help/getNewQuestions', payload: { domain, uid: uid } });
+      dispatch({ type: 'help/getNewQuestions', payload: { domain, uid, size: 15, index: 1 } });
+    } else if (e.key === 'myReply') {
+      dispatch({ type: 'help/getMyAnswerQuestions', payload: { domain, uid, size: 15, index: 1 } });
     }
   }
-  function setPage(page) {
-    switch (page) {
-      case 'newHelp':
-        return (
-          <div>
-            <Divider style={{ margin: 0 }} />
-            {newHelpData ? (
-              <HelpList
-                data={props.newHelpData}
-                domain={domain}
-                dispatch={dispatch}
-                size={size}
-                index={index}
-              ></HelpList>
-            ) : null}
-          </div>
-        );
 
-      case 'hotHelp':
-        return (
-          <div>
-            <Divider style={{ margin: 0 }} />
-            {newHelpData ? (
-              <HelpList
-                data={props.newHelpData}
-                current={current}
-                domain={domain}
-                dispatch={dispatch}
-                size={size}
-                index={index}
-              ></HelpList>
-            ) : null}
-          </div>
-        );
-
-      case 'myHelp':
-        return <div>我的求助</div>;
-
-      case 'myReply':
-        return <div>我的回答</div>;
-
-      default:
-        return <div>新求助</div>;
+  //点击tag响应事件
+  function handleClickTag(payload) {
+    if (current === 'newHelp') {
+      dispatch({ type: 'help/getNewQuestions', payload });
+    } else if (current === 'hotHelp') {
+      dispatch({ type: 'help/getHotQuestions', payload });
     }
   }
+
+  function dispatchHanlder(current, payload) {
+    if (current === 'newHelp') {
+      dispatch({
+        type: 'help/getNewQuestions',
+        payload: payload,
+      });
+    } else if (current === 'hotHelp') {
+      dispatch({
+        type: 'help/getHotQuestions',
+        payload: payload,
+      });
+    } else if (current === 'myHelp') {
+      dispatch({
+        type: 'help/getNewQuestions',
+        payload: Object.assign({}, payload, { uid: props.uid }),
+      });
+    }
+  }
+
+  function handleSearchOrChangePage(payload) {
+    dispatchHanlder(current, payload);
+  }
+
   return (
     <div className={helpStyle.help}>
       <Menu
@@ -82,10 +72,23 @@ function Help(props) {
       <div className={helpStyle.content}>
         {domainList.length ? (
           <div className={helpStyle.domainTags}>
-            <DomainTags current={current} data={domainList} dispatch={dispatch}></DomainTags>
+            <DomainTags data={domainList} onClickTag={handleClickTag} />
           </div>
         ) : null}
-        {setPage(current)}
+        <div>
+          <Divider style={{ margin: 0 }} />
+          {newHelpData ? (
+            <HelpList
+              data={newHelpData}
+              current={current}
+              domain={domain}
+              size={size}
+              index={index}
+              uid={uid}
+              handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );

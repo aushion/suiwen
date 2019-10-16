@@ -56,6 +56,7 @@ function HomeLayout(props) {
             </button>
           ) : null}
         </div>
+
         <div className={styles.inputWrap}>
           <SmartInput
             question={props.question}
