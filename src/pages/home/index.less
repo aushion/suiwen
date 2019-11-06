@@ -10,7 +10,8 @@
     width: 70%;
     min-height: 315px;
     .title {
-      font-size: 32px;
+      font-size: 28px;
+      padding: 20px 0 0 0;
       font-family: Microsoft YaHei;
       text-align: center;
       font-weight: 400;
@@ -19,6 +20,7 @@
     .slideItem {
       position: relative;
       height: 182px;
+      padding-top: 20px;
       cursor: pointer;
       &:hover {
         background: #fff;
@@ -26,35 +28,45 @@
       .slideImg {
         position: absolute;
         left: 50%;
-        transform: translateX(-40%);
+        transform: translateX(-30%);
         img {
-          width: 80%;
+          width: 60%;
         }
       }
       .name {
-        font-weight: 400;
-        font-size: 28px;
-        top: 140px;
+        font-weight: 600;
+        font-size: 18px;
+        top: 120px;
         position: absolute;
         text-align: center;
         width: 100%;
       }
     }
+    :global(.slick-slider){
+      background: #fff;
+      padding-top: 10px;
+    }
     :global(.slick-prev) {
       left: -66px;
     }
+    :global(.slick-next) {
+      right: -66px;
+    }
+
     :global(.slick-arrow:before) {
       color: #797979;
       font-size: 60px;
     }
   }
   .newHelp {
+    margin-bottom: 10px;
     :global(.ant-list) {
       background: #fff;
     }
     :global(.ant-list-item) {
       display: flex;
       justify-content: space-between;
+      padding: 14px;
       .item_content {
         width: 60%;
         cursor: pointer;

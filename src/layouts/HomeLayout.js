@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { Layout } from 'antd';
-import SmartInput from '../components/SmartInput';
-import styles from './HomeLayout.less';
 import router from 'umi/router';
 import { connect } from 'dva';
+import SmartInput from '../components/SmartInput';
+import styles from './HomeLayout.less';
+// import RestTools from '../utils/RestTools'
+
 const { Header, Footer, Content } = Layout;
 
 function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  function handleClickEnter(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { question: value } });
-    value && router.push(`/result?question=${value}`);
+  function handleClickEnterOrItem(value) {
+    props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
+    value && router.push(`/result?q=${value}`);
   }
-  function handleClickItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { question: value } });
-    value && router.push(`/result?question=${value}`);
-  }
+
   function goLogin() {
     console.log('goLogin');
     window.Ecp_ShowLoginLayer2('-90px', '42px');
@@ -59,9 +58,9 @@ function HomeLayout(props) {
 
         <div className={styles.inputWrap}>
           <SmartInput
-            question={props.question}
-            onClickEnter={handleClickEnter}
-            onClickItem={handleClickItem}
+            question={props.q}
+            onClickEnter={handleClickEnterOrItem}
+            onClickItem={handleClickEnterOrItem}
           />
         </div>
       </Header>

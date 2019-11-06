@@ -1,4 +1,5 @@
 import helpService from '../../services/help';
+import Cookies from 'js-cookie';
 
 export default {
   namespace: 'help',
@@ -6,9 +7,11 @@ export default {
     newHelpData: null,
     domainList: [],
     domain: '全部',
-    size: 15,
+    size: 10,
     index: 1,
-    uid: localStorage.getItem('userInfo')? JSON.parse(localStorage.getItem('userInfo')).UserName: ''
+    uid: Cookies.get('userInfo')
+      ? JSON.parse(Cookies.get('userInfo')).user_name
+      : Cookies.get('qa_cnki_uuid'),
   },
 
   effects: {
@@ -19,7 +22,7 @@ export default {
 
     *getDomain({ payload }, { call, put }) {
       const res = yield call(helpService.getDomain);
-      yield put({ type: 'saveDomainList', payload: {domainList: res} });
+      yield put({ type: 'saveDomainList', payload: { domainList: res } });
     },
 
     *getHotQuestions({ payload }, { call, put }) {
@@ -27,23 +30,46 @@ export default {
       yield put({ type: 'saveList', payload: { newHelpData: res.data, ...payload } });
     },
 
-    *getMyAnswerQuestions({payload}, {call,put}) {
+    *getMyAnswerQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getMyAnswerQuestions, payload);
       yield put({ type: 'saveList', payload: { newHelpData: res.data, ...payload } });
-    }
+    },
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname }) => {
-        console.log(pathname);
-        if (pathname === '/help') {
+        const match = pathname.match(/help/i);
+        if (match) {
           dispatch({
             type: 'getDomain',
           });
-          dispatch({
-            type: 'getNewQuestions',
-            payload: {},
-          });
+
+          const uid = Cookies.get('userInfo')
+            ? JSON.parse(Cookies.get('userInfo')).user_name
+            : Cookies.get('qa_cnki_uuid');
+          const current = pathname;
+          dispatch({type: 'saveList', payload: {newHelpData: null}}) //重置状态
+          if (current === '/help/newHelp') {
+            dispatch({
+              type: 'getNewQuestions',
+              payload: { domain: '全部' },
+            });
+          } else if (current === '/help/hotHelp') {
+            dispatch({
+              type: 'getHotQuestions',
+              payload: { domain: '全部' },
+            });
+          } else if (current === '/help/myHelp') {
+            dispatch({
+              type: 'getNewQuestions',
+              payload: { domain: '全部', uid },
+            });
+          } else if (current === '/help/myReply') {
+            dispatch({
+              type: 'getMyAnswerQuestions',
+              payload: { domain: '全部', uid },
+            });
+          }
         }
       });
     },

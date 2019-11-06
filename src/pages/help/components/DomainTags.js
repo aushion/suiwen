@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tag } from 'antd';
 
 function DomainTags(props) {
@@ -6,17 +6,24 @@ function DomainTags(props) {
     background: '#1890ff',
     color: '#fff',
   };
-  const { data, onClickTag } = props;
-  const [checked, setChecked] = useState(-1);
+  const normalStyle = {
+    cursor: 'pointer',
+  };
+  const { data, onClickTag, localDomain } = props;
+  const localChecked = data.map(item => item._domainname).indexOf(localDomain);
+  const [checked, setChecked] = useState(localChecked || -1);
+  useEffect(() => {
+    setChecked(localChecked);
+  }, [localChecked]);
   function handleClick(index, item) {
+    const payload = { domain: item, size: 10, index: 1 };
     setChecked(index);
-    const payload = { domain: item, size: 15, index: 1 };
     onClickTag(payload);
   }
   return (
     <div>
       <Tag
-        style={checked === -1 ? checkedStyle : null}
+        style={checked === -1 ? Object.assign(checkedStyle, normalStyle) : normalStyle}
         onClick={handleClick.bind(this, -1, '全部')}
       >
         全部
@@ -24,7 +31,7 @@ function DomainTags(props) {
       {data.map((item, index) => {
         return (
           <Tag
-            style={checked === index ? checkedStyle : null}
+            style={checked === index ? Object.assign(checkedStyle, normalStyle) : normalStyle}
             key={item._domainname}
             onClick={handleClick.bind(this, index, item._domainname)}
           >

@@ -2,10 +2,19 @@ import { List, Input } from 'antd';
 
 const { Search } = Input;
 function HelpList(props) {
-  const { data, size, index, current, domain, handleSearchOrChangePage } = props;
+  const {
+    data,
+    size,
+    index,
+    current,
+    domain,
+    handleSearchOrChangePage,
+    loading,
+    handleClickItem,
+  } = props;
 
   return (
-    <div>
+    <div style={{ padding: '10px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 16 }}>
           共<span style={{ fontWeight: 'bold', color: '#333' }}>{data.total}</span>条
@@ -21,6 +30,7 @@ function HelpList(props) {
         </div>
       </div>
       <List
+        loading={loading}
         dataSource={data.list}
         pagination={
           data.total > size
@@ -37,7 +47,9 @@ function HelpList(props) {
         }
         renderItem={item => {
           return (
-            <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <List.Item
+              style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 0' }}
+            >
               <div
                 style={{
                   width: '60%',
@@ -47,8 +59,9 @@ function HelpList(props) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
+                onClick={() => handleClickItem(item)}
               >
-                {item.Content}
+                {current === 'myReply' ? item.Qeustion : item.Content}
               </div>
               {current === 'myReply' ? (
                 <div>查看回答</div>

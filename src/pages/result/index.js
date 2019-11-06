@@ -1,12 +1,12 @@
-
 import { connect } from 'dva';
+import styles from './index.less';
 
-function Result(props) {
+function ResultPage(props) {
   const question = props.location.query.question;
-  return <div>{question}</div>;
+  return <div className={styles.result}>{question}</div>;
 }
 
 function mapStateToProps(state) {
-  return { ...state.result };
+  return { ...state.result, ...state.global };
 }
-export default connect(mapStateToProps)(Result);
+export default connect(mapStateToProps)(ResultPage);

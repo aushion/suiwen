@@ -23,8 +23,7 @@ export default {
   },
   reducers: {
     saveList(state, { payload }) {
-      state.newHelpList = payload;
-      return state;
+      return {...state, ...payload};
     },
   },
 };

@@ -1,7 +1,7 @@
 export default {
   namespace: 'global',
   state: {
-    question: '',
+    q: '',
   },
   reducers: {
     setQuestion(state, { payload }) {

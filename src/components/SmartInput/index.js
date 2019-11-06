@@ -3,22 +3,24 @@ import { Input, Button, message } from 'antd';
 import InputRecord from './InputRecord';
 import InputTips from './InputTips';
 import RestTools from '../../utils/RestTools';
-import styles from  './index.less';
+import styles from './index.less';
+
+const HISTORYKEY = RestTools.HISTORYKEY;
 let timer = null;
 message.config({
   maxCount: 1,
-})
+});
 const SmartInput = props => {
   const [value, setValue] = useState('');
   const [showRecord, setRecord] = useState(false);
   const [tipsData, setTips] = useState([]);
-  const inputRecords = JSON.parse(window.localStorage.getItem('inputRecords')) || [];
+  const inputRecords = RestTools.getLocalStorage(HISTORYKEY) || [];
   const needTip = props.needTip;
   useEffect(() => {
     setValue(props.question);
     return () => {
       return false;
-    }
+    };
   }, [props.question]);
 
   function handleChange(e) {
@@ -44,7 +46,7 @@ const SmartInput = props => {
     setTips([]);
     setValue(item);
     if (item) {
-      RestTools.setStorageInput(item);
+      RestTools.setStorageInput(HISTORYKEY,item);
       props.onClickItem(item);
     } else {
       message.warning('请输入您的问题');
@@ -68,7 +70,7 @@ const SmartInput = props => {
         );
         newStr = value.substring(0, maxLength);
       }
-      RestTools.setStorageInput(newStr); //存储输入
+      RestTools.setStorageInput(HISTORYKEY,newStr); //存储输入
       props.onClickEnter(newStr);
     } else {
       message.warning('请输入您的问题');

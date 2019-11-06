@@ -1,15 +1,14 @@
-import licia from 'licia'
+import licia from 'licia';
 export default {
   createUid() {
-    return licia.uuid()
+    return licia.uuid();
   },
-  isIE(){
-    if (!!window.ActiveXObject || "ActiveXObject" in window)
-    return true;
-  else
-    return false;
+  isIE() {
+    if (!!window.ActiveXObject || 'ActiveXObject' in window) return true;
+    else return false;
   },
   maxLength: 38,
+  HISTORYKEY: 'SUIWEN_RECORD',
   getInputTips(value) {
     return new Promise(function(reslove, reject) {
       fetch(
@@ -28,8 +27,8 @@ export default {
         });
     });
   },
-  setStorageInput(value) {
-    let inputRecords = JSON.parse(window.localStorage.getItem('inputRecords')) || [];
+  setStorageInput(key, value) {
+    let inputRecords = JSON.parse(window.localStorage.getItem(key)) || [];
     if (inputRecords.indexOf(value) < 0) {
       if (inputRecords.length < 10) {
         inputRecords.unshift(value);
@@ -42,7 +41,7 @@ export default {
       inputRecords.splice(index, 1);
       inputRecords.unshift(value);
     }
-    window.localStorage.setItem('inputRecords', JSON.stringify(inputRecords));
+    window.localStorage.setItem(key, JSON.stringify(inputRecords));
     return inputRecords;
   },
   translateToRed(str) {
@@ -50,8 +49,8 @@ export default {
   },
   completeUrl(str) {
     return str
-      .replace(/<p>/g,'')
-      .replace(/<\/p>/g,'')
+      .replace(/<p>/g, '')
+      .replace(/<\/p>/g, '')
       .replace(/\n/g, '<br/>')
       .replace(/src="/g, 'src="/msshow/admin/file/faq/')
       .replace(/src='/g, "src='/msshow/admin/file/faq/")
@@ -71,4 +70,10 @@ export default {
       .replace(/src="/g, 'src="http://refbook.img.cnki.net')
       .replace(/src='/g, "src='http://refbook.img.cnki.net");
   },
-}
+  getLocalStorage(key) {
+    return JSON.parse(window.localStorage.getItem(key));
+  },
+  setLocalStorage(key, value) {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  },
+};

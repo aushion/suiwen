@@ -1,10 +1,12 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { List, Icon } from 'antd';
-import styles from  './inputRecord.less';
+import styles from './inputRecord.less';
+import RestTools from '../../utils/RestTools';
 
+const HISTORYKEY = RestTools.HISTORYKEY;
 const InputRecord = props => {
   // const data = props.data;
-  const [data, setData] = useState(props.data)
+  const [data, setData] = useState(props.data);
   return data.length ? (
     <div className={styles['record-list']}>
       <List
@@ -19,11 +21,10 @@ const InputRecord = props => {
               type="close"
               onClick={e => {
                 e.stopPropagation();
-                let inputRecords = JSON.parse(window.localStorage.getItem('inputRecords'));
+                let inputRecords = RestTools.getLocalStorage(HISTORYKEY);
                 inputRecords.splice(index, 1);
-                setData(inputRecords)
-                window.localStorage.setItem('inputRecords', JSON.stringify(inputRecords));
-                  
+                setData(inputRecords);
+                window.localStorage.setItem(HISTORYKEY, JSON.stringify(inputRecords));
               }}
             />
           </List.Item>

@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { Layout } from 'antd';
-import router from 'umi/router'
+import router from 'umi/router';
+import { connect } from 'dva';
 import styles from './BasicLayout.less';
 import SmartInput from '../components/SmartInput';
-import { connect } from 'dva';
+// import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  function handleClickEnter(value) {
-    console.log(value);
-  }
 
-  function handleClickItem(value) {
-    console.log(value);
+  function handleClickEnterOrItem(value) {
+    props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
+    value && router.push(`/result?q=${value}`);
   }
 
   function goHome() {
-    router.push('/home')
+    props.dispatch({ type: 'global/setQuestion', payload: { q: '' } });
+    router.push('/home');
   }
 
   function goLogin() {
@@ -37,34 +37,34 @@ function BasicLayout(props) {
         <div className={styles.inputGroup}>
           <div onClick={goHome} className={styles.logo}></div>
           <div className={styles.login}>
-          您好! 欢迎您来到智能问答平台 {username || '游客'}
-          {username ? null : (
-            <button className={styles.login_btn} onClick={goLogin}>
-              登录
-            </button>
-          )}
-          {username ? null : (
-            <button className={styles.register_btn}>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://local.cnki.net:8000"
-              >
-                注册
-              </a>
-            </button>
-          )}
-          {username ? (
-            <button onClick={logout} className={styles.login_btn}>
-              注销
-            </button>
-          ) : null}
-        </div>
+            您好! 欢迎您来到智能问答平台 {username || '游客'}
+            {username ? null : (
+              <button className={styles.login_btn} onClick={goLogin}>
+                登录
+              </button>
+            )}
+            {username ? null : (
+              <button className={styles.register_btn}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://local.cnki.net:8000"
+                >
+                  注册
+                </a>
+              </button>
+            )}
+            {username ? (
+              <button onClick={logout} className={styles.login_btn}>
+                注销
+              </button>
+            ) : null}
+          </div>
           <div className={styles.inputWrap}>
             <SmartInput
-              question={props.question}
-              onClickEnter={handleClickEnter}
-              onClickItem={handleClickItem}
+              question={props.q}
+              onClickEnter={handleClickEnterOrItem}
+              onClickItem={handleClickEnterOrItem}
             ></SmartInput>
           </div>
         </div>
