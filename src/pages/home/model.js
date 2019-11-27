@@ -9,7 +9,7 @@ export default {
   effects: {
     *getHelpList({ payload }, { call, put }) {
       const res = yield call(helpService.getNewHelpList);
-      yield put({ type: 'saveList', payload: res });
+      yield put({ type: 'saveList', payload: {newHelpList: res} });
     },
   },
   subscriptions: {
