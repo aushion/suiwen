@@ -2,7 +2,7 @@
   .header {
     background: url(../assets/banner.png) no-repeat;
     background-size: cover;
-    height: 45vh;
+    height: 400px;
     position: relative;
     z-index: 999;
     line-height: 0;
@@ -23,10 +23,10 @@
         &:hover{
           background: #fff;
           color: #333;
-         
+
         }
       }
-      
+
     }
     .logo1{
       background: url(../assets/随问logo.png) no-repeat;
@@ -43,20 +43,31 @@
       background-size: cover;
       position: absolute;
       left: 50%;
-      top: 110px;
+      top: 90px;
       transform: translateX(-50%);
     }
     .inputWrap{
       position: absolute;
-      top: 222px;
-      width: 40%;
+      top: 200px;
+      width: 720px;
       left: 50%;
       transform: translateX(-50%);
-     
+      :global(.ant-input-group-addon){
+        width: 120px;
+        :global(.ant-btn){
+          width: 100%;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+      }
     }
   }
   .content {
-    min-height: calc(100vh - 550px);
+    min-height: calc(100vh - 450px);
+    width: 100%;
+    padding: 0 12.5%;
+    background-image: url(../assets/home_content.png);
+    background-size: cover;
   }
   .footer {
     height: 50px;

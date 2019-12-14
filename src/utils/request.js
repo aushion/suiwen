@@ -1,48 +1,68 @@
-/**
- * request 网络请求工具
- * 更详细的 api 文档: https://github.com/umijs/umi-request
- */
-import { extend } from 'umi-request';
-import { notification } from 'antd';
+import axios from 'axios';
+import { Notification } from 'antd';
 
-const codeMessage = {
-  200: '服务器成功返回请求的数据。',
-  201: '新建或修改数据成功。',
-  202: '一个请求已经进入后台排队（异步任务）。',
-  204: '删除数据成功。',
-  400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
-  401: '用户没有权限（令牌、用户名、密码错误）。',
-  403: '用户得到授权，但是访问是被禁止的。',
-  404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
-  406: '请求的格式不可得。',
-  410: '请求的资源被永久删除，且不会再得到的。',
-  422: '当创建一个对象时，发生一个验证错误。',
-  500: '服务器发生错误，请检查服务器。',
-  502: '网关错误。',
-  503: '服务不可用，服务器暂时过载或维护。',
-  504: '网关超时。',
-};
+let xToken = ''; //全局变量临时存储x-token
 
-/**
- * 异常处理程序
- */
-const errorHandler = error => {
-  const { response = {} } = error;
-  const errortext = codeMessage[response.status] || response.statusText;
-  const { status, url } = response;
-
-  notification.error({
-    message: `请求错误 ${status}: ${url}`,
-    description: errortext,
-  });
-};
-
-/**
- * 配置request请求时的默认参数
- */
-const request = extend({
-  errorHandler, // 默认错误处理
-  // credentials: 'include', // 默认请求是否带上cookie
+// 创建一个axios实例
+const request = axios.create({
+  // baseURL: process.env.apiUrl, // url = base url + request url,
+  baseURL: 'http://192.168.103.25:8080/qa.api',
+  // withCredentials: true, // send cookies when cross-domain requests
+  timeout: 30000, // request timeout
 });
+
+// request拦截器里设置headers里的x-token
+request.interceptors.request.use(
+  config => {
+    config.headers['X-Token'] = sessionStorage.getItem('TokenKey');
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
+
+// response 拦截器处理刷新token的逻辑
+request.interceptors.response.use(
+  response => {
+    const res = response.data;
+
+    if (res.code === 401) {
+      // 说明token过期了,刷新token
+      return refreshToken()
+        .then(res => {
+          // 刷新token成功，将最新的token更新到header中，同时保存在sessionStorage中
+          xToken = res.headers['x-token'];
+          if (xToken) {
+            sessionStorage.setItem('TokenKey', xToken);
+          }
+          // instance.setToken(token)
+          // 获取当前失败的请求
+          const config = response.config;
+          // 重置一下配置
+          config.headers['X-Token'] = xToken;
+          // 重试当前请求并返回promise
+          return request(config);
+        })
+        .catch(res => {
+          console.error('refreshtoken error =>', res);
+        });
+    }
+    return response;
+  },
+  error => {
+    console.log('error', error); // for debug
+
+    return Promise.reject(error);
+  },
+);
+
+function refreshToken() {
+  // requst中已创建的axios实例
+  return request.post('/getToken', {
+    appId: '421c0d4b546f48d387b44f1eb040bdff',
+    secret: '8b385d3cc269a1af02c37fa78eec18bd28778118',
+  });
+}
 
 export default request;

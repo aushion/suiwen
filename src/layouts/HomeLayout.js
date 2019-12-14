@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Layout } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
+import request from '../utils/request'
 import SmartInput from '../components/SmartInput';
 import styles from './HomeLayout.less';
 // import RestTools from '../utils/RestTools'
@@ -12,8 +13,13 @@ function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   function handleClickEnterOrItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
-    value && router.push(`/result?q=${value}`);
+    // props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
+    // value && router.push(`/result?q=${value}`);
+
+    const res = request.get('http://192.168.103.25:8080/qa.api/getAnswer?q=鲁迅')
+    res.then(response => {
+      console.log(response)
+    })
   }
 
   function goLogin() {

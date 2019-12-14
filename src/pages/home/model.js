@@ -16,7 +16,7 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname }) => {
         if (pathname === '/home') {
-          dispatch({ type: 'getHelpList' });
+          // dispatch({ type: 'getHelpList' });
         }
       });
     },
