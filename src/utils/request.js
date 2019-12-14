@@ -36,7 +36,6 @@ request.interceptors.response.use(
           if (xToken) {
             sessionStorage.setItem('TokenKey', xToken);
           }
-          // instance.setToken(token)
           // 获取当前失败的请求
           const config = response.config;
           // 重置一下配置
