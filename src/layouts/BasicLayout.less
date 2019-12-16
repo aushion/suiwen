@@ -1,4 +1,8 @@
 .wrapper {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
   .header {
     background-color: lightblue;
     height: 84px;
@@ -8,12 +12,13 @@
       justify-content: center;
       align-items: center;
       height: 100%;
-      .login{
+      .login {
         position: absolute;
         right: 20px;
         top: 30px;
         color: #fff;
-        .login_btn,.register_btn{
+        .login_btn,
+        .register_btn {
           height: 30px;
           width: 60px;
           background: transparent;
@@ -22,10 +27,9 @@
           border-radius: 4px;
           margin-left: 20px;
           cursor: pointer;
-          &:hover{
+          &:hover {
             background: #fff;
             color: #333;
-           
           }
         }
       }
@@ -43,14 +47,15 @@
       .inputWrap {
         width: 40%;
         position: absolute;
-
       }
     }
   }
   .content {
-    min-height: calc(100vh - 50px - 84px);
   }
   .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     height: 50px;
   }
 }

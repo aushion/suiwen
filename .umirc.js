@@ -1,7 +1,11 @@
 // ref: https://umijs.org/config/
 export default {
   treeShaking: true,
-
+  define: {
+    "process.env.apiUrl": 'http://192.168.103.25:8080/sw.api',
+    "process.env.UMI_ENV": process.env.UMI_ENV,
+    "process.env.apiUrl_help": 'http://kc.cnki.net/fb/api'
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [

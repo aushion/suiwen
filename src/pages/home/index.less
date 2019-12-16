@@ -1,20 +1,19 @@
 .home {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  .top {
+  width: 1200px;
+  margin: 0 auto;
+  .skill {
     height: 416px;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    padding-top: 50px;
+    position: relative;
+    margin-bottom: 60px;
     .left {
       float: left;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       height: 100%;
-      width: 41.5%;
+      margin-right: 50px;
+      .title {
+        margin-bottom: 40px;
+      }
       .bg {
         background-image: url(../../assets/skill.png);
         width: 400px;
@@ -22,72 +21,140 @@
       }
     }
     .right {
-      width: 1000px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      width: 750px;
+      float: left;
       .right_top {
         width: 100%;
+        margin-bottom: 40px;
         .tag {
-          font-size: 18px;
+          cursor: pointer;
+          font-size: 16px;
           font-weight: 400;
           color: #23242a;
-          padding: 9px 23px;
+          padding: 8px 24px;
           background: transparent;
           display: inline-block;
-          :active {
-            background: #29a7f3;
-            color: #fff;
-          }
         }
       }
       .right_bottom {
+        width: 100%;
         .wrapper {
+          :global(.slick-list) {
+            height: 320px;
+            padding: 30px 0;
+          }
           .section {
-            .item {
-
-              .item_q {
-                color: #23242a;
-                font-size: 18px;
+            .item_wrapper {
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              .item {
+                font-size: 16px;
                 font-weight: 400;
-                display: flex;
-                margin-bottom: 10px;
-                height: 32px;
-                line-height: 32px;
+                cursor: pointer;
                 .icon {
                   width: 32px;
                   height: 32px;
+                  line-height: 32px;
                   border-radius: 50%;
-                  background: #fed000;
-                  color: #fff;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
                   margin-right: 20px;
-
+                  font-weight: 400;
+                  color: #fff;
+                  text-align: center;
+                  float: left;
+                }
+                .item_content {
+                  line-height: 32px;
+                  &:hover {
+                    color: lightsalmon;
+                  }
+                  p {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                  }
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  }
+  .special {
+    // height: 380px;
+    width: 100%;
+    .special_top {
+      width: 100%;
+      height: 45px;
+      margin-bottom: 40px;
+      .title {
+        float: left;
+      }
+      .modular {
+        float: right;
+        .tag {
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 400;
+          color: #23242a;
+          padding: 8px 14px;
+          background: transparent;
+          display: inline-block;
+        }
+      }
+    }
+    .special_bottom {
+      height: 460px;
+      :global(.slick-slider) {
+        height: 100%;
+        :global(.slick-list) {
+          height: 100%;
+          .special_questions {
+            .specialItem {
+              background: #fff;
+            }
+            .picture {
+              display: table-cell;
+              vertical-align: middle;
+              text-align: center;
+            }
+            .title {
+              padding: 20px 0;
+            }
+            .questions {
+              color: #9a9ca4;
+              font-size: 18px;
+              font-weight: 400;
+              padding: 0 0 20px 0;
+            }
+          }
 
-              .item_a {
-                color: #23242a;
-                font-size: 18px;
-                font-weight: 400;
-                display: flex;
-                color: #9A9CA4;
-                height: 32px;
-                line-height: 32px;
+          .special_help {
+            .help_left {
+              background: url(../../assets//hotHelp.png);
+              width: 400px;
+              height: 300px;
+              background-size: cover;
+              float: left;
+              margin-right: 40px;
+            }
 
-                .icon {
-                  width: 32px;
-                  height: 32px;
-                  border-radius: 50%;
-                  background: #13acff;
-                  color: #fff;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  margin-right: 20px;
+            .help_right {
+              float: left;
+              width: 760px;
+              .help_item {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                padding-top: 15px;
+                cursor: pointer;
+                &:hover{
+                  color: lightsalmon;
                 }
+                // &:last-child {
+                //   padding: 0;
+                // }
               }
             }
           }

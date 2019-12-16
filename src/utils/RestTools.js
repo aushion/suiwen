@@ -30,6 +30,9 @@ export default {
         });
     });
   },
+  removeTag(str){
+    return str.replace(/<p>/g,'').replace(/<\/p>/g,'')
+  },
   setStorageInput(key, value) {
     let inputRecords = JSON.parse(window.localStorage.getItem(key)) || [];
     if (inputRecords.indexOf(value) < 0) {
@@ -48,7 +51,7 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return str.replace(/###/g, '<span style="color:red">').replace(/\$\$\$/g, '</span>');
+    return str.replace(/###/g, '<span style="color:red">').replace(/\$\$\$/g, '</span>').replace(/&nbsp;/g,'');
   },
   completeUrl(str) {
     return str

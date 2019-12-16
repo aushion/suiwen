@@ -6,7 +6,7 @@ let xToken = ''; //全局变量临时存储x-token
 // 创建一个axios实例
 const request = axios.create({
   // baseURL: process.env.apiUrl, // url = base url + request url,
-  baseURL: 'http://192.168.103.25:8080/qa.api',
+  baseURL: process.env.apiUrl,
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 30000, // request timeout
 });
