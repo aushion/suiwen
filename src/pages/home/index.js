@@ -27,14 +27,22 @@ function Home(props) {
     color: '#fff',
     borderRadius: 4
   };
+
+  const specialActiveStyle = {
+    backgroundColor: '#29A7F3',
+    padding: '8px 14px',
+    color: '#fff',
+    borderRadius: 4
+  }
   const skillSettings = {
     infinite: true,
-    autoplay: true,
-    speed: 1000,
-    autoplaySpeed: 3000,
-    beforeChange: function(i) {
-      setActive(i === skillExamples.length - 1 ? 0 : i + 1);
-    },
+    // autoplay: true,
+    // speed: 1000,
+    // autoplaySpeed: 3000,
+    // beforeChange: function(i) {
+    //   setActive(i === skillExamples.length - 1 ? 0 : i + 1);
+    // },
+    arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1
   };
@@ -42,7 +50,8 @@ function Home(props) {
   const specialSettings = {
     autoplay: false,
     slidesToScroll: 1,
-    slidesToShow: 1
+    slidesToShow: 1,
+    arrows: false
   };
 
   function handleClickItem(item) {
@@ -52,8 +61,8 @@ function Home(props) {
 
   function clickTag(i) {
     setActive(i);
-    skillSlider.slickPause();
-    skillSlider.slickGoTo(i, true);
+    // skillSlider.slickPause();
+    skillSlider.slickGoTo(i);
   }
 
   return (
@@ -138,15 +147,21 @@ function Home(props) {
           </div>
           <div className={homeStyles.modular}>
             <span
-              onClick={() => {setActiveSpecial('专题问答'); specialSlider.slickGoTo(0)}}
-              style={activeSpecial === '专题问答' ? activeStyle : null}
+              onClick={() => {
+                setActiveSpecial('专题问答');
+                specialSlider.slickGoTo(0);
+              }}
+              style={activeSpecial === '专题问答' ? specialActiveStyle : null}
               className={homeStyles.tag}
             >
               专题问答
             </span>
             <span
-              onClick={() => {setActiveSpecial('热门求助');specialSlider.slickGoTo(1)}}
-              style={activeSpecial === '热门求助' ? activeStyle : null}
+              onClick={() => {
+                setActiveSpecial('热门求助');
+                specialSlider.slickGoTo(1);
+              }}
+              style={activeSpecial === '热门求助' ? specialActiveStyle : null}
               className={homeStyles.tag}
             >
               热门求助
@@ -155,61 +170,67 @@ function Home(props) {
         </div>
 
         <div className={homeStyles.special_bottom}>
-          <Slider {...specialSettings} ref={slider => (specialSlider = slider)}>
+          <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}>
             <div className={homeStyles.special_questions}>
               {specialQuestions.length ? (
-                <Row gutter={16}>
+                <Row gutter={56}>
                   <Col span={8} className={homeStyles.specialItem}>
-                    <div className={homeStyles.picture}>
-                      <img src={法律} alt="法律" />
-                    </div>
-                    <div className={homeStyles.title}>
-                      <span style={{ color: '#23242A', fontSize: 24 }}>法律</span>{' '}
-                      <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
-                    </div>
-                    <div className={homeStyles.questions}>
-                      {specialQuestions
-                        .filter((item) => item.name === '法律')[0]
-                        .data.slice(0, 2)
-                        .map((item) => {
-                          return <div key={item.qid}>{item.q}</div>;
-                        })}
+                    <div className={homeStyles.specialWrapper}>
+                      <div className={homeStyles.picture}>
+                        <img src={法律} alt="法律" />
+                      </div>
+                      <div className={homeStyles.title}>
+                        <span style={{ color: '#23242A', fontSize: 24 }}>法律</span>{' '}
+                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
+                      </div>
+                      <div className={homeStyles.questions}>
+                        {specialQuestions
+                          .filter((item) => item.name === '法律')[0]
+                          .data.slice(0, 2)
+                          .map((item) => {
+                            return <div key={item.qid}>{item.q}</div>;
+                          })}
+                      </div>
                     </div>
                   </Col>
 
                   <Col span={8} className={homeStyles.specialItem}>
-                    <div className={homeStyles.picture}>
-                      <img src={医学} alt="医学" />
-                    </div>
-                    <div className={homeStyles.title}>
-                      <span style={{ color: '#23242A', fontSize: 24 }}>医学</span>{' '}
-                      <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
-                    </div>
-                    <div className={homeStyles.questions}>
-                      {specialQuestions
-                        .filter((item) => item.name === '医学')[0]
-                        .data.slice(0, 2)
-                        .map((item) => {
-                          return <div key={item.qid}>{item.q}</div>;
-                        })}
+                    <div className={homeStyles.specialWrapper}>
+                      <div className={homeStyles.picture}>
+                        <img src={医学} alt="医学" />
+                      </div>
+                      <div className={homeStyles.title}>
+                        <span style={{ color: '#23242A', fontSize: 24 }}>医学</span>{' '}
+                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
+                      </div>
+                      <div className={homeStyles.questions}>
+                        {specialQuestions
+                          .filter((item) => item.name === '医学')[0]
+                          .data.slice(0, 2)
+                          .map((item) => {
+                            return <div key={item.qid}>{item.q}</div>;
+                          })}
+                      </div>
                     </div>
                   </Col>
 
                   <Col span={8} className={homeStyles.specialItem}>
-                    <div className={homeStyles.picture}>
-                      <img src={农业} alt="农业" />
-                    </div>
-                    <div className={homeStyles.title}>
-                      <span style={{ color: '#23242A', fontSize: 24 }}>农业</span>{' '}
-                      <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
-                    </div>
-                    <div className={homeStyles.questions}>
-                      {specialQuestions
-                        .filter((item) => item.name === '农业')[0]
-                        .data.slice(0, 2)
-                        .map((item) => {
-                          return <div key={item.qid}>{item.q}</div>;
-                        })}
+                    <div className={homeStyles.specialWrapper}>
+                      <div className={homeStyles.picture}>
+                        <img src={农业} alt="农业" />
+                      </div>
+                      <div className={homeStyles.title}>
+                        <span style={{ color: '#23242A', fontSize: 24 }}>农业</span>{' '}
+                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
+                      </div>
+                      <div className={homeStyles.questions}>
+                        {specialQuestions
+                          .filter((item) => item.name === '农业')[0]
+                          .data.slice(0, 2)
+                          .map((item) => {
+                            return <div key={item.qid}>{item.q}</div>;
+                          })}
+                      </div>
                     </div>
                   </Col>
                 </Row>
