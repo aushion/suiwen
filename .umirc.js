@@ -6,6 +6,9 @@ export default {
     "process.env.UMI_ENV": process.env.UMI_ENV,
     "process.env.apiUrl_help": 'http://kc.cnki.net/fb/api'
   },
+  targets:{
+    ie: 9,
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [

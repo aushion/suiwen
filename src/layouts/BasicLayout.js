@@ -4,10 +4,13 @@ import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
 import SmartInput from '../components/SmartInput';
+import querystring from 'querystring'
 // import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
+  const query = querystring.parse(window.location.search.replace('?',''))
+
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
 
@@ -35,7 +38,14 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header}>
         <div className={styles.inputGroup}>
-          <div onClick={goHome} className={styles.logo}></div>
+          <div onClick={goHome} className={styles.logo} />
+          <div className={styles.inputWrap}>
+            <SmartInput
+              question={query.q}
+              onClickEnter={handleClickEnterOrItem}
+              onClickItem={handleClickEnterOrItem}
+            />
+          </div>
           <div className={styles.login}>
             您好! 欢迎您来到智能问答平台 {username || '游客'}
             {username ? null : (
@@ -59,13 +69,6 @@ function BasicLayout(props) {
                 注销
               </button>
             ) : null}
-          </div>
-          <div className={styles.inputWrap}>
-            <SmartInput
-              question={props.q}
-              onClickEnter={handleClickEnterOrItem}
-              onClickItem={handleClickEnterOrItem}
-            ></SmartInput>
           </div>
         </div>
       </Header>

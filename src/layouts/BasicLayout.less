@@ -7,15 +7,38 @@
     background-color: lightblue;
     height: 84px;
     line-height: 0;
+    position: relative;
     .inputGroup {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100%;
+      width: 100%;
+      position: relative;
+      .logo {
+        background: url(../assets/logo1.png) no-repeat;
+        height: 32px;
+        width: 52px;
+        margin-right: 10px;
+        margin-left: 100px;
+        background-size: contain;
+        cursor: pointer;
+        float: left;
+        position: absolute;
+        top: 50%;
+        margin-top: -16px;
+      }
+      .inputWrap {
+        float: left;
+        position: absolute;
+        left: 200px;
+        top: 50%;
+        margin-top: -25px;
+        width: 38%;
+      }
       .login {
+        float: right;
         position: absolute;
         right: 20px;
-        top: 30px;
+        top: 50%;
+        margin-top: -15px;
         color: #fff;
         .login_btn,
         .register_btn {
@@ -32,21 +55,6 @@
             color: #333;
           }
         }
-      }
-      .logo {
-        background: url(../assets/logo1.png) no-repeat;
-        height: 32px;
-        width: 52px;
-        margin-right: 10px;
-        background-size: contain;
-        position: absolute;
-        left: 50%;
-        margin-left: -25%;
-        cursor: pointer;
-      }
-      .inputWrap {
-        width: 40%;
-        position: absolute;
       }
     }
   }

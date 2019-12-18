@@ -18,7 +18,6 @@ let specialSlider = null;
 function Home(props) {
   const { skillExamples, specialQuestions, newHelpList } = props;
 
-  console.log(specialQuestions);
   const [activeTag, setActive] = useState(0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
   const activeStyle = {
@@ -55,8 +54,9 @@ function Home(props) {
   };
 
   function handleClickItem(item) {
-    // props.dispatch({ type: 'global/setQuestion', payload: { q: item.Content } });
-    // router.push('/result?q=' + item.Content);
+    console.log(item)
+    props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
+    router.push('/result?q=' + item);
   }
 
   function clickTag(i) {
@@ -100,7 +100,7 @@ function Home(props) {
                         <div key={item.name} className={homeStyles.section}>
                           {item.data.map((item) => {
                             return (
-                              <div key={item.qId} className={homeStyles.item_wrapper}>
+                              <div key={item.qId} className={homeStyles.item_wrapper} onClick={handleClickItem.bind(this,item.q)}>
                                 <div className={homeStyles.item} style={{ marginBottom: 12 }}>
                                   <div
                                     className={homeStyles.icon}
@@ -242,10 +242,10 @@ function Home(props) {
               <div className={homeStyles.help_right}>
                 <List
                   grid={{ gutter: 16, column: 2 }}
-                  dataSource={newHelpList}
+                  dataSource={newHelpList.slice(0,10)}
                   renderItem={(item) => (
                     <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
-                      <div className={homeStyles.help_item}>
+                      <div className={homeStyles.help_item} onClick={handleClickItem.bind(this,item.Content)}>
                         <span>{item.Content}</span>
                         <span>{item.Time}</span>
                       </div>
