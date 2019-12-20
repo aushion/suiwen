@@ -4,7 +4,7 @@
   padding-bottom: 50px;
   box-sizing: border-box;
   .header {
-    background-color: lightblue;
+    background:linear-gradient(0deg,rgba(0,138,255,1),rgba(0,205,255,1));
     height: 84px;
     line-height: 0;
     position: relative;
@@ -30,8 +30,19 @@
         position: absolute;
         left: 200px;
         top: 50%;
-        margin-top: -25px;
+        margin-top: -20px;
         width: 38%;
+        :global(.ant-input-lg){
+          height: 40px;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+        }
+        :global(.ant-btn-primary){
+          height: 40px;
+          background-color: #0084FF;
+          margin-left: 10px;
+          font-size: 20px;
+        }
       }
       .login {
         float: right;

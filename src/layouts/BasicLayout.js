@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import styles from './BasicLayout.less';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring'
-// import RestTools from '../utils/RestTools';
+import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
@@ -17,6 +17,7 @@ function BasicLayout(props) {
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
     value && router.push(`/result?q=${value}`);
+    RestTools.setSession('q',value)
   }
 
   function goHome() {

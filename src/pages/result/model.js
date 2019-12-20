@@ -1,10 +1,16 @@
 // import queryString from 'querystring';
-import { getAnswer, getSG } from './service/result';
+import { getAnswer, getSG, getRelevantByAnswer } from './service/result';
 export default {
   namespace: 'result',
-  state: [],
+  state: {
+    sgData: [],
+    relatedData: [],
+    answerData: [],
+    faqData: [], //faq数据
+    repositoryData: [] //知识库数据
+  },
   reducers: {
-    process(state, { payload }) {
+    save(state, { payload }) {
       return {
         ...state,
         ...payload
@@ -12,21 +18,76 @@ export default {
     }
   },
   effects: {
-    *getAnswer({ payload }, { call }) {
+    *getAnswer({ payload }, { call, put }) {
       const res = yield call(getAnswer, payload);
-      console.log(res)
+      const { data } = res;
+      if (data.result) {
+        const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
+        const repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
+        yield put({
+          type: 'save',
+          payload: {
+            answerData: data.result.metaList,
+            faqData: faqData,
+            repositoryData: repositoryData
+          }
+        });
+      }
     },
-    *getSG({ payload }, { call }) {
+    *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
-      console.log('sg',res)
+      const { data } = res;
+      if (data.result) {
+        yield put({
+          type: 'save',
+          payload: {
+            sgData: data.metaList
+          }
+        });
+      }
+    },
+    *getRelevantByAnswer({ payload }, { call, put }) {
+      const res = yield call(getRelevantByAnswer, payload);
+      const { data } = res;
+      if (data.result) {
+        yield put({
+          type: 'save',
+          payload: {
+            relatedData: data.result.metaList.filter((item) => item.domain === '文献')[0].dataNode
+          }
+        });
+      }
     }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/result') {
+          //重置问题
+          dispatch({
+            type: 'global/setQuestion',
+            payload: {
+              q: query.q
+            }
+          });
+          //重置数据
+          dispatch({
+            type: 'save',
+            payload: {
+              sgData: [],
+              answerData: [],
+              faqData: [],
+              repositoryData: [],
+              relatedData: []
+            }
+          });
+          //获取数据
           dispatch({ type: 'getAnswer', payload: { ...query, pageStart: 1, pageCount: 10 } });
-          dispatch({type: 'getSG',payload: {...query, pageStart:1, pageCount: 10}})
+          dispatch({ type: 'getSG', payload: { ...query, pageStart: 1, pageCount: 10 } });
+          dispatch({
+            type: 'getRelevantByAnswer',
+            payload: { ...query, pageStart: 1, pageCount: 10 }
+          });
         }
       });
     }

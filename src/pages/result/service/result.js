@@ -11,3 +11,9 @@ export function getSG(payload) {
     params: { ...payload }
   });
 }
+
+export function getRelevantByAnswer(payload) {
+  return request.get('/getRelevantByAnswer', {
+    params: { ...payload }
+  })
+}

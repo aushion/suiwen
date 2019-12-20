@@ -269,7 +269,8 @@ function mapStateToProps(state) {
   // const { newHelpList } = state.home;
   return {
     ...state.home,
-    ...state.global
+    ...state.global,
+    loading: state.loading.models.home
   };
 }
 
