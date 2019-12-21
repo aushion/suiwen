@@ -4,7 +4,7 @@ import Link from 'umi/link';
 import RestTools from '../../../utils/RestTools';
 
 export default function Literature(props) {
-  const data = props.data[0].DATA.map(item => item.FieldValue);
+  const data = props.data
   const spanStyle = {
     display: 'inline-block',
     overflow: 'hidden',
@@ -23,9 +23,7 @@ export default function Literature(props) {
             dangerouslySetInnerHTML={{
               __html: RestTools.translateToRed(item.题名),
             }}
-            href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
-              RestTools.sourceDb[item.来源数据库]
-            }&filename=${item.文件名}`}
+            href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.文件名}`}
             target="_blank"
             rel="noopener noreferrer"
           />

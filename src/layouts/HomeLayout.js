@@ -34,7 +34,7 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-          您好! 欢迎您来到智能问答平台 {username || '游客'}
+          您好! 欢迎 {username || '游客'}
           {username ? null : (
             <button className={styles.login_btn} onClick={goLogin}>
               登录

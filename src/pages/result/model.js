@@ -77,7 +77,7 @@ export default {
               sgData: [],
               answerData: [],
               faqData: [],
-              repositoryData: [],
+              repositoryData: [], //知识库数据
               relatedData: []
             }
           });

@@ -4,12 +4,12 @@ import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
 import SmartInput from '../components/SmartInput';
-import querystring from 'querystring'
+import querystring from 'querystring';
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
-  const query = querystring.parse(window.location.search.replace('?',''))
+  const query = querystring.parse(window.location.search.replace('?', ''));
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
@@ -17,7 +17,7 @@ function BasicLayout(props) {
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
     value && router.push(`/result?q=${value}`);
-    RestTools.setSession('q',value)
+    RestTools.setSession('q', value);
   }
 
   function goHome() {
@@ -40,6 +40,10 @@ function BasicLayout(props) {
       <Header className={styles.header}>
         <div className={styles.inputGroup}>
           <div onClick={goHome} className={styles.logo} />
+          <div className={styles.title}>
+            <div className={styles.cn}>智能问答服务平台</div>
+            <div className={styles.en}>Intelligent Question and Answer</div>
+          </div>
           <div className={styles.inputWrap}>
             <SmartInput
               question={query.q}
@@ -48,7 +52,7 @@ function BasicLayout(props) {
             />
           </div>
           <div className={styles.login}>
-            您好! 欢迎您来到智能问答平台 {username || '游客'}
+            您好! 欢迎 {username || '游客'}
             {username ? null : (
               <button className={styles.login_btn} onClick={goLogin}>
                 登录

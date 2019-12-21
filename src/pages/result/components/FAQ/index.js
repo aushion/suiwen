@@ -16,7 +16,15 @@ function FAQ(props) {
         />
       </div>
       <div className={styles.wrapper}>
-        <div className={styles.icon}>A</div>
+        <div
+          className={styles.icon}
+          style={{
+            background:
+              'linear-gradient(180deg,rgba(123,214,255,1),rgba(9,168,255,1))'
+          }}
+        >
+          A
+        </div>
         <div
           className={styles.text}
           style={{ color: '#5C5D5E' }}
