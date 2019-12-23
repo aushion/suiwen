@@ -60,7 +60,6 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        console.log(query, pathname);
         if (pathname === '/home') {
           dispatch({ type: 'getDomainQuestions' });
           dispatch({ type: 'getTopicQuestions' });

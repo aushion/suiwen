@@ -18,13 +18,6 @@ export default {
         dva: true,
         dynamicImport: false,
         title: '知网随问',
-
-        // dll: {
-        //   exclude: ['jquery'],
-        // },
-
-        // links: [{ rel: 'stylesheet',charset:"UTF-8", href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css' },
-        // {rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'}],
         scripts: [
           {
             src:

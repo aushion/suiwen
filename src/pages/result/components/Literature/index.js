@@ -1,7 +1,6 @@
 import React from 'react';
 import { List } from 'antd';
-import Link from 'umi/link';
-import RestTools from '../../../utils/RestTools';
+import RestTools from '../../../../utils/RestTools';
 
 export default function Literature(props) {
   const data = props.data

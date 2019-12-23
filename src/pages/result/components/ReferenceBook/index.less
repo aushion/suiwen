@@ -3,26 +3,35 @@
   margin-bottom: 20px;
   padding: 20px;
   background: #fff;
-  .ReferenceBook_title{
+  .ReferenceBook_title {
     font-size: 16px;
     margin-bottom: 10px;
     font-weight: 400;
-    color: #0079FF;
+    color: #0079ff;
   }
-  .ReferenceBook_answer{
+  .ReferenceBook_answer {
     color: #333;
     letter-spacing: 2px;
     line-height: 27.2px;
     text-indent: 2em;
     margin-bottom: 20px;
   }
-  .ReferenceBook_more{
-    color: #0079FF;
+  .ReferenceBook_extra {
     text-align: right;
-    display: block;
-    cursor: pointer;
-    &:hover{
-      color: lightsalmon;
+    .ReferenceBook_name {
+      color: #999;
+      cursor: pointer;
+      margin-right: 20px;
+      &:hover {
+        color: lightsalmon;
+      }
+    }
+    .ReferenceBook_more {
+      color: #0079ff;
+      cursor: pointer;
+      &:hover {
+        color: lightsalmon;
+      }
     }
   }
 }

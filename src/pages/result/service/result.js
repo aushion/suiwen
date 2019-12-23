@@ -15,5 +15,17 @@ export function getSG(payload) {
 export function getRelevantByAnswer(payload) {
   return request.get('/getRelevantByAnswer', {
     params: { ...payload }
-  })
+  });
+}
+
+export function getEvaluate(payload) {
+  return request.post('/queryForEvaluate', null, {
+    params: { ...payload }
+  });
+}
+
+export function setEvaluate(payload) {
+  return request.post('/setEvaluate', null, {
+    params: { ...payload }
+  });
 }

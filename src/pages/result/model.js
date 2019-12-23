@@ -1,5 +1,7 @@
 // import queryString from 'querystring';
-import { getAnswer, getSG, getRelevantByAnswer } from './service/result';
+import { getAnswer, getSG, getRelevantByAnswer, setEvaluate } from './service/result';
+import Cookies from 'js-cookie';
+
 export default {
   namespace: 'result',
   state: {
@@ -57,7 +59,12 @@ export default {
           }
         });
       }
-    }
+    },
+
+    *setEvaluate({ payload }, { call }) {
+  const res = yield call(setEvaluate, payload);
+  console.log(res);
+}
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
@@ -82,7 +89,7 @@ export default {
             }
           });
           //获取数据
-          dispatch({ type: 'getAnswer', payload: { ...query, pageStart: 1, pageCount: 10 } });
+          dispatch({ type: 'getAnswer', payload: { ...query, pageStart: 1, pageCount: 10, userId: Cookies.get('cnki_qa_uuid') } });
           dispatch({ type: 'getSG', payload: { ...query, pageStart: 1, pageCount: 10 } });
           dispatch({
             type: 'getRelevantByAnswer',

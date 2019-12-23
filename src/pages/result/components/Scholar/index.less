@@ -1,0 +1,31 @@
+.Scholar {
+  box-shadow: #a5a5a5 0 0 10.8px 0;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fff;
+  :global(.ant-list-item) {
+    align-items: baseline;
+  }
+  .Scholar_pic {
+    float: left;
+    margin-right: 10px;
+  }
+  .Scholar_info {
+    .Scholar_info_item {
+      color: #333;
+      label {
+        color: #999;
+      }
+    }
+  }
+  .Scholar_more{
+    color: #999;
+    display: inline-block;
+    text-align: right;
+    width: 100%;
+    cursor: pointer;
+    &:hover {
+      color: lightsalmon;
+    }
+  }
+}

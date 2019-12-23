@@ -1,6 +1,7 @@
 import React from 'react';
-import { List, Popover } from 'antd';
+import { List, Popover, Icon } from 'antd';
 import groupBy from 'lodash/groupBy';
+import Evaluate from '../Evaluate/index';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
@@ -16,12 +17,15 @@ function SgList(props) {
             itemLayout="vertical"
             dataSource={groupByData[item]}
             footer={
-              <div style={{ float: 'right', fontSize: 10, color: '#999' }}>
+              <div style={{ float: 'right', fontSize: 12, color: '#999' ,overflow: 'hidden' }}>
                 <div>
                   <span> {groupByData[item][0].Data.title} </span>{' '}
-                  <span>{groupByData[item][0].Data.additional_info.FieldValue.年}</span>
+                  <span>{groupByData[item][0].Data.additional_info.FieldValue.年 || ''}</span>
                 </div>
                 {/* 点赞模块预留 */}
+                <div className={styles.sg_evaluate}>
+                  <Evaluate id={groupByData[item][0].id} goodCount={0} badCount={0}></Evaluate>
+                </div>
               </div>
             }
             renderItem={(item, index) => (
@@ -54,7 +58,7 @@ function SgList(props) {
                   }
                   trigger="click"
                 >
-                  <div className={styles.more}>查看更多>></div>
+                  <div className={styles.more}>显示更多>></div>
                 </Popover>
               </List.Item>
             )}
