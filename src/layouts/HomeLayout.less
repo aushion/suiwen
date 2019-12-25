@@ -25,13 +25,13 @@
         border-radius: 4px;
         margin-left: 20px;
         cursor: pointer;
-        a{
+        a {
           color: #fff;
         }
         &:hover {
           background: #fff;
           color: #333;
-          a{
+          a {
             color: #333;
           }
         }
@@ -61,6 +61,9 @@
       width: 720px;
       left: 50%;
       transform: translateX(-50%);
+      :global(.record-wrap) {
+        width: calc(100% - 120px);
+      }
       :global(.ant-input-group-addon) {
         width: 120px;
         :global(.ant-btn) {
@@ -81,5 +84,25 @@
     bottom: 0;
     width: 100%;
     height: 50px;
+    padding: 0;
+    .footer_wrap {
+      overflow: hidden;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      position: relative;
+      .footer_item {
+        display: inline-block;
+        padding: 14px 20px;
+        text-align: center;
+        list-style: none;
+        a {
+          color: #999;
+          &:hover {
+            color: lightsalmon;
+          }
+        }
+      }
+    }
   }
 }

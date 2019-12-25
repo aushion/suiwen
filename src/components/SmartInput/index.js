@@ -8,9 +8,9 @@ import styles from './index.less';
 const HISTORYKEY = RestTools.HISTORYKEY;
 let timer = null;
 message.config({
-  maxCount: 1,
+  maxCount: 1
 });
-const SmartInput = props => {
+const SmartInput = (props) => {
   const [value, setValue] = useState('');
   const [showRecord, setRecord] = useState(false);
   const [tipsData, setTips] = useState([]);
@@ -31,10 +31,10 @@ const SmartInput = props => {
       clearTimeout(timer);
       timer = setTimeout(() => {
         RestTools.getInputTips(currentValue)
-          .then(res => {
+          .then((res) => {
             setTips(res);
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       }, 500);
@@ -46,14 +46,20 @@ const SmartInput = props => {
     setTips([]);
     setValue(item);
     if (item) {
-      RestTools.setStorageInput(HISTORYKEY,item);
+      RestTools.setStorageInput(HISTORYKEY, item);
       props.onClickItem(item);
     } else {
       message.warning('请输入您的问题');
     }
   }
 
-  function handleEnter() {
+  function handleEnter(e) {
+    // e.preventDefault();   //ie不兼容
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    } else {
+      window.event.returnValue = false; //注意加window
+    }
     const maxLength = RestTools.maxLength;
     let str = value;
     let newStr = str;
@@ -66,11 +72,11 @@ const SmartInput = props => {
               <strong style={{ color: 'red' }}>{value.substring(maxLength - 3, maxLength)}</strong>
             </em>
             之后的字数将不会计入问题中
-          </span>,
+          </span>
         );
         newStr = value.substring(0, maxLength);
       }
-      RestTools.setStorageInput(HISTORYKEY,newStr); //存储输入
+      RestTools.setStorageInput(HISTORYKEY, newStr); //存储输入
       props.onClickEnter(newStr);
     } else {
       message.warning('请输入您的问题');
@@ -91,10 +97,10 @@ const SmartInput = props => {
           if (value) {
             if (props.needTip) {
               RestTools.getInputTips(value)
-                .then(res => {
+                .then((res) => {
                   setTips(res);
                 })
-                .catch(err => {
+                .catch((err) => {
                   console.log(err);
                 });
             }
@@ -114,13 +120,13 @@ const SmartInput = props => {
         }
       />
       {showRecord && inputRecords.length ? (
-        <div className={styles['record-wrap']}>
+        <div className={'record-wrap'}>
           <InputRecord data={inputRecords} clickItem={hanldeClickItem} />
         </div>
       ) : null}
 
       {tipsData.length ? (
-        <div className={styles['record-wrap']}>
+        <div className={'record-wrap'}>
           <InputTips keyword={value} data={tipsData} clickItem={hanldeClickItem} />
         </div>
       ) : null}

@@ -29,3 +29,7 @@ export function setEvaluate(payload) {
     params: { ...payload }
   });
 }
+
+export function getHotHelpList(payload) {
+  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=12')
+}

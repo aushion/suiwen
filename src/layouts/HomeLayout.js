@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Layout } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
-import request from '../utils/request';
 import SmartInput from '../components/SmartInput';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
@@ -15,7 +14,8 @@ function HomeLayout(props) {
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
     value && router.push(`/result?q=${value}`);
-    RestTools.setSession('q',value);
+    RestTools.setSession('q', value);
+
   }
 
   function goLogin() {
@@ -68,7 +68,43 @@ function HomeLayout(props) {
       </Header>
       <Content className={styles.content}>{props.children}</Content>
       <Footer className={styles.footer}>
-        <div>homefooter</div>
+        <ul className={styles.footer_wrap}>
+          <li className={styles.footer_item}>
+            <a href="http://cnki.net/gycnki/gycnki.htm" target="_blank" rel="noopener noreferrer">
+              关于我们
+            </a>
+          </li>
+          <li className={styles.footer_item}>
+            <a href="http://www.cnki.net/other/gonggao/bqsm.htm" target="_blank" rel="noopener noreferrer">
+              版权公告
+            </a>
+          </li>
+          <li className={styles.footer_item}>
+            <a href="http://service.cnki.net/" target="_blank" rel="noopener noreferrer">
+              客服中心
+            </a>
+          </li>
+          <li className={styles.footer_item}>
+            <a href="http://help.cnki.net/" target="_blank" rel="noopener noreferrer">
+              在线咨询
+            </a>
+          </li>
+          <li className={styles.footer_item}>
+            <a href="http://ec.cnki.net/skwd/skwd.htm" target="_blank" rel="noopener noreferrer">
+              购买知网卡
+            </a>
+          </li>
+          <li className={styles.footer_item}>
+            <a href="http://my.cnki.net/CNKIRecharging/czzx.html" target="_blank" rel="noopener noreferrer">
+              充值中心
+            </a>
+          </li>
+          <li className={styles.footer_item}>
+            <a href="http://my.cnki.net/" target="_blank" rel="noopener noreferrer">
+              我的CNKI
+            </a>
+          </li>
+        </ul>
       </Footer>
     </div>
   );

@@ -13,7 +13,15 @@ function RelatedLiteraure(props) {
           <List.Item>
             <div>
               <a
-                style={{ fontSize: 14 }}
+                style={{
+                  fontSize: 14,
+                  display: 'inline-block',
+                  width: '100%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+                title={RestTools.removeFlag(item.TITLE)}
                 href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.文件名}`}
                 dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.TITLE) }}
               />

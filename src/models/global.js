@@ -7,5 +7,8 @@ export default {
     setQuestion(state, { payload }) {
       return { ...state, ...payload };
     },
-  },
+    save(state, { payload }) {
+      return { ...state, ...payload };
+    }
+  }
 };

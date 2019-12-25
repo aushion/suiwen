@@ -45,26 +45,28 @@ export default {
       }
     },
 
-    *getHotHelpList({ payload }, { call,put }) {
-        const { data } = yield call(getHotHelpList);
-        if(data.length) {
-          yield put({type: 'save', payload: {
+    *getHotHelpList({ payload }, { call, put }) {
+      const { data } = yield call(getHotHelpList);
+      if (data.length) {
+        yield put({
+          type: 'save',
+          payload: {
             newHelpList: data
-          }})
-        }
-}
+          }
+        });
+
+      }
+    }
   },
-
-
 
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/home') {
+          dispatch({ type: 'gloabl/setQuestion', payload: { q: '' } });
           dispatch({ type: 'getDomainQuestions' });
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHotHelpList' });
-
         }
       });
     }

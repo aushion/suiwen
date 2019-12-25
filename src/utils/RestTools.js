@@ -53,6 +53,9 @@ export default {
   translateToRed(str) {
     return str.replace(/###/g, '<span style="color:red">').replace(/\$\$\$/g, '</span>').replace(/&nbsp;/g,'');
   },
+  removeFlag(str){
+    return str.replace(/###/g, '').replace(/\$\$\$/g, '')
+  },
   completeUrl(str) {
     return str
       .replace(/<p>/g, '')

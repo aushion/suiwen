@@ -1,8 +1,10 @@
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
+import Evaluate from '../Evaluate';
 
 function Journal(props) {
-  const { data } = props;
+  const { data, id, evaluate } = props;
+  const { good, bad, isevalute } = evaluate;
   return (
     <div className={styles.Journal}>
       {data.length
@@ -45,13 +47,17 @@ function Journal(props) {
         : null}
 
       <a
-        style={{ display: 'block', textAlign: 'right' }}
+        style={{ display: 'block', textAlign: 'right', color: '#999',fontSize: 12 }}
         href="http://navi.cnki.net/KNavi/All.html"
         target="_blank"
         rel="noopener noreferrer"
       >
         更多期刊
       </a>
+
+      <div className={styles.Journal_evaluate}>
+        <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
+      </div>
     </div>
   );
 }

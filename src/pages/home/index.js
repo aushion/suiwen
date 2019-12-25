@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Popover, List, Row, Col } from 'antd';
+import { Spin, List, Row, Col, Divider } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
-import Link from 'umi/link';
 import Slider from 'react-slick';
 import BlockTitle from './components/BlockTitle';
 import homeStyles from './index.less';
@@ -16,7 +15,7 @@ import 医学 from '../../assets/医学.png';
 let skillSlider = null;
 let specialSlider = null;
 function Home(props) {
-  const { skillExamples, specialQuestions, newHelpList } = props;
+  const { skillExamples, specialQuestions, newHelpList, loading } = props;
 
   const [activeTag, setActive] = useState(0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
@@ -32,15 +31,14 @@ function Home(props) {
     padding: '8px 14px',
     color: '#fff',
     borderRadius: 4
-  }
+  };
   const skillSettings = {
     infinite: true,
     // autoplay: true,
     // speed: 1000,
     // autoplaySpeed: 3000,
-    // beforeChange: function(i) {
-    //   setActive(i === skillExamples.length - 1 ? 0 : i + 1);
-    // },
+    beforeChange: (current, next) => {setActive(next<0?0:next)},
+    initialSlide: 0,
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1
@@ -50,13 +48,14 @@ function Home(props) {
     autoplay: false,
     slidesToScroll: 1,
     slidesToShow: 1,
+    swipe: false,
     arrows: false
   };
 
   function handleClickItem(item) {
-    console.log(item)
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
     router.push('/result?q=' + item);
+    RestTools.setSession('q',item)
   }
 
   function clickTag(i) {
@@ -67,6 +66,7 @@ function Home(props) {
 
   return (
     <div className={homeStyles.home}>
+      <Spin spinning={loading}>
       <div className={homeStyles.skill}>
         <div className={homeStyles.left}>
           <div className={homeStyles.title}>
@@ -100,7 +100,11 @@ function Home(props) {
                         <div key={item.name} className={homeStyles.section}>
                           {item.data.map((item) => {
                             return (
-                              <div key={item.qId} className={homeStyles.item_wrapper} onClick={handleClickItem.bind(this,item.q)}>
+                              <div
+                                key={item.qId}
+                                className={homeStyles.item_wrapper}
+                                onClick={handleClickItem.bind(this, item.q)}
+                              >
                                 <div className={homeStyles.item} style={{ marginBottom: 12 }}>
                                   <div
                                     className={homeStyles.icon}
@@ -201,7 +205,7 @@ function Home(props) {
                       </div>
                       <div className={homeStyles.title}>
                         <span style={{ color: '#23242A', fontSize: 24 }}>医学</span>{' '}
-                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
+                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Medicine</span>
                       </div>
                       <div className={homeStyles.questions}>
                         {specialQuestions
@@ -221,7 +225,7 @@ function Home(props) {
                       </div>
                       <div className={homeStyles.title}>
                         <span style={{ color: '#23242A', fontSize: 24 }}>农业</span>{' '}
-                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
+                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Argiculture</span>
                       </div>
                       <div className={homeStyles.questions}>
                         {specialQuestions
@@ -241,19 +245,28 @@ function Home(props) {
 
               <div className={homeStyles.help_right}>
                 <List
-                  grid={{ gutter: 16, column: 2 }}
-                  dataSource={newHelpList.slice(0,10)}
+                  grid={{ gutter: 16, column: 1 }}
+                  dataSource={newHelpList.slice(0, 5)}
                   renderItem={(item) => (
                     <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
-                      <div className={homeStyles.help_item} onClick={handleClickItem.bind(this,item.Content)}>
-                        <span>{item.Content}</span>
-                        <span>{item.Time}</span>
+                      <div
+                        className={homeStyles.help_item}
+                        // onClick={handleClickItem.bind(this, item.Content)}
+                      >
+                        <span
+                         className={homeStyles.help_item_content}
+                        >
+                          {item.Content}
+                        </span>
+                        <span style={{display: 'inline-block', overflow: 'hidden', cursor: 'pointer'}}>我来回答</span>
+                         <Divider type="vertical" style={{top: '-5px'}}></Divider>
+                        <span style={{ float: 'right' }}>{item.Time}</span>
                       </div>
                     </List.Item>
                   )}
                 />
 
-                <div style={{ width: 100, float: 'right', color: '#C4C4C4', fontSize: 20 }}>
+                <div className={homeStyles.help_more}>
                   MORE>>
                 </div>
               </div>
@@ -261,7 +274,9 @@ function Home(props) {
           </Slider>
         </div>
       </div>
+      </Spin>
     </div>
+
   );
 }
 

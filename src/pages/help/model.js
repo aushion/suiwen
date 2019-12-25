@@ -11,7 +11,7 @@ export default {
     index: 1,
     uid: Cookies.get('userInfo')
       ? JSON.parse(Cookies.get('userInfo')).user_name
-      : Cookies.get('qa_cnki_uuid'),
+      : Cookies.get('cnki_qa_uuid'),
   },
 
   effects: {

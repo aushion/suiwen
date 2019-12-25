@@ -30,6 +30,7 @@
         left: 160px;
         top: 40%;
         height: 50px;
+        cursor: pointer;
         .cn{
           height: 18px;
           font-size: 16px;
@@ -48,6 +49,9 @@
         top: 50%;
         margin-top: -20px;
         width: 38%;
+        :global(.record-wrap){
+          width: calc(100% - 88px);
+        }
         :global(.ant-input-lg){
           height: 40px;
           border-top-right-radius: 4px;
@@ -91,12 +95,31 @@
       }
     }
   }
-  .content {
-  }
+
   .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 50px;
+    padding: 0;
+    .footer_wrap {
+      overflow: hidden;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      position: relative;
+      .footer_item {
+        display: inline-block;
+        padding: 14px 20px;
+        text-align: center;
+        list-style: none;
+        a {
+          color: #999;
+          &:hover {
+            color: lightsalmon;
+          }
+        }
+      }
+    }
   }
 }

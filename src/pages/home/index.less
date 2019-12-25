@@ -114,6 +114,8 @@
           .special_questions {
             .specialWrapper {
               background: #fff;
+              box-shadow: 0px 0px 4px 0px rgba(0, 132, 255, 0.2) inset;
+
               &:hover {
                 box-shadow: 0px 0px 24px 0px rgba(0, 132, 255, 0.2);
               }
@@ -139,6 +141,16 @@
           .special_help {
             width: 100%;
             padding: 0 !important;
+            .help_more {
+              cursor: pointer;
+              width: 100;
+              float: right;
+              color: #c4c4c4;
+              font-size: 20px;
+              &:hover {
+                color: lightsalmon;
+              }
+            }
             .help_left {
               background: url(../../assets//hotHelp.png);
               width: 400px;
@@ -156,9 +168,18 @@
                 overflow: hidden;
                 white-space: nowrap;
                 padding-top: 15px;
-                cursor: pointer;
-                &:hover {
-                  color: lightsalmon;
+                line-height: 20px;
+
+                .help_item_content {
+                  display: inline-block;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  width: 70%;
+                  cursor: pointer;
+                  &:hover {
+                    color: lightsalmon;
+                  }
                 }
                 // &:last-child {
                 //   padding: 0;

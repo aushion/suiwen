@@ -1,5 +1,11 @@
 // import queryString from 'querystring';
-import { getAnswer, getSG, getRelevantByAnswer, setEvaluate } from './service/result';
+import {
+  getAnswer,
+  getSG,
+  getRelevantByAnswer,
+  setEvaluate,
+  getHotHelpList
+} from './service/result';
 import Cookies from 'js-cookie';
 
 export default {
@@ -9,7 +15,8 @@ export default {
     relatedData: [],
     answerData: [],
     faqData: [], //faq数据
-    repositoryData: [] //知识库数据
+    repositoryData: [], //知识库数据,
+    helpList: []
   },
   reducers: {
     save(state, { payload }) {
@@ -62,13 +69,26 @@ export default {
     },
 
     *setEvaluate({ payload }, { call }) {
-  const res = yield call(setEvaluate, payload);
-  console.log(res);
-}
+      yield call(setEvaluate, payload);
+    },
+    *getHotHelpList({ payload }, { call, put }) {
+      const { data } = yield call(getHotHelpList);
+      if (data.length) {
+        yield put({
+          type: 'save',
+          payload: {
+            helpList: data
+          }
+        });
+      }
+    }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
+        console.log(pathname, query);
+        const userId = Cookies.get('cnki_qa_uuid');
+        const { q } = query;
         if (pathname === '/result') {
           //重置问题
           dispatch({
@@ -85,15 +105,25 @@ export default {
               answerData: [],
               faqData: [],
               repositoryData: [], //知识库数据
-              relatedData: []
+              relatedData: [],
+              helpList: []
             }
           });
           //获取数据
-          dispatch({ type: 'getAnswer', payload: { ...query, pageStart: 1, pageCount: 10, userId: Cookies.get('cnki_qa_uuid') } });
-          dispatch({ type: 'getSG', payload: { ...query, pageStart: 1, pageCount: 10 } });
+          dispatch({
+            type: 'getAnswer',
+            payload: { q: q, pageStart: 1, pageCount: 10, userId }
+          });
+          dispatch({
+            type: 'getSG',
+            payload: { q: q, pageStart: 1, pageCount: 10, userId }
+          });
           dispatch({
             type: 'getRelevantByAnswer',
-            payload: { ...query, pageStart: 1, pageCount: 10 }
+            payload: { q: q, pageStart: 1, pageCount: 10 }
+          });
+          dispatch({
+            type: 'getHotHelpList'
           });
         }
       });

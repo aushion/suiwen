@@ -4,8 +4,11 @@ export default {
   define: {
     "process.env.apiUrl": 'http://192.168.103.25:8080/sw.api',
     "process.env.UMI_ENV": process.env.UMI_ENV,
-    "process.env.apiUrl_help": 'http://kc.cnki.net/fb/api'
+    "process.env.apiUrl_help": 'http://192.168.103.24/qa.fb/api'
   },
+  base:'/',
+  publicPath: "./",
+  history: 'hash',
   targets:{
     ie: 9,
   },
@@ -16,12 +19,16 @@ export default {
       {
         antd: true,
         dva: true,
-        dynamicImport: false,
+        dynamicImport: {
+          webpackChunkName: true,
+        },
         title: '知网随问',
+        // links: [{ rel: 'stylesheet', href: 'http://132.cnki.net/TopLogin/Content/TopLogin.css' }],
         scripts: [
           {
             src:
-              'http://192.168.100.132/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
+           // 'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000'
+               'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000',
           },
           {
             content: `try {
@@ -42,9 +49,7 @@ export default {
              `,
           },
         ],
-        targets: {
-          ie: 10,
-        },
+
         routes: {
           exclude: [
             /models\//,

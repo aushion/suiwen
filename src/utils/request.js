@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Notification } from 'antd';
+// import { Notification } from 'antd';
 
 let xToken = ''; //全局变量临时存储x-token
 

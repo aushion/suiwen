@@ -2,10 +2,11 @@ import { List } from 'antd';
 import styles from './index.less';
 import face from '../../../../assets/face.gif';
 import RestTools from '../../../../utils/RestTools';
+import Evaluate from '../Evaluate';
 
 export default function Scholar(props) {
-  const { data, title } = props;
-
+  const { data, title, id, evaluate } = props;
+  const { good, bad, isevalute } = evaluate;
   return (
     <div className={styles.Scholar}>
       <List
@@ -88,6 +89,9 @@ export default function Scholar(props) {
       >
         CNKI学者成果库
       </a>
+      <div className={styles.Scholar_evaluate}>
+        <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
+      </div>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
+import Evaluate from '../Evaluate';
 
 function ReferenceBook(props) {
-  const { data, title } = props;
+  const { data, id, evaluate } = props;
+  const { good, bad, isevalute } = evaluate;
 
   function handleAnswer(str, code) {
     if (str) {
@@ -13,6 +15,7 @@ function ReferenceBook(props) {
         '&db=crfd"' +
         'target="_blank"' +
         'rel="noopener noreferrer"' +
+        'style="white-space:nowrap"' +
         '> 查看全文>>' +
         '</a>'
       );
@@ -24,7 +27,9 @@ function ReferenceBook(props) {
     <div className={styles.ReferenceBook}>
       <div
         className={styles.ReferenceBook_title}
-        dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(title) }}
+        dangerouslySetInnerHTML={{
+          __html: RestTools.translateToRed(data[0].TITLE || data[0].Title)
+        }}
       />
       {data.map((item) => (
         <div key={item.工具书编号}>
@@ -47,17 +52,23 @@ function ReferenceBook(props) {
               href={`http://gongjushu.cnki.net/refbook/${item.工具书编号}.html`}
               dangerouslySetInnerHTML={{ __html: '--' + RestTools.translateToRed(item.工具书名称) }}
             />
-            {/* <a
-              href={`http://192.168.103.24/qa.web/query/link?id=${item.工具书编号}&db=crfd`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.ReferenceBook_more}
-            >
-              查看全文>>
-            </a> */}
           </div>
         </div>
       ))}
+      <a
+        className={styles.ReferenceBook_more}
+        href={`http://192.168.103.24/qa.web/query/linknavi?kw=${RestTools.removeFlag(
+          data[0].TITLE || data[0].Title
+        )}&c=crfdsearch`}
+        target='_blank'
+        rel="noopener noreferrer"
+        dangerouslySetInnerHTML={{
+          __html: `更多关于${RestTools.removeFlag(data[0].TITLE || data[0].Title)}的工具书`
+        }}
+      ></a>
+      <div className={styles.ReferenceBook_evaluate}>
+        <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
+      </div>
     </div>
   );
 }
