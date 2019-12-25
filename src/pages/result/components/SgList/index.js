@@ -1,5 +1,5 @@
-import React from 'react';
-import { List, Popover } from 'antd';
+import React, { useState } from 'react';
+import { List, Popover, Modal } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
 import RestTools from '../../../../utils/RestTools';
@@ -9,6 +9,12 @@ function SgList(props) {
   const data = props.data;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
+  const [visible, setVisible] = useState(false);
+  const [initialText, setText] = useState('');
+  function showMore(text) {
+    setVisible(true);
+    setText(text);
+  }
   return (
     <div className={styles.SgList}>
       {keys.map((item) => (
@@ -46,37 +52,69 @@ function SgList(props) {
                   className={styles.fontStyle}
                   dangerouslySetInnerHTML={{
                     __html: RestTools.translateToRed(
-                      item.Data.answer.replace(/:/g, ':<br>')
+                      RestTools.formatText(item.Data.answer)
+                      // item.Data.answer.replace(/:/g, ':<br>')
                       // .replace(/;/g, ';<br>')
                     )
                   }}
                 />
-                <Popover
+                {/* <Popover
                   placement="right"
                   content={
                     <div
                       style={{
-                        width: 500,
+                        width: 400,
                         color: '#333',
                         letterSpacing: '2px',
                         lineHeight: '27.2px',
+                        marginLeft: 20,
                         textIndent: '2em'
                       }}
                       className={styles.fontStyle}
                       dangerouslySetInnerHTML={{
-                        __html: RestTools.translateToRed(item.Data.answer_context)
+                        __html: RestTools.translateToRed( RestTools.formatText(item.Data.answer_context))
                       }}
                     />
                   }
                   trigger="click"
                 >
                   <div className={styles.more}>显示更多>></div>
-                </Popover>
+                </Popover> */}
+
+                <div
+                  className={styles.more}
+                  onClick={showMore.bind(this, item.Data.answer_context)}
+                >
+                  显示更多>>
+                </div>
               </List.Item>
             )}
           />
         </div>
       ))}
+      <Modal
+        visible={visible}
+        footer={null}
+        style={{ top: 40,left: '29%' }}
+        onCancel={() => {
+          setVisible(false);
+        }}
+      >
+        <div
+          style={{
+            // width: 400,
+            paddingTop: 10,
+            color: '#333',
+            letterSpacing: '2px',
+            lineHeight: '27.2px',
+            textIndent: '2em'
+          }}
+          className={styles.fontStyle}
+          dangerouslySetInnerHTML={{
+            __html: RestTools.translateToRed(RestTools.formatText(initialText))
+          }}
+        />
+      </Modal>
     </div>
   );
 }

@@ -47,7 +47,7 @@ function Journal(props) {
         : null}
 
       <a
-        style={{ display: 'block', textAlign: 'right', color: '#999',fontSize: 12 }}
+        style={{ display: 'block', textAlign: 'right', color: '#999',fontSize: 14 }}
         href="http://navi.cnki.net/KNavi/All.html"
         target="_blank"
         rel="noopener noreferrer"

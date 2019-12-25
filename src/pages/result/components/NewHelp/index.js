@@ -1,10 +1,13 @@
-import { List } from 'antd';
+import { List, Icon } from 'antd';
 
 function NewHelp(props) {
   const { data } = props;
   return (
     <div>
-      <div style={{ fontSize: 20, fontWeight: 400, color: '#333' }}>新求助</div>
+      <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
+        <Icon type="question-circle" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
+        新求助
+      </div>
       <List
         itemLayout="vertical"
         dataSource={data.slice(0, 2)}
@@ -31,7 +34,13 @@ function NewHelp(props) {
                 {item.Content}
               </span>
               <span
-                style={{ display: 'inline-block', float: 'right', color: '#999', fontSize: 14 }}
+                style={{
+                  display: 'inline-block',
+                  float: 'right',
+                  color: '#999',
+                  fontSize: 12,
+                  lineHeight: '25px'
+                }}
               >
                 回答数：{item.CheckSum}
               </span>

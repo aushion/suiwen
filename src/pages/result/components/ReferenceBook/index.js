@@ -25,14 +25,20 @@ function ReferenceBook(props) {
 
   return (
     <div className={styles.ReferenceBook}>
-      <div
+      {/* <div
         className={styles.ReferenceBook_title}
         dangerouslySetInnerHTML={{
           __html: RestTools.translateToRed(data[0].TITLE || data[0].Title)
         }}
-      />
+      /> */}
       {data.map((item) => (
         <div key={item.工具书编号}>
+          <div
+            className={styles.ReferenceBook_title}
+            dangerouslySetInnerHTML={{
+              __html: RestTools.translateToRed(item.TITLE || item.Title)
+            }}
+          />
           <div
             key={item.工具书编号}
             className={styles.ReferenceBook_answer}
@@ -60,7 +66,7 @@ function ReferenceBook(props) {
         href={`http://192.168.103.24/qa.web/query/linknavi?kw=${RestTools.removeFlag(
           data[0].TITLE || data[0].Title
         )}&c=crfdsearch`}
-        target='_blank'
+        target="_blank"
         rel="noopener noreferrer"
         dangerouslySetInnerHTML={{
           __html: `更多关于${RestTools.removeFlag(data[0].TITLE || data[0].Title)}的工具书`

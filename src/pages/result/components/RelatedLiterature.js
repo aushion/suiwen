@@ -1,11 +1,11 @@
-import { List } from 'antd';
+import { List, Icon } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
 function RelatedLiteraure(props) {
   const { data, q } = props;
   return (
     <div>
-      <div style={{ fontSize: 20, fontWeight: 400, color: '#333' }}>相关文献</div>
+      <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}><Icon type="read" style={{fontSize: 16,marginRight: 6, color: '#f39b27'}} />相关文献</div>
       <List
         itemLayout="vertical"
         dataSource={data}
@@ -44,7 +44,7 @@ function RelatedLiteraure(props) {
         )}
       />
       <a
-        style={{ textAlign: 'right', display: 'block' }}
+        style={{ textAlign: 'right', display: 'block', color: '#999', fontSize: 12 }}
         href={`http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${q}&korder=0&sel=1`}
         target="_blank"
         rel="noopener noreferrer"

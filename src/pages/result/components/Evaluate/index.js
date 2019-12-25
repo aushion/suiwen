@@ -50,13 +50,27 @@ function Evaluate(props) {
       <span
         className={styles.Evaluate_action}
         onClick={clickLike.bind(this, 1)}
-        style={{ marginRight: 40, color: '#e54020' }}
+        style={
+          isevaluate === '1'
+            ? { marginRight: 40, color: '#e54020' }
+            : { marginRight: 40, color: '848484' }
+        }
       >
-        <Icon type="like" style={{ color: '#e54020' }}></Icon>
+        <Icon
+          type="like"
+          style={isevaluate === '1' ? { color: '#e54020' } : { color: '#848484' }}
+        ></Icon>
         {good}
       </span>
-      <span className={styles.Evaluate_action} onClick={clickLike.bind(this, 0)}>
-        <Icon type="dislike" style={{ color: '#848484' }}></Icon>
+      <span
+        style={isevaluate === '0' ? { color: '#e54020' } : { color: '#848484' }}
+        className={styles.Evaluate_action}
+        onClick={clickLike.bind(this, 0)}
+      >
+        <Icon
+          type="dislike"
+          style={isevaluate === '0' ? { color: '#e54020' } : { color: '#848484' }}
+        ></Icon>
         {bad}
       </span>
     </div>

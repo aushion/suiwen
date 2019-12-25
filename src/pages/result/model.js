@@ -86,7 +86,6 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        console.log(pathname, query);
         const userId = Cookies.get('cnki_qa_uuid');
         const { q } = query;
         if (pathname === '/result') {

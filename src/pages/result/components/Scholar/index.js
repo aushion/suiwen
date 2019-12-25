@@ -24,7 +24,9 @@ export default function Scholar(props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.学者名) }}
-                    href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${item.学者名}&code=${item.学者代码}`}
+                    href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${RestTools.removeFlag(
+                      item.学者名
+                    )}&code=${item.学者代码}`}
                   />
 
                   <span

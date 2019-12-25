@@ -37,8 +37,11 @@ function Home(props) {
     // autoplay: true,
     // speed: 1000,
     // autoplaySpeed: 3000,
-    beforeChange: (current, next) => {setActive(next<0?0:next)},
-    initialSlide: 0,
+    // beforeChange: (current, next) => {setActive(next<0?0:next)},
+    // onReInit: (e) =>{
+    //   skillSlider && skillSlider.slickGoTo(0, true)
+    // },
+    swipe: false,
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1
@@ -55,228 +58,229 @@ function Home(props) {
   function handleClickItem(item) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
     router.push('/result?q=' + item);
-    RestTools.setSession('q',item)
+    RestTools.setSession('q', item);
   }
 
   function clickTag(i) {
     setActive(i);
     // skillSlider.slickPause();
-    skillSlider.slickGoTo(i);
+    skillSlider.slickGoTo(i, true);
   }
 
   return (
     <div className={homeStyles.home}>
       <Spin spinning={loading}>
-      <div className={homeStyles.skill}>
-        <div className={homeStyles.left}>
-          <div className={homeStyles.title}>
-            <BlockTitle cnTitle="技能" enTitle="Skill" />
-          </div>
-          <div className={homeStyles.bg}></div>
-        </div>
-
-        <div className={homeStyles.right}>
-          <div className={homeStyles.right_top}>
-            {skillExamples.length
-              ? skillExamples.map((item, index) => (
-                  <span
-                    onClick={clickTag.bind(this, index)}
-                    style={activeTag === index ? activeStyle : null}
-                    key={item.name}
-                    className={homeStyles.tag}
-                  >
-                    {item.name}
-                  </span>
-                ))
-              : null}
+        <div className={homeStyles.skill}>
+          <div className={homeStyles.left}>
+            <div className={homeStyles.title}>
+              <BlockTitle cnTitle="技能" enTitle="Skill" />
+            </div>
+            <div className={homeStyles.bg}></div>
           </div>
 
-          <div className={homeStyles.right_bottom}>
-            <div className={homeStyles.wrapper}>
-              <Slider {...skillSettings} ref={(slider) => (skillSlider = slider)}>
-                {skillExamples.length
-                  ? skillExamples.map((item) => {
-                      return (
-                        <div key={item.name} className={homeStyles.section}>
-                          {item.data.map((item) => {
-                            return (
-                              <div
-                                key={item.qId}
-                                className={homeStyles.item_wrapper}
-                                onClick={handleClickItem.bind(this, item.q)}
-                              >
-                                <div className={homeStyles.item} style={{ marginBottom: 12 }}>
-                                  <div
-                                    className={homeStyles.icon}
-                                    style={{ background: '#FAC500' }}
-                                  >
-                                    Q
+          <div className={homeStyles.right}>
+            <div className={homeStyles.right_top}>
+              {skillExamples.length
+                ? skillExamples.map((item, index) => (
+                    <span
+                      onClick={clickTag.bind(this, index)}
+                      style={activeTag === index ? activeStyle : null}
+                      key={item.name}
+                      className={homeStyles.tag}
+                    >
+                      {item.name}
+                    </span>
+                  ))
+                : null}
+            </div>
+
+            <div className={homeStyles.right_bottom}>
+              <div className={homeStyles.wrapper}>
+                <Slider {...skillSettings} ref={(slider) => (skillSlider = slider)}>
+                  {skillExamples.length
+                    ? skillExamples.map((item) => {
+                        return (
+                          <div key={item.name} className={homeStyles.section}>
+                            {item.data.map((item) => {
+                              return (
+                                <div
+                                  key={item.qId}
+                                  className={homeStyles.item_wrapper}
+                                  onClick={handleClickItem.bind(this, item.q)}
+                                >
+                                  <div className={homeStyles.item} style={{ marginBottom: 12 }}>
+                                    <div
+                                      className={homeStyles.icon}
+                                      style={{ background: '#FAC500' }}
+                                    >
+                                      Q
+                                    </div>
+                                    <div
+                                      className={homeStyles.item_content}
+                                      style={{ color: '#23242A' }}
+                                    >
+                                      {item.q}
+                                    </div>
                                   </div>
-                                  <div
-                                    className={homeStyles.item_content}
-                                    style={{ color: '#23242A' }}
-                                  >
-                                    {item.q}
+                                  <div className={homeStyles.item}>
+                                    <div
+                                      className={homeStyles.icon}
+                                      style={{ background: '#4BC3FF' }}
+                                    >
+                                      A
+                                    </div>
+                                    <div
+                                      className={homeStyles.item_content}
+                                      title={RestTools.removeTag(item.answer)}
+                                      dangerouslySetInnerHTML={{ __html: item.answer }}
+                                    ></div>
                                   </div>
                                 </div>
-                                <div className={homeStyles.item}>
-                                  <div
-                                    className={homeStyles.icon}
-                                    style={{ background: '#4BC3FF' }}
-                                  >
-                                    A
-                                  </div>
-                                  <div
-                                    className={homeStyles.item_content}
-                                    title={RestTools.removeTag(item.answer)}
-                                    dangerouslySetInnerHTML={{ __html: item.answer }}
-                                  ></div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      );
-                    })
-                  : null}
-              </Slider>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className={homeStyles.special}>
-        <div className={homeStyles.special_top}>
-          <div className={homeStyles.title}>
-            <BlockTitle enTitle="Special" cnTitle="专题" />
-          </div>
-          <div className={homeStyles.modular}>
-            <span
-              onClick={() => {
-                setActiveSpecial('专题问答');
-                specialSlider.slickGoTo(0);
-              }}
-              style={activeSpecial === '专题问答' ? specialActiveStyle : null}
-              className={homeStyles.tag}
-            >
-              专题问答
-            </span>
-            <span
-              onClick={() => {
-                setActiveSpecial('热门求助');
-                specialSlider.slickGoTo(1);
-              }}
-              style={activeSpecial === '热门求助' ? specialActiveStyle : null}
-              className={homeStyles.tag}
-            >
-              热门求助
-            </span>
-          </div>
-        </div>
-
-        <div className={homeStyles.special_bottom}>
-          <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}>
-            <div className={homeStyles.special_questions}>
-              {specialQuestions.length ? (
-                <Row gutter={56}>
-                  <Col span={8} className={homeStyles.specialItem}>
-                    <div className={homeStyles.specialWrapper}>
-                      <div className={homeStyles.picture}>
-                        <img src={法律} alt="法律" />
-                      </div>
-                      <div className={homeStyles.title}>
-                        <span style={{ color: '#23242A', fontSize: 24 }}>法律</span>{' '}
-                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
-                      </div>
-                      <div className={homeStyles.questions}>
-                        {specialQuestions
-                          .filter((item) => item.name === '法律')[0]
-                          .data.slice(0, 2)
-                          .map((item) => {
-                            return <div key={item.qid}>{item.q}</div>;
-                          })}
-                      </div>
-                    </div>
-                  </Col>
-
-                  <Col span={8} className={homeStyles.specialItem}>
-                    <div className={homeStyles.specialWrapper}>
-                      <div className={homeStyles.picture}>
-                        <img src={医学} alt="医学" />
-                      </div>
-                      <div className={homeStyles.title}>
-                        <span style={{ color: '#23242A', fontSize: 24 }}>医学</span>{' '}
-                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Medicine</span>
-                      </div>
-                      <div className={homeStyles.questions}>
-                        {specialQuestions
-                          .filter((item) => item.name === '医学')[0]
-                          .data.slice(0, 2)
-                          .map((item) => {
-                            return <div key={item.qid}>{item.q}</div>;
-                          })}
-                      </div>
-                    </div>
-                  </Col>
-
-                  <Col span={8} className={homeStyles.specialItem}>
-                    <div className={homeStyles.specialWrapper}>
-                      <div className={homeStyles.picture}>
-                        <img src={农业} alt="农业" />
-                      </div>
-                      <div className={homeStyles.title}>
-                        <span style={{ color: '#23242A', fontSize: 24 }}>农业</span>{' '}
-                        <span style={{ color: '#C4C4C4', fontSize: 18 }}>Argiculture</span>
-                      </div>
-                      <div className={homeStyles.questions}>
-                        {specialQuestions
-                          .filter((item) => item.name === '农业')[0]
-                          .data.slice(0, 2)
-                          .map((item) => {
-                            return <div key={item.qid}>{item.q}</div>;
-                          })}
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-              ) : null}
-            </div>
-            <div className={homeStyles.special_help}>
-              <div className={homeStyles.help_left}></div>
-
-              <div className={homeStyles.help_right}>
-                <List
-                  grid={{ gutter: 16, column: 1 }}
-                  dataSource={newHelpList.slice(0, 5)}
-                  renderItem={(item) => (
-                    <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
-                      <div
-                        className={homeStyles.help_item}
-                        // onClick={handleClickItem.bind(this, item.Content)}
-                      >
-                        <span
-                         className={homeStyles.help_item_content}
-                        >
-                          {item.Content}
-                        </span>
-                        <span style={{display: 'inline-block', overflow: 'hidden', cursor: 'pointer'}}>我来回答</span>
-                         <Divider type="vertical" style={{top: '-5px'}}></Divider>
-                        <span style={{ float: 'right' }}>{item.Time}</span>
-                      </div>
-                    </List.Item>
-                  )}
-                />
-
-                <div className={homeStyles.help_more}>
-                  MORE>>
-                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })
+                    : null}
+                </Slider>
               </div>
             </div>
-          </Slider>
+          </div>
         </div>
-      </div>
+        <div className={homeStyles.special}>
+          <div className={homeStyles.special_top}>
+            <div className={homeStyles.title}>
+              <BlockTitle enTitle="Special" cnTitle="专题" />
+            </div>
+            <div className={homeStyles.modular}>
+              <span
+                onClick={() => {
+                  setActiveSpecial('专题问答');
+                  specialSlider.slickGoTo(0);
+                }}
+                style={activeSpecial === '专题问答' ? specialActiveStyle : null}
+                className={homeStyles.tag}
+              >
+                专题问答
+              </span>
+              <span
+                onClick={() => {
+                  setActiveSpecial('热门求助');
+                  specialSlider.slickGoTo(1);
+                }}
+                style={activeSpecial === '热门求助' ? specialActiveStyle : null}
+                className={homeStyles.tag}
+              >
+                热门求助
+              </span>
+            </div>
+          </div>
+
+          <div className={homeStyles.special_bottom}>
+            <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}>
+              <div className={homeStyles.special_questions}>
+                {specialQuestions.length ? (
+                  <Row gutter={56}>
+                    <Col span={8} className={homeStyles.specialItem}>
+                      <div className={homeStyles.specialWrapper}>
+                        <div className={homeStyles.picture}>
+                          <img src={法律} alt="法律" />
+                        </div>
+                        <div className={homeStyles.title}>
+                          <span style={{ color: '#23242A', fontSize: 24 }}>法律</span>{' '}
+                          <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
+                        </div>
+                        <div className={homeStyles.questions}>
+                          {specialQuestions
+                            .filter((item) => item.name === '法律')[0]
+                            .data.slice(0, 2)
+                            .map((item) => {
+                              return <div key={item.qid}>{item.q}</div>;
+                            })}
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col span={8} className={homeStyles.specialItem}>
+                      <div className={homeStyles.specialWrapper}>
+                        <div className={homeStyles.picture}>
+                          <img src={医学} alt="医学" />
+                        </div>
+                        <div className={homeStyles.title}>
+                          <span style={{ color: '#23242A', fontSize: 24 }}>医学</span>{' '}
+                          <span style={{ color: '#C4C4C4', fontSize: 18 }}>Medicine</span>
+                        </div>
+                        <div className={homeStyles.questions}>
+                          {specialQuestions
+                            .filter((item) => item.name === '医学')[0]
+                            .data.slice(0, 2)
+                            .map((item) => {
+                              return <div key={item.qid}>{item.q}</div>;
+                            })}
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col span={8} className={homeStyles.specialItem}>
+                      <div className={homeStyles.specialWrapper}>
+                        <div className={homeStyles.picture}>
+                          <img src={农业} alt="农业" />
+                        </div>
+                        <div className={homeStyles.title}>
+                          <span style={{ color: '#23242A', fontSize: 24 }}>农业</span>{' '}
+                          <span style={{ color: '#C4C4C4', fontSize: 18 }}>Argiculture</span>
+                        </div>
+                        <div className={homeStyles.questions}>
+                          {specialQuestions
+                            .filter((item) => item.name === '农业')[0]
+                            .data.slice(0, 2)
+                            .map((item) => {
+                              return <div key={item.qid}>{item.q}</div>;
+                            })}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
+              </div>
+              <div className={homeStyles.special_help}>
+                <div className={homeStyles.help_left}></div>
+
+                <div className={homeStyles.help_right}>
+                  <List
+                    grid={{ gutter: 16, column: 1 }}
+                    dataSource={newHelpList.slice(0, 5)}
+                    renderItem={(item) => (
+                      <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
+                        <div
+                          className={homeStyles.help_item}
+                          // onClick={handleClickItem.bind(this, item.Content)}
+                        >
+                          <span className={homeStyles.help_item_content}>{item.Content}</span>
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              overflow: 'hidden',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            我来回答
+                          </span>
+                          <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                          <span style={{ float: 'right' }}>{item.Time}</span>
+                        </div>
+                      </List.Item>
+                    )}
+                  />
+
+                  <div className={homeStyles.help_more}>MORE>></div>
+                </div>
+              </div>
+            </Slider>
+          </div>
+        </div>
       </Spin>
     </div>
-
   );
 }
 

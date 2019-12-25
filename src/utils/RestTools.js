@@ -15,7 +15,7 @@ export default {
   getInputTips(value) {
     return new Promise(function(reslove, reject) {
       fetch(
-        `http://qa.cnki.net/qa.sug/su.ashx?action=getsmarttips&p=0.5842204899447518&kw=${value}&td=1570516528856`,
+        `http://qa.cnki.net/qa.sug/su.ashx?action=getsmarttips&p=0.5842204899447518&kw=${value}&td=1570516528856`
       )
         .then(function(response) {
           return response.text();
@@ -24,14 +24,14 @@ export default {
           const tipsData = JSON.parse(myJson.replace(/var oJson = /g, '')).results;
           reslove(tipsData);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log('err:', err); //网络请求失败返回的数据
           reject(err);
         });
     });
   },
-  removeTag(str){
-    return str.replace(/<p>/g,'').replace(/<\/p>/g,'')
+  removeTag(str) {
+    return str.replace(/<p>/g, '').replace(/<\/p>/g, '');
   },
   setStorageInput(key, value) {
     let inputRecords = JSON.parse(window.localStorage.getItem(key)) || [];
@@ -51,10 +51,50 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return str.replace(/###/g, '<span style="color:red">').replace(/\$\$\$/g, '</span>').replace(/&nbsp;/g,'');
+    return str
+      .replace(/###/g, '<span style="color:red">')
+      .replace(/\$\$\$/g, '</span>')
+      .replace(/&nbsp;/g, '');
   },
-  removeFlag(str){
-    return str.replace(/###/g, '').replace(/\$\$\$/g, '')
+  formatText(sgText) {
+    sgText = sgText.replace(/;;/g, ';');
+    sgText = sgText.replace(/；；/g, '；');
+    sgText = sgText.replace(/::/g, ':');
+    sgText = sgText.replace(/：：/g, '：');
+
+    if (sgText.startsWith('\t\t\n')) {
+      sgText = sgText.replace(/\t\t\n/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+    }
+    let str = '';
+    let lastPos = 0;
+    for (let i = 0; i < sgText.length; i++) {
+      str += sgText[i];
+      switch (sgText[i]) {
+        case ':':
+        case ': ':
+          if (i > 0) {
+            str += '</p><p>';
+          }
+          lastPos = i;
+          break;
+        case ';':
+        case '; ':
+          if (i > 0) {
+            if (i > lastPos + 15) {
+              str += '</p><p>';
+            }
+          }
+          lastPos = i;
+          break;
+        default:
+          break;
+      }
+    }
+    return str;
+  },
+
+  removeFlag(str) {
+    return str.replace(/###/g, '').replace(/\$\$\$/g, '');
   },
   completeUrl(str) {
     return str
@@ -85,7 +125,7 @@ export default {
   setLocalStorage(key, value) {
     window.localStorage.setItem(key, JSON.stringify(value));
   },
-  setSession(key,value) {
+  setSession(key, value) {
     window.sessionStorage.setItem(key, JSON.stringify(value));
   },
   getSession(key) {
