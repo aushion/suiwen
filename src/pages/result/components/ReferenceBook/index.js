@@ -9,7 +9,7 @@ function ReferenceBook(props) {
   function handleAnswer(str, code) {
     if (str) {
       return (
-        str.substr(0, 200) +
+        str.substr(0, 200).replace(/<{1}[^<>]*>{1}/g,'') +
         '<a href="http://192.168.103.24/qa.web/query/link?id=' +
         code +
         '&db=crfd"' +

@@ -3,6 +3,7 @@
   min-height: 100%;
   padding-bottom: 50px;
   box-sizing: border-box;
+
   .header {
     background:linear-gradient(0deg,rgba(0,138,255,1),rgba(0,205,255,1));
     height: 84px;
@@ -91,6 +92,25 @@
               color: #333;
             }
           }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .header{
+      .inputGroup{
+        .logo{
+          // display: none;
+          margin-left: 1%;
+        }
+        .title{
+          display: none;
+        }
+        .inputWrap{
+          position: absolute;
+          left: 10%;
+          width: 40%;
         }
       }
     }

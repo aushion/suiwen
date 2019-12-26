@@ -28,7 +28,7 @@ function BasicLayout(props) {
 
   function goLogin() {
     console.log('goLogin');
-    window.Ecp_ShowLoginLayer2('-90px', '42px');
+    // window.Ecp_ShowLoginLayer2('-60px', '42px');
   }
 
   function logout() {
@@ -48,6 +48,7 @@ function BasicLayout(props) {
           <div className={styles.inputWrap}>
             <SmartInput
               question={q}
+              needTip
               onClickEnter={handleClickEnterOrItem}
               onClickItem={handleClickEnterOrItem}
             />

@@ -1,12 +1,12 @@
 import React from 'react';
 import { List } from 'antd';
-import './inputTips.less';
+import styles from './inputTips.less';
 
 const InputTips = (props) => {
     const { data, keyword } = props;
-
+    console.log(7,data)
     return data.length ? (
-      <div className="tip-list">
+      <div className={styles["tip-list"]}>
         <List
           dataSource={data.slice(0,10)}
           renderItem={(item, index) => (
@@ -16,7 +16,7 @@ const InputTips = (props) => {
               onMouseDown={e => e.preventDefault()}
             >
               <div
-                className="list-item"
+                className={styles["list-item"]}
                 dangerouslySetInnerHTML={{__html: item.value.replace(keyword, `<Strong style="color:red">${keyword}</Strong>`)}}
               />
             </List.Item>
@@ -24,6 +24,6 @@ const InputTips = (props) => {
         />
       </div>
     ) : null;
-  
+
 }
 export default InputTips;

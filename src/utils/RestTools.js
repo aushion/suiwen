@@ -1,3 +1,4 @@
+import request from './request';
 export default {
   createUid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -13,22 +14,27 @@ export default {
   maxLength: 38,
   HISTORYKEY: 'SUIWEN_RECORD',
   getInputTips(value) {
-    return new Promise(function(reslove, reject) {
-      fetch(
-        `http://qa.cnki.net/qa.sug/su.ashx?action=getsmarttips&p=0.5842204899447518&kw=${value}&td=1570516528856`
-      )
-        .then(function(response) {
-          return response.text();
-        })
-        .then(function(myJson) {
-          const tipsData = JSON.parse(myJson.replace(/var oJson = /g, '')).results;
-          reslove(tipsData);
-        })
-        .catch((err) => {
-          console.log('err:', err); //网络请求失败返回的数据
-          reject(err);
-        });
+    return request.get(`${process.env.apiUrl}/sug`, {
+      params: {
+        s: value
+      }
     });
+    // return new Promise(function(reslove, reject) {
+    //   fetch(
+    //     `${process.env.apiUrl}/qa.api/sug?q=${value}`
+    //   )
+    //     .then(function(response) {
+    //       return response.text();
+    //     })
+    //     .then(function(myJson) {
+    //       const tipsData = JSON.parse(myJson.replace(/var oJson = /g, '')).results;
+    //       reslove(tipsData);
+    //     })
+    //     .catch((err) => {
+    //       console.log('err:', err); //网络请求失败返回的数据
+    //       reject(err);
+    //     });
+    // });
   },
   removeTag(str) {
     return str.replace(/<p>/g, '').replace(/<\/p>/g, '');
@@ -118,6 +124,11 @@ export default {
       .replace(/\n/g, '<br/>')
       .replace(/src="/g, 'src="http://refbook.img.cnki.net')
       .replace(/src='/g, "src='http://refbook.img.cnki.net");
+  },
+  status: {
+    '0': '状态：未审核',
+    '1': '',
+    '-1': '状态：审核未通过',
   },
   getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key));

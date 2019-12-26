@@ -1,16 +1,16 @@
 // ref: https://umijs.org/config/
 export default {
-  treeShaking: true,
+  // treeShaking: true,
   define: {
-    "process.env.apiUrl": 'http://192.168.103.25:8080/sw.api',
-    "process.env.UMI_ENV": process.env.UMI_ENV,
-    "process.env.apiUrl_help": 'http://192.168.103.24/qa.fb/api'
+    'process.env.apiUrl': 'http://192.168.103.25:8080/sw.api',
+    'process.env.UMI_ENV': process.env.UMI_ENV,
+    'process.env.apiUrl_help': 'http://192.168.103.24/qa.fb/api'
   },
-  base:'/',
-  publicPath: "./",
+  base: '/',
+  publicPath: './',
   history: 'hash',
-  targets:{
-    ie: 9,
+  targets: {
+    ie: 9
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
@@ -20,15 +20,15 @@ export default {
         antd: true,
         dva: true,
         dynamicImport: {
-          webpackChunkName: true,
+          webpackChunkName: true
         },
         title: '知网随问',
         // links: [{ rel: 'stylesheet', href: 'http://132.cnki.net/TopLogin/Content/TopLogin.css' }],
         scripts: [
           {
             src:
-           // 'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000'
-               'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000',
+              'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://local.cnki.net'
+            //  'http://132.cnki.net/TopLogin/api/loginapi/get?type=2&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
           },
           {
             content: `try {
@@ -46,8 +46,8 @@ export default {
                   }
                   catch (e) { }
               }
-             `,
-          },
+             `
+          }
         ],
 
         routes: {
@@ -56,11 +56,10 @@ export default {
             /services\//,
             /model\.(t|j)sx?$/,
             /service\.(t|j)sx?$/,
-            /components\//,
-          ],
-        },
-      },
-    ],
-
-  ],
+            /components\//
+          ]
+        }
+      }
+    ]
+  ]
 };

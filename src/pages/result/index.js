@@ -9,10 +9,20 @@ import Journal from './components/Journal';
 import Literature from './components/Literature';
 import Scholar from './components/Scholar';
 import NewHelp from './components/NewHelp';
+import CommunityAnswer from './components/CommunityAnswer';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 function ResultPage(props) {
-  const { sgData, faqData, repositoryData, q, relatedData, loading, helpList } = props;
+  const {
+    sgData,
+    faqData,
+    repositoryData,
+    q,
+    relatedData,
+    loading,
+    helpList,
+    communityAnswer
+  } = props;
   const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号);
   const JournalData = repositoryData.filter((item) => item.domain === '期刊');
   const literatureData = repositoryData.filter((item) => item.domain === '文献');
@@ -38,6 +48,7 @@ function ResultPage(props) {
                 ))}
               </div>
             ) : null}
+            {communityAnswer ? <CommunityAnswer data = {communityAnswer}></CommunityAnswer> : null}
             {scholarData.length
               ? scholarData.map((item) => (
                   <Scholar

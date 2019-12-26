@@ -15,12 +15,12 @@ function HomeLayout(props) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
     value && router.push(`/result?q=${value}`);
     RestTools.setSession('q', value);
-
   }
 
   function goLogin() {
-    console.log('goLogin');
-    window.Ecp_ShowLoginLayer2('-90px', '42px');
+    // window.Ecp_ShowLoginLayer2('-90px', '42px');
+    // window.Ecp_ShowLoginLayer2('-10px','120px')
+    // request({url: `http://132.cnki.net/TopLogin/api/loginapi/Login?callback=jQuery111307605174265725956_1577339722053&userName=chenaosheng&pwd=cnki12399&isAutoLogin=false&p=0&_=1577339722059`,method: 'get'})
   }
 
   function logout() {
@@ -36,9 +36,15 @@ function HomeLayout(props) {
         <div className={styles.login}>
           您好! 欢迎 {username || '游客'}
           {username ? null : (
-            <button className={styles.login_btn} onClick={goLogin}>
+            <a
+              className={styles.login_btn}
+              // onClick={goLogin}
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000"
+            >
               登录
-            </button>
+            </a>
           )}
           {username ? null : (
             <button className={styles.register_btn}>
@@ -60,6 +66,7 @@ function HomeLayout(props) {
 
         <div className={styles.inputWrap}>
           <SmartInput
+            needTip
             question={props.q}
             onClickEnter={handleClickEnterOrItem}
             onClickItem={handleClickEnterOrItem}
@@ -75,7 +82,11 @@ function HomeLayout(props) {
             </a>
           </li>
           <li className={styles.footer_item}>
-            <a href="http://www.cnki.net/other/gonggao/bqsm.htm" target="_blank" rel="noopener noreferrer">
+            <a
+              href="http://www.cnki.net/other/gonggao/bqsm.htm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               版权公告
             </a>
           </li>
@@ -95,7 +106,11 @@ function HomeLayout(props) {
             </a>
           </li>
           <li className={styles.footer_item}>
-            <a href="http://my.cnki.net/CNKIRecharging/czzx.html" target="_blank" rel="noopener noreferrer">
+            <a
+              href="http://my.cnki.net/CNKIRecharging/czzx.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               充值中心
             </a>
           </li>

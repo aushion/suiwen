@@ -33,3 +33,9 @@ export function setEvaluate(payload) {
 export function getHotHelpList(payload) {
   return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=12')
 }
+
+export function getCommunityAnswer(payload) {
+  return request.get('/getCommunityAnswer', {
+    params: { ...payload }
+  })
+}

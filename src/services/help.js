@@ -1,5 +1,6 @@
 import request from '../utils/request';
-const serverurl = 'http://kc.cnki.net/fb/api/';
+// const serverurl = 'http://kc.cnki.net/fb/api/';
+const serverurl = 'http://192.168.103.24/qa.fb/api/'
 export default {
   getNewHelpList() {
     return request.get(serverurl + '/GetNewQuestion?size=6');
@@ -27,7 +28,23 @@ export default {
         `/GetMyAnswerQuestion?size=${size}&index=${index}&searchKey=${searchKey}&domain=${domain}&uid=${uid}`,
     );
   },
+  getAnwser(payload) {
+    const { size = 10, index = 1, QID, uid = '' } = payload;
+    return request.get(serverurl + `GetAnswer?size=${size}&index=${index}&QID=${QID}&uid=${uid}`);
+  },
 
+  getUserFAQ(payload) {
+    const { question } = payload;
+    return request.get(serverurl + `/getUserFAQ?q=${question}`);
+  },
+
+  setAnswer(payload) {
+    return request.post(serverurl + `SetAnswer`, { data: payload });
+  },
+
+  setQanswer(payload) {
+    return request.post(serverurl + 'SetQanswer', {data: payload})
+  },
   getDomain() {
     return request.get(serverurl + 'Domain');
   },

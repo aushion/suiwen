@@ -27,12 +27,14 @@ const SmartInput = (props) => {
     const currentValue = e.target.value;
     setValue(e.target.value);
     setRecord(e.target.value ? false : true);
+    setTips([])
     if (needTip) {
       clearTimeout(timer);
       timer = setTimeout(() => {
         RestTools.getInputTips(currentValue)
           .then((res) => {
-            setTips(res);
+            const result = res.data.result;
+            if (result) setTips(result);
           })
           .catch((err) => {
             console.log(err);
@@ -98,13 +100,15 @@ const SmartInput = (props) => {
             if (props.needTip) {
               RestTools.getInputTips(value)
                 .then((res) => {
-                  setTips(res);
+                  const result = res.data.result;
+                  if (result) setTips(result);
                 })
                 .catch((err) => {
                   console.log(err);
                 });
             }
           } else {
+            setTips([])
             setRecord(true);
           }
         }}

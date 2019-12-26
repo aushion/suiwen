@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { List, Popover, Modal } from 'antd';
+import { List, Modal } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
 import RestTools from '../../../../utils/RestTools';
@@ -33,7 +33,7 @@ function SgList(props) {
                   >
                     {groupByData[item][0].Data.title}
                   </a>{' '}
-                  <span>{groupByData[item][0].Data.additional_info.FieldValue.年 || ''}</span>
+                  <span>{groupByData[item][0].Data.additional_info.FieldValue?groupByData[item][0].Data.additional_info.FieldValue.年 : ''}</span>
                 </div>
                 {/* 点赞模块预留 */}
                 <div className={styles.sg_evaluate}>

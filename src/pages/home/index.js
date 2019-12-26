@@ -11,12 +11,12 @@ import RestTools from '../../utils/RestTools';
 import 法律 from '../../assets/法律.png';
 import 农业 from '../../assets/农业.png';
 import 医学 from '../../assets/医学.png';
+import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
 function Home(props) {
-  const { skillExamples, specialQuestions, newHelpList, loading } = props;
-
+  const { skillExamples , specialQuestions, newHelpList, loading } = props;
   const [activeTag, setActive] = useState(0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
   const activeStyle = {
@@ -38,9 +38,9 @@ function Home(props) {
     // speed: 1000,
     // autoplaySpeed: 3000,
     // beforeChange: (current, next) => {setActive(next<0?0:next)},
-    // onReInit: (e) =>{
-    //   skillSlider && skillSlider.slickGoTo(0, true)
-    // },
+    onInit: (e) =>{
+      skillSlider && skillSlider.slickGoTo(1, true)
+    },
     swipe: false,
     arrows: false,
     slidesToShow: 1,
@@ -256,7 +256,7 @@ function Home(props) {
                           className={homeStyles.help_item}
                           // onClick={handleClickItem.bind(this, item.Content)}
                         >
-                          <span className={homeStyles.help_item_content}>{item.Content}</span>
+                          <Link to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`} className={homeStyles.help_item_content}>{item.Content}</Link>
                           <span
                             style={{
                               display: 'inline-block',
@@ -273,7 +273,9 @@ function Home(props) {
                     )}
                   />
 
-                  <div className={homeStyles.help_more}>MORE>></div>
+                  <div className={homeStyles.help_more} onClick={() => {
+                    router.push('/help/newHelp')
+                  }}>MORE>></div>
                 </div>
               </div>
             </Slider>

@@ -1,4 +1,5 @@
 import { getDomainQuestions, getTopicQuestions, getHotHelpList } from './service/home';
+import RestTools from '../../utils/RestTools';
 
 export default {
   namespace: 'home',
@@ -24,6 +25,7 @@ export default {
             skillExamples: newArray
           }
         });
+        RestTools.setSession('skillExamples', newArray);
       }
     },
 
@@ -54,7 +56,6 @@ export default {
             newHelpList: data
           }
         });
-
       }
     }
   },
@@ -62,9 +63,16 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
+        const skillExamples = RestTools.getSession('skillExamples');
         if (pathname === '/home') {
           dispatch({ type: 'gloabl/setQuestion', payload: { q: '' } });
-          dispatch({ type: 'getDomainQuestions' });
+          if (!skillExamples) {
+            dispatch({ type: 'getDomainQuestions' });
+          }else{
+            dispatch({type: 'save', payload: {
+              skillExamples
+            }})
+          }
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHotHelpList' });
         }

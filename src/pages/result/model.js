@@ -4,7 +4,8 @@ import {
   getSG,
   getRelevantByAnswer,
   setEvaluate,
-  getHotHelpList
+  getHotHelpList,
+  getCommunityAnswer
 } from './service/result';
 import Cookies from 'js-cookie';
 
@@ -16,7 +17,8 @@ export default {
     answerData: [],
     faqData: [], //faq数据
     repositoryData: [], //知识库数据,
-    helpList: []
+    helpList: [],
+    communityAnswer: null
   },
   reducers: {
     save(state, { payload }) {
@@ -81,13 +83,25 @@ export default {
           }
         });
       }
+    },
+    *getCommunityAnswer({ payload }, { call, put }) {
+      const res = yield call(getCommunityAnswer, payload);
+      const result = res.data.result;
+      if (result) {
+        yield put({
+          type: 'save',
+          payload: {
+            communityAnswer: result
+          }
+        });
+      }
     }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const userId = Cookies.get('cnki_qa_uuid');
-        const { q } = query;
+        let { q } = query;
         if (pathname === '/result') {
           //重置问题
           dispatch({
@@ -105,7 +119,8 @@ export default {
               faqData: [],
               repositoryData: [], //知识库数据
               relatedData: [],
-              helpList: []
+              helpList: [],
+              communityAnswer: null
             }
           });
           //获取数据
@@ -120,6 +135,10 @@ export default {
           dispatch({
             type: 'getRelevantByAnswer',
             payload: { q: q, pageStart: 1, pageCount: 10 }
+          });
+          dispatch({
+            type: 'getCommunityAnswer',
+            payload: { q: q.replace(/？/g,'') }
           });
           dispatch({
             type: 'getHotHelpList'
