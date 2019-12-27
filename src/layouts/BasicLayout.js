@@ -11,7 +11,7 @@ const { Header, Footer, Content } = Layout;
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
 
-  let { q = RestTools.getSession('q') } = query;
+  let { q =  RestTools.getSession('q') } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
 
@@ -54,7 +54,7 @@ function BasicLayout(props) {
             />
           </div>
           <div className={styles.login}>
-            您好! 欢迎 {username || '游客'}
+            <span className={styles.tips}>您好! 欢迎 {username || '游客'}</span>
             {username ? null : (
               <button className={styles.login_btn} onClick={goLogin}>
                 登录

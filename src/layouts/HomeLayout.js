@@ -36,15 +36,18 @@ function HomeLayout(props) {
         <div className={styles.login}>
           您好! 欢迎 {username || '游客'}
           {username ? null : (
-            <a
+            <button
               className={styles.login_btn}
               // onClick={goLogin}
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000"
             >
-              登录
-            </a>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000"
+              >
+                登录
+              </a>
+            </button>
           )}
           {username ? null : (
             <button className={styles.register_btn}>

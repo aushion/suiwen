@@ -38,7 +38,7 @@ export default {
                 function LoginSucess(data) {
                   console.log('logindata',data)
                   window.localStorage.setItem('userInfo',JSON.stringify(data))
-                  window.location.reload()
+                  window.location.href = window.location.href.split("?")[0];
                 }
                 function Logout() {
                   try {

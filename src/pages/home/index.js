@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Row, Col, Divider } from 'antd';
+import { Spin, List, Row, Col, Divider, message, Icon } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -15,8 +15,12 @@ import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
+message.config({
+  maxCount: 1,
+  top: 50
+});
 function Home(props) {
-  const { skillExamples , specialQuestions, newHelpList, loading } = props;
+  const { skillExamples, specialQuestions, newHelpList, loading } = props;
   const [activeTag, setActive] = useState(0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
   const activeStyle = {
@@ -38,13 +42,12 @@ function Home(props) {
     // speed: 1000,
     // autoplaySpeed: 3000,
     // beforeChange: (current, next) => {setActive(next<0?0:next)},
-    onInit: (e) =>{
-      skillSlider && skillSlider.slickGoTo(1, true)
-    },
+
+    initialSlide: 0,
     swipe: false,
-    arrows: false,
-    slidesToShow: 1,
-    slidesToScroll: 1
+    arrows: false
+    // slidesToShow: 1,
+    // slidesToScroll: 1
   };
 
   const specialSettings = {
@@ -66,6 +69,49 @@ function Home(props) {
     // skillSlider.slickPause();
     skillSlider.slickGoTo(i, true);
   }
+
+  function building() {
+    message.warn({
+      content: '正在建设中...',
+      icon: <Icon type="smile" />
+    });
+  }
+  const slideList = skillExamples.length
+    ? skillExamples.map((item) => {
+        return (
+          <div key={item.name} className={homeStyles.section}>
+            {item.data.map((item) => {
+              return (
+                <div
+                  key={item.qId}
+                  className={homeStyles.item_wrapper}
+                  onClick={handleClickItem.bind(this, item.q)}
+                >
+                  <div className={homeStyles.item} style={{ marginBottom: 12 }}>
+                    <div className={homeStyles.icon} style={{ background: '#FAC500' }}>
+                      Q
+                    </div>
+                    <div className={homeStyles.item_content} style={{ color: '#23242A' }}>
+                      {item.q}
+                    </div>
+                  </div>
+                  <div className={homeStyles.item}>
+                    <div className={homeStyles.icon} style={{ background: '#4BC3FF' }}>
+                      A
+                    </div>
+                    <div
+                      className={homeStyles.item_content}
+                      title={RestTools.removeTag(item.answer)}
+                      dangerouslySetInnerHTML={{ __html: item.answer }}
+                    ></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })
+    : null;
 
   return (
     <div className={homeStyles.home}>
@@ -97,51 +143,7 @@ function Home(props) {
             <div className={homeStyles.right_bottom}>
               <div className={homeStyles.wrapper}>
                 <Slider {...skillSettings} ref={(slider) => (skillSlider = slider)}>
-                  {skillExamples.length
-                    ? skillExamples.map((item) => {
-                        return (
-                          <div key={item.name} className={homeStyles.section}>
-                            {item.data.map((item) => {
-                              return (
-                                <div
-                                  key={item.qId}
-                                  className={homeStyles.item_wrapper}
-                                  onClick={handleClickItem.bind(this, item.q)}
-                                >
-                                  <div className={homeStyles.item} style={{ marginBottom: 12 }}>
-                                    <div
-                                      className={homeStyles.icon}
-                                      style={{ background: '#FAC500' }}
-                                    >
-                                      Q
-                                    </div>
-                                    <div
-                                      className={homeStyles.item_content}
-                                      style={{ color: '#23242A' }}
-                                    >
-                                      {item.q}
-                                    </div>
-                                  </div>
-                                  <div className={homeStyles.item}>
-                                    <div
-                                      className={homeStyles.icon}
-                                      style={{ background: '#4BC3FF' }}
-                                    >
-                                      A
-                                    </div>
-                                    <div
-                                      className={homeStyles.item_content}
-                                      title={RestTools.removeTag(item.answer)}
-                                      dangerouslySetInnerHTML={{ __html: item.answer }}
-                                    ></div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        );
-                      })
-                    : null}
+                  {slideList}
                 </Slider>
               </div>
             </div>
@@ -195,7 +197,17 @@ function Home(props) {
                             .filter((item) => item.name === '法律')[0]
                             .data.slice(0, 2)
                             .map((item) => {
-                              return <div key={item.qid}>{item.q}</div>;
+                              return (
+                                <a
+                                  className={homeStyles.questions_item}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  href={`http://qa2.cnki.net/jcyqa/result?q=${item.q}`}
+                                  key={item.qid}
+                                >
+                                  {item.q}
+                                </a>
+                              );
                             })}
                         </div>
                       </div>
@@ -215,7 +227,15 @@ function Home(props) {
                             .filter((item) => item.name === '医学')[0]
                             .data.slice(0, 2)
                             .map((item) => {
-                              return <div key={item.qid}>{item.q}</div>;
+                              return (
+                                <a
+                                  className={homeStyles.questions_item}
+                                  onClick={building}
+                                  key={item.qid}
+                                >
+                                  {item.q}
+                                </a>
+                              );
                             })}
                         </div>
                       </div>
@@ -235,7 +255,15 @@ function Home(props) {
                             .filter((item) => item.name === '农业')[0]
                             .data.slice(0, 2)
                             .map((item) => {
-                              return <div key={item.qid}>{item.q}</div>;
+                              return (
+                                <a
+                                  className={homeStyles.questions_item}
+                                  onClick={building}
+                                  key={item.qid}
+                                >
+                                  {item.q}
+                                </a>
+                              );
                             })}
                         </div>
                       </div>
@@ -254,9 +282,17 @@ function Home(props) {
                       <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
                         <div
                           className={homeStyles.help_item}
+                          onClick={() => {
+                            RestTools.setSession('q', item.Content);
+                          }}
                           // onClick={handleClickItem.bind(this, item.Content)}
                         >
-                          <Link to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`} className={homeStyles.help_item_content}>{item.Content}</Link>
+                          <Link
+                            to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                            className={homeStyles.help_item_content}
+                          >
+                            {item.Content}
+                          </Link>
                           <span
                             style={{
                               display: 'inline-block',
@@ -273,9 +309,14 @@ function Home(props) {
                     )}
                   />
 
-                  <div className={homeStyles.help_more} onClick={() => {
-                    router.push('/help/newHelp')
-                  }}>MORE>></div>
+                  <div
+                    className={homeStyles.help_more}
+                    onClick={() => {
+                      router.push('/help/newHelp');
+                    }}
+                  >
+                    MORE>>
+                  </div>
                 </div>
               </div>
             </Slider>

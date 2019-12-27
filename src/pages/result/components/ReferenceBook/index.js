@@ -3,13 +3,13 @@ import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 function ReferenceBook(props) {
-  const { data, id, evaluate } = props;
+  const { data, id, evaluate, title } = props;
   const { good, bad, isevalute } = evaluate;
 
   function handleAnswer(str, code) {
     if (str) {
       return (
-        str.substr(0, 200).replace(/<{1}[^<>]*>{1}/g,'') +
+        str.replace(/<{1}[^<>]*>{1}/g, '').substr(0, 200) +
         '<a href="http://192.168.103.24/qa.web/query/link?id=' +
         code +
         '&db=crfd"' +
@@ -36,14 +36,14 @@ function ReferenceBook(props) {
           <div
             className={styles.ReferenceBook_title}
             dangerouslySetInnerHTML={{
-              __html: RestTools.translateToRed(item.TITLE || item.Title)
+              __html: RestTools.translateToRed(item.TITLE || item.Title || '-')
             }}
           />
           <div
             key={item.工具书编号}
             className={styles.ReferenceBook_answer}
             dangerouslySetInnerHTML={{
-              __html: RestTools.translateToRed(
+              __html: RestTools.removeFlag(
                 RestTools.completeToolsBook(
                   handleAnswer(item.Answer || item.介绍 || '-', item.工具书编号)
                 )
@@ -64,12 +64,12 @@ function ReferenceBook(props) {
       <a
         className={styles.ReferenceBook_more}
         href={`http://192.168.103.24/qa.web/query/linknavi?kw=${RestTools.removeFlag(
-          data[0].TITLE || data[0].Title
+          data[0].TITLE || data[0].Title || '-'
         )}&c=crfdsearch`}
         target="_blank"
         rel="noopener noreferrer"
         dangerouslySetInnerHTML={{
-          __html: `更多关于${RestTools.removeFlag(data[0].TITLE || data[0].Title)}的工具书`
+          __html: `更多“${RestTools.removeFlag(title || '-')}”的工具书`
         }}
       ></a>
       <div className={styles.ReferenceBook_evaluate}>

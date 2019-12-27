@@ -48,6 +48,7 @@ export default {
             type: 'getDomain',
           });
 
+
           const uid = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid');

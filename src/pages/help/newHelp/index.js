@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider } from 'antd';
+import { Divider, Empty } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import DomainTags from '../components/DomainTags';
@@ -52,7 +52,7 @@ function NewHelp(props) {
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
               handleClickItem={handleClickItem}
             />
-          ) : null}
+          ) : <Empty />}
         </div>
       </div>
     </div>

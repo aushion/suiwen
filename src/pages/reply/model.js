@@ -87,12 +87,14 @@ export default {
           const params = query;
           const uid = RestTools.getLocalStorage('userInfo') ? RestTools.getLocalStorage('userInfo').UserName : '';
           const { QID } = params;
+
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
           } else {
             dispatch({ type: 'getUserFAQ', payload: params });
           }
           // dispatch({ type: 'getDomains' });
+
         }
       });
     },

@@ -39,11 +39,11 @@ export default {
   },
 
   setAnswer(payload) {
-    return request.post(serverurl + `SetAnswer`, { data: payload });
+    return request.post(serverurl + `SetAnswer`, {  ...payload });
   },
 
   setQanswer(payload) {
-    return request.post(serverurl + 'SetQanswer', {data: payload})
+    return request.post(serverurl + 'SetQanswer', {...payload})
   },
   getDomain() {
     return request.get(serverurl + 'Domain');

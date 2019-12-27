@@ -121,7 +121,7 @@ export default {
 
   completeToolsBook(str) {
     return str
-      .replace(/\n/g, '<br/>')
+      // .replace(/\n/g, '<br/>')
       .replace(/src="/g, 'src="http://refbook.img.cnki.net')
       .replace(/src='/g, "src='http://refbook.img.cnki.net");
   },

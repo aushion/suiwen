@@ -1,4 +1,6 @@
 import { List, Icon } from 'antd';
+import Link from 'umi/link';
+import RestTools from '../../../../utils/RestTools';
 
 function NewHelp(props) {
   const { data } = props;
@@ -18,8 +20,9 @@ function NewHelp(props) {
                 width: '100%',
                 fontSize: 12
               }}
+              onClick={() => {RestTools.setSession('q', item.Content)}}
             >
-              <span
+              <Link
                 title={item.Content}
                 style={{
                   display: 'inline-block',
@@ -28,11 +31,13 @@ function NewHelp(props) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                   marginRight: 10,
-                  fontSize: 14
+                  fontSize: 14,
+                  color: '#848484'
                 }}
+                to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
               >
                 {item.Content}
-              </span>
+              </Link>
               <span
                 style={{
                   display: 'inline-block',
