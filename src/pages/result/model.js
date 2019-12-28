@@ -126,19 +126,19 @@ export default {
           //获取数据
           dispatch({
             type: 'getAnswer',
-            payload: { q: q, pageStart: 1, pageCount: 10, userId }
+            payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
           });
           dispatch({
             type: 'getSG',
-            payload: { q: q, pageStart: 1, pageCount: 10, userId }
+            payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
           });
           dispatch({
             type: 'getRelevantByAnswer',
-            payload: { q: q, pageStart: 1, pageCount: 10 }
+            payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
           });
           dispatch({
             type: 'getCommunityAnswer',
-            payload: { q: q.replace(/？/g,'') }
+            payload: { q: encodeURIComponent(q.replace(/？/g,'')) }
           });
           dispatch({
             type: 'getHotHelpList'

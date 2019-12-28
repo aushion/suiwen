@@ -229,6 +229,9 @@ function Home(props) {
                             .map((item) => {
                               return (
                                 <a
+                                  href={`http://qa.cnki.net/web/SQuery?q=${item.q}&r=query&domain=%E5%8C%BB%E5%AD%A6`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
                                   onClick={building}
                                   key={item.qid}
@@ -257,6 +260,9 @@ function Home(props) {
                             .map((item) => {
                               return (
                                 <a
+                                  href={`http://qa.cnki.net/web/SQuery?q=${item.q}&r=query&domain=农业`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
                                   onClick={building}
                                   key={item.qid}

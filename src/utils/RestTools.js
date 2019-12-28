@@ -16,7 +16,7 @@ export default {
   getInputTips(value) {
     return request.get(`${process.env.apiUrl}/sug`, {
       params: {
-        s: value
+        s: encodeURIComponent(value)
       }
     });
     // return new Promise(function(reslove, reject) {

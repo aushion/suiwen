@@ -85,6 +85,7 @@ function ResultPage(props) {
                   <ReferenceBook
                     key={item.id}
                     id={item.id}
+                    domain={item.domain}
                     evaluate={item.evaluate}
                     title={item.title}
                     data={item.dataNode}

@@ -3,7 +3,7 @@ import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 function ReferenceBook(props) {
-  const { data, id, evaluate, title } = props;
+  const { data, id, evaluate, title, domain } = props;
   const { good, bad, isevalute } = evaluate;
 
   function handleAnswer(str, code) {
@@ -63,13 +63,22 @@ function ReferenceBook(props) {
       ))}
       <a
         className={styles.ReferenceBook_more}
-        href={`http://192.168.103.24/qa.web/query/linknavi?kw=${RestTools.removeFlag(
-          data[0].TITLE || data[0].Title || '-'
-        )}&c=crfdsearch`}
+        href={
+          domain === '翻译'
+            ? `http://dict.cnki.net/dict_result.aspx?searchword=${RestTools.removeFlag(
+                data[0].TITLE || data[0].Title || '-'
+              )}`
+            : `http://192.168.103.24/qa.web/query/linknavi?kw=${RestTools.removeFlag(
+                data[0].TITLE || data[0].Title || '-'
+              )}&c=crfdsearch`
+        }
         target="_blank"
         rel="noopener noreferrer"
         dangerouslySetInnerHTML={{
-          __html: `更多“${RestTools.removeFlag(title || '-')}”的工具书`
+          __html:
+            domain === '翻译'
+              ? 'CNKI翻译助手'
+              : `更多“${RestTools.removeFlag(title || '-')}”的工具书`
         }}
       ></a>
       <div className={styles.ReferenceBook_evaluate}>
