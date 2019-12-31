@@ -1,7 +1,7 @@
 import helpServer from '../../services/help';
 import qaServer from '../../services/qa';
 import RestTools from '../../utils/RestTools';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { message } from 'antd';
 import router from 'umi/router';
 

@@ -17,11 +17,11 @@ function HomeLayout(props) {
     RestTools.setSession('q', value);
   }
 
-  function goLogin() {
-    // window.Ecp_ShowLoginLayer2('-90px', '42px');
-    // window.Ecp_ShowLoginLayer2('-10px','120px')
-    // request({url: `http://132.cnki.net/TopLogin/api/loginapi/Login?callback=jQuery111307605174265725956_1577339722053&userName=chenaosheng&pwd=cnki12399&isAutoLogin=false&p=0&_=1577339722059`,method: 'get'})
-  }
+  // function goLogin() {
+  // window.Ecp_ShowLoginLayer2('-90px', '42px');
+  // window.Ecp_ShowLoginLayer2('-10px','120px')
+  // request({url: `http://132.cnki.net/TopLogin/api/loginapi/Login?callback=jQuery111307605174265725956_1577339722053&userName=chenaosheng&pwd=cnki12399&isAutoLogin=false&p=0&_=1577339722059`,method: 'get'})
+  // }
 
   function logout() {
     localStorage.setItem('userInfo', null);
@@ -36,29 +36,21 @@ function HomeLayout(props) {
         <div className={styles.login}>
           您好! 欢迎 {username || '游客'}
           {username ? null : (
-            <button
+            <a
               className={styles.login_btn}
-              // onClick={goLogin}
+               href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa2.cnki.net/sw.web"
+              // href={`https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000`}
             >
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000"
-              >
-                登录
-              </a>
-            </button>
+              登录
+            </a>
           )}
           {username ? null : (
-            <button className={styles.register_btn}>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://local.cnki.net:8000"
-              >
-                注册
-              </a>
-            </button>
+            <a
+              className={styles.register_btn}
+              href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://qa2.cnki.net/sw.web"
+            >
+              注册
+            </a>
           )}
           {username ? (
             <button onClick={logout} className={styles.login_btn}>

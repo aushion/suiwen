@@ -45,7 +45,7 @@ function ReferenceBook(props) {
             dangerouslySetInnerHTML={{
               __html: RestTools.removeFlag(
                 RestTools.completeToolsBook(
-                  handleAnswer(item.Answer || item.介绍 || '-', item.工具书编号)
+                  handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)
                 )
               )
             }}
@@ -55,8 +55,8 @@ function ReferenceBook(props) {
               className={styles.ReferenceBook_name}
               target="_blank"
               rel="noopener noreferrer"
-              href={`http://gongjushu.cnki.net/refbook/${item.工具书编号}.html`}
-              dangerouslySetInnerHTML={{ __html: '--' + RestTools.translateToRed(item.工具书名称) }}
+              href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(item.工具书编号)}.html`}
+              dangerouslySetInnerHTML={{ __html: '--' + RestTools.removeFlag(item.工具书名称) }}
             />
           </div>
         </div>

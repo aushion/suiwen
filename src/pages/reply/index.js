@@ -1,22 +1,22 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Spin, message, Select } from 'antd';
+import { Divider, Icon, Button, Form, Spin, message } from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
 import Link from 'umi/link';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import RestTools from '../../utils/RestTools';
 import 'braft-editor/dist/index.css';
 import HelpMenu from '../help/components/HelpMenu';
 import replyStyle from './index.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
+// const { Option } = Select;
 function Reply(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
   const userInfo = RestTools.getLocalStorage('userInfo')? RestTools.getLocalStorage('userInfo') : null;
-  const { domain } = params;
-  const { total, answerList, loading, domains } = props;
+  // const { domain } = params;
+  const { total, answerList, loading } = props;
   const { getFieldDecorator } = props.form;
   const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);

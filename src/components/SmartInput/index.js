@@ -91,6 +91,7 @@ const SmartInput = (props) => {
       <Input
         placeholder="请输入问题"
         size="large"
+        autoComplete='off'
         allowClear
         value={value}
         onChange={handleChange}

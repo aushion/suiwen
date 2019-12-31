@@ -6,6 +6,12 @@ export function getAnswer(payload) {
   });
 }
 
+export function getAnswerByDomain(payload){
+  return request.get('/getAnswerByDomain',{
+    params: { ...payload }
+  })
+}
+
 export function getSG(payload) {
   return request.get('/getSGData', {
     params: { ...payload }

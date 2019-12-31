@@ -11,7 +11,7 @@ const { Header, Footer, Content } = Layout;
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
 
-  let { q =  RestTools.getSession('q') } = query;
+  let { q = RestTools.getSession('q') } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
 
@@ -27,7 +27,7 @@ function BasicLayout(props) {
   }
 
   function goLogin() {
-    console.log('goLogin');
+    // console.log('goLogin');
     // window.Ecp_ShowLoginLayer2('-60px', '42px');
   }
 
@@ -56,20 +56,20 @@ function BasicLayout(props) {
           <div className={styles.login}>
             <span className={styles.tips}>您好! 欢迎 {username || '游客'}</span>
             {username ? null : (
-              <button className={styles.login_btn} onClick={goLogin}>
+              <a
+                className={styles.login_btn}
+                href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa2.cnki.net/sw.web"
+              >
                 登录
-              </button>
+              </a>
             )}
             {username ? null : (
-              <button className={styles.register_btn}>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://local.cnki.net:8000"
-                >
-                  注册
-                </a>
-              </button>
+              <a
+                className={styles.register_btn}
+                href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://qa2.cnki.net/sw.web"
+              >
+                注册
+              </a>
             )}
             {username ? (
               <button onClick={logout} className={styles.login_btn}>

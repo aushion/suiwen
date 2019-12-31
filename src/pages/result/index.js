@@ -10,6 +10,7 @@ import Literature from './components/Literature';
 import Scholar from './components/Scholar';
 import NewHelp from './components/NewHelp';
 import CommunityAnswer from './components/CommunityAnswer';
+import Graphic from './components/Graphic';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 function ResultPage(props) {
@@ -19,22 +20,28 @@ function ResultPage(props) {
     repositoryData,
     q,
     relatedData,
+    dispatch,
     loading,
     helpList,
     communityAnswer
   } = props;
   const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号);
+  const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识');
   const JournalData = repositoryData.filter((item) => item.domain === '期刊');
   const literatureData = repositoryData.filter((item) => item.domain === '文献');
   const scholarData = repositoryData.filter((item) => item.domain === '学者');
+  const communityAnswerLength = communityAnswer ? 1 : 0;
 
   const resultLength =
+    cnkizhishi.length +
     sgData.length +
     faqData.length +
     referenceBookData.length +
     JournalData.length +
     literatureData.length +
-    scholarData.length;
+    scholarData.length +
+    communityAnswerLength;
+
   return (
     <div className={styles.result}>
       <Spin spinning={loading} indicator={antIcon}>
@@ -48,7 +55,10 @@ function ResultPage(props) {
                 ))}
               </div>
             ) : null}
-            {communityAnswer ? <CommunityAnswer data = {communityAnswer}></CommunityAnswer> : null}
+            {cnkizhishi.length
+              ? cnkizhishi.map((item) => <Graphic key={item.id} data={item.dataNode}></Graphic>)
+              : null}
+            {communityAnswer ? <CommunityAnswer data={communityAnswer}></CommunityAnswer> : null}
             {scholarData.length
               ? scholarData.map((item) => (
                   <Scholar
@@ -65,6 +75,10 @@ function ResultPage(props) {
                   <Literature
                     key={item.id}
                     id={item.id}
+                    q={q}
+                    domain={item.domain}
+                    dispatch={dispatch}
+                    pagination={item.pagination}
                     evaluate={item.evaluate}
                     data={item.dataNode}
                   />

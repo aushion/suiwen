@@ -57,22 +57,22 @@ export default {
           if (current === '/help/newHelp') {
             dispatch({
               type: 'getNewQuestions',
-              payload: { domain: '全部' },
+              payload: { domain: encodeURIComponent('全部') },
             });
           } else if (current === '/help/hotHelp') {
             dispatch({
               type: 'getHotQuestions',
-              payload: { domain: '全部' },
+              payload: { domain: encodeURIComponent('全部') },
             });
           } else if (current === '/help/myHelp') {
             dispatch({
               type: 'getNewQuestions',
-              payload: { domain: '全部', uid },
+              payload: { domain: encodeURIComponent('全部'), uid },
             });
           } else if (current === '/help/myReply') {
             dispatch({
               type: 'getMyAnswerQuestions',
-              payload: { domain: '全部', uid },
+              payload: { domain: encodeURIComponent('全部'), uid },
             });
           }
         }

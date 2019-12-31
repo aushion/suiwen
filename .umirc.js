@@ -1,6 +1,6 @@
 // ref: https://umijs.org/config/
 export default {
-  // treeShaking: true,
+  treeShaking: true,
   define: {
     'process.env.apiUrl': 'http://192.168.103.25:8080/sw.api',
     'process.env.UMI_ENV': process.env.UMI_ENV,
@@ -27,8 +27,10 @@ export default {
         scripts: [
           {
             src:
-              'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://local.cnki.net'
-            //  'http://132.cnki.net/TopLogin/api/loginapi/get?type=2&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
+             'http://login.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://qa2.cnki.net/sw.web'
+            //  'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://local.cnki.net:8000'
+
+            // 'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
           },
           {
             content: `try {

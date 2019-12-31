@@ -10,30 +10,30 @@ function HelpList(props) {
     domain,
     handleSearchOrChangePage,
     loading,
-    handleClickItem,
+    handleClickItem
   } = props;
 
-  return (
+  return data ? (
     <div style={{ padding: '10px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 16 }}>
-          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data.total}</span>条
+          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
         </div>
         <div>
           <Search
             style={{ width: 200 }}
-            onSearch={value => {
+            onSearch={(value) => {
               const payload = { domain, searchKey: value };
               handleSearchOrChangePage(payload);
             }}
-          ></Search>
+          />
         </div>
       </div>
       <List
         loading={loading}
         dataSource={data.list}
         pagination={
-          data.total > size
+          data.total && data.total > size
             ? {
                 total: data.total,
                 pageSize: size,
@@ -41,11 +41,11 @@ function HelpList(props) {
                 onChange: function(page, pageSize) {
                   const payload = { size: pageSize, index: page, domain: domain };
                   handleSearchOrChangePage(payload);
-                },
+                }
               }
             : null
         }
-        renderItem={item => {
+        renderItem={(item) => {
           return (
             <List.Item
               style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 0' }}
@@ -57,7 +57,7 @@ function HelpList(props) {
                   cursor: 'pointer',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  whiteSpace: 'nowrap'
                 }}
                 onClick={() => handleClickItem(item)}
               >
@@ -77,9 +77,9 @@ function HelpList(props) {
             </List.Item>
           );
         }}
-      ></List>
+      />
     </div>
-  );
+  ) : null;
 }
 
 export default HelpList;

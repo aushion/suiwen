@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "start": "umi dev",
-    "build": "umi build",
-    "test": "umi test",
+    "build": "cross-env UMI_ENV=prod umi build",
+    "test": "cross-env UMI_ENV=test umi dev",
     "lint": "eslint --ext .js src mock tests",
     "precommit": "lint-staged"
   },

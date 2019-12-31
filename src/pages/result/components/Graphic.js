@@ -1,21 +1,29 @@
-import { connect } from 'dva';
 import RestTools from '../../../utils/RestTools';
 
 function Graphic(props) {
-  const { 介绍, TITLE, 工具书名称 } = props.dataNode;
+  const { data } = props;
   return (
-    <div>
-      <div dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(TITLE) }} />
-      <div dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(介绍) }}></div>
+    <div
+      style={{
+        boxShadow: '#a5a5a5 0 0 10.8px 0',
+        padding: 20,
+        marginBottom: 20,
+        color: '#333',
+        letterSpacing: '2px',
+        lineHeight: '27.2px',
+        textIndent: '2em'
+      }}
+    >
+      {data.map((item) => {
+        return (
+          <div
+            key={item.ID}
+            dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.介绍) }}
+          ></div>
+        );
+      })}
     </div>
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    ...state.result,
-    ...state.global,
-    loading: state.loading.models.result
-  };
-}
-export default connect(mapStateToProps)(Graphic);
+export default Graphic;

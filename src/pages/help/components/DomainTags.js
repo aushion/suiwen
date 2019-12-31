@@ -4,19 +4,19 @@ import { Tag } from 'antd';
 function DomainTags(props) {
   const checkedStyle = {
     background: '#1890ff',
-    color: '#fff',
+    color: '#fff'
   };
   const normalStyle = {
-    cursor: 'pointer',
+    cursor: 'pointer'
   };
   const { data, onClickTag, localDomain } = props;
-  const localChecked = data.map(item => item._domainname).indexOf(localDomain);
+  const localChecked = data.map((item) => item._domainname).indexOf(localDomain);
   const [checked, setChecked] = useState(localChecked || -1);
   useEffect(() => {
     setChecked(localChecked);
   }, [localChecked]);
   function handleClick(index, item) {
-    const payload = { domain: item, size: 10, index: 1 };
+    const payload = { domain: encodeURIComponent(item), size: 10, index: 1 };
     setChecked(index);
     onClickTag(payload);
   }

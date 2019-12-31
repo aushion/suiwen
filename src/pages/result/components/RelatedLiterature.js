@@ -5,7 +5,10 @@ function RelatedLiteraure(props) {
   const { data, q } = props;
   return (
     <div>
-      <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}><Icon type="read" style={{fontSize: 16,marginRight: 6, color: '#f39b27'}} />相关文献</div>
+      <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
+        <Icon type="read" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
+        相关文献
+      </div>
       <List
         itemLayout="vertical"
         dataSource={data}
@@ -22,6 +25,8 @@ function RelatedLiteraure(props) {
                   whiteSpace: 'nowrap'
                 }}
                 title={RestTools.removeFlag(item.TITLE)}
+                target="_blank"
+                rel="noopener noreferrer"
                 href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.文件名}`}
                 dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.TITLE) }}
               />

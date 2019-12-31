@@ -28,7 +28,7 @@ function FAQ(props) {
         <div
           className={styles.text}
           style={{ color: '#5C5D5E' }}
-          dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(answer) }}
+          dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(RestTools.completeToolsBook(answer)) }}
         />
         <div className={styles.faq_evaluate}>
           <Evaluate

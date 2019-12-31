@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Row, Col, Divider, message, Icon } from 'antd';
+import { Spin, List, Row, Col, Divider, message } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -15,6 +15,7 @@ import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
+const HISTORYKEY = RestTools.HISTORYKEY
 message.config({
   maxCount: 1,
   top: 50
@@ -62,6 +63,7 @@ function Home(props) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
     router.push('/result?q=' + item);
     RestTools.setSession('q', item);
+    RestTools.setStorageInput(HISTORYKEY,item)
   }
 
   function clickTag(i) {
@@ -70,12 +72,12 @@ function Home(props) {
     skillSlider.slickGoTo(i, true);
   }
 
-  function building() {
-    message.warn({
-      content: '正在建设中...',
-      icon: <Icon type="smile" />
-    });
-  }
+  // function building() {
+  //   message.warn({
+  //     content: '正在建设中...',
+  //     icon: <Icon type="smile" />
+  //   });
+  // }
   const slideList = skillExamples.length
     ? skillExamples.map((item) => {
         return (
@@ -233,7 +235,7 @@ function Home(props) {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
-                                  onClick={building}
+                                  // onClick={building}
                                   key={item.qid}
                                 >
                                   {item.q}
@@ -264,7 +266,7 @@ function Home(props) {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
-                                  onClick={building}
+                                  // onClick={building}
                                   key={item.qid}
                                 >
                                   {item.q}

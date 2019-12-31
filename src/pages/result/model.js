@@ -5,9 +5,11 @@ import {
   getRelevantByAnswer,
   setEvaluate,
   getHotHelpList,
-  getCommunityAnswer
+  getCommunityAnswer,
+  getAnswerByDomain
 } from './service/result';
 import Cookies from 'js-cookie';
+import RestTools from '../../utils/RestTools';
 
 export default {
   namespace: 'result',
@@ -35,6 +37,7 @@ export default {
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         const repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
+
         yield put({
           type: 'save',
           payload: {
@@ -43,8 +46,23 @@ export default {
             repositoryData: repositoryData
           }
         });
+        //数据持久化
+        RestTools.setSession('answer',{
+          nswerData: data.result.metaList,
+          faqData: faqData,
+          repositoryData: repositoryData
+        })
       }
     },
+
+    *getAnswerByDomain({ payload }, { call }) {
+  const res = yield call(getAnswerByDomain, payload);
+  const { data } = res;
+  if (data.result) {
+    console.log(data);
+  }
+},
+
     *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
       const { data } = res;

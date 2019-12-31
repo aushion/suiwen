@@ -62,6 +62,7 @@ export default {
       .replace(/\$\$\$/g, '</span>')
       .replace(/&nbsp;/g, '');
   },
+
   formatText(sgText) {
     sgText = sgText.replace(/;;/g, ';');
     sgText = sgText.replace(/；；/g, '；');
@@ -71,6 +72,7 @@ export default {
     if (sgText.startsWith('\t\t\n')) {
       sgText = sgText.replace(/\t\t\n/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
     }
+
     let str = '';
     let lastPos = 0;
     for (let i = 0; i < sgText.length; i++) {
@@ -78,7 +80,7 @@ export default {
       switch (sgText[i]) {
         case ':':
         case ': ':
-          if (i > 0) {
+          if (i > 0 && /\u4E00-\u9FA5/.test(str.substr(0, i)[0])) {
             str += '</p><p>';
           }
           lastPos = i;
@@ -120,15 +122,17 @@ export default {
   },
 
   completeToolsBook(str) {
-    return str
-      // .replace(/\n/g, '<br/>')
-      .replace(/src="/g, 'src="http://refbook.img.cnki.net')
-      .replace(/src='/g, "src='http://refbook.img.cnki.net");
+    return (
+      str
+        // .replace(/\n/g, '<br/>')
+        .replace(/src="/g, 'src="http://refbook.img.cnki.net')
+        .replace(/src='/g, "src='http://refbook.img.cnki.net")
+    );
   },
   status: {
     '0': '状态：未审核',
     '1': '',
-    '-1': '状态：审核未通过',
+    '-1': '状态：审核未通过'
   },
   getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key));

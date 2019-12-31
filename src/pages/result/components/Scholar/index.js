@@ -87,6 +87,8 @@ export default function Scholar(props) {
       />
       <a
         className={styles.Scholar_more}
+        target='_blank'
+        rel="noopener noreferrer"
         href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&dn=${title}`}
       >
         CNKI学者成果库

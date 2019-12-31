@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Empty } from 'antd';
+import { Divider, Empty , Spin} from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import DomainTags from '../components/DomainTags';
@@ -12,6 +12,7 @@ function NewHelp(props) {
   const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props;
   //点击tag响应事件
   function handleClickTag(payload) {
+    console.log('payload',payload)
     dispatch({
       type: 'help/getNewQuestions',
       payload: payload,
@@ -41,7 +42,7 @@ function NewHelp(props) {
         ) : null}
         <div>
           <Divider style={{ margin: 0 }} />
-          {newHelpData ? (
+          {/* <Spin spinning={loading}> */}
             <HelpList
               data={newHelpData}
               domain={domain}
@@ -52,7 +53,8 @@ function NewHelp(props) {
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
               handleClickItem={handleClickItem}
             />
-          ) : <Empty />}
+            {/* </Spin> */}
+          {/* ) : <Empty />} */}
         </div>
       </div>
     </div>
