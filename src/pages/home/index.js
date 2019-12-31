@@ -15,14 +15,14 @@ import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
-const HISTORYKEY = RestTools.HISTORYKEY
+const HISTORYKEY = RestTools.HISTORYKEY;
 message.config({
   maxCount: 1,
   top: 50
 });
 function Home(props) {
   const { skillExamples, specialQuestions, newHelpList, loading } = props;
-  const [activeTag, setActive] = useState(0);
+  const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
   const activeStyle = {
     backgroundColor: '#29A7F3',
@@ -39,16 +39,9 @@ function Home(props) {
   };
   const skillSettings = {
     infinite: true,
-    // autoplay: true,
-    // speed: 1000,
-    // autoplaySpeed: 3000,
-    // beforeChange: (current, next) => {setActive(next<0?0:next)},
-
-    initialSlide: 0,
+    initialSlide: RestTools.getSession('tagIndex') || 0,
     swipe: false,
     arrows: false
-    // slidesToShow: 1,
-    // slidesToScroll: 1
   };
 
   const specialSettings = {
@@ -63,12 +56,12 @@ function Home(props) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
     router.push('/result?q=' + item);
     RestTools.setSession('q', item);
-    RestTools.setStorageInput(HISTORYKEY,item)
+    RestTools.setStorageInput(HISTORYKEY, item);
   }
 
   function clickTag(i) {
     setActive(i);
-    // skillSlider.slickPause();
+    RestTools.setSession('tagIndex',i) //存储索引，解决页面回退，索引丢失的问题
     skillSlider.slickGoTo(i, true);
   }
 

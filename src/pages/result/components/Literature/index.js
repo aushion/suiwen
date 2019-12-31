@@ -84,7 +84,7 @@ export default function Literature(props) {
               dangerouslySetInnerHTML={{
                 __html: RestTools.translateToRed(item.题名)
               }}
-              href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.文件名}`}
+              href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.sourceDb[item.来源数据库]}&filename=${item.文件名}`}
               target="_blank"
               rel="noopener noreferrer"
             />
@@ -95,9 +95,9 @@ export default function Literature(props) {
             <span>{item.来源数据库}</span>
             <span>{item.出版日期}</span>
             <span
-              title={RestTools.translateToRed(item.作者)}
+              title={RestTools.translateToRed(item.作者|| '-')}
               style={Object.assign({}, spanStyle, { width: '10%' })}
-              dangerouslySetInnerHTML={{__html:RestTools.translateToRed(item.作者)}}
+              dangerouslySetInnerHTML={{__html:RestTools.translateToRed(item.作者 || '-')}}
             />
           </List.Item>
         )}

@@ -7,7 +7,8 @@ function DomainTags(props) {
     color: '#fff'
   };
   const normalStyle = {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginBottom: 10,
   };
   const { data, onClickTag, localDomain } = props;
   const localChecked = data.map((item) => item._domainname).indexOf(localDomain);

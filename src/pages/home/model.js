@@ -62,11 +62,12 @@ export default {
 
   subscriptions: {
     listenHistory({ dispatch, history }) {
+     const {action} = history;
       return history.listen(({ pathname, query }) => {
         const skillExamples = RestTools.getSession('skillExamples');
         if (pathname === '/home') {
           dispatch({ type: 'gloabl/setQuestion', payload: { q: '' } });
-          if (!skillExamples) {
+          if (!skillExamples && action === 'PUSH') {
             dispatch({ type: 'getDomainQuestions' });
           }else{
             dispatch({type: 'save', payload: {

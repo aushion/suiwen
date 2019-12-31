@@ -1,14 +1,19 @@
 // import styles from './index.css';
-import BasicLayout from './BasicLayout'
-import HomeLayout from './HomeLayout'
-
-export default function (props) {
-  if(props.location.pathname === '/home'){
-    return <HomeLayout>{props.children}</HomeLayout>
+import { ConfigProvider } from 'antd';
+import BasicLayout from './BasicLayout';
+import HomeLayout from './HomeLayout';
+import zhCN from 'antd/es/locale/zh_CN';
+export default function(props) {
+  if (props.location.pathname === '/home') {
+    return (
+      <ConfigProvider locale={zhCN}>
+        <HomeLayout>{props.children}</HomeLayout>
+      </ConfigProvider>
+    );
   }
   return (
-    <BasicLayout>{props.children}</BasicLayout>
+    <ConfigProvider locale={zhCN}>
+      <BasicLayout>{props.children}</BasicLayout>
+    </ConfigProvider>
   );
 }
-
-

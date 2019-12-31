@@ -62,7 +62,13 @@ export default {
       .replace(/\$\$\$/g, '</span>')
       .replace(/&nbsp;/g, '');
   },
-
+  sourceDb: {
+    博士: 'CDFD',
+    硕士: 'CMFD',
+    期刊: 'CJFD',
+    中国会议: 'CPFD',
+    报纸: 'CCND',
+  },
   formatText(sgText) {
     sgText = sgText.replace(/;;/g, ';');
     sgText = sgText.replace(/；；/g, '；');
