@@ -3,7 +3,7 @@ import { Spin, Row, Col, Icon, Divider } from 'antd';
 import styles from './index.less';
 import SgList from './components/SgList';
 import FAQ from './components/FAQ';
-import RelatedLiterature from './components/RelatedLiterature';
+import RelatedList from './components/RelatedList';
 import ReferenceBook from './components/ReferenceBook';
 import Journal from './components/Journal';
 import Literature from './components/Literature';
@@ -25,11 +25,17 @@ function ResultPage(props) {
     helpList,
     communityAnswer
   } = props;
+
   const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号);
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识');
   const JournalData = repositoryData.filter((item) => item.domain === '期刊');
   const literatureData = repositoryData.filter((item) => item.domain === '文献');
   const scholarData = repositoryData.filter((item) => item.domain === '学者');
+  const relatedLiterature =
+    relatedData.length && relatedData.filter((item) => item.domain === '文献'); //相关文献
+  const relatedPatent =
+    relatedData.length && relatedData.filter((item) => item.domain === '专利'); //相关专利
+
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
   const resultLength =
@@ -109,8 +115,31 @@ function ResultPage(props) {
             {sgData.length ? <SgList data={sgData} /> : null}
           </Col>
           <Col span={6} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
-            {relatedData.length ? <RelatedLiterature q={q} data={relatedData} /> : null}
-            {relatedData.length && helpList.length ? <Divider dashed></Divider> : null}
+            {relatedLiterature.length ? (
+              <RelatedList
+                q={q}
+                extra={{
+                  time: '出版日期',
+                  author: '作者',
+                  source: '来源'
+                }}
+                title="相关文献"
+                focus="题名"
+                data={relatedLiterature[0].dataNode}
+              />
+            ) : null}
+            {relatedData.length && helpList.length ? <Divider dashed /> : null}
+            {relatedPatent.length ? (
+              <RelatedList
+                q={q}
+                extra={{ time: '发表时间', author: '发明人' }}
+                title="相关专利"
+                focus="专利名"
+                data={relatedPatent[0].dataNode}
+              />
+            ) : null}
+            {relatedData.length && helpList.length ? <Divider dashed /> : null}
+
             {helpList.length ? <NewHelp data={helpList} /> : null}
           </Col>
         </Row>

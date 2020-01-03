@@ -47,21 +47,21 @@ export default {
           }
         });
         //数据持久化
-        RestTools.setSession('answer',{
+        RestTools.setSession('answer', {
           nswerData: data.result.metaList,
           faqData: faqData,
           repositoryData: repositoryData
-        })
+        });
       }
     },
 
     *getAnswerByDomain({ payload }, { call }) {
-  const res = yield call(getAnswerByDomain, payload);
-  const { data } = res;
-  if (data.result) {
-    console.log(data);
-  }
-},
+      const res = yield call(getAnswerByDomain, payload);
+      const { data } = res;
+      if (data.result) {
+        console.log(data);
+      }
+    },
 
     *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
@@ -82,7 +82,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            relatedData: data.result.metaList.filter((item) => item.domain === '文献')[0].dataNode
+            relatedData: data.result.metaList
           }
         });
       }
@@ -156,7 +156,7 @@ export default {
           });
           dispatch({
             type: 'getCommunityAnswer',
-            payload: { q: encodeURIComponent(q.replace(/？/g,'')) }
+            payload: { q: encodeURIComponent(q.replace(/？/g, '')) }
           });
           dispatch({
             type: 'getHotHelpList'

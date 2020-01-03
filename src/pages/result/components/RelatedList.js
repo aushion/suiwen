@@ -2,12 +2,27 @@ import { List, Icon } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
 function RelatedLiteraure(props) {
-  const { data, q } = props;
+  const { data, q, title, focus, extra } = props;
+  function outLink(type, filename) {
+    if (type === '相关文献') {
+      return `http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${filename}`;
+    } else {
+      return `http://dbpub.cnki.net/grid2008/dbpub/detail.aspx?dbcode=SCPD&dbname=SCPD&filename=${filename}`;
+    }
+  }
+
+  function moreLink(type, q) {
+    if (type === '相关文献') {
+      return `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${q}&korder=0&sel=1`;
+    } else {
+      return `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCPD&kw=${q}&korder=0&sel=1`;
+    }
+  }
   return (
     <div>
       <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
         <Icon type="read" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
-        相关文献
+        {title}
       </div>
       <List
         itemLayout="vertical"
@@ -24,11 +39,11 @@ function RelatedLiteraure(props) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap'
                 }}
-                title={RestTools.removeFlag(item.TITLE)}
+                title={RestTools.removeFlag(item[focus])}
                 target="_blank"
                 rel="noopener noreferrer"
-                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.文件名}`}
-                dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.TITLE) }}
+                href={outLink(title, item.文件名)}
+                dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item[focus]) }}
               />
             </div>
             <div
@@ -41,20 +56,20 @@ function RelatedLiteraure(props) {
                 whiteSpace: 'nowrap'
               }}
             >
-              <span style={{ display: 'inline-block', marginRight: 10 }}>{item.作者}</span>
-              <span style={{ display: 'inline-block', marginRight: 10 }}>{item.来源}</span>
-              <span>{item.出版日期}</span>
+              <span style={{ display: 'inline-block', marginRight: 10 }}>{item[extra.author]}</span>
+              <span style={{ display: 'inline-block', marginRight: 10 }}>{item[extra.source]}</span>
+              <span>{item[extra.time]}</span>
             </div>
           </List.Item>
         )}
       />
       <a
         style={{ textAlign: 'right', display: 'block', color: '#999', fontSize: 12 }}
-        href={`http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${q}&korder=0&sel=1`}
+        href={moreLink(title,q)}
         target="_blank"
         rel="noopener noreferrer"
       >
-        更多文献>>
+        更多>>
       </a>
     </div>
   );

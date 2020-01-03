@@ -197,7 +197,7 @@ function Home(props) {
                                   className={homeStyles.questions_item}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  href={`http://qa2.cnki.net/jcyqa/result?q=${item.q}`}
+                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(item.q)}&r=query&domain=${encodeURIComponent('法律')}`}
                                   key={item.qid}
                                 >
                                   {item.q}
@@ -224,7 +224,7 @@ function Home(props) {
                             .map((item) => {
                               return (
                                 <a
-                                  href={`http://qa.cnki.net/web/SQuery?q=${item.q}&r=query&domain=%E5%8C%BB%E5%AD%A6`}
+                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(item.q)}&r=query&domain=${encodeURIComponent('医学')}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
@@ -255,7 +255,7 @@ function Home(props) {
                             .map((item) => {
                               return (
                                 <a
-                                  href={`http://qa.cnki.net/web/SQuery?q=${item.q}&r=query&domain=农业`}
+                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(item.q)}&r=query&domain=${encodeURIComponent('农业')}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
