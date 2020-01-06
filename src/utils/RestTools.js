@@ -58,6 +58,8 @@ export default {
   },
   translateToRed(str) {
     return str
+      .replace(/<[^p]/g,' < ')
+      .replace(/>[^p]/g,' > ')
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
       .replace(/&nbsp;/g, '');
@@ -70,6 +72,8 @@ export default {
     报纸: 'CCND',
   },
   formatText(sgText) {
+    sgText = sgText.replace(/<\sp>/g,'');
+    sgText = sgText.replace(/<\s\/p>/g,'');
     sgText = sgText.replace(/;;/g, ';');
     sgText = sgText.replace(/；；/g, '；');
     sgText = sgText.replace(/::/g, ':');

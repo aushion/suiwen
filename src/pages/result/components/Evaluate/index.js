@@ -53,7 +53,7 @@ function Evaluate(props) {
         style={
           isevaluate === '1'
             ? { marginRight: 40, color: '#e54020' }
-            : { marginRight: 40, color: '848484' }
+            : { marginRight: 40, color: '#848484' }
         }
       >
         <Icon

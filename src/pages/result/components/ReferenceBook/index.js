@@ -9,7 +9,7 @@ function ReferenceBook(props) {
   function handleAnswer(str, code) {
     if (str) {
       return (
-        str.replace(/<{1}[^<>]*>{1}/g, '').substr(0, 200) +
+        str.replace(/<{1}[^<img|br>]*>{1}/g, '').substr(0, 200) +
         '<a href="http://192.168.103.24/qa.web/query/link?id=' +
         code +
         '&db=crfd"' +
@@ -43,11 +43,13 @@ function ReferenceBook(props) {
             key={item.工具书编号}
             className={styles.ReferenceBook_answer}
             dangerouslySetInnerHTML={{
-              __html: RestTools.removeFlag(
-                RestTools.completeToolsBook(
-                  handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)
+              __html:
+                RestTools.translateToRed(
+                  RestTools.completeToolsBook(
+                    handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)
+                  )
                 )
-              )
+
             }}
           />
           <div className={styles.ReferenceBook_extra}>
@@ -55,7 +57,9 @@ function ReferenceBook(props) {
               className={styles.ReferenceBook_name}
               target="_blank"
               rel="noopener noreferrer"
-              href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(item.工具书编号)}.html`}
+              href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(
+                item.工具书编号
+              )}.html`}
               dangerouslySetInnerHTML={{ __html: '--' + RestTools.removeFlag(item.工具书名称) }}
             />
           </div>

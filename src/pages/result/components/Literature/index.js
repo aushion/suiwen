@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { List, Tag } from 'antd';
 import Cookies from 'js-cookie';
+import dayjs from 'dayjs'
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
@@ -82,7 +83,7 @@ export default function Literature(props) {
             <a
               style={Object.assign({}, spanStyle, { width: '45%' })}
               dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(item.题名)
+                __html: RestTools.translateToRed(item.题名|| '-')
               }}
               href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.sourceDb[item.来源数据库]}&filename=${item.文件名}`}
               target="_blank"
@@ -93,7 +94,7 @@ export default function Literature(props) {
               {item.被引频次 ? `${item.下载频次}/${item.被引频次}` : `${item.下载频次}/-`}
             </span>
             <span>{item.来源数据库}</span>
-            <span>{item.出版日期}</span>
+            <span>{item.出版日期?dayjs(item.出版日期).format('YYYY-MM-DD'):'---------'}</span>
             <span
               title={RestTools.translateToRed(item.作者|| '-')}
               style={Object.assign({}, spanStyle, { width: '10%' })}

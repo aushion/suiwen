@@ -26,15 +26,14 @@ function ResultPage(props) {
     communityAnswer
   } = props;
 
-  const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号);
-  const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识');
-  const JournalData = repositoryData.filter((item) => item.domain === '期刊');
-  const literatureData = repositoryData.filter((item) => item.domain === '文献');
-  const scholarData = repositoryData.filter((item) => item.domain === '学者');
+  const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号); //工具书数据
+  const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
+  const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
+  const literatureData = repositoryData.filter((item) => item.dataNode[0].题名); //文献数据
+  const scholarData = repositoryData.filter((item) => item.domain === '学者'); //学者数据
   const relatedLiterature =
     relatedData.length && relatedData.filter((item) => item.domain === '文献'); //相关文献
-  const relatedPatent =
-    relatedData.length && relatedData.filter((item) => item.domain === '专利'); //相关专利
+  const relatedPatent = relatedData.length && relatedData.filter((item) => item.domain === '专利'); //相关专利
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
@@ -54,17 +53,10 @@ function ResultPage(props) {
         <div className={styles.result_tips}>为您找到{resultLength}条结果</div>
         <Row gutter={24}>
           <Col span={18}>
-            {faqData.length ? (
-              <div>
-                {faqData.map((item) => (
-                  <FAQ key={item.id} data={item} />
-                ))}
-              </div>
-            ) : null}
             {cnkizhishi.length
-              ? cnkizhishi.map((item) => <Graphic key={item.id} data={item.dataNode}></Graphic>)
+              ? cnkizhishi.map((item) => <Graphic key={item.id} data={item.dataNode} />)
               : null}
-            {communityAnswer ? <CommunityAnswer data={communityAnswer}></CommunityAnswer> : null}
+            {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
             {scholarData.length
               ? scholarData.map((item) => (
                   <Scholar
@@ -112,6 +104,13 @@ function ResultPage(props) {
                   />
                 ))
               : null}
+            {faqData.length ? (
+              <div>
+                {faqData.map((item) => (
+                  <FAQ key={item.id} data={item} />
+                ))}
+              </div>
+            ) : null}
             {sgData.length ? <SgList data={sgData} /> : null}
           </Col>
           <Col span={6} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>

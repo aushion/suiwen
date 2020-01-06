@@ -43,11 +43,11 @@ function Journal(props) {
                 </div>
                 <div className={styles.Journal_right_item}>
                   <label htmlFor="">综合影响因子：</label>
-                  <span>{item.综合影响因子}</span>
+                  <span>{item.综合影响因子 || '-'}</span>
                 </div>
                 <div className={styles.Journal_right_item}>
                   <label htmlFor="">复合影响因子：</label>
-                  <span>{item.复合影响因子}</span>
+                  <span>{item.复合影响因子 ||'-'}</span>
                 </div>
               </div>
             </div>

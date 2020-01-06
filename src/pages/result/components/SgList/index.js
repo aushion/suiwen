@@ -33,7 +33,11 @@ function SgList(props) {
                   >
                     {groupByData[item][0].Data.title}
                   </a>{' '}
-                  <span>{groupByData[item][0].Data.additional_info.FieldValue?groupByData[item][0].Data.additional_info.FieldValue.年 : ''}</span>
+                  <span>
+                    {groupByData[item][0].Data.additional_info.FieldValue
+                      ? groupByData[item][0].Data.additional_info.FieldValue.年
+                      : ''}
+                  </span>
                 </div>
                 {/* 点赞模块预留 */}
                 <div className={styles.sg_evaluate}>
@@ -53,8 +57,7 @@ function SgList(props) {
                   dangerouslySetInnerHTML={{
                     __html: RestTools.translateToRed(
                       RestTools.formatText(item.Data.answer)
-                      // item.Data.answer.replace(/:/g, ':<br>')
-                      // .replace(/;/g, ';<br>')
+
                     )
                   }}
                 />
@@ -80,13 +83,14 @@ function SgList(props) {
                 >
                   <div className={styles.more}>显示更多>></div>
                 </Popover> */}
-
-                <div
-                  className={styles.more}
-                  onClick={showMore.bind(this, item.Data.answer_context)}
-                >
-                  显示更多>>
-                </div>
+                {item.Data.answer_context ? (
+                  <div
+                    className={styles.more}
+                    onClick={showMore.bind(this, item.Data.answer_context)}
+                  >
+                    显示更多>>
+                  </div>
+                ) : null}
               </List.Item>
             )}
           />
@@ -95,7 +99,7 @@ function SgList(props) {
       <Modal
         visible={visible}
         footer={null}
-        style={{ top: 40,left: '29%' }}
+        style={{ top: 40, left: '29%' }}
         onCancel={() => {
           setVisible(false);
         }}
