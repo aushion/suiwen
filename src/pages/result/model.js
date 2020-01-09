@@ -6,8 +6,12 @@ import {
   setEvaluate,
   getHotHelpList,
   getCommunityAnswer,
-  getAnswerByDomain
+  getAnswerByDomain,
+  setQuestion,
+  getCustomView
 } from './service/result';
+import { message } from 'antd';
+import router from 'umi/router';
 import Cookies from 'js-cookie';
 import RestTools from '../../utils/RestTools';
 
@@ -17,6 +21,7 @@ export default {
     sgData: [],
     relatedData: [],
     answerData: [],
+    visible: false,
     faqData: [], //faq数据
     repositoryData: [], //知识库数据,
     helpList: [],
@@ -48,7 +53,7 @@ export default {
         });
         //数据持久化
         RestTools.setSession('answer', {
-          nswerData: data.result.metaList,
+          answerData: data.result.metaList,
           faqData: faqData,
           repositoryData: repositoryData
         });
@@ -61,6 +66,39 @@ export default {
       if (data.result) {
         console.log(data);
       }
+    },
+
+    *getCustomView({ payload }, { call, put }) {
+      const res = yield call(getCustomView, payload);
+      const oldAnswer = RestTools.getSession('answer');
+      const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
+      let newRepositoryData = [];
+      if (res.data.code === 200) {
+        newRepositoryData = oldRepositoryData.map((item) => {
+          const { data, pagination, whereSql } = res.data.result;
+          if (
+            whereSql.split('ORDER')[0].replace(/\s/g, '') ===
+            item.whereSql.split('ORDER')[0].replace(/\s/g, '')
+          ) {
+            item = {
+              ...item,
+              dataNode: data,
+              pagination,
+              whereSql
+            };
+          }
+          return item;
+        });
+      }
+      yield put({
+        type: 'save',
+        payload: {
+          ...oldAnswer,
+          repositoryData: newRepositoryData
+        }
+      });
+
+      RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData });
     },
 
     *getSG({ payload }, { call, put }) {
@@ -113,6 +151,18 @@ export default {
           }
         });
       }
+    },
+    *setQuestion({ payload }, { call, put }) {
+      const res = yield call(setQuestion, payload);
+      if (res.data.success) {
+        yield put({ type: 'save', payload: { visible: false } });
+        router.push('/help/myHelp');
+      } else if (!res.data.message) {
+        message.error('提交失败');
+      } else if (res.data.message === '1') {
+        message.warn('请勿重复提交');
+      }
+      return res;
     }
   },
   subscriptions: {

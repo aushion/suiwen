@@ -45,3 +45,20 @@ export function getCommunityAnswer(payload) {
     params: { ...payload }
   })
 }
+
+export function getCustomView(payload){
+  return request.post('/getCustomView', null, {
+    data: {
+      ...payload
+    }
+  })
+}
+
+export function setQuestion(payload) {
+  console.log(payload)
+  return request.post(process.env.apiUrl_help + '/SetQuestion',null, {
+    params: {
+      ...payload
+    }
+  })
+}

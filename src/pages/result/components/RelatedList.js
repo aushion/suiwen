@@ -3,9 +3,9 @@ import RestTools from '../../../utils/RestTools';
 
 function RelatedLiteraure(props) {
   const { data, q, title, focus, extra } = props;
-  function outLink(type, filename) {
+  function outLink(type, filename, source) {
     if (type === '相关文献') {
-      return `http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${filename}`;
+      return `http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.sourceDb[source]}&filename=${filename}`;
     } else {
       return `http://dbpub.cnki.net/grid2008/dbpub/detail.aspx?dbcode=SCPD&dbname=SCPD&filename=${filename}`;
     }
@@ -42,7 +42,7 @@ function RelatedLiteraure(props) {
                 title={RestTools.removeFlag(item[focus])}
                 target="_blank"
                 rel="noopener noreferrer"
-                href={outLink(title, item.文件名)}
+                href={outLink(title, item.文件名, item.来源数据库)}
                 dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item[focus]) }}
               />
             </div>
@@ -65,7 +65,7 @@ function RelatedLiteraure(props) {
       />
       <a
         style={{ textAlign: 'right', display: 'block', color: '#999', fontSize: 12 }}
-        href={moreLink(title,q)}
+        href={moreLink(title, q)}
         target="_blank"
         rel="noopener noreferrer"
       >

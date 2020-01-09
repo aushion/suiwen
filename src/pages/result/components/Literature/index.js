@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { List, Tag } from 'antd';
-import Cookies from 'js-cookie';
-import dayjs from 'dayjs'
+import { List, Tag, Icon } from 'antd';
+import dayjs from 'dayjs';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 export default function Literature(props) {
-  const { data, id, evaluate, dispatch, pagination, domain, q } = props;
+  let { data, id, evaluate, dispatch, pagination, whereSql } = props;
+  const sortKey = whereSql.replace(/\s/g, '').match(/BY\((\S*),/)[1];
+  const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
-  const { pageStart, pageCount } = pagination;
+  const { pageStart } = pagination;
 
   const [page, changePage] = useState(pageStart);
-  const userId = RestTools.getLocalStorage('userInfo')
-    ? RestTools.getLocalStorage('userInfo').userName
-    : Cookies.get('cnki_qa_uuid');
+
   const spanStyle = {
     display: 'inline-block',
     overflow: 'hidden',
@@ -23,16 +22,18 @@ export default function Literature(props) {
   const tagStyle = {
     cursor: 'pointer'
   };
+
+  const activeTag = {
+    background: 'rgb(24, 144, 255)',
+    color: '#fff'
+  };
   function nextPage() {
     changePage(page + 1);
     dispatch({
-      type: 'result/getAnswerByDomain',
+      type: 'result/getCustomView',
       payload: {
-        domain,
-        q,
-        userId,
         pageStart: page + 1,
-        pageCount
+        whereSql
       }
     });
   }
@@ -40,16 +41,49 @@ export default function Literature(props) {
   function prevPage() {
     changePage(page - 1);
     dispatch({
-      type: 'result/getAnswerByDomain',
+      type: 'result/getCustomView',
       payload: {
-        domain,
-        q,
-        userId,
         pageStart: page - 1,
-        pageCount
+        whereSql
       }
     });
   }
+
+  function sortBy(key) {
+    let str = whereSql.split('ORDER')[0];
+    let order = '';
+    if (key === 'time') {
+      if (count % 2 !== 0) {
+        order = " ORDER BY (发表时间,'TIME') desc ";
+      } else {
+        order = " ORDER BY (发表时间,'TIME') asc ";
+      }
+    } else if (key === 'ref') {
+      if (count % 2 !== 0) {
+        order = " ORDER BY  (被引频次,'integer') desc ";
+      } else {
+        order = " ORDER BY  (被引频次,'integer') asc ";
+      }
+    } else if (key === 'down') {
+      if (count % 2 !== 0) {
+        order = " ORDER BY  (下载频次,'integer') desc ";
+      } else {
+        order = " ORDER BY  (下载频次,'integer') asc ";
+      }
+    } else if (key === 'ffd') {
+      order = "ORDER BY (ffd,'rank') DESC";
+    }
+    let newWhereSql = str + order;
+    dispatch({
+      type: 'result/getCustomView',
+      payload: {
+        pageStart,
+        whereSql: newWhereSql
+      }
+    });
+    setCount(count + 1);
+  }
+
   return (
     <div
       style={{
@@ -60,20 +94,65 @@ export default function Literature(props) {
       }}
     >
       <List
-        // bordered
+        header={
+          <div>
+            {/* {sortKey === 'ffd' ? (
+              <Tag
+                onClick={sortBy.bind(this, 'ffd')}
+                style={
+                  sortKey === 'ffd'
+                    ? { ...tagStyle, ...activeTag }
+                    : {
+                        ...tagStyle
+                      }
+                }
+              >
+                默认排序
+              </Tag>
+            ) : null} */}
+            <Tag
+              onClick={sortBy.bind(this, 'time')}
+              style={sortKey === '发表时间' ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
+            >
+              {sortKey === '发表时间' ? (
+                <Icon type={count % 2 ? 'caret-up' : 'caret-down'} />
+              ) : null}
+              时间
+            </Tag>
+
+            <Tag
+              onClick={sortBy.bind(this, 'ref')}
+              style={sortKey === '被引频次' ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
+            >
+              {sortKey === '被引频次' ? (
+                <Icon type={count % 2 ? 'caret-up' : 'caret-down'} />
+              ) : null}
+              引用
+            </Tag>
+            <Tag
+              onClick={sortBy.bind(this, 'down')}
+              style={sortKey === '下载频次' ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
+            >
+              {sortKey === '下载频次' ? (
+                <Icon type={count % 2 ? 'caret-up' : 'caret-down'} />
+              ) : null}
+              下载
+            </Tag>
+          </div>
+        }
         footer={
           <div>
-            {/* <div>
+            <div>
               {page > 1 ? (
                 <Tag style={tagStyle} onClick={prevPage}>
                   上一页
                 </Tag>
               ) : null}
-              <span>{page}</span>
+              <span style={{ padding: '0 10px' }}>{page}</span>
               <Tag style={tagStyle} onClick={nextPage}>
                 下一页
               </Tag>
-            </div> */}
+            </div>
             <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
           </div>
         }
@@ -83,22 +162,24 @@ export default function Literature(props) {
             <a
               style={Object.assign({}, spanStyle, { width: '45%' })}
               dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(item.题名|| '-')
+                __html: RestTools.translateToRed(item.题名 || '-')
               }}
-              href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.sourceDb[item.来源数据库]}&filename=${item.文件名}`}
+              href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
+                RestTools.sourceDb[item.来源数据库]
+              }&filename=${item.文件名}`}
               target="_blank"
               rel="noopener noreferrer"
             />
             <span>
               下载/被引：
-              {item.被引频次 ? `${item.下载频次}/${item.被引频次}` : `${item.下载频次}/-`}
+              {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
             </span>
             <span>{item.来源数据库}</span>
-            <span>{item.出版日期?dayjs(item.出版日期).format('YYYY-MM-DD'):'---------'}</span>
+            <span>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</span>
             <span
-              title={RestTools.translateToRed(item.作者|| '-')}
+              title={RestTools.translateToRed(item.作者 || '-')}
               style={Object.assign({}, spanStyle, { width: '10%' })}
-              dangerouslySetInnerHTML={{__html:RestTools.translateToRed(item.作者 || '-')}}
+              dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.作者 || '-') }}
             />
           </List.Item>
         )}

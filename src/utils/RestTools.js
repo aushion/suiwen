@@ -58,8 +58,8 @@ export default {
   },
   translateToRed(str) {
     return str
-      .replace(/<[^p]/g,' < ')
-      .replace(/>[^p]/g,' > ')
+      // .replace(/<[^p]/g,' < ')
+      // .replace(/>[^p]/g,' > ')
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
       .replace(/&nbsp;/g, '');
