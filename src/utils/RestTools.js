@@ -114,6 +114,10 @@ export default {
   removeFlag(str) {
     return str.replace(/###/g, '').replace(/\$\$\$/g, '');
   },
+
+  removeHtmlTag(str) {
+    return str.replace(/<[^>]+>/g,"");  //正则去掉所有的html标记
+  },
   completeUrl(str) {
     return str
       .replace(/<p>/g, '')

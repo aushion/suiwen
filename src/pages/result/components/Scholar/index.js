@@ -11,9 +11,26 @@ export default function Scholar(props) {
     <div className={styles.Scholar}>
       <List
         dataSource={data}
+        itemLayout="vertical"
         renderItem={(item) => {
+          const relatedLiterature = item.literature
+            ? item.literature.map((item) => (
+                <div>
+                  <a
+                    href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
+                      RestTools.sourceDb[item.来源数据库]
+                    }&filename=${item.文件名}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{textDecoration: 'underline', padding: '4px 0',display: 'inline-block'}}
+                  >
+                    {item.题名}
+                  </a>
+                </div>
+              ))
+            : null;
           return (
-            <List.Item>
+            <List.Item a>
               <div className={styles.Scholar_pic}>
                 <img style={{ verticalAlign: 'text-top' }} src={face} alt={item.学者名} />
               </div>
@@ -80,6 +97,12 @@ export default function Scholar(props) {
                     }}
                   />
                 </div>
+                {item.literature ? (
+                  <div className={styles.Scholar_info_item}>
+                    <div>学者最新文献：</div>
+                    {relatedLiterature}
+                  </div>
+                ) : null}
               </div>
             </List.Item>
           );
@@ -87,7 +110,7 @@ export default function Scholar(props) {
       />
       <a
         className={styles.Scholar_more}
-        target='_blank'
+        target="_blank"
         rel="noopener noreferrer"
         href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&dn=${title}`}
       >

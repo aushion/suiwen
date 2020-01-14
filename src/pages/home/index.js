@@ -91,13 +91,13 @@ function Home(props) {
                     </div>
                   </div>
                   <div className={homeStyles.item}>
-                    <div className={homeStyles.icon} style={{ background: '#4BC3FF' }}>
+                    <div className={homeStyles.icon} style={{ background: '#4BC3FF' }} >
                       A
                     </div>
                     <div
                       className={homeStyles.item_content}
                       title={RestTools.removeTag(item.answer)}
-                      dangerouslySetInnerHTML={{ __html: item.answer }}
+                      dangerouslySetInnerHTML={{ __html: RestTools.removeHtmlTag(item.answer) }}
                     ></div>
                   </div>
                 </div>

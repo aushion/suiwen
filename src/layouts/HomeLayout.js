@@ -38,7 +38,7 @@ function HomeLayout(props) {
           {username ? null : (
             <a
               className={styles.login_btn}
-              href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa2.cnki.net/sw.web"
+              href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
               // href={`https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000`}
             >
               登录
@@ -47,7 +47,7 @@ function HomeLayout(props) {
           {username ? null : (
             <a
               className={styles.register_btn}
-              href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://qa2.cnki.net/sw.web"
+              href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://qa.cnki.net/sw.web"
             >
               注册
             </a>

@@ -128,7 +128,7 @@ function ResultPage(props) {
               </span>
             </div>
           ) : null}
-          {answerData.length ? (
+          {answerData.length || sgData.length? (
             <Row gutter={24}>
               <Col span={18}>
                 {cnkizhishi.length
