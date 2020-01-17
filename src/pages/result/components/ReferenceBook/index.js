@@ -9,7 +9,7 @@ function ReferenceBook(props) {
   function handleAnswer(str, code) {
     if (str) {
       return (
-        str.replace(/<{1}[^<img|br|a>]*>{1}/g, '').substr(0, 300) +
+        RestTools.subHtml(str,300,false) +
         '<a href="http://192.168.103.24/qa.web/query/link?id=' +
         code +
         '&db=crfd"' +

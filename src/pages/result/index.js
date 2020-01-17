@@ -39,6 +39,7 @@ function ResultPage(props) {
     answerData
   } = props;
 
+
   const [submitQ, setSubmitQ] = useState(q);
   const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
@@ -110,7 +111,7 @@ function ResultPage(props) {
     <div className={styles.result}>
       <Spin spinning={loading} indicator={antIcon}>
         <div style={{ minHeight: 'calc(45vh)' }}>
-          {answerData.length ? (
+          {resultLength ? (
             <div className={styles.result_tips}>
               <span>为您找到{resultLength}条结果</span>
 
