@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Layout, BackTop } from 'antd';
+import { Layout, BackTop, Affix, Button } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
+import FeedBack from '../components/FeedBack';
+
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
@@ -14,7 +16,7 @@ function BasicLayout(props) {
   let { q = RestTools.getSession('q') } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-
+  const [visible, setVisible] = useState(false)
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
     value && router.push(`/result?q=${value}`);
@@ -127,6 +129,17 @@ function BasicLayout(props) {
           </li>
         </ul>
       </Footer>
+      <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
+      <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>
+        <Button
+          type="primary"
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          反馈
+        </Button>
+      </Affix>
       <BackTop />
     </div>
   );

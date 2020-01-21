@@ -23,7 +23,7 @@ export default {
           webpackChunkName: true
         },
         title: '知网随问',
-        // links: [{ rel: 'stylesheet', href: 'http://132.cnki.net/TopLogin/Content/TopLogin.css' }],
+        links: [{ rel: 'icon', href: '<%= PUBLIC_PATH %>static/cnki.ico' }],
         scripts: [
           {
             src:

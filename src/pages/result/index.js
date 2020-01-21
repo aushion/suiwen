@@ -175,8 +175,8 @@ function ResultPage(props) {
                     ))
                   : null}
 
-                {Journal.length
-                  ? JournalData.map((item) => (
+                {JournalData.length
+                  ? JournalData.slice(0,1).map((item) => (
                       <Journal
                         key={item.id}
                         id={item.id}
