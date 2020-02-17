@@ -31,11 +31,11 @@ function Journal(props) {
                 </a>
                 <div className={styles.Journal_right_item}>
                   <label htmlFor="">主办单位：</label>
-                  <span>{item.主办单位 || '-'}</span>
+                  <span>{item.主办单位名称 || '-'}</span>
                 </div>
                 <div className={styles.Journal_right_item}>
                   <label htmlFor="">ISSN：</label>
-                  <span>{item.ISSN || '-'}</span>主办单位
+                  <span>{item.ISSN || '-'}</span>
                 </div>
                 <div className={styles.Journal_right_item}>
                   <label htmlFor="">CN：</label>

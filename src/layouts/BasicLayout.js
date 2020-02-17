@@ -14,7 +14,7 @@ function BasicLayout(props) {
   let { q = RestTools.getSession('q') } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-
+  const {title} = props;
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
     value && router.push(`/result?q=${value}`);
@@ -42,8 +42,8 @@ function BasicLayout(props) {
         <div className={styles.inputGroup}>
           <div onClick={goHome} className={styles.logo} />
           <div className={styles.title} onClick={goHome}>
-            <div className={styles.cn}>智能问答服务平台</div>
-            <div className={styles.en}>Intelligent Question and Answer</div>
+            <div className={styles.cn}>{title.cnText}</div>
+            <div className={styles.en}>{title.enText}</div>
           </div>
           <div className={styles.inputWrap}>
             <SmartInput

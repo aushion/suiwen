@@ -61,7 +61,7 @@ function Home(props) {
 
   function clickTag(i) {
     setActive(i);
-    RestTools.setSession('tagIndex',i) //存储索引，解决页面回退，索引丢失的问题
+    RestTools.setSession('tagIndex', i); //存储索引，解决页面回退，索引丢失的问题
     skillSlider.slickGoTo(i, true);
   }
 
@@ -91,7 +91,7 @@ function Home(props) {
                     </div>
                   </div>
                   <div className={homeStyles.item}>
-                    <div className={homeStyles.icon} style={{ background: '#4BC3FF' }} >
+                    <div className={homeStyles.icon} style={{ background: '#4BC3FF' }}>
                       A
                     </div>
                     <div
@@ -120,26 +120,31 @@ function Home(props) {
           </div>
 
           <div className={homeStyles.right}>
-            <div className={homeStyles.right_top}>
-              {skillExamples.length
-                ? skillExamples.map((item, index) => (
-                    <span
-                      onClick={clickTag.bind(this, index)}
-                      style={activeTag === index ? activeStyle : null}
-                      key={item.name}
-                      className={homeStyles.tag}
-                    >
-                      {item.name}
-                    </span>
-                  ))
-                : null}
+              <div className={homeStyles.right_top}>
+              <div style={{ whiteSpace: 'nowrap' }}>
+
+                {skillExamples.length
+                  ? skillExamples.map((item, index) => (
+                      <span
+                        onClick={clickTag.bind(this, index)}
+                        style={activeTag === index ? activeStyle : null}
+                        key={item.name}
+                        className={homeStyles.tag}
+                      >
+                        {item.name}
+                      </span>
+                    ))
+                  : null}
+              </div>
             </div>
 
             <div className={homeStyles.right_bottom}>
               <div className={homeStyles.wrapper}>
-                <Slider {...skillSettings} ref={(slider) => (skillSlider = slider)}>
-                  {slideList}
-                </Slider>
+                {skillExamples.length ? (
+                  <Slider {...skillSettings} ref={(slider) => (skillSlider = slider)}>
+                    {slideList}
+                  </Slider>
+                ) : null}
               </div>
             </div>
           </div>
@@ -197,7 +202,9 @@ function Home(props) {
                                   className={homeStyles.questions_item}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(item.q)}&r=query&domain=${encodeURIComponent('法律')}`}
+                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
+                                    item.q
+                                  )}&r=query&domain=${encodeURIComponent('法律')}`}
                                   key={item.qid}
                                 >
                                   {item.q}
@@ -224,7 +231,9 @@ function Home(props) {
                             .map((item) => {
                               return (
                                 <a
-                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(item.q)}&r=query&domain=${encodeURIComponent('医学')}`}
+                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
+                                    item.q
+                                  )}&r=query&domain=${encodeURIComponent('医学')}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
@@ -255,7 +264,9 @@ function Home(props) {
                             .map((item) => {
                               return (
                                 <a
-                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(item.q)}&r=query&domain=${encodeURIComponent('农业')}`}
+                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
+                                    item.q
+                                  )}&r=query&domain=${encodeURIComponent('农业')}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
@@ -292,7 +303,7 @@ function Home(props) {
                             to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
                             className={homeStyles.help_item_content}
                           >
-                            {item.Content}
+                            <span title={item.Content}>{item.Content}</span>
                           </Link>
                           <span
                             style={{

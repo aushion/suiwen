@@ -41,9 +41,9 @@ export default function Scholar(props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.学者名) }}
-                    href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${RestTools.removeFlag(
+                    href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${encodeURIComponent(RestTools.removeFlag(
                       item.学者名
-                    )}&code=${item.学者代码}`}
+                    ))}&code=${item.学者代码}`}
                   />
 
                   <span
@@ -112,7 +112,7 @@ export default function Scholar(props) {
         className={styles.Scholar_more}
         target="_blank"
         rel="noopener noreferrer"
-        href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&dn=${title}`}
+        href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&dn=${encodeURIComponent(title)}`}
       >
         CNKI学者成果库
       </a>

@@ -29,7 +29,7 @@ function MyReply(props) {
         <div>
           <Divider style={{ margin: 0 }} />
           <Spin spinning={loading}>
-            {newHelpData ? <MyAnswerList data={newHelpData}></MyAnswerList> : null}
+            {newHelpData ? <MyAnswerList from={false} data={newHelpData}></MyAnswerList> : null}
           </Spin>
         </div>
       </div>

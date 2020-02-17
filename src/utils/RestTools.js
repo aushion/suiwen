@@ -13,6 +13,75 @@ export default {
   },
   maxLength: 38,
   HISTORYKEY: 'SUIWEN_RECORD',
+  subHtml(oHtml, nlen, isByte) {
+    var rgx1 = /<[^<^>^\/]+>/;      //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
+    var rgx2 = /<\/[^<^>^\/]+>/;    //后标签
+    var rgx4 = /<[^<^>]+>/;         //所有标签
+    var selfTags = "hr,br,img,input,meta".split(",");
+    if (typeof oHtml !== "string") {
+      return "";
+    }
+    oHtml = oHtml.replace(/(^\s*)|(\s*$)/g, "").replace(/\r|\n/g, "");
+    var oStr = oHtml.replace(/<[^<^>]*>/g, "");
+    var olen = isByte ? oStr.replace(/[^\x00-\xff]/g, "**").length : oStr.length;
+    if (!/^\d+$/.test(nlen) || olen <= nlen) {
+      return oHtml;
+    }
+    var tStr = oHtml;
+    var index = 0;
+    var matchs = [];//含有所有html标签的数组
+    while (rgx4.test(tStr)) {
+      var m = {};
+      m.index = index + tStr.search(rgx4);
+      m.string = tStr.match(rgx4).toString();
+      var len = tStr.search(/<[^<^>]+>/) + tStr.match(/<[^<^>]+>/)[0].length;
+      tStr = tStr.substr(len);
+      index += len;
+      matchs.push(m);
+    }
+    if (isByte) {
+      var i = 0;
+      for (var z = 0; z < oStr.length; z++) {
+        i += (oStr.charCodeAt(z) > 255) ? 2 : 1;
+        if (i >= nlen) {
+          tStr = oStr.slice(0, (z + 1));
+          break;
+        }
+      }
+    } else {
+      tStr = oStr.substr(0, nlen);
+    }
+    var startTags = [];
+    for (var i = 0; i < matchs.length; i++) {
+      if (tStr.length <= matchs[i].index) {
+        matchs = matchs.slice(0, i);
+        break;
+      } else {
+        tStr = tStr.substring(0, matchs[i].index) + matchs[i].string + tStr.substr(matchs[i].index);
+        if (rgx1.test(matchs[i].string.replace(/(\/\/)/g, ""))) {
+          var name = matchs[i].string.replace(/[<>]/g, "").split(" ");
+          if (name.length > 0) {
+            name = name[0];
+            if (selfTags.indexOf(name) === -1) {
+              startTags.push(name);
+            }
+          }
+        } else if (rgx2.test(matchs[i].string)) {
+          var name = matchs[i].string.replace(/[<\/>]/g, "");
+          if (startTags.length > 0 && startTags[startTags.length - 1] === name) {
+            startTags.pop();
+          }
+        }
+      }
+    }
+    if (startTags.length > 0) {
+      for (var i = startTags.length - 1; i >= 0; i--) {
+        tStr += '</' + startTags[i] + '>';
+      }
+    }
+    return tStr;
+  },
+
   getInputTips(value) {
     return request.get(`${process.env.apiUrl}/sug`, {
       params: {
@@ -116,7 +185,7 @@ export default {
   },
 
   removeHtmlTag(str) {
-    return str.replace(/<[^>]+>/g,"");  //正则去掉所有的html标记
+    return str.replace(/<[^>]+>/g,"").replace(/&nbsp;/g,'');  //正则去掉所有的html标记
   },
   completeUrl(str) {
     return str
@@ -147,6 +216,21 @@ export default {
     '0': '状态：未审核',
     '1': '',
     '-1': '状态：审核未通过'
+  },
+
+  title: {
+    law: {
+      cnText: '法律',
+      enText: 'Law',
+    },
+    medicine: {
+      cnText: '医学',
+      enText: 'Medicine'
+    },
+    agriculture: {
+      cnText: '农业',
+      enText: 'Agriculture'
+    }
   },
   getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key));

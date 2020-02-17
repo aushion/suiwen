@@ -9,7 +9,7 @@ export default function Literature(props) {
   const sortKey = whereSql.replace(/\s/g, '').match(/BY\((\S*),/)[1];
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
-  const { pageStart } = pagination;
+  const { pageStart, pageCount, total } = pagination;
 
   const [page, changePage] = useState(pageStart);
 
@@ -142,6 +142,7 @@ export default function Literature(props) {
         }
         footer={
           <div>
+            {total >= pageCount ?
             <div>
               {page > 1 ? (
                 <Tag style={tagStyle} onClick={prevPage}>
@@ -152,13 +153,13 @@ export default function Literature(props) {
               <Tag style={tagStyle} onClick={nextPage}>
                 下一页
               </Tag>
-            </div>
+            </div>: null}
             <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
           </div>
         }
         dataSource={data}
         renderItem={(item) => (
-          <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <List.Item style={{ display: '-ms-flex',display: 'flex',  justifyContent: 'space-between' }}>
             <a
               style={Object.assign({}, spanStyle, { width: '45%' })}
               dangerouslySetInnerHTML={{
@@ -170,16 +171,16 @@ export default function Literature(props) {
               target="_blank"
               rel="noopener noreferrer"
             />
-            <span>
+            <div>
               下载/被引：
               {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
-            </span>
-            <span>{item.来源数据库}</span>
-            <span>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</span>
-            <span
-              title={RestTools.translateToRed(item.作者 || '-')}
+            </div>
+            <div>{item.来源数据库}</div>
+            <div>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</div>
+            <div
+              title={RestTools.removeFlag((/\d+/g.test(item.作者)? item.作者名称 : item.作者) ||'-')}
               style={Object.assign({}, spanStyle, { width: '10%' })}
-              dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.作者 || '-') }}
+              dangerouslySetInnerHTML={{ __html: RestTools.translateToRed((/\d+/g.test(item.作者)? item.作者名称 : item.作者) || '-') }}
             />
           </List.Item>
         )}
