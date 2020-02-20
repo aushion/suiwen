@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
-import { List, Tag, Icon } from 'antd';
+import { List, Tag, Icon, Pagination, Input } from 'antd';
 import dayjs from 'dayjs';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
+const { Search } = Input;
 export default function Literature(props) {
-  let { data, id, evaluate, dispatch, pagination, whereSql } = props;
-  const sortKey = whereSql.replace(/\s/g, '').match(/BY\((\S*),/)[1];
+  let { data, id, evaluate, dispatch, pagination, sql, orderBy, SN, year, subject, intent } = props;
+  const sortKey = orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1];
+
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
   const { pageStart, pageCount, total } = pagination;
-
   const [page, changePage] = useState(pageStart);
+  const [yearInfo, setYearInfo] = useState({
+    index: 0,
+    yearSql: '',
+    year: year.slice(0, 12)
+  });
+
+  const [subjectInfo, setSubjectInfo] = useState({
+    index: 0,
+    subjectSql: '',
+    subject: subject.slice(0, 5)
+  });
 
   const spanStyle = {
     display: 'inline-block',
@@ -20,37 +32,37 @@ export default function Literature(props) {
     textOverflow: 'ellipsis'
   };
   const tagStyle = {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    marginBottom: '2px',
+    lineHeight: 1.5
   };
 
   const activeTag = {
     background: 'rgb(24, 144, 255)',
     color: '#fff'
   };
-  function nextPage() {
-    changePage(page + 1);
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart: page + 1,
-        whereSql
-      }
-    });
-  }
 
-  function prevPage() {
-    changePage(page - 1);
+  function handleChangePage(page) {
+    const { yearSql } = yearInfo;
+    const {subjectSql} = subjectInfo;
+
+    changePage(page);
     dispatch({
       type: 'result/getCustomView',
       payload: {
-        pageStart: page - 1,
-        whereSql
+        pageStart: page,
+        whereSql: sql,
+        yearSql,
+        subjectSql,
+        keyword: '',
+        intent,
+        SN,
+        orderSql: ' ' + orderBy
       }
     });
   }
 
   function sortBy(key) {
-    let str = whereSql.split('ORDER')[0];
     let order = '';
     if (key === 'time') {
       if (count % 2 !== 0) {
@@ -71,18 +83,106 @@ export default function Literature(props) {
         order = " ORDER BY  (下载频次,'integer') asc ";
       }
     } else if (key === 'ffd') {
-      order = "ORDER BY (ffd,'rank') DESC";
+      order = " ORDER BY (ffd,'rank') DESC";
     }
-    let newWhereSql = str + order;
+    const { yearSql } = yearInfo;
+    const { subjectSql } = subjectInfo;
+
     dispatch({
       type: 'result/getCustomView',
       payload: {
         pageStart,
-        whereSql: newWhereSql
+        whereSql: sql,
+        yearSql,
+        subjectSql,
+        intent,
+        keyword: '',
+        SN,
+        orderSql: order
       }
     });
     setCount(count + 1);
   }
+
+  function filterByYear(year, index) {
+    const yearSql = year === '全部' ? '' : ` AND 年='${year}'`;
+    const { subjectSql } = subjectInfo;
+    const newYearInfo = {
+      index,
+      yearSql,
+      year:yearInfo.year
+    }
+    changePage(1);
+    setYearInfo((prev) => {
+      return {
+        ...prev,
+        index,
+        yearSql,
+      }
+    });
+  
+    dispatch({
+      type: 'result/getCustomView',
+      payload: {
+        pageStart: 1,
+        whereSql: sql,
+        yearSql: yearSql,
+        intent,
+        subjectSql,
+        keyword: '',
+        SN,
+        orderSql: orderBy
+      }
+    });
+  }
+
+  function filterBySubject(subject, index) {
+    const subjectSql = subject === '全部' ? '' : ` AND 专题子栏目代码='${subject}?'`;
+    setSubjectInfo({ ...subjectInfo, index, subjectSql });
+    setYearInfo({ ...yearInfo, index: 0, yearSql: '' });
+    dispatch({
+      type: 'result/getCustomView',
+      payload: {
+        pageStart,
+        whereSql: sql,
+        yearSql: '',
+        intent,
+        subjectSql,
+        keyword: '',
+        SN,
+        orderSql: orderBy
+      }
+    });
+  }
+
+  function showOrHide(type) {
+    const { year: currentYear } = yearInfo;
+    const { subject: currentSubject } = subjectInfo;
+    if (type === 'year') {
+      setYearInfo({
+        ...yearInfo,
+        year: currentYear.length < year.length ? year : year.slice(0, 12)
+      });
+    } else {
+      setSubjectInfo({
+        ...subjectInfo,
+        subject: currentSubject.length < subject.length ? subject : subject.slice(0, 5)
+      });
+    }
+  }
+  //排序子组件
+  const SortTag = function(props) {
+    const { sortKeyText, name, sqlKey } = props;
+    return (
+      <Tag
+        onClick={sortBy.bind(this, sqlKey)}
+        style={sortKey === sortKeyText ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
+      >
+        {sortKey === sortKeyText ? <Icon type={count % 2 ? 'caret-up' : 'caret-down'} /> : null}
+        {name}
+      </Tag>
+    );
+  };
 
   return (
     <div
@@ -95,71 +195,103 @@ export default function Literature(props) {
     >
       <List
         header={
-          <div>
-            {/* {sortKey === 'ffd' ? (
-              <Tag
-                onClick={sortBy.bind(this, 'ffd')}
-                style={
-                  sortKey === 'ffd'
-                    ? { ...tagStyle, ...activeTag }
-                    : {
-                        ...tagStyle
-                      }
-                }
-              >
-                默认排序
-              </Tag>
-            ) : null} */}
-            <Tag
-              onClick={sortBy.bind(this, 'time')}
-              style={sortKey === '发表时间' ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
-            >
-              {sortKey === '发表时间' ? (
-                <Icon type={count % 2 ? 'caret-up' : 'caret-down'} />
-              ) : null}
-              时间
-            </Tag>
-
-            <Tag
-              onClick={sortBy.bind(this, 'ref')}
-              style={sortKey === '被引频次' ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
-            >
-              {sortKey === '被引频次' ? (
-                <Icon type={count % 2 ? 'caret-up' : 'caret-down'} />
-              ) : null}
-              引用
-            </Tag>
-            <Tag
-              onClick={sortBy.bind(this, 'down')}
-              style={sortKey === '下载频次' ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
-            >
-              {sortKey === '下载频次' ? (
-                <Icon type={count % 2 ? 'caret-up' : 'caret-down'} />
-              ) : null}
-              下载
-            </Tag>
+          <div style={{ overflow: 'hidden' }}>
+            <div style={{ float: 'left' }}>
+              <Search
+                placeholder=""
+                onSearch={(value) => console.log(value)}
+                style={{ width: 300 }}
+              />
+            </div>
+            <div style={{ float: 'right' }}>
+              <SortTag sqlKey="ffd" name="默认排序" sortKeyText="ffd" />
+              <SortTag sqlKey="time" name="时间" sortKeyText="发表时间" />
+              <SortTag sqlKey="ref" name="引用" sortKeyText="被引频次" />
+              <SortTag sqlKey="down" name="下载" sortKeyText="下载频次" />
+            </div>
           </div>
         }
         footer={
           <div>
-            {total >= pageCount ?
-            <div>
-              {page > 1 ? (
-                <Tag style={tagStyle} onClick={prevPage}>
-                  上一页
-                </Tag>
+            <div style={{ marginBottom: 10 }}>
+              <label htmlFor="时间">时间：</label>
+
+              {[{ 年: '全部' }].concat(yearInfo.year).map((item, index) => {
+                return (
+                  <Tag
+                    style={
+                      yearInfo.index === index ? { ...tagStyle, ...activeTag } : { ...tagStyle }
+                    }
+                    key={item.年}
+                    onClick={filterByYear.bind(this, item.年, index)}
+                  >
+                    {item.年}
+                  </Tag>
+                );
+              })}
+              {yearInfo.year.length < year.length ? (
+                <Icon
+                  onClick={showOrHide.bind(this, 'year')}
+                  style={{ color: '#000', fontWeight: 'bolder' }}
+                  type="arrow-down"
+                />
+              ) : yearInfo.year.length === year.length ? (
+                <Icon
+                  onClick={showOrHide.bind(this, 'year')}
+                  style={{ color: '#000', fontWeight: 'bolder' }}
+                  type="arrow-up"
+                />
               ) : null}
-              <span style={{ padding: '0 10px' }}>{page}</span>
-              <Tag style={tagStyle} onClick={nextPage}>
-                下一页
-              </Tag>
-            </div>: null}
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label htmlFor="其他">学科：</label>
+              {[{ g: '全部', i: '全部' }].concat(subjectInfo.subject).map((item, index) => {
+                return (
+                  <Tag
+                    onClick={filterBySubject.bind(this, item.i, index)}
+                    style={
+                      subjectInfo.index === index ? { ...tagStyle, ...activeTag } : { ...tagStyle }
+                    }
+                    key={item.g}
+                  >
+                    {item.g}
+                  </Tag>
+                );
+              })}
+              {subjectInfo.subject.length < subject.length ? (
+                <Icon
+                  onClick={showOrHide.bind(this, 'subject')}
+                  style={{ color: '#000', fontWeight: 'bolder' }}
+                  type="arrow-down"
+                />
+              ) : subjectInfo.subject.length === subject.length ? (
+                <Icon
+                  onClick={showOrHide.bind(this, 'subject')}
+                  style={{ color: '#000', fontWeight: 'bolder' }}
+                  type="arrow-up"
+                />
+              ) : null}
+            </div>
+
+            {total >= pageCount ? (
+              <div>
+                <Pagination
+                  size="small"
+                  total={total}
+                  current={page}
+                  pageSize={pageCount}
+                  onChange={handleChangePage}
+                />
+              </div>
+            ) : null}
             <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
           </div>
         }
         dataSource={data}
         renderItem={(item) => (
-          <List.Item style={{ display: '-ms-flex',display: 'flex',  justifyContent: 'space-between' }}>
+          <List.Item
+            style={{ display: '-ms-flex', display: 'flex', justifyContent: 'space-between' }}
+          >
             <a
               style={Object.assign({}, spanStyle, { width: '45%' })}
               dangerouslySetInnerHTML={{
@@ -178,9 +310,15 @@ export default function Literature(props) {
             <div>{item.来源数据库}</div>
             <div>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</div>
             <div
-              title={RestTools.removeFlag((/\d+/g.test(item.作者)? item.作者名称 : item.作者) ||'-')}
+              title={RestTools.removeFlag(
+                (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
+              )}
               style={Object.assign({}, spanStyle, { width: '10%' })}
-              dangerouslySetInnerHTML={{ __html: RestTools.translateToRed((/\d+/g.test(item.作者)? item.作者名称 : item.作者) || '-') }}
+              dangerouslySetInnerHTML={{
+                __html: RestTools.translateToRed(
+                  (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
+                )
+              }}
             />
           </List.Item>
         )}

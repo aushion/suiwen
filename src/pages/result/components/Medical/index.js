@@ -31,7 +31,8 @@ export default function Medical(props) {
     医学规范: data[0][intentFocus] ? intentFocus : '适应症',
     辅助检查: data[0][intentFocus] ? intentFocus : '概述',
     规范: data[0][intentFocus] ? intentFocus : '适应症',
-    '疾病-用药': data[0][intentFocus] ? intentFocus : '适应症'
+    '疾病-用药': data[0][intentFocus] ? intentFocus : '适应症',
+    '用药副作用': data[0][intentFocus] ? intentFocus : '适应症'
   };
 
   function callback(key) {
@@ -52,20 +53,21 @@ export default function Medical(props) {
     }
   }
 
-  const removeHtmlTagMainStr = RestTools.removeHtmlTag(
+  const removeHtmlTagMainStr = data[0][focus[intentDomain]] && RestTools.removeHtmlTag(
     data[0][focus[intentDomain]] ? data[0][focus[intentDomain]] : data[0]['概述']
   );
   const mainStr =
     removeHtmlTagMainStr && removeHtmlTagMainStr.length > 300
       ? RestTools.subHtml(removeHtmlTagMainStr, 300, false) + '<a class="showMore"> 更多>></a>'
       : removeHtmlTagMainStr;
+  const tableId = data[0].ID || data[0].文件名;    
   return (
     <div className={styles.Medical}>
-      {data[0].ID ? (
+      {id ? (
         <a
           className={styles.title}
           target="_blank"
-          href={`http://qa.cnki.net/web/query/link?id=${data[0].ID}&db=${data[0].table}`}
+          href={`http://qa.cnki.net/web/query/link?id=${tableId}&db=${data[0].table}`}
         >
           {intentJson.parsed_key + '_医药知识库'}
         </a>
@@ -91,9 +93,9 @@ export default function Medical(props) {
         </div>
       ) : intentDomain === '用药副作用' ? (
         <div>
-          <ul>
-            {data.map((item) => (
-              <li key={item}>{item[intentFocus]}</li>
+          <ul style={{padding: 0}}>
+            {data.map((item,index) => (
+              <li style={{listStyle:'none', padding: '10px 0', borderBottom: '1px solid #eee'}} key={index}>{item[intentFocus]}</li>
             ))}
           </ul>
         </div>

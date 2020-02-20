@@ -44,10 +44,10 @@ function ResultPage(props) {
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
-  const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号); //工具书数据
+  const referenceBookData = repositoryData.filter((item) => Array.isArray(item.dataNode) && item.dataNode[0].工具书编号); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
-  const literatureData = repositoryData.filter((item) => item.dataNode[0].题名); //文献数据
+  const literatureData = repositoryData.filter((item) => item.domain === '文献'); //文献数据
   const scholarData = repositoryData.filter((item) => item.domain === '学者'); //学者数据
   const relatedLiterature =
     relatedData.length && relatedData.filter((item) => item.domain === '文献'); //相关文献
@@ -193,8 +193,13 @@ function ResultPage(props) {
                         dispatch={dispatch}
                         pagination={item.pagination}
                         evaluate={item.evaluate}
-                        data={item.dataNode}
-                        whereSql={item.whereSql}
+                        year={item.dataNode.year}
+                        subject={item.dataNode.subject}
+                        intent={item.intentJson}
+                        data={item.dataNode.data}
+                        SN={item.dataNode.SN}
+                        sql={item.dataNode.sql}
+                        orderBy={item.dataNode.orderBy}
                       />
                     ))
                   : null}

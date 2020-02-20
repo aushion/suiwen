@@ -75,18 +75,24 @@ export default {
       let newRepositoryData = [];
       if (res.data.code === 200) {
         newRepositoryData = oldRepositoryData.map((item) => {
-          const { data, pagination, whereSql } = res.data.result;
-          if (
-            whereSql.split('ORDER')[0].replace(/\s/g, '') ===
-            item.whereSql.split('ORDER')[0].replace(/\s/g, '')
-          ) {
-            item = {
-              ...item,
-              dataNode: data,
-              pagination,
-              whereSql
-            };
-          }
+          const { sql, orderSql, data: newData } = res.data.result[0].dataNode;
+          const { dataNode } = item;
+          const { data, ...others } = dataNode;
+          // if (
+          //   whereSql.split('ORDER')[0].replace(/\s/g, '') ===
+          //   item.whereSql.split('ORDER')[0].replace(/\s/g, '')
+          // ) {
+          item = {
+            ...item,
+            ...res.data.result[0],
+            dataNode: {
+              data: newData,
+              ...others,
+              sql: sql,
+              orderBy: orderSql
+            },
+          };
+          // }
           return item;
         });
       }
