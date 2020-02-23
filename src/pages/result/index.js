@@ -197,6 +197,8 @@ function ResultPage(props) {
                         subject={item.dataNode.subject}
                         intent={item.intentJson}
                         data={item.dataNode.data}
+                        keyword={item.dataNode.keyword}
+                        linkName={item.dataNode.linkName}
                         SN={item.dataNode.SN}
                         sql={item.dataNode.sql}
                         orderBy={item.dataNode.orderBy}

@@ -63,7 +63,7 @@ export default function Medical(props) {
   const tableId = data[0].ID || data[0].文件名;    
   return (
     <div className={styles.Medical}>
-      {id ? (
+      {tableId ? (
         <a
           className={styles.title}
           target="_blank"
@@ -78,14 +78,17 @@ export default function Medical(props) {
       {intentDomain === '疾病-用药' ? (
         <div>
           <Table
+          size="small"
             dataSource={data.map((item) => ({
               疾病名: RestTools.removeFlag(item['疾病名']),
-              疾病用药: RestTools.removeHtmlTag(item['疾病用药'])
+              疾病用药: RestTools.translateToRed(RestTools.removeHtmlTag(item['疾病用药']))
             }))}
             pagination={false}
           >
             <Column title="疾病" dataIndex="疾病名" key="疾病名" />
-            <Column title="药品" dataIndex="疾病用药" key="疾病用药" />
+            <Column title="药品" dataIndex="疾病用药" key="疾病用药" render={(text,record) => <span
+              dangerouslySetInnerHTML={{__html: text}}
+            />  } />
           </Table>
           <div style={{ padding: 10, fontSize: 12, color: 'red' }}>
             (注意:请在医生的指导下使用。)
@@ -95,7 +98,9 @@ export default function Medical(props) {
         <div>
           <ul style={{padding: 0}}>
             {data.map((item,index) => (
-              <li style={{listStyle:'none', padding: '10px 0', borderBottom: '1px solid #eee'}} key={index}>{item[intentFocus]}</li>
+              <li style={{listStyle:'none', padding: '10px 0', borderBottom: '1px solid #eee'}} key={index}
+               dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item[intentFocus])}}
+              />
             ))}
           </ul>
         </div>

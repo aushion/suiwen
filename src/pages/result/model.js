@@ -25,7 +25,7 @@ export default {
     faqData: [], //faq数据
     repositoryData: [], //知识库数据,
     helpList: [],
-    communityAnswer: null
+    communityAnswer: null,
   },
   reducers: {
     save(state, { payload }) {

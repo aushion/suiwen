@@ -17,7 +17,7 @@ function BasicLayout(props) {
   const {title} = props;
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
-    value && router.push(`/result?q=${value}`);
+    value && router.replace(`/result?q=${value}`);
     RestTools.setSession('q', value);
   }
 

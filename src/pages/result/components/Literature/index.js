@@ -6,24 +6,49 @@ import Evaluate from '../Evaluate';
 
 const { Search } = Input;
 export default function Literature(props) {
-  let { data, id, evaluate, dispatch, pagination, sql, orderBy, SN, year, subject, intent } = props;
+  let { data, id, evaluate, dispatch, linkName, keyword, pagination, sql, orderBy, SN, year, subject, intent } = props;
   const sortKey = orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1];
-
+  console.log(intent)
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
   const { pageStart, pageCount, total } = pagination;
   const [page, changePage] = useState(pageStart);
+  const [searchValue, setSearchValue] = useState(keyword?intent.results[0].fields[keyword]: '')
   const [yearInfo, setYearInfo] = useState({
     index: 0,
     yearSql: '',
-    year: year.slice(0, 12)
+    year: year ? year.slice(0, 12) : []
   });
+  
 
   const [subjectInfo, setSubjectInfo] = useState({
     index: 0,
     subjectSql: '',
-    subject: subject.slice(0, 5)
+    subject: subject ? subject.slice(0, 5) : []
   });
+
+  const linkMap = {
+    '文献': {
+      name: '相关文献',
+      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${kw}&korder=0&sel=1`
+    },
+    '硕士': {
+      name: '硕士论文',
+      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+    },
+    '博士': {
+      name: '博士论文',
+      url: (kw) =>`http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+    },
+    '会议': {
+      name: '会议论文',
+      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CIPD&kw=${kw}&korder=0&sel=1`
+    },
+    '硕博': {
+      name: '硕博士论文',
+      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+    },
+  }
 
   const spanStyle = {
     display: 'inline-block',
@@ -44,7 +69,7 @@ export default function Literature(props) {
 
   function handleChangePage(page) {
     const { yearSql } = yearInfo;
-    const {subjectSql} = subjectInfo;
+    const { subjectSql } = subjectInfo;
 
     changePage(page);
     dispatch({
@@ -110,21 +135,16 @@ export default function Literature(props) {
     const newYearInfo = {
       index,
       yearSql,
-      year:yearInfo.year
-    }
+      year: yearInfo.year
+    };
     changePage(1);
-    setYearInfo((prev) => {
-      return {
-        ...prev,
-        index,
-        yearSql,
-      }
-    });
-  
+    setYearInfo(newYearInfo);
+
     dispatch({
       type: 'result/getCustomView',
       payload: {
         pageStart: 1,
+        index,
         whereSql: sql,
         yearSql: yearSql,
         intent,
@@ -199,6 +219,7 @@ export default function Literature(props) {
             <div style={{ float: 'left' }}>
               <Search
                 placeholder=""
+                value={searchValue}
                 onSearch={(value) => console.log(value)}
                 style={{ width: 300 }}
               />
@@ -213,65 +234,72 @@ export default function Literature(props) {
         }
         footer={
           <div>
-            <div style={{ marginBottom: 10 }}>
-              <label htmlFor="时间">时间：</label>
+            {yearInfo.year.length ? (
+              <div style={{ marginBottom: 10 }}>
+                <label htmlFor="时间">时间：</label>
 
-              {[{ 年: '全部' }].concat(yearInfo.year).map((item, index) => {
-                return (
-                  <Tag
-                    style={
-                      yearInfo.index === index ? { ...tagStyle, ...activeTag } : { ...tagStyle }
-                    }
-                    key={item.年}
-                    onClick={filterByYear.bind(this, item.年, index)}
-                  >
-                    {item.年}
-                  </Tag>
-                );
-              })}
-              {yearInfo.year.length < year.length ? (
-                <Icon
-                  onClick={showOrHide.bind(this, 'year')}
-                  style={{ color: '#000', fontWeight: 'bolder' }}
-                  type="arrow-down"
-                />
-              ) : yearInfo.year.length === year.length ? (
-                <Icon
-                  onClick={showOrHide.bind(this, 'year')}
-                  style={{ color: '#000', fontWeight: 'bolder' }}
-                  type="arrow-up"
-                />
-              ) : null}
-            </div>
-            <div style={{ marginBottom: 10 }}>
-              <label htmlFor="其他">学科：</label>
-              {[{ g: '全部', i: '全部' }].concat(subjectInfo.subject).map((item, index) => {
-                return (
-                  <Tag
-                    onClick={filterBySubject.bind(this, item.i, index)}
-                    style={
-                      subjectInfo.index === index ? { ...tagStyle, ...activeTag } : { ...tagStyle }
-                    }
-                    key={item.g}
-                  >
-                    {item.g}
-                  </Tag>
-                );
-              })}
-              {subjectInfo.subject.length < subject.length ? (
-                <Icon
-                  onClick={showOrHide.bind(this, 'subject')}
-                  style={{ color: '#000', fontWeight: 'bolder' }}
-                  type="arrow-down"
-                />
-              ) : subjectInfo.subject.length === subject.length ? (
-                <Icon
-                  onClick={showOrHide.bind(this, 'subject')}
-                  style={{ color: '#000', fontWeight: 'bolder' }}
-                  type="arrow-up"
-                />
-              ) : null}
-            </div>
+                {[{ 年: '全部' }].concat(yearInfo.year).map((item, index) => {
+                  return (
+                    <Tag
+                      style={
+                        yearInfo.index === index ? { ...tagStyle, ...activeTag } : { ...tagStyle }
+                      }
+                      key={item.年}
+                      onClick={filterByYear.bind(this, item.年, index)}
+                    >
+                      {item.年}
+                    </Tag>
+                  );
+                })}
+                {yearInfo.year.length < year.length ? (
+                  <Icon
+                    onClick={showOrHide.bind(this, 'year')}
+                    style={{ color: '#000', fontWeight: 'bolder' }}
+                    type="arrow-down"
+                  />
+                ) : yearInfo.year.length === year.length ? (
+                  <Icon
+                    onClick={showOrHide.bind(this, 'year')}
+                    style={{ color: '#000', fontWeight: 'bolder' }}
+                    type="arrow-up"
+                  />
+                ) : null}
+              </div>
+            ) : null}
+
+            {subjectInfo.subject.length ? (
+              <div style={{ marginBottom: 10 }}>
+                <label htmlFor="其他">学科：</label>
+                {[{ g: '全部', i: '全部' }].concat(subjectInfo.subject).map((item, index) => {
+                  return (
+                    <Tag
+                      onClick={filterBySubject.bind(this, item.i, index)}
+                      style={
+                        subjectInfo.index === index
+                          ? { ...tagStyle, ...activeTag }
+                          : { ...tagStyle }
+                      }
+                      key={item.g}
+                    >
+                      {item.g}
+                    </Tag>
+                  );
+                })}
+                {subjectInfo.subject.length < subject.length ? (
+                  <Icon
+                    onClick={showOrHide.bind(this, 'subject')}
+                    style={{ color: '#000', fontWeight: 'bolder' }}
+                    type="arrow-down"
+                  />
+                ) : subjectInfo.subject.length === subject.length ? (
+                  <Icon
+                    onClick={showOrHide.bind(this, 'subject')}
+                    style={{ color: '#000', fontWeight: 'bolder' }}
+                    type="arrow-up"
+                  />
+                ) : null}
+              </div>
+            ) : null}
 
             {total >= pageCount ? (
               <div>
@@ -284,6 +312,14 @@ export default function Literature(props) {
                 />
               </div>
             ) : null}
+            <a
+              style={{ display: 'block', paddingBottom: 10, textAlign: 'right', color: '#999', fontSize: 12 }}
+              href={linkMap[linkName].url(intent.results[0].fields[keyword])}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              更多{linkMap[linkName].name}
+            </a>
             <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
           </div>
         }
@@ -313,7 +349,7 @@ export default function Literature(props) {
               title={RestTools.removeFlag(
                 (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
               )}
-              style={Object.assign({}, spanStyle, { width: '10%' })}
+              style={{ ...spanStyle, width: '10%' }}
               dangerouslySetInnerHTML={{
                 __html: RestTools.translateToRed(
                   (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
