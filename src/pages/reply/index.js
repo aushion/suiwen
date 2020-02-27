@@ -94,7 +94,7 @@ function Reply(props) {
                 />
                 <div>
                   <span style={{ paddingRight: 20 }}>{index}#</span>
-                  <Link to={'/home'} style={{ paddingRight: 20 }}>
+                  <Link to={'/myReply'} style={{ paddingRight: 20 }}>
                     <Icon type="user" /> {item.UserName || item.userName}
                   </Link>
                   <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>

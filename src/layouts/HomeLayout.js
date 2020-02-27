@@ -12,8 +12,8 @@ function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   function handleClickEnterOrItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
-    value && router.push(`/result?q=${value}`);
+    props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
+    value && router.replace(`/result?q=${value.trim()}`);
     RestTools.setSession('q', value);
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, Tag, Icon, Pagination, Input } from 'antd';
 import dayjs from 'dayjs';
 import RestTools from '../../../../utils/RestTools';
@@ -6,20 +6,29 @@ import Evaluate from '../Evaluate';
 
 const { Search } = Input;
 export default function Literature(props) {
-  let { data, id, evaluate, dispatch, linkName, keyword, pagination, sql, orderBy, SN, year, subject, intent } = props;
-  const sortKey = orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1];
-  console.log(intent)
+  const { literatureData, dispatch } = props;
+  const [works, people = null, sameNames = null] = literatureData;
+
+  //嵌套解构
+  let {
+    dataNode: { data, year, searchword, subject, subjectType, SN, orderBy, keyword, linkName, sql },
+    id,
+    evaluate,
+    pagination,
+    intentJson: intent
+  } = works;
+  const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
   const { pageStart, pageCount, total } = pagination;
   const [page, changePage] = useState(pageStart);
-  const [searchValue, setSearchValue] = useState(keyword?intent.results[0].fields[keyword]: '')
+  const [searchValue, setSearchValue] = useState(searchword || keyword || '');
+
   const [yearInfo, setYearInfo] = useState({
-    index: 0,
+    index: 0, //年份信息的初始状态
     yearSql: '',
     year: year ? year.slice(0, 12) : []
   });
-  
 
   const [subjectInfo, setSubjectInfo] = useState({
     index: 0,
@@ -27,28 +36,49 @@ export default function Literature(props) {
     subject: subject ? subject.slice(0, 5) : []
   });
 
+  useEffect(() => {
+    RestTools.setSession('preSearchValue', searchValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    setYearInfo({
+      ...yearInfo,
+      year: year ? year.slice(0, 12) : []
+    });
+  }, [year, yearInfo]);
   const linkMap = {
-    '文献': {
+    文献: {
       name: '相关文献',
-      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${kw}&korder=0&sel=1`
+      url: (kw) =>
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${kw}&korder=0&sel=1`
     },
-    '硕士': {
+    硕士: {
       name: '硕士论文',
-      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+      url: (kw) =>
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
     },
-    '博士': {
+    博士: {
       name: '博士论文',
-      url: (kw) =>`http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+      url: (kw) =>
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
     },
-    '会议': {
+    会议: {
       name: '会议论文',
-      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CIPD&kw=${kw}&korder=0&sel=1`
+      url: (kw) =>
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CIPD&kw=${kw}&korder=0&sel=1`
     },
-    '硕博': {
+    硕博: {
       name: '硕博士论文',
-      url: (kw) => `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
-    },
-  }
+      url: (kw) =>
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+    }
+  };
+
+  const subjectSqlMap = {
+    学科: (subject) => ` AND 专题子栏目代码='${subject}?'`,
+    学位授予单位: (subject) => ` AND 来源代码='${subject}?'`,
+    主办单位: (subject) => ` AND 主办单位代码='${subject}?'`
+  };
 
   const spanStyle = {
     display: 'inline-block',
@@ -70,7 +100,6 @@ export default function Literature(props) {
   function handleChangePage(page) {
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
-
     changePage(page);
     dispatch({
       type: 'result/getCustomView',
@@ -80,6 +109,7 @@ export default function Literature(props) {
         yearSql,
         subjectSql,
         keyword: '',
+        searchword:  '',
         intent,
         SN,
         orderSql: ' ' + orderBy
@@ -95,20 +125,25 @@ export default function Literature(props) {
       } else {
         order = " ORDER BY (发表时间,'TIME') asc ";
       }
+      setSortKey('发表时间')
     } else if (key === 'ref') {
       if (count % 2 !== 0) {
         order = " ORDER BY  (被引频次,'integer') desc ";
       } else {
         order = " ORDER BY  (被引频次,'integer') asc ";
       }
+      setSortKey('被引频次')
+
     } else if (key === 'down') {
       if (count % 2 !== 0) {
         order = " ORDER BY  (下载频次,'integer') desc ";
       } else {
         order = " ORDER BY  (下载频次,'integer') asc ";
       }
+      setSortKey('下载频次')
     } else if (key === 'ffd') {
       order = " ORDER BY (ffd,'rank') DESC";
+      setSortKey('ffd')
     }
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
@@ -121,7 +156,8 @@ export default function Literature(props) {
         yearSql,
         subjectSql,
         intent,
-        keyword: '',
+        keyword: RestTools.getSession('preSearchValue'),
+        searchword: searchValue,
         SN,
         orderSql: order
       }
@@ -133,23 +169,23 @@ export default function Literature(props) {
     const yearSql = year === '全部' ? '' : ` AND 年='${year}'`;
     const { subjectSql } = subjectInfo;
     const newYearInfo = {
-      index,
+      index, //点击年份标签的索引，用于设置选中状态
       yearSql,
       year: yearInfo.year
     };
-    changePage(1);
-    setYearInfo(newYearInfo);
+    setYearInfo(newYearInfo); //修改年份选中状态
+    changePage(1)
 
     dispatch({
       type: 'result/getCustomView',
       payload: {
         pageStart: 1,
-        index,
         whereSql: sql,
         yearSql: yearSql,
         intent,
         subjectSql,
         keyword: '',
+        searchword: '',
         SN,
         orderSql: orderBy
       }
@@ -157,17 +193,19 @@ export default function Literature(props) {
   }
 
   function filterBySubject(subject, index) {
-    const subjectSql = subject === '全部' ? '' : ` AND 专题子栏目代码='${subject}?'`;
+    const subjectSql = subject === '全部' ? '' : subjectSqlMap[subjectType](subject);
     setSubjectInfo({ ...subjectInfo, index, subjectSql });
     setYearInfo({ ...yearInfo, index: 0, yearSql: '' });
+    changePage(1)
     dispatch({
       type: 'result/getCustomView',
       payload: {
-        pageStart,
+        pageStart: 1,
         whereSql: sql,
         yearSql: '',
         intent,
         subjectSql,
+        searchword: '',
         keyword: '',
         SN,
         orderSql: orderBy
@@ -190,9 +228,43 @@ export default function Literature(props) {
       });
     }
   }
+
+  function handleSearch(value) {
+    const keyword = RestTools.getSession('preSearchValue');
+    if (keyword === value) {
+      return;
+    }
+    setYearInfo({
+      index: 0,
+      yearSql: '',
+      year:[]
+    })
+    setSubjectInfo({
+      index: 0,
+      subjectSql: '',
+      subject: []
+    })
+    changePage(1)
+    dispatch({
+      type: 'result/getCustomView',
+      payload: {
+        pageStart: 1,
+        whereSql: sql,
+        yearSql: '',
+        intent,
+        subjectSql: '',
+        keyword,
+        searchword: value,
+        SN,
+        orderSql: orderBy
+      }
+    });
+    //记录上一次搜索框的值
+    RestTools.setSession('preSearchValue', value);
+  }
   //排序子组件
   const SortTag = function(props) {
-    const { sortKeyText, name, sqlKey } = props;
+    const { sortKeyText, name, sqlKey, tagStyle, activeTag, count, } = props;
     return (
       <Tag
         onClick={sortBy.bind(this, sqlKey)}
@@ -202,6 +274,84 @@ export default function Literature(props) {
         {name}
       </Tag>
     );
+  };
+
+  //学者信息组件
+  const PeopleInfo = (props) => {
+    const { 作者 = '', 学者单位 = '', 研究领域 = '' } = props.data;
+    return (
+      <div>
+        <span
+          style={{ fontSize: 16, paddingRight: '20px' }}
+          dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(作者) }}
+        />
+        <span style={{ paddingRight: '20px' }}>{学者单位}</span>
+        <span>{研究领域}</span>
+      </div>
+    );
+  };
+  // 同名学者组件
+  const SameNames = (props) => {
+    const { data } = props;
+    return (
+      <div style={{ marginTop: 10 }}>
+        <div style={{ padding: '20px 0', fontSize: 14 }}>
+          同名学者：
+          <a
+            href={`http://xuezhe.cnki.net/Search/Search.aspx?ac=result&sm=0&sv=${RestTools.removeFlag(
+              data[0].作者 || ''
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            更多学者
+          </a>
+        </div>
+        <ul style={{ padding: 0 }}>
+          {data.map((item, index) => (
+            <li style={{ listStyle: 'none', padding: '5px 0' }} key={index}>
+              <a
+                href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${RestTools.removeFlag(
+                  item.作者
+                )}&code=${item.学者代码}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {RestTools.removeFlag(item.作者)}
+              </a>
+              <span style={{ margin: '0 20px', color: '#999', fontSize: 12 }}>{item.学者单位}</span>
+              <span style={{ color: '#999', fontSize: 12 }}>{item.研究领域}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  // 列表后箭头组件
+  const DynamicArrow = (props) => {
+    const { currentLength, basicsLength, size, type } = props;
+    if (basicsLength > size) {
+      if (currentLength < basicsLength) {
+        return (
+          <Icon
+            onClick={showOrHide.bind(this, type)}
+            style={{ color: '#000', fontWeight: 'bolder' }}
+            type="arrow-down"
+          />
+        );
+      } else if (currentLength === basicsLength && basicsLength > size) {
+        return (
+          <Icon
+            onClick={showOrHide.bind(this, type)}
+            style={{ color: '#000', fontWeight: 'bolder' }}
+            type="arrow-up"
+          />
+        );
+      }
+    } else {
+      return <span></span>;
+    }
   };
 
   return (
@@ -217,18 +367,51 @@ export default function Literature(props) {
         header={
           <div style={{ overflow: 'hidden' }}>
             <div style={{ float: 'left' }}>
-              <Search
-                placeholder=""
-                value={searchValue}
-                onSearch={(value) => console.log(value)}
-                style={{ width: 300 }}
-              />
+              {people ? (
+                <PeopleInfo data={people.dataNode.data[0]} />
+              ) : (
+                <Search
+                  placeholder=""
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  onSearch={(value) => handleSearch(value)}
+                  style={{ width: 300 }}
+                />
+              )}
             </div>
             <div style={{ float: 'right' }}>
-              <SortTag sqlKey="ffd" name="默认排序" sortKeyText="ffd" />
-              <SortTag sqlKey="time" name="时间" sortKeyText="发表时间" />
-              <SortTag sqlKey="ref" name="引用" sortKeyText="被引频次" />
-              <SortTag sqlKey="down" name="下载" sortKeyText="下载频次" />
+              <SortTag
+                sqlKey="ffd"
+                name="默认排序"
+                sortKeyText="ffd"
+                tagStyle={tagStyle}
+                activeTag={activeTag}
+                count={count}
+              />
+              <SortTag
+                sqlKey="time"
+                name="时间"
+                sortKeyText="发表时间"
+                tagStyle={tagStyle}
+                activeTag={activeTag}
+                count={count}
+              />
+              <SortTag
+                sqlKey="ref"
+                name="引用"
+                sortKeyText="被引频次"
+                tagStyle={tagStyle}
+                activeTag={activeTag}
+                count={count}
+              />
+              <SortTag
+                sqlKey="down"
+                name="下载"
+                sortKeyText="下载频次"
+                tagStyle={tagStyle}
+                activeTag={activeTag}
+                count={count}
+              />
             </div>
           </div>
         }
@@ -251,19 +434,13 @@ export default function Literature(props) {
                     </Tag>
                   );
                 })}
-                {yearInfo.year.length < year.length ? (
-                  <Icon
-                    onClick={showOrHide.bind(this, 'year')}
-                    style={{ color: '#000', fontWeight: 'bolder' }}
-                    type="arrow-down"
-                  />
-                ) : yearInfo.year.length === year.length ? (
-                  <Icon
-                    onClick={showOrHide.bind(this, 'year')}
-                    style={{ color: '#000', fontWeight: 'bolder' }}
-                    type="arrow-up"
-                  />
-                ) : null}
+
+                <DynamicArrow
+                  currentLength={yearInfo.year.length}
+                  basicsLength={year.length}
+                  size={12}
+                  type="year"
+                />
               </div>
             ) : null}
 
@@ -285,19 +462,12 @@ export default function Literature(props) {
                     </Tag>
                   );
                 })}
-                {subjectInfo.subject.length < subject.length ? (
-                  <Icon
-                    onClick={showOrHide.bind(this, 'subject')}
-                    style={{ color: '#000', fontWeight: 'bolder' }}
-                    type="arrow-down"
-                  />
-                ) : subjectInfo.subject.length === subject.length ? (
-                  <Icon
-                    onClick={showOrHide.bind(this, 'subject')}
-                    style={{ color: '#000', fontWeight: 'bolder' }}
-                    type="arrow-up"
-                  />
-                ) : null}
+                <DynamicArrow
+                  currentLength={subjectInfo.subject.length}
+                  basicsLength={subject.length}
+                  size={5}
+                  type="subject"
+                />
               </div>
             ) : null}
 
@@ -312,8 +482,15 @@ export default function Literature(props) {
                 />
               </div>
             ) : null}
+            {sameNames ? <SameNames data={sameNames.dataNode.data} /> : null}
             <a
-              style={{ display: 'block', paddingBottom: 10, textAlign: 'right', color: '#999', fontSize: 12 }}
+              style={{
+                display: 'block',
+                paddingBottom: 10,
+                textAlign: 'right',
+                color: '#999',
+                fontSize: 12
+              }}
               href={linkMap[linkName].url(intent.results[0].fields[keyword])}
               target="_blank"
               rel="noopener noreferrer"

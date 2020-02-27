@@ -55,9 +55,8 @@ function SgList(props) {
                 <div
                   className={styles.fontStyle}
                   dangerouslySetInnerHTML={{
-                    __html: RestTools.translateToRed(
-                      RestTools.formatText(item.Data.answer)
-
+                    __html: RestTools.formatText(
+                      RestTools.translateToRed(item.Data.answer)
                     )
                   }}
                 />

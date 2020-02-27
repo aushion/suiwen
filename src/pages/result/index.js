@@ -44,7 +44,9 @@ function ResultPage(props) {
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
-  const referenceBookData = repositoryData.filter((item) => Array.isArray(item.dataNode) && item.dataNode[0].工具书编号); //工具书数据
+  const referenceBookData = repositoryData.filter(
+    (item) => Array.isArray(item.dataNode) && item.dataNode[0].工具书编号
+  ); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
   const literatureData = repositoryData.filter((item) => item.domain === '文献'); //文献数据
@@ -183,28 +185,13 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
-                {literatureData.length
-                  ? literatureData.map((item) => (
-                      <Literature
-                        key={item.id}
-                        id={item.id}
-                        q={q}
-                        domain={item.domain}
-                        dispatch={dispatch}
-                        pagination={item.pagination}
-                        evaluate={item.evaluate}
-                        year={item.dataNode.year}
-                        subject={item.dataNode.subject}
-                        intent={item.intentJson}
-                        data={item.dataNode.data}
-                        keyword={item.dataNode.keyword}
-                        linkName={item.dataNode.linkName}
-                        SN={item.dataNode.SN}
-                        sql={item.dataNode.sql}
-                        orderBy={item.dataNode.orderBy}
-                      />
-                    ))
-                  : null}
+                {literatureData.length ? (
+                  <Literature
+                    literatureData={literatureData}
+                    dispatch={dispatch}
+                    
+                  />
+                ) : null}
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
                       <ReferenceBook

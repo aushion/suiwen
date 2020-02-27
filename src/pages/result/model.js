@@ -25,7 +25,7 @@ export default {
     faqData: [], //faq数据
     repositoryData: [], //知识库数据,
     helpList: [],
-    communityAnswer: null,
+    communityAnswer: null
   },
   reducers: {
     save(state, { payload }) {
@@ -42,7 +42,7 @@ export default {
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         const repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
-
+        
         yield put({
           type: 'save',
           payload: {
@@ -74,25 +74,25 @@ export default {
       const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
       let newRepositoryData = [];
       if (res.data.code === 200) {
-        newRepositoryData = oldRepositoryData.map((item) => {
-          const { sql, orderSql, data: newData } = res.data.result[0].dataNode;
-          const { dataNode } = item;
-          const { data, ...others } = dataNode;
-          // if (
-          //   whereSql.split('ORDER')[0].replace(/\s/g, '') ===
-          //   item.whereSql.split('ORDER')[0].replace(/\s/g, '')
-          // ) {
-          item = {
-            ...item,
-            ...res.data.result[0],
-            dataNode: {
-              data: newData,
-              ...others,
-              sql: sql,
-              orderBy: orderSql
-            },
-          };
-          // }
+        newRepositoryData = oldRepositoryData.map((item, index) => {
+          if (index === 0) { //数组的第0项是论文数据
+            const { data: newData, sql: newSql, year: newYear } = res.data.result[0].dataNode;
+            const { dataNode } = item;
+            const { data, year, subject, ...others } = dataNode;
+
+            item = {
+              ...item,
+              ...res.data.result[0],
+              dataNode: {
+                ...others,
+                data: newData,
+                year: newYear,
+                subject,
+                sql: newSql
+              }
+            };
+          }
+
           return item;
         });
       }

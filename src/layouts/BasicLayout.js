@@ -16,8 +16,8 @@ function BasicLayout(props) {
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const {title} = props;
   function handleClickEnterOrItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
-    value && router.replace(`/result?q=${value}`);
+    props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
+    value && router.replace(`/result?q=${value.trim()}`);
     RestTools.setSession('q', value);
   }
 
