@@ -14,6 +14,7 @@ import { message } from 'antd';
 import router from 'umi/router';
 import Cookies from 'js-cookie';
 import RestTools from '../../utils/RestTools';
+import mockData from '../../mock/mockData'
 
 export default {
   namespace: 'result',
@@ -39,10 +40,12 @@ export default {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(getAnswer, payload);
       const { data } = res;
+      // data.result.metaList.push(mockData.statistics.single).push(mockData.statistics.multi)
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
-        const repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
-        
+        let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
+        // repositoryData =  repositoryData.concat(mockData.statistics.single).concat(mockData.statistics.multi);
+        // console.log('repositoryData', repositoryData)
         yield put({
           type: 'save',
           payload: {
@@ -76,7 +79,7 @@ export default {
       if (res.data.code === 200) {
         newRepositoryData = oldRepositoryData.map((item, index) => {
           if (index === 0) { //数组的第0项是论文数据
-            const { data: newData, sql: newSql, year: newYear } = res.data.result[0].dataNode;
+            const { data: newData, sql: newSql, year: newYear,orderBy, subject: newSubject } = res.data.result[0].dataNode;
             const { dataNode } = item;
             const { data, year, subject, ...others } = dataNode;
 
@@ -86,8 +89,9 @@ export default {
               dataNode: {
                 ...others,
                 data: newData,
+                orderBy,
                 year: newYear,
-                subject,
+                subject: newSubject,
                 sql: newSql
               }
             };
@@ -103,8 +107,9 @@ export default {
           repositoryData: newRepositoryData
         }
       });
-
       RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData });
+      return newRepositoryData;
+
     },
 
     *getSG({ payload }, { call, put }) {

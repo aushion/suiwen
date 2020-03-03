@@ -1,68 +1,69 @@
 import React from 'react';
-import {
-  G2,
-  Chart,
-  Geom,
-  Axis,
-  Tooltip,
-  Coord,
-  Label,
-  Legend,
-  View,
-  Guide,
-  Shape,
-  Facet,
-  Util
-} from 'bizcharts';
-
+import { G2, Chart, Geom, Axis, Tooltip, Label, Legend } from 'bizcharts';
+import DataSet from '@antv/data-set';
 import Evaluate from '../Evaluate';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
+import mockdata from '../../../../mock/mockData';
 
 export default function Statistics(props) {
-  const { domain, intentId, intentDomain, intentFocus, data, id, evaluate } = props;
-  const { good, bad, isevalute } = evaluate;
+  const { domain, intentId, intentDomain, intentFocus, intentJson, id, evaluate = {} } = props;
+  const { good = 0, bad = 0, isevalute = false } = evaluate;
+  let dv = null;
+  // const data = mockdata.statistics.single[0].dataNode.map((item) => ({
+  //   ...item,
+  //   value: Number(item.value)
+  // }));
+  // const data = [
+  //   {
+  //     unit: '万人',
+  //     prop: '2000',
+  //     value: 126743
+  //   },
+  //   {
+  //     unit: '万人',
+  //     prop: '2001',
+  //     value: 127627
+  //   },
+  //   {
+  //     unit: '万人',
+  //     prop: '2002',
+  //     value: 128453
+  //   },
+  //   {
+  //     unit: '万人',
+  //     prop: '2003',
+  //     value: 129227
+  //   },
+  //   {
+  //     unit: '万人',
+  //     prop: '2004',
+  //     value: 129988
+  //   },
+  //   {
+  //     unit: '万人',
+  //     prop: '2005',
+  //     value: 130756
+  //   }
+  // ];
+  let data = mockdata.statistics.multi[0].dataNode;
 
-  const mockdata = [
-    {
-      year: '1951 年',
-      sales: 38
-    },
-    {
-      year: '1952 年',
-      sales: 52
-    },
-    {
-      year: '1956 年',
-      sales: 61
-    },
-    {
-      year: '1957 年',
-      sales: 145
-    },
-    {
-      year: '1958 年',
-      sales: 48
-    },
-    {
-      year: '1959 年',
-      sales: 38
-    },
-    {
-      year: '1960 年',
-      sales: 38
-    },
-    {
-      year: '1962 年',
-      sales: 38
-    }
-  ];
-
-  const cols = {
-    sales: {
-      tickInterval: 20
-    }
-  };
+  if (data[0].name) {
+    const ds = new DataSet();
+    dv = ds.createView().source(data);
+    dv.transform({
+      type: 'fold',
+      fields: data[0].fileds.map((item) => item.toString()),
+      // 展开字段集
+      key: 'key',
+      // key字段
+      value: 'value'
+      //value:  intentJson.results[0].fields[intentFocus] // value字段
+    }).transform({
+      type: 'sort-by',
+      fields: ['key']
+    });
+  }
 
   const tongjikanwu =
     data.length && intentDomain === '统计刊物'
@@ -158,18 +159,79 @@ export default function Statistics(props) {
 
   const shuzhuwenda =
     data.length && intentDomain === '数值问答' ? (
-      <div>
-        <Chart height={400} data={mockdata} scale={cols} forceFit>
-          <Axis name="year" />
-          <Axis name="sales" />
-          <Tooltip
-            crosshairs={{
-              type: 'y'
-            }}
-          />
-          <Geom type="interval" position="year*sales" />
-        </Chart>
-      </div>
+      data[0].name ? (
+        <div>
+          <Chart height={400} data={dv} forceFit>
+            <Legend />
+            <Axis name="key" />
+            <Axis name="value" position={'left'} />
+            <Tooltip />
+            <Geom
+              type="interval"
+              position="key*value"
+              color={[
+                'name'
+              ]}
+              adjust={[
+                {
+                  type: 'dodge',
+                  marginRatio: 1 / 32
+                }
+              ]}
+              tooltip={[
+                'name*value*unit',
+                (name, value, unit) => {
+                  return {
+                    name: name,
+                    value: value + unit
+                  };
+                }
+              ]}
+            />
+          </Chart>
+        </div>
+      ) : (
+        <div>
+          <Chart height={400} data={data} forceFit>
+            <Axis name="prop" />
+            <Axis name="value" />
+            <Legend />
+            <Tooltip />
+            <Geom
+              tooltip={[
+                'prop*value*unit',
+                (prop, value, unit) => {
+                  return {
+                    name: prop,
+                    value: value + unit
+                  };
+                }
+              ]}
+              type="interval"
+              position="prop*value"
+              color="prop"
+            >
+              <Label
+                content="value"
+                offset={20} // 设置坐标轴文本 label 距离坐标轴线的距离
+                textStyle={{
+                  textAlign: 'center', // 文本对齐方向，可取值为： start middle end
+                  fill: '#696969', // 文本的颜色
+                  fontSize: '12', // 文本大小
+                  textBaseline: 'top' // 文本基准线，可取 top middle bottom，默认为middle
+                }}
+                //textStyle={()=>{}}// 支持回调
+                rotate={15}
+                autoRotate={true} // 是否需要自动旋转，默认为 true
+                formatter={(text, item, index) => {
+                  return `${item.point.value}${item.point.unit}`;
+                }} // 回调函数，用于格式化坐标轴上显示的文本信息
+                // htmlTemplate= {()=>{}}, // 使用 html 自定义 label
+              />
+            </Geom>
+          </Chart>
+        </div>
+      )
     ) : null;
 
   return (

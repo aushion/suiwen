@@ -33,7 +33,7 @@ function Home(props) {
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
     return (
-      <div className={className} style={{...style}} onClick={onClick}>
+      <div className={className} style={{ ...style }} onClick={onClick}>
         <Icon type="left" className={homeStyles.arrow} />;
       </div>
     );
@@ -42,8 +42,8 @@ function Home(props) {
   const NextArrow = function(props) {
     const { className, style, onClick } = props;
     return (
-      <div className={className} style={{...style}} onClick={onClick}>
-        <Icon type="right"   className={homeStyles.arrow}/>;
+      <div className={className} style={{ ...style }} onClick={onClick}>
+        <Icon type="right" className={homeStyles.arrow} />;
       </div>
     );
   };
@@ -87,11 +87,10 @@ function Home(props) {
   }
 
   function clickTag(i) {
-    console.log(i);
     setActive(i);
     RestTools.setSession('tagIndex', i); //存储索引，解决页面回退，索引丢失的问题
     skillSlider.slickGoTo(i, true);
-  }
+  } 
 
   // function building() {
   //   message.warn({

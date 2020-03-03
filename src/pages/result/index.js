@@ -60,18 +60,17 @@ function ResultPage(props) {
   );
   const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
   const communityAnswerLength = communityAnswer ? 1 : 0;
-
   const kaifangyuData = repositoryData.filter(
     (item) =>
-      item.domain !== 'CNKI知识' &&
+      // item.domain !== 'CNKI知识' &&
       item.domain !== '期刊' &&
       item.domain !== '学者' &&
       item.domain !== '文献' &&
       item.domain !== '专利' &&
       item.domain !== '医学' &&
       item.domain !== '统计数据' &&
-      !item.dataNode[0].提名 &&
-      !item.dataNode[0].工具书编号
+      !(item.dataNode && item.dataNode[0].题名) &&
+      !(item.dataNode && item.dataNode[0].工具书编号)
   );
 
   const resultLength =
@@ -154,20 +153,23 @@ function ResultPage(props) {
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
               <Col span={18}>
-                {cnkizhishi.length
-                  ? cnkizhishi.map((item) => <Graphic key={item.id} data={item.dataNode} />)
-                  : null}
+                {/* {cnkizhishi.length
+                  ? cnkizhishi.map((item) => (
+                      <Graphic key={item.id} data={item.dataNode} intentFocus={item.intentFocus} />
+                    ))
+                  : null} */}
 
                 {statisticsData.length
                   ? statisticsData.map((item) => (
                       <Statistics
                         title={item.title}
                         id={item.id}
-                        evaluate={item.evaluate}
+                        // evaluate={item.evaluate}
                         intentDomain={item.intentDomain}
                         intentFocus={item.intentFocus}
+                        intentJson={item.intentJson}
                         key={item.id}
-                        data={item.dataNode}
+                        // data={item.dataNode}
                       />
                     ))
                   : null}
@@ -186,11 +188,7 @@ function ResultPage(props) {
                     ))
                   : null}
                 {literatureData.length ? (
-                  <Literature
-                    literatureData={literatureData}
-                    dispatch={dispatch}
-                    
-                  />
+                  <Literature literatureData={literatureData} dispatch={dispatch} />
                 ) : null}
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
@@ -204,7 +202,6 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
-                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
                 {scholarData.length
                   ? scholarData.map((item) => (
                       <Scholar
@@ -234,12 +231,16 @@ function ResultPage(props) {
                         key={item.id}
                         id={item.id}
                         data={item.dataNode}
+                        intentJson={item.intentJson}
+                        intentDomain={item.intentDomain}
+                        domain={item.domain}
                         title={item.title}
                         evaluate={item.evaluate}
                         intentFocus={item.intentFocus}
                       />
                     ))
                   : null}
+                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
 
                 {faqData.length ? (
                   <div>

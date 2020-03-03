@@ -3,6 +3,7 @@ import { ConfigProvider } from 'antd';
 import BasicLayout from './BasicLayout';
 import HomeLayout from './HomeLayout';
 import zhCN from 'antd/es/locale/zh_CN';
+
 export default function(props) {
   if (props.location.pathname === '/home') {
     return (

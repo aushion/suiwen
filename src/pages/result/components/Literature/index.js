@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { List, Tag, Icon, Pagination, Input } from 'antd';
 import dayjs from 'dayjs';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
+import DynamicArrow from './DynamicArrow';
+import SameNames from './SameNames';
+import PeopleInfo from './PeopleInfo';
 
 const { Search } = Input;
 export default function Literature(props) {
@@ -17,6 +21,7 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
+  const subjectValid = subject && subject.filter((item) => !/\d+/g.test(item.g)); //有效学科单元
   const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
@@ -33,20 +38,45 @@ export default function Literature(props) {
   const [subjectInfo, setSubjectInfo] = useState({
     index: 0,
     subjectSql: '',
-    subject: subject ? subject.slice(0, 5) : []
+    subject: subjectValid ? subjectValid.slice(0, 8) : []
   });
 
   useEffect(() => {
     RestTools.setSession('preSearchValue', searchValue);
-  }, [searchValue]);
+  }, []);
 
   useEffect(() => {
-    setYearInfo({
-      ...yearInfo,
-      year: year ? year.slice(0, 12) : []
-    });
-  }, [year, yearInfo]);
+    if(year){
+      setYearInfo({
+        ...yearInfo,
+        year: yearInfo.index > 12 ? year : year.slice(0, 12) //当索引大于初始值是，去所有
+      });
+    }
+    return () => {
+      setYearInfo(null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year]);
+
+  useEffect(() => {
+    if(subject){
+      setSubjectInfo({
+        ...subjectInfo,
+        subject: subjectValid ? subjectValid.slice(0, 8) : []
+      });
+    }
+    return () => {
+      setSubjectInfo(null)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subject]);
+
   const linkMap = {
+    期刊: {
+      name: '论文',
+      url: (kw) => 
+      `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+    },
     文献: {
       name: '相关文献',
       url: (kw) =>
@@ -93,7 +123,7 @@ export default function Literature(props) {
   };
 
   const activeTag = {
-    background: 'rgb(24, 144, 255)',
+    backgroundColor: 'rgb(24, 144, 255)',
     color: '#fff'
   };
 
@@ -109,7 +139,7 @@ export default function Literature(props) {
         yearSql,
         subjectSql,
         keyword: '',
-        searchword:  '',
+        searchword: '',
         intent,
         SN,
         orderSql: ' ' + orderBy
@@ -120,30 +150,50 @@ export default function Literature(props) {
   function sortBy(key) {
     let order = '';
     if (key === 'time') {
-      if (count % 2 !== 0) {
+      if(sortKey === '发表时间'){
+        setCount(count+1)
+      }else{
+        setCount(0)
+      }
+      if (count % 2 === 0) {
         order = " ORDER BY (发表时间,'TIME') desc ";
       } else {
         order = " ORDER BY (发表时间,'TIME') asc ";
       }
-      setSortKey('发表时间')
+      setSortKey('发表时间');
     } else if (key === 'ref') {
-      if (count % 2 !== 0) {
+      if(sortKey === '被引频次'){
+        setCount(count+1)
+      }else{
+        setCount(0)
+      }
+      if (count % 2 === 0) {
         order = " ORDER BY  (被引频次,'integer') desc ";
       } else {
         order = " ORDER BY  (被引频次,'integer') asc ";
       }
-      setSortKey('被引频次')
-
+      setSortKey('被引频次');
     } else if (key === 'down') {
-      if (count % 2 !== 0) {
+      if(sortKey === '下载频次'){
+        setCount(count+1)
+      }else{
+        setCount(0)
+      }
+      if (count % 2 === 0) {
         order = " ORDER BY  (下载频次,'integer') desc ";
       } else {
         order = " ORDER BY  (下载频次,'integer') asc ";
       }
-      setSortKey('下载频次')
+      setSortKey('下载频次');
     } else if (key === 'ffd') {
+      if(sortKey === 'ffd'){
+
+        setCount(count+1)
+      }else{
+        setCount(0)
+      }
       order = " ORDER BY (ffd,'rank') DESC";
-      setSortKey('ffd')
+      setSortKey('ffd');
     }
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
@@ -156,13 +206,12 @@ export default function Literature(props) {
         yearSql,
         subjectSql,
         intent,
-        keyword: RestTools.getSession('preSearchValue'),
-        searchword: searchValue,
+        keyword: '',
+        searchword: '',
         SN,
         orderSql: order
       }
     });
-    setCount(count + 1);
   }
 
   function filterByYear(year, index) {
@@ -171,10 +220,10 @@ export default function Literature(props) {
     const newYearInfo = {
       index, //点击年份标签的索引，用于设置选中状态
       yearSql,
-      year: yearInfo.year
+      year: []
     };
     setYearInfo(newYearInfo); //修改年份选中状态
-    changePage(1)
+    changePage(1);
 
     dispatch({
       type: 'result/getCustomView',
@@ -194,9 +243,9 @@ export default function Literature(props) {
 
   function filterBySubject(subject, index) {
     const subjectSql = subject === '全部' ? '' : subjectSqlMap[subjectType](subject);
-    setSubjectInfo({ ...subjectInfo, index, subjectSql });
+    setSubjectInfo({ subject: [], index: index === 0 ? 0 : 1, subjectSql });
     setYearInfo({ ...yearInfo, index: 0, yearSql: '' });
-    changePage(1)
+    changePage(1);
     dispatch({
       type: 'result/getCustomView',
       payload: {
@@ -213,38 +262,22 @@ export default function Literature(props) {
     });
   }
 
-  function showOrHide(type) {
-    const { year: currentYear } = yearInfo;
-    const { subject: currentSubject } = subjectInfo;
-    if (type === 'year') {
-      setYearInfo({
-        ...yearInfo,
-        year: currentYear.length < year.length ? year : year.slice(0, 12)
-      });
-    } else {
-      setSubjectInfo({
-        ...subjectInfo,
-        subject: currentSubject.length < subject.length ? subject : subject.slice(0, 5)
-      });
-    }
-  }
-
   function handleSearch(value) {
     const keyword = RestTools.getSession('preSearchValue');
-    if (keyword === value) {
+    if (!value || keyword === value) {
       return;
     }
     setYearInfo({
       index: 0,
       yearSql: '',
-      year:[]
-    })
+      year: []
+    });
     setSubjectInfo({
       index: 0,
       subjectSql: '',
       subject: []
-    })
-    changePage(1)
+    });
+    changePage(1);
     dispatch({
       type: 'result/getCustomView',
       payload: {
@@ -264,96 +297,35 @@ export default function Literature(props) {
   }
   //排序子组件
   const SortTag = function(props) {
-    const { sortKeyText, name, sqlKey, tagStyle, activeTag, count, } = props;
+    const { sortKeyText, name, sqlKey, tagStyle, activeTag, count, showArrow } = props;
     return (
       <Tag
         onClick={sortBy.bind(this, sqlKey)}
         style={sortKey === sortKeyText ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
       >
-        {sortKey === sortKeyText ? <Icon type={count % 2 ? 'caret-up' : 'caret-down'} /> : null}
+        {sortKey === sortKeyText && showArrow ? (
+          <Icon type={count % 2 === 0 ? 'caret-down' : 'caret-up'} />
+        ) : null}
         {name}
       </Tag>
     );
   };
 
-  //学者信息组件
-  const PeopleInfo = (props) => {
-    const { 作者 = '', 学者单位 = '', 研究领域 = '' } = props.data;
-    return (
-      <div>
-        <span
-          style={{ fontSize: 16, paddingRight: '20px' }}
-          dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(作者) }}
-        />
-        <span style={{ paddingRight: '20px' }}>{学者单位}</span>
-        <span>{研究领域}</span>
-      </div>
-    );
-  };
-  // 同名学者组件
-  const SameNames = (props) => {
-    const { data } = props;
-    return (
-      <div style={{ marginTop: 10 }}>
-        <div style={{ padding: '20px 0', fontSize: 14 }}>
-          同名学者：
-          <a
-            href={`http://xuezhe.cnki.net/Search/Search.aspx?ac=result&sm=0&sv=${RestTools.removeFlag(
-              data[0].作者 || ''
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            更多学者
-          </a>
-        </div>
-        <ul style={{ padding: 0 }}>
-          {data.map((item, index) => (
-            <li style={{ listStyle: 'none', padding: '5px 0' }} key={index}>
-              <a
-                href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${RestTools.removeFlag(
-                  item.作者
-                )}&code=${item.学者代码}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {RestTools.removeFlag(item.作者)}
-              </a>
-              <span style={{ margin: '0 20px', color: '#999', fontSize: 12 }}>{item.学者单位}</span>
-              <span style={{ color: '#999', fontSize: 12 }}>{item.研究领域}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
-
-  // 列表后箭头组件
-  const DynamicArrow = (props) => {
+  function showOrHide(props) {
     const { currentLength, basicsLength, size, type } = props;
-    if (basicsLength > size) {
-      if (currentLength < basicsLength) {
-        return (
-          <Icon
-            onClick={showOrHide.bind(this, type)}
-            style={{ color: '#000', fontWeight: 'bolder' }}
-            type="arrow-down"
-          />
-        );
-      } else if (currentLength === basicsLength && basicsLength > size) {
-        return (
-          <Icon
-            onClick={showOrHide.bind(this, type)}
-            style={{ color: '#000', fontWeight: 'bolder' }}
-            type="arrow-up"
-          />
-        );
-      }
+    const data = type === 'year' ? year : subjectValid;
+    if (type === 'year') {
+      setYearInfo({
+        ...yearInfo,
+        year: currentLength < basicsLength ? data : data.slice(0, size)
+      });
     } else {
-      return <span></span>;
+      setSubjectInfo({
+        ...subjectInfo,
+        subject: currentLength < basicsLength ? data : data.slice(0, size)
+      });
     }
-  };
-
+  }
   return (
     <div
       style={{
@@ -384,6 +356,7 @@ export default function Literature(props) {
                 sqlKey="ffd"
                 name="默认排序"
                 sortKeyText="ffd"
+                showArrow={false}
                 tagStyle={tagStyle}
                 activeTag={activeTag}
                 count={count}
@@ -393,12 +366,14 @@ export default function Literature(props) {
                 name="时间"
                 sortKeyText="发表时间"
                 tagStyle={tagStyle}
+                showArrow
                 activeTag={activeTag}
                 count={count}
               />
               <SortTag
                 sqlKey="ref"
                 name="引用"
+                showArrow
                 sortKeyText="被引频次"
                 tagStyle={tagStyle}
                 activeTag={activeTag}
@@ -407,6 +382,7 @@ export default function Literature(props) {
               <SortTag
                 sqlKey="down"
                 name="下载"
+                showArrow
                 sortKeyText="下载频次"
                 tagStyle={tagStyle}
                 activeTag={activeTag}
@@ -434,19 +410,22 @@ export default function Literature(props) {
                     </Tag>
                   );
                 })}
-
-                <DynamicArrow
-                  currentLength={yearInfo.year.length}
-                  basicsLength={year.length}
-                  size={12}
-                  type="year"
-                />
+                {year.length > 12 ? (
+                  <DynamicArrow
+                    currentLength={yearInfo.year.length}
+                    basicsLength={year.length}
+                    index={yearInfo.index}
+                    onClick={showOrHide}
+                    size={12}
+                    type="year"
+                  />
+                ) : null}
               </div>
             ) : null}
 
             {subjectInfo.subject.length ? (
               <div style={{ marginBottom: 10 }}>
-                <label htmlFor="其他">学科：</label>
+                <label htmlFor="其他">{subjectType}：</label>
                 {[{ g: '全部', i: '全部' }].concat(subjectInfo.subject).map((item, index) => {
                   return (
                     <Tag
@@ -462,12 +441,16 @@ export default function Literature(props) {
                     </Tag>
                   );
                 })}
-                <DynamicArrow
-                  currentLength={subjectInfo.subject.length}
-                  basicsLength={subject.length}
-                  size={5}
-                  type="subject"
-                />
+                {subjectValid.length > 8 ? (
+                  <DynamicArrow
+                    currentLength={subjectInfo.subject.length}
+                    basicsLength={subjectValid.length}
+                    index={subjectInfo.index}
+                    onClick={showOrHide}
+                    size={8}
+                    type="subject"
+                  />
+                ) : null}
               </div>
             ) : null}
 
@@ -483,58 +466,83 @@ export default function Literature(props) {
               </div>
             ) : null}
             {sameNames ? <SameNames data={sameNames.dataNode.data} /> : null}
-            <a
-              style={{
-                display: 'block',
-                paddingBottom: 10,
-                textAlign: 'right',
-                color: '#999',
-                fontSize: 12
-              }}
-              href={linkMap[linkName].url(intent.results[0].fields[keyword])}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              更多{linkMap[linkName].name}
-            </a>
-            <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ textAlign: 'right' }}>
+                <a
+                  style={{
+                    paddingBottom: 10,
+                    color: '#999',
+                    fontSize: 13
+                  }}
+                  href={linkMap[linkName].url(keyword)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  更多{linkMap[linkName].name}
+                </a>
+              </div>
+
+              <div>
+                <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
+              </div>
+            </div>
           </div>
         }
         dataSource={data}
-        renderItem={(item) => (
-          <List.Item
-            style={{ display: '-ms-flex', display: 'flex', justifyContent: 'space-between' }}
-          >
-            <a
-              style={Object.assign({}, spanStyle, { width: '45%' })}
-              dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(item.题名 || '-')
-              }}
-              href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
-                RestTools.sourceDb[item.来源数据库]
-              }&filename=${item.文件名}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-            <div>
-              下载/被引：
-              {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
-            </div>
-            <div>{item.来源数据库}</div>
-            <div>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</div>
-            <div
-              title={RestTools.removeFlag(
-                (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
-              )}
-              style={{ ...spanStyle, width: '10%' }}
-              dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(
+        renderItem={(item) => {
+          const authorIndex =
+            item.作者 &&
+            item.作者
+              .split(';')
+              .filter((item) => item)
+              .findIndex((item) => /#+/g.test(item));
+          item.作者名称 =
+            item.作者名称 &&
+            item.作者名称
+              .split(';')
+              .filter((item) => item)
+              .map((item, index) => {
+                if (authorIndex === index) {
+                  return `###${item}$$$`;
+                }
+                return item;
+              })
+              .join(';');
+          return (
+            <List.Item
+              style={{ display: '-ms-flex', display: 'flex', justifyContent: 'space-between' }}
+            >
+              <a
+                style={Object.assign({}, spanStyle, { width: '45%' })}
+                dangerouslySetInnerHTML={{
+                  __html: RestTools.translateToRed(item.题名 || '-')
+                }}
+                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
+                  RestTools.sourceDb[item.来源数据库]
+                }&filename=${item.文件名}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+              <div>
+                下载/被引：
+                {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
+              </div>
+              <div>{item.来源数据库}</div>
+              <div>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</div>
+              <div
+                title={RestTools.removeFlag(
                   (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
-                )
-              }}
-            />
-          </List.Item>
-        )}
+                )}
+                style={{ ...spanStyle, width: '10%' }}
+                dangerouslySetInnerHTML={{
+                  __html: RestTools.translateToRed(
+                    (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
+                  )
+                }}
+              />
+            </List.Item>
+          );
+        }}
       />
     </div>
   );
