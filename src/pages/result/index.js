@@ -15,8 +15,10 @@ import NewHelp from './components/NewHelp';
 import CommunityAnswer from './components/CommunityAnswer';
 import Graphic from './components/Graphic';
 import Medical from './components/Medical';
-import RestTools from '../../utils/RestTools';
+import Patent from './components/Patent';
 import Statistics from './components/Statistics';
+import Poem from './components/Poem';
+import RestTools from 'Utils/RestTools';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -58,11 +60,13 @@ function ResultPage(props) {
   const medicalData = repositoryData.filter(
     (item) => item.domain === '医学' && !item.dataNode[0].工具书编号
   );
+  const patentData = repositoryData.filter((item) => item.domain === '专利'); //专利数据
+  const poemData = repositoryData.filter((item) => item.domain === '诗词'); //诗词
   const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
   const communityAnswerLength = communityAnswer ? 1 : 0;
   const kaifangyuData = repositoryData.filter(
     (item) =>
-      // item.domain !== 'CNKI知识' &&
+      item.domain !== '诗词' &&
       item.domain !== '期刊' &&
       item.domain !== '学者' &&
       item.domain !== '文献' &&
@@ -153,12 +157,6 @@ function ResultPage(props) {
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
               <Col span={18}>
-                {/* {cnkizhishi.length
-                  ? cnkizhishi.map((item) => (
-                      <Graphic key={item.id} data={item.dataNode} intentFocus={item.intentFocus} />
-                    ))
-                  : null} */}
-
                 {statisticsData.length
                   ? statisticsData.map((item) => (
                       <Statistics
@@ -190,12 +188,17 @@ function ResultPage(props) {
                 {literatureData.length ? (
                   <Literature literatureData={literatureData} dispatch={dispatch} />
                 ) : null}
+                {patentData.length
+                  ? patentData.map((item) => <Patent key={item.id} data={item}/>)
+                  : null}
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
                       <ReferenceBook
                         key={item.id}
                         id={item.id}
                         domain={item.domain}
+                        intentDomain={item.intentDomain}
+                        intentFocus={item.intentFocus}
                         evaluate={item.evaluate}
                         title={item.title}
                         data={item.dataNode}
@@ -240,6 +243,7 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
+                {poemData.length ? poemData.map(item => <Poem key={item.id} data={item}></Poem>):null}  
                 {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
 
                 {faqData.length ? (

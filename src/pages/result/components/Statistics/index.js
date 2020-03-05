@@ -1,51 +1,16 @@
 import React from 'react';
-import { G2, Chart, Geom, Axis, Tooltip, Label, Legend } from 'bizcharts';
+import {  Chart, Geom, Axis, Tooltip, Label, Legend } from 'bizcharts';
 import DataSet from '@antv/data-set';
 import Evaluate from '../Evaluate';
-import RestTools from '../../../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 import styles from './index.less';
 import mockdata from '../../../../mock/mockData';
 
 export default function Statistics(props) {
-  const { domain, intentId, intentDomain, intentFocus, intentJson, id, evaluate = {} } = props;
+  const { intentDomain, id, evaluate = {} } = props;
   const { good = 0, bad = 0, isevalute = false } = evaluate;
   let dv = null;
-  // const data = mockdata.statistics.single[0].dataNode.map((item) => ({
-  //   ...item,
-  //   value: Number(item.value)
-  // }));
-  // const data = [
-  //   {
-  //     unit: '万人',
-  //     prop: '2000',
-  //     value: 126743
-  //   },
-  //   {
-  //     unit: '万人',
-  //     prop: '2001',
-  //     value: 127627
-  //   },
-  //   {
-  //     unit: '万人',
-  //     prop: '2002',
-  //     value: 128453
-  //   },
-  //   {
-  //     unit: '万人',
-  //     prop: '2003',
-  //     value: 129227
-  //   },
-  //   {
-  //     unit: '万人',
-  //     prop: '2004',
-  //     value: 129988
-  //   },
-  //   {
-  //     unit: '万人',
-  //     prop: '2005',
-  //     value: 130756
-  //   }
-  // ];
+ 
   let data = mockdata.statistics.multi[0].dataNode;
 
   if (data[0].name) {

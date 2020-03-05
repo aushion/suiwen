@@ -14,22 +14,23 @@ export default {
   maxLength: 38,
   HISTORYKEY: 'SUIWEN_RECORD',
   subHtml(oHtml, nlen, isByte) {
-    var rgx1 = /<[^<^>^\/]+>/;      //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
-    var rgx2 = /<\/[^<^>^\/]+>/;    //后标签
-    var rgx4 = /<[^<^>]+>/;         //所有标签
-    var selfTags = "hr,br,img,input,meta".split(",");
-    if (typeof oHtml !== "string") {
-      return "";
+    var rgx1 = /<[^<^>^\/]+>/; //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
+    var rgx2 = /<\/[^<^>^\/]+>/; //后标签
+    var rgx4 = /<[^<^>]+>/; //所有标签
+    var selfTags = 'hr,br,img,input,meta'.split(',');
+    if (typeof oHtml !== 'string') {
+      return '';
     }
-    oHtml = oHtml.replace(/(^\s*)|(\s*$)/g, "").replace(/\r|\n/g, "");
-    var oStr = oHtml.replace(/<[^<^>]*>/g, "");
-    var olen = isByte ? oStr.replace(/[^\x00-\xff]/g, "**").length : oStr.length;
+    oHtml = oHtml.replace(/(^\s*)|(\s*$)/g, '').replace(/\r|\n/g, '');
+    var oStr = oHtml.replace(/<[^<^>]*>/g, '');
+    // eslint-disable-next-line no-control-regex
+    var olen = isByte ? oStr.replace(/[^\x00-\xff]/g, '**').length : oStr.length;
     if (!/^\d+$/.test(nlen) || olen <= nlen) {
       return oHtml;
     }
     var tStr = oHtml;
     var index = 0;
-    var matchs = [];//含有所有html标签的数组
+    var matchs = []; //含有所有html标签的数组
     while (rgx4.test(tStr)) {
       var m = {};
       m.index = index + tStr.search(rgx4);
@@ -42,9 +43,9 @@ export default {
     if (isByte) {
       var i = 0;
       for (var z = 0; z < oStr.length; z++) {
-        i += (oStr.charCodeAt(z) > 255) ? 2 : 1;
+        i += oStr.charCodeAt(z) > 255 ? 2 : 1;
         if (i >= nlen) {
-          tStr = oStr.slice(0, (z + 1));
+          tStr = oStr.slice(0, z + 1);
           break;
         }
       }
@@ -52,14 +53,14 @@ export default {
       tStr = oStr.substr(0, nlen);
     }
     var startTags = [];
-    for (var i = 0; i < matchs.length; i++) {
+    for (let i = 0; i < matchs.length; i++) {
       if (tStr.length <= matchs[i].index) {
         matchs = matchs.slice(0, i);
         break;
       } else {
         tStr = tStr.substring(0, matchs[i].index) + matchs[i].string + tStr.substr(matchs[i].index);
-        if (rgx1.test(matchs[i].string.replace(/(\/\/)/g, ""))) {
-          var name = matchs[i].string.replace(/[<>]/g, "").split(" ");
+        if (rgx1.test(matchs[i].string.replace(/(\/\/)/g, ''))) {
+          var name = matchs[i].string.replace(/[<>]/g, '').split(' ');
           if (name.length > 0) {
             name = name[0];
             if (selfTags.indexOf(name) === -1) {
@@ -67,7 +68,7 @@ export default {
             }
           }
         } else if (rgx2.test(matchs[i].string)) {
-          var name = matchs[i].string.replace(/[<\/>]/g, "");
+          let name = matchs[i].string.replace(/[<\/>]/g, '');
           if (startTags.length > 0 && startTags[startTags.length - 1] === name) {
             startTags.pop();
           }
@@ -75,13 +76,38 @@ export default {
       }
     }
     if (startTags.length > 0) {
-      for (var i = startTags.length - 1; i >= 0; i--) {
+      for (let i = startTags.length - 1; i >= 0; i--) {
         tStr += '</' + startTags[i] + '>';
       }
     }
     return tStr;
   },
-
+  //Unicode 转换 ASCII
+  UnicodeToAscii(str) {
+    let newStr = str.replace(/&#(\d+);/g, function(item) {
+      return String.fromCharCode(item.replace(/[&#;]/g, ''));
+    });
+    return newStr;
+  },
+  handleStr(str, code, more) {
+    if (str) {
+      if (str.length > 300) {
+        return this.subHtml(str, 300, true) + more
+          ? '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
+              code +
+              '&db=crfd"' +
+              'target="_blank"' +
+              'rel="noopener noreferrer"' +
+              'style="white-space:nowrap"' +
+              '> 查看全文>>' +
+              '</a>'
+          : '';
+      } else {
+        return str;
+      }
+    }
+    return '-';
+  },
   getInputTips(value) {
     return request.get(`${process.env.apiUrl}/sug`, {
       params: {
@@ -126,23 +152,45 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return str
-      // .replace(/<[^p]/g,' < ')
-      // .replace(/>[^p]/g,' > ')
-      .replace(/###/g, '<span style="color:red">')
-      .replace(/\$\$\$/g, '</span>')
-      .replace(/&nbsp;/g, '');
+    return (
+      str
+        // .replace(/<[^p]/g,' < ')
+        // .replace(/>[^p]/g,' > ')
+        .replace(/###/g, '<span style="color:red">')
+        .replace(/\$\$\$/g, '</span>')
+        .replace(/&nbsp;/g, '')
+    );
+  },
+  headerInfo: {
+    医学: {
+      title: {
+        cnText: '医学',
+        enText: 'Medical'
+      },
+      headerStyle: {
+        background: 'lightPink'
+      }
+    },
+    农业: {
+      title: {
+        cnText: '农业',
+        enText: 'Agriculture'
+      },
+      headerStyle: {
+        background: 'lightGreen'
+      }
+    }
   },
   sourceDb: {
     博士: 'CDFD',
     硕士: 'CMFD',
     期刊: 'CJFD',
     中国会议: 'CPFD',
-    报纸: 'CCND',
+    报纸: 'CCND'
   },
   formatText(sgText) {
-    sgText = sgText.replace(/<\sp>/g,'');
-    sgText = sgText.replace(/<\s\/p>/g,'');
+    sgText = sgText.replace(/<\sp>/g, '');
+    sgText = sgText.replace(/<\s\/p>/g, '');
     sgText = sgText.replace(/;;/g, ';');
     sgText = sgText.replace(/；；/g, '；');
     sgText = sgText.replace(/::/g, ':');
@@ -185,7 +233,7 @@ export default {
   },
 
   removeHtmlTag(str) {
-    return str.replace(/<[^>]+>/g,"").replace(/&nbsp;/g,'');  //正则去掉所有的html标记
+    return str.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ''); //正则去掉所有的html标记
   },
   completeUrl(str) {
     return str
@@ -221,7 +269,7 @@ export default {
   title: {
     law: {
       cnText: '法律',
-      enText: 'Law',
+      enText: 'Law'
     },
     medicine: {
       cnText: '医学',
@@ -232,6 +280,16 @@ export default {
       enText: 'Agriculture'
     }
   },
+  version: {
+    P0101: '1992年版',
+    P0102: '1996年版',
+    P0103: '2000年版',
+    P0104: '2004年版',
+    P0105: '2008年版',
+    P0106: '2011年版',
+    P0107: '2014年版'
+  },
+
   getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key));
   },

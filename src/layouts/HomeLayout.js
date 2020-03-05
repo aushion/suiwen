@@ -38,8 +38,8 @@ function HomeLayout(props) {
           {username ? null : (
             <a
               className={styles.login_btn}
-              href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              // href={`https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000`}
+              // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
+              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://192.168.103.24/sw.web`}
             >
               登录
             </a>

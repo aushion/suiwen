@@ -5,7 +5,8 @@ export default {
     title: {
       cnText: '智能问答服务平台',
       enText: 'Intelligent Question and Answer'
-    }
+    },
+    headerStyle:null
   },
   reducers: {
     setQuestion(state, { payload }) {

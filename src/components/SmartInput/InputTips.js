@@ -4,7 +4,6 @@ import styles from './inputTips.less';
 
 const InputTips = (props) => {
     const { data, keyword } = props;
-    console.log(7,data)
     return data.length ? (
       <div className={styles["tip-list"]}>
         <List

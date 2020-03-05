@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { List, Tag, Icon, Pagination, Input } from 'antd';
+import { List, Tag, Icon, Pagination, Input, message } from 'antd';
 import dayjs from 'dayjs';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
@@ -15,20 +15,33 @@ export default function Literature(props) {
 
   //嵌套解构
   let {
-    dataNode: { data, year, searchword, subject, subjectType, SN, orderBy, keyword, linkName, sql },
+    dataNode: {
+      data = [],
+      year = [],
+      searchword,
+      subject = [],
+      subjectType,
+      SN,
+      orderBy,
+      keyword,
+      linkName,
+      sql
+    },
     id,
     evaluate,
+    intentId,
     pagination,
     intentJson: intent
   } = works;
-  const subjectValid = subject && subject.filter((item) => !/\d+/g.test(item.g)); //有效学科单元
+
+  const subjectValid = subject ? subject.filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
+
   const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
   const { pageStart, pageCount, total } = pagination;
   const [page, changePage] = useState(pageStart);
   const [searchValue, setSearchValue] = useState(searchword || keyword || '');
-
   const [yearInfo, setYearInfo] = useState({
     index: 0, //年份信息的初始状态
     yearSql: '',
@@ -46,61 +59,73 @@ export default function Literature(props) {
   }, []);
 
   useEffect(() => {
-    if(year){
+    if (year.length) {
       setYearInfo({
         ...yearInfo,
         year: yearInfo.index > 12 ? year : year.slice(0, 12) //当索引大于初始值是，去所有
       });
     }
-    return () => {
-      setYearInfo(null)
-    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year]);
 
   useEffect(() => {
-    if(subject){
+    if (subject.length) {
       setSubjectInfo({
         ...subjectInfo,
         subject: subjectValid ? subjectValid.slice(0, 8) : []
       });
     }
-    return () => {
-      setSubjectInfo(null)
-    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subject]);
+
+  // useEffect(() => {
+  //   console.log('count', count)
+  // },[count])
 
   const linkMap = {
     期刊: {
       name: '论文',
-      url: (kw) => 
-      `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+      url: (kw) =>
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
+          kw
+        )}&korder=4&sel=1`
     },
     文献: {
       name: '相关文献',
       url: (kw) =>
-        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${kw}&korder=0&sel=1`
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${encodeURIComponent(
+          kw
+        )}&korder=0&sel=1`
     },
     硕士: {
       name: '硕士论文',
       url: (kw) =>
-        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
+          kw
+        )}&korder=0&sel=1`
     },
     博士: {
       name: '博士论文',
       url: (kw) =>
-        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
+          kw
+        )}&korder=0&sel=1`
     },
     会议: {
       name: '会议论文',
       url: (kw) =>
-        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CIPD&kw=${kw}&korder=0&sel=1`
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CIPD&kw=${encodeURIComponent(
+          kw
+        )}&korder=0&sel=1`
     },
     硕博: {
       name: '硕博士论文',
       url: (kw) =>
-        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${kw}&korder=0&sel=1`
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
+          kw
+        )}&korder=0&sel=1`
     }
   };
 
@@ -149,12 +174,9 @@ export default function Literature(props) {
 
   function sortBy(key) {
     let order = '';
+    const newCount = count+1;
+    setCount(newCount)
     if (key === 'time') {
-      if(sortKey === '发表时间'){
-        setCount(count+1)
-      }else{
-        setCount(0)
-      }
       if (count % 2 === 0) {
         order = " ORDER BY (发表时间,'TIME') desc ";
       } else {
@@ -162,11 +184,6 @@ export default function Literature(props) {
       }
       setSortKey('发表时间');
     } else if (key === 'ref') {
-      if(sortKey === '被引频次'){
-        setCount(count+1)
-      }else{
-        setCount(0)
-      }
       if (count % 2 === 0) {
         order = " ORDER BY  (被引频次,'integer') desc ";
       } else {
@@ -174,11 +191,6 @@ export default function Literature(props) {
       }
       setSortKey('被引频次');
     } else if (key === 'down') {
-      if(sortKey === '下载频次'){
-        setCount(count+1)
-      }else{
-        setCount(0)
-      }
       if (count % 2 === 0) {
         order = " ORDER BY  (下载频次,'integer') desc ";
       } else {
@@ -186,12 +198,6 @@ export default function Literature(props) {
       }
       setSortKey('下载频次');
     } else if (key === 'ffd') {
-      if(sortKey === 'ffd'){
-
-        setCount(count+1)
-      }else{
-        setCount(0)
-      }
       order = " ORDER BY (ffd,'rank') DESC";
       setSortKey('ffd');
     }
@@ -267,6 +273,10 @@ export default function Literature(props) {
     if (!value || keyword === value) {
       return;
     }
+    if (value.length > 20) {
+      message.warning('输入的字符不能超过20个');
+      return;
+    }
     setYearInfo({
       index: 0,
       yearSql: '',
@@ -304,7 +314,7 @@ export default function Literature(props) {
         style={sortKey === sortKeyText ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
       >
         {sortKey === sortKeyText && showArrow ? (
-          <Icon type={count % 2 === 0 ? 'caret-down' : 'caret-up'} />
+          <Icon type={count % 2 ? 'caret-down' : 'caret-up'} />
         ) : null}
         {name}
       </Tag>
@@ -335,6 +345,9 @@ export default function Literature(props) {
         boxShadow: '#a5a5a5 0 0 10.8px 0'
       }}
     >
+      {intentId === '43' || intentId === '71' || intentId === '77' ? (
+        <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
+      ) : null}
       <List
         header={
           <div style={{ overflow: 'hidden' }}>
@@ -348,6 +361,7 @@ export default function Literature(props) {
                   onChange={(e) => setSearchValue(e.target.value)}
                   onSearch={(value) => handleSearch(value)}
                   style={{ width: 300 }}
+                  maxLength={20}
                 />
               )}
             </div>
@@ -393,24 +407,23 @@ export default function Literature(props) {
         }
         footer={
           <div>
-            {yearInfo.year.length ? (
+            {year && year.length ? (
               <div style={{ marginBottom: 10 }}>
                 <label htmlFor="时间">时间：</label>
-
                 {[{ 年: '全部' }].concat(yearInfo.year).map((item, index) => {
                   return (
                     <Tag
                       style={
                         yearInfo.index === index ? { ...tagStyle, ...activeTag } : { ...tagStyle }
                       }
-                      key={item.年}
+                      key={item.年 || ''}
                       onClick={filterByYear.bind(this, item.年, index)}
                     >
-                      {item.年}
+                      {item.年 || ''}
                     </Tag>
                   );
                 })}
-                {year.length > 12 ? (
+                {year && year.length > 12 ? (
                   <DynamicArrow
                     currentLength={yearInfo.year.length}
                     basicsLength={year.length}
@@ -423,7 +436,7 @@ export default function Literature(props) {
               </div>
             ) : null}
 
-            {subjectInfo.subject.length ? (
+            {subject && subject.length ? (
               <div style={{ marginBottom: 10 }}>
                 <label htmlFor="其他">{subjectType}：</label>
                 {[{ g: '全部', i: '全部' }].concat(subjectInfo.subject).map((item, index) => {
@@ -454,7 +467,7 @@ export default function Literature(props) {
               </div>
             ) : null}
 
-            {total >= pageCount ? (
+            {data.length && total >= pageCount ? (
               <div>
                 <Pagination
                   size="small"
@@ -465,6 +478,7 @@ export default function Literature(props) {
                 />
               </div>
             ) : null}
+
             {sameNames ? <SameNames data={sameNames.dataNode.data} /> : null}
             <div style={{ overflow: 'hidden' }}>
               <div style={{ textAlign: 'right' }}>
@@ -490,33 +504,27 @@ export default function Literature(props) {
         }
         dataSource={data}
         renderItem={(item) => {
-          const authorIndex =
-            item.作者 &&
-            item.作者
-              .split(';')
-              .filter((item) => item)
-              .findIndex((item) => /#+/g.test(item));
+          const author = intent.results[0].fields['作者'];
           item.作者名称 =
             item.作者名称 &&
             item.作者名称
               .split(';')
               .filter((item) => item)
               .map((item, index) => {
-                if (authorIndex === index) {
+                if (author === item) {
                   return `###${item}$$$`;
                 }
                 return item;
               })
               .join(';');
           return (
-            <List.Item
-              style={{ display: '-ms-flex', display: 'flex', justifyContent: 'space-between' }}
-            >
+            <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
               <a
                 style={Object.assign({}, spanStyle, { width: '45%' })}
                 dangerouslySetInnerHTML={{
                   __html: RestTools.translateToRed(item.题名 || '-')
                 }}
+                title={RestTools.removeFlag(item.题名 || '-')}
                 href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
                   RestTools.sourceDb[item.来源数据库]
                 }&filename=${item.文件名}`}
@@ -528,7 +536,7 @@ export default function Literature(props) {
                 {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
               </div>
               <div>{item.来源数据库}</div>
-              <div>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '---------'}</div>
+              <div style={{minWidth: '72px'}}>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}</div>
               <div
                 title={RestTools.removeFlag(
                   (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'

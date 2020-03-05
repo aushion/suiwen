@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Empty , Spin} from 'antd';
+import { Divider} from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import DomainTags from '../components/DomainTags';

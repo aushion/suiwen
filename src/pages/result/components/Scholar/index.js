@@ -14,8 +14,8 @@ export default function Scholar(props) {
         itemLayout="vertical"
         renderItem={(item) => {
           const relatedLiterature = item.literature
-            ? item.literature.map((item) => (
-                <div>
+            ? item.literature.map((item,index) => (
+                <div key={index}>
                   <a
                     href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
                       RestTools.sourceDb[item.来源数据库]

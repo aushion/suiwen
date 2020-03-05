@@ -90,7 +90,7 @@ function Home(props) {
     setActive(i);
     RestTools.setSession('tagIndex', i); //存储索引，解决页面回退，索引丢失的问题
     skillSlider.slickGoTo(i, true);
-  } 
+  }
 
   // function building() {
   //   message.warn({
@@ -98,6 +98,11 @@ function Home(props) {
   //     icon: <Icon type="smile" />
   //   });
   // }
+
+  // function gotoSpecial(q,domain) {
+  //   router.push(`/result?q=${q}&domain=${domain}`);
+  // }
+
   const slideList = skillExamples.length
     ? skillExamples.map((item) => {
         return (
@@ -262,6 +267,7 @@ function Home(props) {
                                   href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                                     item.q
                                   )}&r=query&domain=${encodeURIComponent('医学')}`}
+                                  // onClick={gotoSpecial.bind(this, item.q,'医学')}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
@@ -295,6 +301,8 @@ function Home(props) {
                                   href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                                     item.q
                                   )}&r=query&domain=${encodeURIComponent('农业')}`}
+                                  // onClick={gotoSpecial.bind(this, item.q,'农业')}
+
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}

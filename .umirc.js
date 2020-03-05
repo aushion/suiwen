@@ -1,4 +1,5 @@
 // ref: https://umijs.org/config/
+import path from 'path'
 export default {
   treeShaking: true,
   define: {
@@ -7,10 +8,13 @@ export default {
     'process.env.apiUrl_help': 'http://192.168.103.24/qa.fb/api'
   },
   base: '/',
-  publicPath: './',
+  publicPath: '/',
   history: 'hash',
   targets: {
     ie: 9
+  },
+  alias: {
+    Utils: path.resolve(__dirname,'src/utils')
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html

@@ -7,7 +7,7 @@ import styles from './index.less';
 const { TabPane } = Tabs;
 const { Column } = Table;
 export default function Medical(props) {
-  const { title, id, intentFocus, intentDomain, data, evaluate, intentJson } = props;
+  const {id, intentFocus, intentDomain, data, evaluate, intentJson } = props;
   const { good, bad, isevalute } = evaluate;
   const tabs = {
     疾病: ['治疗', '别名', '发病机制', '并发症', '流行病学', '病因', '诊断'].filter(
@@ -67,6 +67,7 @@ export default function Medical(props) {
         <a
           className={styles.title}
           target="_blank"
+          rel="noopener noreferrer"
           href={`http://qa.cnki.net/web/query/link?id=${tableId}&db=${data[0].table}`}
         >
           {intentJson.parsed_key + '_医药知识库'}
