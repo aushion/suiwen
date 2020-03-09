@@ -8,8 +8,8 @@ const SameNames = (props) => {
         同名学者：
         <a
           href={`http://xuezhe.cnki.net/Search/Search.aspx?ac=result&sm=0&sv=${RestTools.removeFlag(
-            data[0].作者 || ''
-          )}`}
+            encodeURIComponent(data[0].作者 || ''
+          ))}`}
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -15,7 +15,7 @@ function Poem(props) {
     <div className={styles.poem}>
       {dataNode.length
         ? dataNode.map((item, index) => {
-            const { 诗词名称, 诗文, 作者, 年代 } = item;
+            const { 诗词名称='', 诗文='', 作者='', 年代='' } = item;
             return (
               <div key={index} className={styles.poem_item}>
                 <div
@@ -30,7 +30,7 @@ function Poem(props) {
                 />
                 <div
                   className={styles.poem_content}
-                  dangerouslySetInnerHTML={{ __html: `${RestTools.translateToRed(诗文)}` }}
+                  dangerouslySetInnerHTML={{ __html: `${RestTools.completeToolsBook(RestTools.translateToRed(诗文))}` }}
                 />
               </div>
             );

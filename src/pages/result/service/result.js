@@ -6,10 +6,10 @@ export function getAnswer(payload) {
   });
 }
 
-export function getAnswerByDomain(payload){
-  return request.get('/getAnswerByDomain',{
+export function getAnswerByDomain(payload) {
+  return request.get('/getAnswerByDomain', {
     params: { ...payload }
-  })
+  });
 }
 
 export function getSG(payload) {
@@ -37,28 +37,45 @@ export function setEvaluate(payload) {
 }
 
 export function getHotHelpList(payload) {
-  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=12')
+  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=12');
 }
 
 export function getCommunityAnswer(payload) {
   return request.get('/getCommunityAnswer', {
     params: { ...payload }
-  })
+  });
 }
 
-export function getCustomView(payload){
+export function getCustomView(payload) {
   return request.post('/getCustomView', null, {
     data: {
       ...payload
     }
-  })
+  });
 }
 
 export function setQuestion(payload) {
-  console.log(payload)
-  return request.post(process.env.apiUrl_help + '/SetQuestion',null, {
+  return request.post(process.env.apiUrl_help + '/SetQuestion', null, {
     params: {
       ...payload
     }
-  })
+  });
+}
+
+//获取问题收集，统计用
+export function collectQuestion(payload) {
+  return request.post(`${process.env.apiUrl_collect}/admin/cache/submit`, null, {
+    data: {
+      ...payload
+    }
+  });
+}
+
+//问答统计
+export function submitQa(payload) {
+  return request.post(`${process.env.apiUrl_collect}/admin/cache/submitqa`, null, {
+    data: {
+      ...payload
+    }
+  });
 }

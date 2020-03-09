@@ -59,7 +59,7 @@ function Evaluate(props) {
         <Icon
           type="like"
           style={isevaluate === '1' ? { color: '#e54020' } : { color: '#848484' }}
-        ></Icon>
+        />
         {good}
       </span>
       <span
@@ -70,7 +70,7 @@ function Evaluate(props) {
         <Icon
           type="dislike"
           style={isevaluate === '0' ? { color: '#e54020' } : { color: '#848484' }}
-        ></Icon>
+        />
         {bad}
       </span>
     </div>

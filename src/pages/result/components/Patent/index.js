@@ -35,7 +35,7 @@ function Patent(props) {
           width={250}
           render={(text, record) => <span>{record.发明机构 ? record.发明机构 : '-'}</span>}
         />
-        <Column title="发表时间" dataIndex="发表时间" key="发表时间" />
+        <Column title="发表时间" dataIndex="发表时间" key="发表时间" width={100} />
         <Column title="发明人" dataIndex="发明人" key="发明人" />
       </Table>
 

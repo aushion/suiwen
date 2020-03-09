@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { List, Tag, Icon, Pagination, Input, message } from 'antd';
 import dayjs from 'dayjs';
+import findIndex from 'lodash/findIndex';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import DynamicArrow from './DynamicArrow';
@@ -22,8 +23,11 @@ export default function Literature(props) {
       subject = [],
       subjectType,
       SN,
+      korderValue,
       orderBy,
       keyword,
+      replaceSql,
+      fieldWord,
       linkName,
       sql
     },
@@ -35,7 +39,6 @@ export default function Literature(props) {
   } = works;
 
   const subjectValid = subject ? subject.filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
-
   const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
@@ -73,6 +76,7 @@ export default function Literature(props) {
     if (subject.length) {
       setSubjectInfo({
         ...subjectInfo,
+        index: subjectInfo.item ? findIndex(subjectValid, subjectInfo.item) + 1 : subjectInfo.index,
         subject: subjectValid ? subjectValid.slice(0, 8) : []
       });
     }
@@ -80,52 +84,48 @@ export default function Literature(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subject]);
 
-  // useEffect(() => {
-  //   console.log('count', count)
-  // },[count])
-
   const linkMap = {
     期刊: {
-      name: '论文',
+      name: '期刊论文',
       url: (kw) =>
-        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
+        `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CJFQ&kw=${encodeURIComponent(
           kw
-        )}&korder=4&sel=1`
+        )}&korder=${korderValue}&sel=1`
     },
     文献: {
       name: '相关文献',
       url: (kw) =>
         `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${encodeURIComponent(
           kw
-        )}&korder=0&sel=1`
+        )}&korder=${korderValue}&sel=1`
     },
     硕士: {
       name: '硕士论文',
       url: (kw) =>
         `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
           kw
-        )}&korder=0&sel=1`
+        )}&korder=${korderValue}&sel=1`
     },
     博士: {
       name: '博士论文',
       url: (kw) =>
         `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
           kw
-        )}&korder=0&sel=1`
+        )}&korder=${korderValue}&sel=1`
     },
     会议: {
       name: '会议论文',
       url: (kw) =>
         `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CIPD&kw=${encodeURIComponent(
           kw
-        )}&korder=0&sel=1`
+        )}&korder=${korderValue}&sel=1`
     },
     硕博: {
       name: '硕博士论文',
       url: (kw) =>
         `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
           kw
-        )}&korder=0&sel=1`
+        )}&korder=${korderValue}&sel=1`
     }
   };
 
@@ -163,6 +163,8 @@ export default function Literature(props) {
         whereSql: sql,
         yearSql,
         subjectSql,
+        fieldWord,
+        replaceSql,
         keyword: '',
         searchword: '',
         intent,
@@ -174,8 +176,8 @@ export default function Literature(props) {
 
   function sortBy(key) {
     let order = '';
-    const newCount = count+1;
-    setCount(newCount)
+    const newCount = count + 1;
+    setCount(newCount);
     if (key === 'time') {
       if (count % 2 === 0) {
         order = " ORDER BY (发表时间,'TIME') desc ";
@@ -213,6 +215,8 @@ export default function Literature(props) {
         subjectSql,
         intent,
         keyword: '',
+        fieldWord,
+        replaceSql,
         searchword: '',
         SN,
         orderSql: order
@@ -239,6 +243,8 @@ export default function Literature(props) {
         yearSql: yearSql,
         intent,
         subjectSql,
+        fieldWord,
+        replaceSql,
         keyword: '',
         searchword: '',
         SN,
@@ -249,7 +255,14 @@ export default function Literature(props) {
 
   function filterBySubject(subject, index) {
     const subjectSql = subject === '全部' ? '' : subjectSqlMap[subjectType](subject);
-    setSubjectInfo({ subject: [], index: index === 0 ? 0 : 1, subjectSql });
+    setSubjectInfo({
+      subject: [],
+      index: index === 0 ? 0 : 1,
+      subjectSql,
+      item: {
+        i: subject
+      }
+    });
     setYearInfo({ ...yearInfo, index: 0, yearSql: '' });
     changePage(1);
     dispatch({
@@ -260,6 +273,8 @@ export default function Literature(props) {
         yearSql: '',
         intent,
         subjectSql,
+        fieldWord,
+        replaceSql,
         searchword: '',
         keyword: '',
         SN,
@@ -270,11 +285,14 @@ export default function Literature(props) {
 
   function handleSearch(value) {
     const keyword = RestTools.getSession('preSearchValue');
+    if(!value){
+      message.warning('您还没有输入哟')
+    }
     if (!value || keyword === value) {
       return;
     }
     if (value.length > 20) {
-      message.warning('输入的字符不能超过20个');
+        message.warning('输入的字符不能超过20个');
       return;
     }
     setYearInfo({
@@ -296,6 +314,8 @@ export default function Literature(props) {
         yearSql: '',
         intent,
         subjectSql: '',
+        fieldWord,
+        replaceSql,
         keyword,
         searchword: value,
         SN,
@@ -348,7 +368,7 @@ export default function Literature(props) {
       {intentId === '43' || intentId === '71' || intentId === '77' ? (
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}
-      <List
+      {data.length ? <List
         header={
           <div style={{ overflow: 'hidden' }}>
             <div style={{ float: 'left' }}>
@@ -480,8 +500,8 @@ export default function Literature(props) {
             ) : null}
 
             {sameNames ? <SameNames data={sameNames.dataNode.data} /> : null}
-            <div style={{ overflow: 'hidden' }}>
-              <div style={{ textAlign: 'right' }}>
+           <div style={{ overflow: 'hidden' }}>
+           {linkName ? <div style={{ textAlign: 'right' }}>
                 <a
                   style={{
                     paddingBottom: 10,
@@ -495,6 +515,7 @@ export default function Literature(props) {
                   更多{linkMap[linkName].name}
                 </a>
               </div>
+              :null}
 
               <div>
                 <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
@@ -531,12 +552,14 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div>
+              <div style={{width: '150px'}}>
                 下载/被引：
                 {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
               </div>
               <div>{item.来源数据库}</div>
-              <div style={{minWidth: '72px'}}>{item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}</div>
+              <div style={{ width: '72px' }}>
+                {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
+              </div>
               <div
                 title={RestTools.removeFlag(
                   (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
@@ -551,7 +574,7 @@ export default function Literature(props) {
             </List.Item>
           );
         }}
-      />
+      />: null}
     </div>
   );
 }

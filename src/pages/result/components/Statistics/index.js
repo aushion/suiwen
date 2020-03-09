@@ -1,34 +1,29 @@
 import React from 'react';
-import {  Chart, Geom, Axis, Tooltip, Label, Legend } from 'bizcharts';
-import DataSet from '@antv/data-set';
+import { Chart, Geom, Axis, Tooltip, Label, Legend } from 'bizcharts';
+import  flattenDeep  from 'lodash/flattenDeep';
 import Evaluate from '../Evaluate';
 import RestTools from 'Utils/RestTools';
 import styles from './index.less';
-import mockdata from '../../../../mock/mockData';
 
 export default function Statistics(props) {
-  const { intentDomain, id, evaluate = {} } = props;
+  let { intentDomain, id, evaluate = {}, data=[] } = props;
   const { good = 0, bad = 0, isevalute = false } = evaluate;
-  let dv = null;
- 
-  let data = mockdata.statistics.multi[0].dataNode;
 
-  if (data[0].name) {
-    const ds = new DataSet();
-    dv = ds.createView().source(data);
-    dv.transform({
-      type: 'fold',
-      fields: data[0].fileds.map((item) => item.toString()),
-      // 展开字段集
-      key: 'key',
-      // key字段
-      value: 'value'
-      //value:  intentJson.results[0].fields[intentFocus] // value字段
-    }).transform({
-      type: 'sort-by',
-      fields: ['key']
+  if(data.length && data[0].name) {
+    data = data.map((item) => {
+      item = item.fileds.map((current) => {
+        return {
+          key: current,
+          value: item[current],
+          name: item.name,
+          unit: item.unit
+        };
+      });
+      return item;
     });
+    data = flattenDeep(data)
   }
+
 
   const tongjikanwu =
     data.length && intentDomain === '统计刊物'
@@ -126,7 +121,7 @@ export default function Statistics(props) {
     data.length && intentDomain === '数值问答' ? (
       data[0].name ? (
         <div>
-          <Chart height={400} data={dv} forceFit>
+          <Chart height={400} data={data} forceFit>
             <Legend />
             <Axis name="key" />
             <Axis name="value" position={'left'} />
@@ -134,9 +129,7 @@ export default function Statistics(props) {
             <Geom
               type="interval"
               position="key*value"
-              color={[
-                'name'
-              ]}
+              color={['name']}
               adjust={[
                 {
                   type: 'dodge',
@@ -201,10 +194,11 @@ export default function Statistics(props) {
 
   return (
     <div className={styles.Statistics}>
+     
       {intentDomain === '数值问答' ? shuzhuwenda : null}
       {intentDomain === '年鉴名录' ? nianjianminglu : null}
-
       {intentDomain === '统计刊物' ? tongjikanwu : null}
+
       <a
         style={{ display: 'block', textAlign: 'right', color: '#999', fontSize: 14 }}
         href="http://data.cnki.net/Yearbook"

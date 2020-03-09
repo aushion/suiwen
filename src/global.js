@@ -6,6 +6,13 @@ if (!Cookies.get('cnki_qa_uuid')) {
   });
 }
 
+if(Cookies.get('Ecp_LoginStuts')){
+  window.localStorage.setItem('userInfo',Cookies.get('Ecp_LoginStuts'))
+}else{
+  // window.Ecp_LogoutOptr()
+  window.localStorage.setItem('userInfo',null)
+}
+
 if (/Android|Windows Phone|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   window.location.href = 'http://qa.cnki.net/sw.mobile';
 } else if (/iPad/i.test(navigator.userAgent)) {

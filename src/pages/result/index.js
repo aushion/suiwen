@@ -162,12 +162,12 @@ function ResultPage(props) {
                       <Statistics
                         title={item.title}
                         id={item.id}
-                        // evaluate={item.evaluate}
+                        evaluate={item.evaluate}
                         intentDomain={item.intentDomain}
                         intentFocus={item.intentFocus}
                         intentJson={item.intentJson}
                         key={item.id}
-                        // data={item.dataNode}
+                        data={item.dataNode}
                       />
                     ))
                   : null}
@@ -185,7 +185,7 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
-                {literatureData.length ? (
+                {literatureData.length && (literatureData.length === 1 || literatureData.length === 3)? (
                   <Literature literatureData={literatureData} dispatch={dispatch} />
                 ) : null}
                 {patentData.length
@@ -213,6 +213,7 @@ function ResultPage(props) {
                         evaluate={item.evaluate}
                         title={item.title}
                         data={item.dataNode}
+                        intentJson={item.intentJson}
                       />
                     ))
                   : null}
@@ -244,8 +245,6 @@ function ResultPage(props) {
                     ))
                   : null}
                 {poemData.length ? poemData.map(item => <Poem key={item.id} data={item}></Poem>):null}  
-                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
-
                 {faqData.length ? (
                   <div>
                     {faqData.map((item) => (
@@ -253,6 +252,9 @@ function ResultPage(props) {
                     ))}
                   </div>
                 ) : null}
+                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
+
+              
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
               <Col span={6} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>

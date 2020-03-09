@@ -3,6 +3,7 @@ import { Layout, BackTop } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
+import Cookies from 'js-cookie';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import RestTools from '../utils/RestTools';
@@ -14,7 +15,7 @@ function BasicLayout(props) {
   let { q = RestTools.getSession('q') } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  const {title, headerStyle} = props;
+  const { title, headerStyle } = props;
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
     value && router.replace(`/result?q=${value.trim()}`);
@@ -26,19 +27,24 @@ function BasicLayout(props) {
     router.push('/home');
   }
 
- // function goLogin() {
-    // console.log('goLogin');
-    // window.Ecp_ShowLoginLayer2('-60px', '42px');
+  // function goLogin() {
+  // console.log('goLogin');
+  // window.Ecp_ShowLoginLayer2('-60px', '42px');
   //}
 
   function logout() {
+    Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
+    Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
+		Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+		Cookies.remove("Ecp_session", { expires: -1 });
+		Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     localStorage.setItem('userInfo', null);
     setUsername(null);
   }
 
   return (
     <div className={styles.wrapper}>
-      <Header className={styles.header} style={headerStyle?headerStyle:null}>
+      <Header className={styles.header} style={headerStyle ? headerStyle : null}>
         <div className={styles.inputGroup}>
           <div onClick={goHome} className={styles.logo} />
           <div className={styles.title} onClick={goHome}>
@@ -58,9 +64,8 @@ function BasicLayout(props) {
             {username ? null : (
               <a
                 className={styles.login_btn}
-              //  href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://192.168.103.24/sw.web`}
-
+                //  href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
+                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
               >
                 登录
               </a>

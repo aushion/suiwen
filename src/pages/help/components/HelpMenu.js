@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Menu } from 'antd';
 import router from 'umi/router';
+import querystring from 'querystring'
 
 export default function HelpMenu(props) {
   const [current, setCurrent] = useState(props.current);
+  const {data = []} = props;
+  const paramstr = window.location.href.split('?')[1];
+  const query = querystring.parse(paramstr);
+  const {username = ''} = query;
+  
   function handleClick(e) {
     setCurrent(e.key);
-    router.push(`/help/${e.key}`);
+    router.push(username ? `/help/${e.key}?username=${username}`: `/help/${e.key}`);
   }
   return (
     <Menu
@@ -16,10 +22,10 @@ export default function HelpMenu(props) {
       selectedKeys={[current]}
       mode="horizontal"
     >
-      <Menu.Item key="newHelp">新求助</Menu.Item>
-      <Menu.Item key="hotHelp">热门求助</Menu.Item>
-      <Menu.Item key="myHelp">我的求助</Menu.Item>
-      <Menu.Item key="myReply">我的回答</Menu.Item>
+      {data.length ? data.map(item => 
+        <Menu.Item key={item.key}>{item.text}</Menu.Item>
+      ):null}
+  
     </Menu>
   );
 }

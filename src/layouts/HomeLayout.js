@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import SmartInput from '../components/SmartInput';
+import Cookies from 'js-cookie';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 
@@ -24,6 +25,11 @@ function HomeLayout(props) {
   // }
 
   function logout() {
+    Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
+    Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
+		Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+		Cookies.remove("Ecp_session", { expires: -1 });
+		Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     localStorage.setItem('userInfo', null);
     setUsername(null);
   }
@@ -39,7 +45,7 @@ function HomeLayout(props) {
             <a
               className={styles.login_btn}
               // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://192.168.103.24/sw.web`}
+              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
             >
               登录
             </a>

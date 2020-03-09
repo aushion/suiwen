@@ -8,6 +8,7 @@ import Link from 'umi/link';
 import RestTools from '../../utils/RestTools';
 import 'braft-editor/dist/index.css';
 import HelpMenu from '../help/components/HelpMenu';
+
 import replyStyle from './index.less';
 
 const FormItem = Form.Item;
@@ -20,6 +21,35 @@ function Reply(props) {
   const { getFieldDecorator } = props.form;
   const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
+  const menus = RestTools.getLocalStorage('userInfo')
+  ? [
+      {
+        key: 'newHelp',
+        text: '新求助'
+      },
+      {
+        key: 'hotHelp',
+        text: '热门求助'
+      },
+      {
+        key: 'myHelp',
+        text: '我的求助'
+      },
+      {
+        key: 'myReply',
+        text: '我的回答'
+      }
+    ]
+  : [
+      {
+        key: 'newHelp',
+        text: '新求助'
+      },
+      {
+        key: 'hotHelp',
+        text: '热门求助'
+      }
+    ];
   function submitContent(e) {
     if (userInfo) {
       // const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
@@ -71,7 +101,7 @@ function Reply(props) {
   return (
     <div className={replyStyle.reply}>
       <div>
-        <HelpMenu></HelpMenu>
+        <HelpMenu data={menus}></HelpMenu>
       </div>
       <div className={replyStyle.content}>
         <div className={replyStyle.title}>
@@ -94,7 +124,7 @@ function Reply(props) {
                 />
                 <div>
                   <span style={{ paddingRight: 20 }}>{index}#</span>
-                  <Link to={'/myReply'} style={{ paddingRight: 20 }}>
+                  <Link to={`help/otherHelp?username=${item.UserName || item.userName}`} style={{ paddingRight: 20 }}>
                     <Icon type="user" /> {item.UserName || item.userName}
                   </Link>
                   <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
