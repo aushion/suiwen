@@ -19,7 +19,7 @@ export default function Scholar(props) {
   const filterKey = resultKey.filter((item) => linkKey[item]);
   let paramObj = {};
   filterKey.forEach((item) => {
-    paramObj[linkKey[item]] = fields[item];
+    paramObj[linkKey[item]] = RestTools.removeFlag(fields[item]);
   });
   const paramString = querystring.stringify(paramObj);
   return (

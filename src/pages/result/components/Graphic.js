@@ -13,6 +13,7 @@ function Graphic(props) {
     setVisible(true);
     setText(text);
   }
+
   return (
     <div className={styles.Graphic}>
       {domain === '翻译' ? (

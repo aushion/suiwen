@@ -285,8 +285,9 @@ export default function Literature(props) {
 
   function handleSearch(value) {
     const keyword = RestTools.getSession('preSearchValue');
-    if(!value){
-      message.warning('您还没有输入哟')
+    if(!value.trim()){
+      message.warning('您还没有输入哟');
+      return;
     }
     if (!value || keyword === value) {
       return;
@@ -552,19 +553,19 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div style={{width: '150px'}}>
+              <div style={{width: '20%'}}>
                 下载/被引：
                 {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
               </div>
-              <div>{item.来源数据库}</div>
-              <div style={{ width: '72px' }}>
+              <div style={{width: '5%'}}>{item.来源数据库}</div>
+              <div style={{ width: '15%', textAlign:'center' }}>
                 {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
               </div>
               <div
                 title={RestTools.removeFlag(
                   (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
                 )}
-                style={{ ...spanStyle, width: '10%' }}
+                style={{ ...spanStyle, width: '15%' }}
                 dangerouslySetInnerHTML={{
                   __html: RestTools.translateToRed(
                     (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
