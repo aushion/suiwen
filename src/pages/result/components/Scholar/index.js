@@ -3,10 +3,25 @@ import styles from './index.less';
 import face from '../../../../assets/face.gif';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
+import querystring from 'querystring';
 
 export default function Scholar(props) {
-  const { data, title, id, evaluate } = props;
+  const { data, id, evaluate, intentJson } = props;
   const { good, bad, isevalute } = evaluate;
+  const { fields } = intentJson.results[0];
+  const linkKey = {
+    学者名: 'sv',
+    学者单位: 'ut',
+    研究领域: 'dn',
+    主题: 'dn'
+  };
+  const resultKey = Object.keys(fields);
+  const filterKey = resultKey.filter((item) => linkKey[item]);
+  let paramObj = {};
+  filterKey.forEach((item) => {
+    paramObj[linkKey[item]] = RestTools.removeFlag(fields[item]);
+  });
+  const paramString = querystring.stringify(paramObj);
   return (
     <div className={styles.Scholar}>
       <List
@@ -14,15 +29,19 @@ export default function Scholar(props) {
         itemLayout="vertical"
         renderItem={(item) => {
           const relatedLiterature = item.literature
-            ? item.literature.map((item) => (
-                <div>
+            ? item.literature.map((item, index) => (
+                <div key={index}>
                   <a
                     href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
                       RestTools.sourceDb[item.来源数据库]
                     }&filename=${item.文件名}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{textDecoration: 'underline', padding: '4px 0',display: 'inline-block'}}
+                    style={{
+                      textDecoration: 'underline',
+                      padding: '4px 0',
+                      display: 'inline-block'
+                    }}
                   >
                     {item.题名}
                   </a>
@@ -41,8 +60,8 @@ export default function Scholar(props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.学者名) }}
-                    href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${RestTools.removeFlag(
-                      item.学者名
+                    href={`http://kns.cnki.net/kcms/detail/knetsearch.aspx?sfield=au&skey=${encodeURIComponent(
+                      RestTools.removeFlag(item.学者名)
                     )}&code=${item.学者代码}`}
                   />
 
@@ -112,7 +131,7 @@ export default function Scholar(props) {
         className={styles.Scholar_more}
         target="_blank"
         rel="noopener noreferrer"
-        href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&dn=${title}`}
+        href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&${paramString}`}
       >
         CNKI学者成果库
       </a>

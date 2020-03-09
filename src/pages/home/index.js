@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Row, Col, Divider, message } from 'antd';
+import { Spin, List, Row, Col, Divider, message, Icon } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -24,11 +24,28 @@ function Home(props) {
   const { skillExamples, specialQuestions, newHelpList, loading } = props;
   const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
-  const activeStyle = {
-    backgroundColor: '#29A7F3',
-    padding: '8px 24px',
-    color: '#fff',
-    borderRadius: 4
+  // const activeStyle = {
+  //   backgroundColor: '#29A7F3',
+  //   padding: '8px 24px',
+  //   color: '#fff',
+  //   borderRadius: 4
+  // };
+  const PrevArrow = function(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div className={className} style={{ ...style }} onClick={onClick}>
+        <Icon type="left" className={homeStyles.arrow} />;
+      </div>
+    );
+  };
+
+  const NextArrow = function(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div className={className} style={{ ...style }} onClick={onClick}>
+        <Icon type="right" className={homeStyles.arrow} />;
+      </div>
+    );
   };
 
   const specialActiveStyle = {
@@ -37,6 +54,16 @@ function Home(props) {
     color: '#fff',
     borderRadius: 4
   };
+
+  const tagSettings = {
+    infinite: false,
+    speed: 500,
+    slidesToShow: 7,
+    slidesToScroll: 1,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />
+  };
+
   const skillSettings = {
     infinite: true,
     initialSlide: RestTools.getSession('tagIndex') || 0,
@@ -71,6 +98,11 @@ function Home(props) {
   //     icon: <Icon type="smile" />
   //   });
   // }
+
+  // function gotoSpecial(q,domain) {
+  //   router.push(`/result?q=${q}&domain=${domain}`);
+  // }
+
   const slideList = skillExamples.length
     ? skillExamples.map((item) => {
         return (
@@ -108,6 +140,19 @@ function Home(props) {
       })
     : null;
 
+  const tagList = skillExamples.length
+    ? skillExamples.map((item, index) => (
+        <div
+          onClick={clickTag.bind(this, index)}
+          // style={activeTag === index ? activeStyle : null}
+          key={item.name}
+          className={activeTag === index ? homeStyles.active_tag : homeStyles.tag}
+        >
+          {item.name}
+        </div>
+      ))
+    : null;
+
   return (
     <div className={homeStyles.home}>
       <Spin spinning={loading}>
@@ -121,18 +166,9 @@ function Home(props) {
 
           <div className={homeStyles.right}>
             <div className={homeStyles.right_top}>
-              {skillExamples.length
-                ? skillExamples.map((item, index) => (
-                    <span
-                      onClick={clickTag.bind(this, index)}
-                      style={activeTag === index ? activeStyle : null}
-                      key={item.name}
-                      className={homeStyles.tag}
-                    >
-                      {item.name}
-                    </span>
-                  ))
-                : null}
+              {/* <div style={{ whiteSpace: 'nowrap', }}> */}
+              <Slider {...tagSettings}>{tagList}</Slider>
+              {/* </div> */}
             </div>
 
             <div className={homeStyles.right_bottom}>
@@ -231,6 +267,7 @@ function Home(props) {
                                   href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                                     item.q
                                   )}&r=query&domain=${encodeURIComponent('医学')}`}
+                                  // onClick={gotoSpecial.bind(this, item.q,'医学')}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
@@ -264,6 +301,8 @@ function Home(props) {
                                   href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                                     item.q
                                   )}&r=query&domain=${encodeURIComponent('农业')}`}
+                                  // onClick={gotoSpecial.bind(this, item.q,'农业')}
+
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={homeStyles.questions_item}
@@ -300,7 +339,7 @@ function Home(props) {
                             to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
                             className={homeStyles.help_item_content}
                           >
-                            {item.Content}
+                            <span title={item.Content}>{item.Content}</span>
                           </Link>
                           <span
                             style={{

@@ -3,77 +3,86 @@ import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 function ReferenceBook(props) {
-  const { data, id, evaluate, title, domain } = props;
+  const { data, id, evaluate, title, domain, intentFocus } = props;
   const { good, bad, isevalute } = evaluate;
 
   function handleAnswer(str, code) {
     if (str) {
-      return (
-        RestTools.subHtml(str,300,false) +
-        '<a href="http://192.168.103.24/qa.web/query/link?id=' +
-        code +
-        '&db=crfd"' +
-        'target="_blank"' +
-        'rel="noopener noreferrer"' +
-        'style="white-space:nowrap"' +
-        '> 查看全文>>' +
-        '</a>'
-      );
+      if (str.length > 300) {
+        return (
+          RestTools.subHtml(str, 300, false) +
+          '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
+          code +
+          '&db=crfd"' +
+          'target="_blank"' +
+          'rel="noopener noreferrer"' +
+          'style="white-space:nowrap"' +
+          '> 查看全文>>' +
+          '</a>'
+        );
+      } else {
+        return str;
+      }
     }
     return '-';
   }
 
   return (
     <div className={styles.ReferenceBook}>
-      {/* <div
-        className={styles.ReferenceBook_title}
-        dangerouslySetInnerHTML={{
-          __html: RestTools.translateToRed(data[0].TITLE || data[0].Title)
-        }}
-      /> */}
-      {data.map((item) => (
-        <div key={item.工具书编号}>
-          <div
-            className={styles.ReferenceBook_title}
-            dangerouslySetInnerHTML={{
-              __html: RestTools.translateToRed(item.TITLE || item.Title || '-')
-            }}
-          />
-          <div
-            key={item.工具书编号}
-            className={styles.ReferenceBook_answer}
-            dangerouslySetInnerHTML={{
-              __html:
-                RestTools.translateToRed(
-                  RestTools.completeToolsBook(
-                    handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)
-                  )
-                )
+      {data.map((item, index) => {
+        const answer =
+          intentFocus === '谜语'
+            ? `谜底：${handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
+            : handleAnswer(item.Answer || item.介绍 || '-', item.条目编码);
+        const title =
+          intentFocus === '成语'
+            ? `${item.TITLE || item.Title || '-'} ${item.条目拼音}`
+            : intentFocus === '谜语'
+            ? `谜面: ${item.TITLE || item.Title || '-'}`
+            : item.TITLE || item.Title || '-';
 
-            }}
-          />
-          <div className={styles.ReferenceBook_extra}>
-            <a
-              className={styles.ReferenceBook_name}
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(
-                item.工具书编号
-              )}.html`}
-              dangerouslySetInnerHTML={{ __html: '--' + RestTools.removeFlag(item.工具书名称) }}
+        return (
+          <div key={item.工具书编号 + index}>
+            <div
+              className={styles.ReferenceBook_title}
+              dangerouslySetInnerHTML={{
+                __html: RestTools.translateToRed(title)
+              }}
             />
+            <div
+              key={item.工具书编号 + index}
+              className={styles.ReferenceBook_answer}
+              dangerouslySetInnerHTML={{
+                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer))
+              }}
+            />
+            <div className={styles.ReferenceBook_extra}>
+              <a
+                className={styles.ReferenceBook_name}
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(
+                  item.工具书编号
+                )}.html`}
+                dangerouslySetInnerHTML={{
+                  __html: '--' + RestTools.removeFlag(item.工具书名称 || item.Title)
+                }}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       <a
         className={styles.ReferenceBook_more}
         href={
           domain === '翻译'
-            ? `http://dict.cnki.net/dict_result.aspx?searchword=${RestTools.removeFlag(
-                data[0].TITLE || data[0].Title || '-'
+            ? `http://dict.cnki.net/dict_result.aspx?searchword=${encodeURIComponent(
+                RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
               )}`
-            : `http://192.168.103.24/qa.web/query/linknavi?kw=${RestTools.removeFlag(
-                data[0].TITLE || data[0].Title || '-'
+            : intentFocus === '成语'
+            ? `http://gongjushu.cnki.net/rbook/`
+            : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
+                RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
               )}&c=crfdsearch`
         }
         target="_blank"
@@ -84,7 +93,7 @@ function ReferenceBook(props) {
               ? 'CNKI翻译助手'
               : `更多“${RestTools.removeFlag(title || '-')}”的工具书`
         }}
-      ></a>
+      />
       <div className={styles.ReferenceBook_evaluate}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
       </div>

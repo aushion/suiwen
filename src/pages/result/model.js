@@ -8,12 +8,14 @@ import {
   getCommunityAnswer,
   getAnswerByDomain,
   setQuestion,
-  getCustomView
+  getCustomView,
+  collectQuestion,
+  submitQa
 } from './service/result';
 import { message } from 'antd';
 import router from 'umi/router';
 import Cookies from 'js-cookie';
-import RestTools from '../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
 export default {
   namespace: 'result',
@@ -38,10 +40,14 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(getAnswer, payload);
+      const { q } = payload;
       const { data } = res;
+      const userid = RestTools.getLocalStorage('userInfo')
+        ? RestTools.getLocalStorage('userInfo').UserName
+        : Cookies.get('cnki_qa_uuid');
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
-        const repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
+        let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
 
         yield put({
           type: 'save',
@@ -51,6 +57,15 @@ export default {
             repositoryData: repositoryData
           }
         });
+
+        yield call(submitQa, {
+          clientType: 'pc',
+          question: decodeURIComponent(q),
+          answerStatus: res.data.result ? 'yes' : 'no',
+          ip: '192.168.22.13',
+          userid: userid
+        });
+
         //数据持久化
         RestTools.setSession('answer', {
           answerData: data.result.metaList,
@@ -74,19 +89,33 @@ export default {
       const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
       let newRepositoryData = [];
       if (res.data.code === 200) {
-        newRepositoryData = oldRepositoryData.map((item) => {
-          const { data, pagination, whereSql } = res.data.result;
-          if (
-            whereSql.split('ORDER')[0].replace(/\s/g, '') ===
-            item.whereSql.split('ORDER')[0].replace(/\s/g, '')
-          ) {
+        newRepositoryData = oldRepositoryData.map((item, index) => {
+          if (index === 0) {
+            //数组的第0项是论文数据
+            const {
+              data: newData,
+              sql: newSql,
+              year: newYear,
+              orderBy,
+              subject: newSubject
+            } = res.data.result[0].dataNode;
+            const { dataNode } = item;
+            const { data, year, subject, ...others } = dataNode;
+
             item = {
               ...item,
-              dataNode: data,
-              pagination,
-              whereSql
+              ...res.data.result[0],
+              dataNode: {
+                ...others,
+                data: newData,
+                orderBy,
+                year: newYear || [],
+                subject: newSubject || [],
+                sql: newSql
+              }
             };
           }
+
           return item;
         });
       }
@@ -97,8 +126,8 @@ export default {
           repositoryData: newRepositoryData
         }
       });
-
       RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData });
+      return newRepositoryData;
     },
 
     *getSG({ payload }, { call, put }) {
@@ -163,14 +192,40 @@ export default {
         message.warn('请勿重复提交');
       }
       return res;
+    },
+    *collectQuestion({ payload }, { call }) {
+      const { q } = payload;
+      const userid = RestTools.getLocalStorage('userInfo')
+        ? RestTools.getLocalStorage('userInfo').UserName
+        : Cookies.get('cnki_qa_uuid');
+      yield call(collectQuestion, {
+        clientType: 'pc',
+        browser: 'Chrome',
+        ip: '182.98.177.137',
+        question: q,
+        type: 'search',
+        userid
+      });
     }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        const userId = Cookies.get('cnki_qa_uuid');
-        let { q } = query;
+        // const userId = Cookies.get('cnki_qa_uuid');
+        let { q, domain = '' } = query;
+        const userId = RestTools.getLocalStorage('userInfo')
+        ? RestTools.getLocalStorage('userInfo').UserName
+        : Cookies.get('cnki_qa_uuid');
         if (pathname === '/result') {
+          if (domain) {
+            dispatch({
+              type: 'global/save',
+              payload: {
+                ...RestTools.headerInfo[domain],
+                domain
+              }
+            });
+          }
           //重置问题
           dispatch({
             type: 'global/setQuestion',
@@ -191,6 +246,7 @@ export default {
               communityAnswer: null
             }
           });
+          dispatch({ type: 'collectQuestion', payload: { q } });
           //获取数据
           dispatch({
             type: 'getAnswer',
@@ -206,7 +262,7 @@ export default {
           });
           dispatch({
             type: 'getCommunityAnswer',
-            payload: { q: encodeURIComponent(q.replace(/？/g, '')) }
+            payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId, }
           });
           dispatch({
             type: 'getHotHelpList'

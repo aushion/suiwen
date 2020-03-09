@@ -4,6 +4,7 @@ import router from 'umi/router';
 import { connect } from 'dva';
 import SmartInput from '../components/SmartInput';
 import FeedBack from '../components/FeedBack';
+import Cookies from 'js-cookie';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 
@@ -14,8 +15,8 @@ function HomeLayout(props) {
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
   function handleClickEnterOrItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: value } });
-    value && router.push(`/result?q=${value}`);
+    props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
+    value && router.replace(`/result?q=${value.trim()}`);
     RestTools.setSession('q', value);
   }
 
@@ -26,6 +27,11 @@ function HomeLayout(props) {
   // }
 
   function logout() {
+    Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
+    Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
+		Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+		Cookies.remove("Ecp_session", { expires: -1 });
+		Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     localStorage.setItem('userInfo', null);
     setUsername(null);
   }
@@ -40,8 +46,8 @@ function HomeLayout(props) {
           {username ? null : (
             <a
               className={styles.login_btn}
-              href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              // href={`https://132.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8000`}
+              // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
+              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
             >
               登录
             </a>

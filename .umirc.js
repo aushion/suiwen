@@ -1,16 +1,22 @@
 // ref: https://umijs.org/config/
+import path from 'path'
 export default {
   treeShaking: true,
   define: {
     'process.env.apiUrl': 'http://192.168.103.25:8080/sw.api',
     'process.env.UMI_ENV': process.env.UMI_ENV,
-    'process.env.apiUrl_help': 'http://192.168.103.24/qa.fb/api'
+    'process.env.apiUrl_help': 'http://192.168.103.24/qa.fb/api',
+    'process.env.apiUrl_collect': 'http://192.168.103.25:8080/SWcollect'
+
   },
   base: '/',
   publicPath: './',
   history: 'hash',
   targets: {
     ie: 9
+  },
+  alias: {
+    Utils: path.resolve(__dirname,'src/utils')
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
@@ -36,17 +42,13 @@ export default {
             content: `try {
                   window.FlushLogin();
                 } catch (e) {}
-
+                window.RemoveCookie = window.Ecp_ReomveCookie;
                 function LoginSucess(data) {
-                  console.log('logindata',data)
                   window.localStorage.setItem('userInfo',JSON.stringify(data))
                   window.location.href = window.location.href.split("?")[0];
                 }
-                function Logout() {
-                  try {
-                      Ecp_UserLogout();
-                  }
-                  catch (e) { }
+                function Ecp_LogoutOptr(data) { 
+                 
               }
              `
           }
@@ -63,5 +65,27 @@ export default {
         }
       }
     ]
-  ]
+  ],
+  chainWebpack(config) {
+    config.optimization.splitChunks({
+      chunks: "async",
+      minSize: 30000,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    })
+  }
 };

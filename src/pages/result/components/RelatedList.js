@@ -13,9 +13,9 @@ function RelatedLiteraure(props) {
 
   function moreLink(type, q) {
     if (type === '相关文献') {
-      return `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${q}&korder=0&sel=1`;
+      return `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCDB&kw=${encodeURIComponent(q)}&korder=0&sel=1`;
     } else {
-      return `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCPD&kw=${q}&korder=0&sel=1`;
+      return `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCPD&kw=${encodeURIComponent(q)}&korder=0&sel=1`;
     }
   }
   return (

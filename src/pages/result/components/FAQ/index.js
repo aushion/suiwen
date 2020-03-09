@@ -4,7 +4,7 @@ import Evaluate from '../Evaluate';
 import styles from './index.less';
 
 function FAQ(props) {
-  const { question, answer, id, evaluate } = props.data;
+  const { question, answer, id, evaluate,domain } = props.data;
   const {good, bad, isevalute} = evaluate
   return (
     <div className={styles.FAQ}>
@@ -30,6 +30,7 @@ function FAQ(props) {
           style={{ color: '#5C5D5E' }}
           dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(RestTools.completeToolsBook(answer)) }}
         />
+        <div className={styles.source}>{domain} 常见问题集</div>
         <div className={styles.faq_evaluate}>
           <Evaluate
             id={id}

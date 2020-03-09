@@ -26,7 +26,7 @@ function SgList(props) {
               <div style={{ float: 'right', fontSize: 14, color: '#999', overflow: 'hidden' }}>
                 <div>
                   <a
-                    style={{ color: '#999', marginRight: 20 }}
+                    style={{ color: '#999',  }}
                     target="_blank"
                     rel="noopener noreferrer"
                     href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].Data.source_id}`}
@@ -55,9 +55,8 @@ function SgList(props) {
                 <div
                   className={styles.fontStyle}
                   dangerouslySetInnerHTML={{
-                    __html: RestTools.translateToRed(
-                      RestTools.formatText(item.Data.answer)
-
+                    __html: RestTools.formatText(
+                      RestTools.translateToRed(item.Data.answer)
                     )
                   }}
                 />

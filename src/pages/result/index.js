@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message } from 'antd';
 import Cookies from 'js-cookie';
@@ -14,7 +14,11 @@ import Scholar from './components/Scholar';
 import NewHelp from './components/NewHelp';
 import CommunityAnswer from './components/CommunityAnswer';
 import Graphic from './components/Graphic';
-import RestTools from '../../utils/RestTools';
+import Medical from './components/Medical';
+import Patent from './components/Patent';
+import Statistics from './components/Statistics';
+import Poem from './components/Poem';
+import RestTools from 'Utils/RestTools';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -41,16 +45,39 @@ function ResultPage(props) {
 
 
   const [submitQ, setSubmitQ] = useState(q);
-  const referenceBookData = repositoryData.filter((item) => item.dataNode[0].工具书编号); //工具书数据
+  useEffect(() => {
+    setSubmitQ(q);
+  }, [q]);
+  const referenceBookData = repositoryData.filter(
+    (item) => Array.isArray(item.dataNode) && item.dataNode[0].工具书编号
+  ); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
-  const literatureData = repositoryData.filter((item) => item.dataNode[0].题名); //文献数据
+  const literatureData = repositoryData.filter((item) => item.domain === '文献'); //文献数据
   const scholarData = repositoryData.filter((item) => item.domain === '学者'); //学者数据
   const relatedLiterature =
     relatedData.length && relatedData.filter((item) => item.domain === '文献'); //相关文献
   const relatedPatent = relatedData.length && relatedData.filter((item) => item.domain === '专利'); //相关专利
 
+  const medicalData = repositoryData.filter(
+    (item) => item.domain === '医学' && !item.dataNode[0].工具书编号
+  );
+  const patentData = repositoryData.filter((item) => item.domain === '专利'); //专利数据
+  const poemData = repositoryData.filter((item) => item.domain === '诗词'); //诗词
+  const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
   const communityAnswerLength = communityAnswer ? 1 : 0;
+  const kaifangyuData = repositoryData.filter(
+    (item) =>
+      item.domain !== '诗词' &&
+      item.domain !== '期刊' &&
+      item.domain !== '学者' &&
+      item.domain !== '文献' &&
+      item.domain !== '专利' &&
+      item.domain !== '医学' &&
+      item.domain !== '统计数据' &&
+      !(item.dataNode && item.dataNode[0].题名) &&
+      !(item.dataNode && item.dataNode[0].工具书编号)
+  );
 
   const resultLength =
     cnkizhishi.length +
@@ -129,26 +156,42 @@ function ResultPage(props) {
               </span>
             </div>
           ) : null}
-          {answerData.length || sgData.length? (
+          {answerData.length || sgData.length ? (
             <Row gutter={24}>
               <Col span={18}>
-                {cnkizhishi.length
-                  ? cnkizhishi.map((item) => <Graphic key={item.id} data={item.dataNode} />)
-                  : null}
-                {literatureData.length
-                  ? literatureData.map((item) => (
-                      <Literature
-                        key={item.id}
+                {statisticsData.length
+                  ? statisticsData.map((item) => (
+                      <Statistics
+                        title={item.title}
                         id={item.id}
-                        q={q}
-                        domain={item.domain}
-                        dispatch={dispatch}
-                        pagination={item.pagination}
                         evaluate={item.evaluate}
+                        intentDomain={item.intentDomain}
+                        intentFocus={item.intentFocus}
+                        intentJson={item.intentJson}
+                        key={item.id}
                         data={item.dataNode}
-                        whereSql={item.whereSql}
                       />
                     ))
+                  : null}
+                {medicalData.length
+                  ? medicalData.map((item) => (
+                      <Medical
+                        title={item.title}
+                        id={item.id}
+                        intentJson={item.intentJson}
+                        evaluate={item.evaluate}
+                        intentDomain={item.intentDomain}
+                        intentFocus={item.intentFocus}
+                        key={item.id}
+                        data={item.dataNode}
+                      />
+                    ))
+                  : null}
+                {literatureData.length && (literatureData.length === 1 || literatureData.length === 3)? (
+                  <Literature literatureData={literatureData} dispatch={dispatch} />
+                ) : null}
+                {patentData.length
+                  ? patentData.map((item) => <Patent key={item.id} data={item}/>)
                   : null}
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
@@ -156,13 +199,14 @@ function ResultPage(props) {
                         key={item.id}
                         id={item.id}
                         domain={item.domain}
+                        intentDomain={item.intentDomain}
+                        intentFocus={item.intentFocus}
                         evaluate={item.evaluate}
                         title={item.title}
                         data={item.dataNode}
                       />
                     ))
                   : null}
-                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
                 {scholarData.length
                   ? scholarData.map((item) => (
                       <Scholar
@@ -171,6 +215,7 @@ function ResultPage(props) {
                         evaluate={item.evaluate}
                         title={item.title}
                         data={item.dataNode}
+                        intentJson={item.intentJson}
                       />
                     ))
                   : null}
@@ -186,6 +231,22 @@ function ResultPage(props) {
                     ))
                   : null}
 
+                {kaifangyuData.length
+                  ? kaifangyuData.map((item) => (
+                      <Graphic
+                        key={item.id}
+                        id={item.id}
+                        data={item.dataNode}
+                        intentJson={item.intentJson}
+                        intentDomain={item.intentDomain}
+                        domain={item.domain}
+                        title={item.title}
+                        evaluate={item.evaluate}
+                        intentFocus={item.intentFocus}
+                      />
+                    ))
+                  : null}
+                {poemData.length ? poemData.map(item => <Poem key={item.id} data={item}></Poem>):null}  
                 {faqData.length ? (
                   <div>
                     {faqData.map((item) => (
@@ -193,6 +254,9 @@ function ResultPage(props) {
                     ))}
                   </div>
                 ) : null}
+                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
+
+              
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
               <Col span={6} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
@@ -233,6 +297,12 @@ function ResultPage(props) {
                   type="primary"
                   onClick={() => {
                     router.push('/');
+                    dispatch({
+                      type: 'global/setQuestion',
+                      payload: {
+                        q: ''
+                      }
+                    });
                   }}
                 >
                   回到首页

@@ -8,7 +8,8 @@ import styles from './index.less';
 const HISTORYKEY = RestTools.HISTORYKEY;
 let timer = null;
 message.config({
-  maxCount: 1
+  maxCount: 1,
+  top: 100,
 });
 const SmartInput = (props) => {
   const [value, setValue] = useState('');
