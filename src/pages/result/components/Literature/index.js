@@ -369,7 +369,7 @@ export default function Literature(props) {
       {intentId === '43' || intentId === '71' || intentId === '77' ? (
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}
-      {data.length ? <List
+      <List
         header={
           <div style={{ overflow: 'hidden' }}>
             <div style={{ float: 'left' }}>
@@ -575,7 +575,7 @@ export default function Literature(props) {
             </List.Item>
           );
         }}
-      />: null}
+      />
     </div>
   );
 }

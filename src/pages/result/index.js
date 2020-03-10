@@ -19,6 +19,7 @@ import Patent from './components/Patent';
 import Statistics from './components/Statistics';
 import Poem from './components/Poem';
 import RestTools from 'Utils/RestTools';
+import Sentence from './components/Sentence';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -43,13 +44,61 @@ function ResultPage(props) {
     answerData
   } = props;
 
-
   const [submitQ, setSubmitQ] = useState(q);
+  useEffect(() => {
+    const userId = RestTools.getLocalStorage('userInfo')
+      ? RestTools.getLocalStorage('userInfo').UserName
+      : Cookies.get('cnki_qa_uuid');
+      
+    if (q) {
+      //重置数据
+      dispatch({
+        type: 'result/save',
+        payload: {
+          sgData: [],
+          answerData: [],
+          faqData: [],
+          repositoryData: [], //知识库数据
+          relatedData: [],
+          helpList: [],
+          communityAnswer: null
+        }
+      });
+
+      dispatch({
+        type: 'result/getAnswer',
+        payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+      });
+      dispatch({ type: 'result/collectQuestion', payload: { q } });
+
+      dispatch({
+        type: 'result/getSG',
+        payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+      });
+      dispatch({
+        type: 'result/getRelevantByAnswer',
+        payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
+      });
+      dispatch({
+        type: 'result/getCommunityAnswer',
+        payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
+      });
+      dispatch({
+        type: 'result/getHotHelpList'
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q]);
+
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
   const referenceBookData = repositoryData.filter(
-    (item) => Array.isArray(item.dataNode) && item.dataNode[0].工具书编号
+    (item) =>
+      Array.isArray(item.dataNode) &&
+      item.dataNode[0].工具书编号 &&
+      item.intentDomain !== '句型覆盖'
   ); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
@@ -65,9 +114,11 @@ function ResultPage(props) {
   const patentData = repositoryData.filter((item) => item.domain === '专利'); //专利数据
   const poemData = repositoryData.filter((item) => item.domain === '诗词'); //诗词
   const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
+  const sentenceData = repositoryData.filter((item) => item.intentDomain === '句型覆盖');
   const communityAnswerLength = communityAnswer ? 1 : 0;
   const kaifangyuData = repositoryData.filter(
     (item) =>
+      // item.domain !== 'CNKI知识' &&
       item.domain !== '诗词' &&
       item.domain !== '期刊' &&
       item.domain !== '学者' &&
@@ -187,11 +238,12 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
-                {literatureData.length && (literatureData.length === 1 || literatureData.length === 3)? (
+                {literatureData.length &&
+                (literatureData.length === 1 || literatureData.length === 3) ? (
                   <Literature literatureData={literatureData} dispatch={dispatch} />
                 ) : null}
                 {patentData.length
-                  ? patentData.map((item) => <Patent key={item.id} data={item}/>)
+                  ? patentData.map((item) => <Patent key={item.id} data={item} />)
                   : null}
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
@@ -207,6 +259,8 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
+                {sentenceData.length ? <Sentence data={sentenceData} /> : null}
+
                 {scholarData.length
                   ? scholarData.map((item) => (
                       <Scholar
@@ -221,7 +275,7 @@ function ResultPage(props) {
                   : null}
 
                 {JournalData.length
-                  ? JournalData.slice(0,1).map((item) => (
+                  ? JournalData.slice(0, 1).map((item) => (
                       <Journal
                         key={item.id}
                         id={item.id}
@@ -236,17 +290,22 @@ function ResultPage(props) {
                       <Graphic
                         key={item.id}
                         id={item.id}
+                        q={q}
                         data={item.dataNode}
                         intentJson={item.intentJson}
                         intentDomain={item.intentDomain}
                         domain={item.domain}
+                        pagination={item.pagination}
                         title={item.title}
                         evaluate={item.evaluate}
                         intentFocus={item.intentFocus}
+                        dispatch={dispatch}
                       />
                     ))
                   : null}
-                {poemData.length ? poemData.map(item => <Poem key={item.id} data={item}></Poem>):null}  
+                {poemData.length
+                  ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
+                  : null}
                 {faqData.length ? (
                   <div>
                     {faqData.map((item) => (
@@ -256,7 +315,6 @@ function ResultPage(props) {
                 ) : null}
                 {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
 
-              
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
               <Col span={6} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>

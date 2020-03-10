@@ -16,7 +16,7 @@ function HomeLayout(props) {
   const [visible, setVisible] = useState(false);
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
-    value && router.replace(`/result?q=${value.trim()}`);
+    value && router.push(`/result?q=${value.trim()}`);
     RestTools.setSession('q', value);
   }
 

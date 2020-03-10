@@ -45,6 +45,13 @@ export default {
       const userid = RestTools.getLocalStorage('userInfo')
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
+      yield call(submitQa, {
+        ClientType: 'pc',
+        question: decodeURIComponent(q),
+        answerStatus: res.data.code === 200 ? 'yes' : 'no',
+        ip: '192.168.22.13',
+        userid: userid
+      });
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
@@ -56,14 +63,6 @@ export default {
             faqData: faqData,
             repositoryData: repositoryData
           }
-        });
-
-        yield call(submitQa, {
-          clientType: 'pc',
-          question: decodeURIComponent(q),
-          answerStatus: res.data.result ? 'yes' : 'no',
-          ip: '192.168.22.13',
-          userid: userid
         });
 
         //数据持久化
@@ -214,8 +213,8 @@ export default {
         // const userId = Cookies.get('cnki_qa_uuid');
         let { q, domain = '' } = query;
         const userId = RestTools.getLocalStorage('userInfo')
-        ? RestTools.getLocalStorage('userInfo').UserName
-        : Cookies.get('cnki_qa_uuid');
+          ? RestTools.getLocalStorage('userInfo').UserName
+          : Cookies.get('cnki_qa_uuid');
         if (pathname === '/result') {
           if (domain) {
             dispatch({
@@ -226,46 +225,13 @@ export default {
               }
             });
           }
+
           //重置问题
           dispatch({
             type: 'global/setQuestion',
             payload: {
-              q: query.q
+              q: q
             }
-          });
-          //重置数据
-          dispatch({
-            type: 'save',
-            payload: {
-              sgData: [],
-              answerData: [],
-              faqData: [],
-              repositoryData: [], //知识库数据
-              relatedData: [],
-              helpList: [],
-              communityAnswer: null
-            }
-          });
-          dispatch({ type: 'collectQuestion', payload: { q } });
-          //获取数据
-          dispatch({
-            type: 'getAnswer',
-            payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-          });
-          dispatch({
-            type: 'getSG',
-            payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-          });
-          dispatch({
-            type: 'getRelevantByAnswer',
-            payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
-          });
-          dispatch({
-            type: 'getCommunityAnswer',
-            payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId, }
-          });
-          dispatch({
-            type: 'getHotHelpList'
           });
         }
       });

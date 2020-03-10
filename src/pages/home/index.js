@@ -238,6 +238,7 @@ function Home(props) {
                                   href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                                     item.q
                                   )}&r=query&domain=${encodeURIComponent('法律')}`}
+                                  // href={`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(item.q)}`}
                                   key={item.qid}
                                 >
                                   {item.q}

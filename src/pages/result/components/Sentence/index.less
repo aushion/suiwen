@@ -1,0 +1,44 @@
+.Sentence {
+  box-shadow: #a5a5a5 0 0 10.8px 0;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fff;
+  .Sentence_title {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    color: #0079ff;
+  }
+  .Sentence_answer {
+    color: #333;
+    letter-spacing: 2px;
+    line-height: 27.2px;
+    // text-indent: 2em;
+    margin-bottom: 20px;
+    text-align: left;
+    img {
+      width: 50%;
+    }
+    .Sentence_item {
+      border-bottom: 1px dotted lightsalmon;
+      padding: 10px;
+    }
+    .Sentence_extra {
+      text-align: right;
+      .Sentence_name {
+        color: #999;
+        cursor: pointer;
+        &:hover {
+          color: lightsalmon;
+        }
+      }
+    }
+    .Sentence_more {
+      color: #999;
+      cursor: pointer;
+      display: inline-block;
+      padding: 10px 0;
+      text-align: right;
+    }
+  }
+}

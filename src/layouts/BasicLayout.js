@@ -21,12 +21,11 @@ function BasicLayout(props) {
   const { title, headerStyle } = props;
   function handleClickEnterOrItem(value) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
-    value && router.replace(`/result?q=${value.trim()}`);
+    value && router.push(`/result?q=${value.trim()}`);
     RestTools.setSession('q', value);
   }
 
   function goHome() {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: '' } });
     router.push('/home');
   }
 
