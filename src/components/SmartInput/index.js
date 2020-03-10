@@ -66,7 +66,7 @@ const SmartInput = (props) => {
     const maxLength = RestTools.maxLength;
     let str = value;
     let newStr = str;
-    if (value) {
+    if (value.trim()) {
       if (value.length > maxLength) {
         message.warning(
           <span>

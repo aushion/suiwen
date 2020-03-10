@@ -17,7 +17,8 @@ function SgList(props) {
   }
   return (
     <div className={styles.SgList}>
-      {keys.map((item) => (
+      {keys.map((item) => {
+        return (
         <div key={item} className={styles.wrapper}>
           <List
             itemLayout="vertical"
@@ -32,9 +33,9 @@ function SgList(props) {
                     href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].Data.source_id}`}
                   >
                     {groupByData[item][0].Data.title}
-                  </a>{' '}
+                  </a>
                   <span>
-                    {groupByData[item][0].Data.additional_info.FieldValue
+                    {groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.FieldValue
                       ? groupByData[item][0].Data.additional_info.FieldValue.年
                       : ''}
                   </span>
@@ -94,7 +95,8 @@ function SgList(props) {
             )}
           />
         </div>
-      ))}
+      )}
+      )}
       <Modal
         visible={visible}
         footer={null}

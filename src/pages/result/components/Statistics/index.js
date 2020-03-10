@@ -13,8 +13,8 @@ export default function Statistics(props) {
     data = data.map((item) => {
       item = item.fileds.map((current) => {
         return {
-          key: current,
-          value: item[current],
+          key: current.toString(),
+          value: Number(item[current]),
           name: item.name,
           unit: item.unit
         };

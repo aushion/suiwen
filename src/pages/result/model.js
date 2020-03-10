@@ -46,7 +46,7 @@ export default {
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
       yield call(submitQa, {
-        ClientType: 'pc',
+        clientType: 'pc',
         question: decodeURIComponent(q),
         answerStatus: res.data.code === 200 ? 'yes' : 'no',
         ip: '192.168.22.13',
@@ -198,7 +198,7 @@ export default {
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
       yield call(collectQuestion, {
-        clientType: 'pc',
+        ClientType: 'pc',
         browser: 'Chrome',
         ip: '182.98.177.137',
         question: q,
@@ -212,9 +212,9 @@ export default {
       return history.listen(({ pathname, query }) => {
         // const userId = Cookies.get('cnki_qa_uuid');
         let { q, domain = '' } = query;
-        const userId = RestTools.getLocalStorage('userInfo')
-          ? RestTools.getLocalStorage('userInfo').UserName
-          : Cookies.get('cnki_qa_uuid');
+        // const userId = RestTools.getLocalStorage('userInfo')
+        //   ? RestTools.getLocalStorage('userInfo').UserName
+        //   : Cookies.get('cnki_qa_uuid');
         if (pathname === '/result') {
           if (domain) {
             dispatch({
