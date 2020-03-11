@@ -4,7 +4,7 @@ import router from 'umi/router';
 import { connect } from 'dva';
 import SmartInput from '../components/SmartInput';
 import FeedBack from '../components/FeedBack';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 
@@ -14,10 +14,13 @@ function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
+  const {dispatch} = props;
   function handleClickEnterOrItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
-    value && router.push(`/result?q=${value.trim()}`);
-    RestTools.setSession('q', value);
+    const q = value.trim();
+    dispatch({ type: 'global/setQuestion', payload: { q: q } });
+    value && router.push(`/result?q=${encodeURIComponent(q)}`);
+  
+    RestTools.setSession('q', q);
   }
 
   // function goLogin() {
@@ -27,11 +30,13 @@ function HomeLayout(props) {
   // }
 
   function logout() {
-    Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
-    Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
-		Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
-		Cookies.remove("Ecp_session", { expires: -1 });
-		Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
+    // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
+    // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
+		// Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+		// Cookies.remove("Ecp_session", { expires: -1 });
+    // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
+    window.Ecp_LogoutOptr_my(0);
+    
     localStorage.setItem('userInfo', null);
     setUsername(null);
   }
@@ -42,12 +47,12 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-          您好! 欢迎 {username || '游客'}
+          您好!  {username || '游客'}
           {username ? null : (
             <a
               className={styles.login_btn}
-              href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
+              // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
+              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
             >
               登录
             </a>
@@ -62,7 +67,7 @@ function HomeLayout(props) {
           )}
           {username ? (
             <button onClick={logout} className={styles.login_btn}>
-              注销
+              退出
             </button>
           ) : null}
         </div>

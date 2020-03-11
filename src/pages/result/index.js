@@ -45,51 +45,51 @@ function ResultPage(props) {
   } = props;
 
   const [submitQ, setSubmitQ] = useState(q);
-  useEffect(() => {
-    const userId = RestTools.getLocalStorage('userInfo')
-      ? RestTools.getLocalStorage('userInfo').UserName
-      : Cookies.get('cnki_qa_uuid');
+  // useEffect(() => {
+  //   const userId = RestTools.getLocalStorage('userInfo')
+  //     ? RestTools.getLocalStorage('userInfo').UserName
+  //     : Cookies.get('cnki_qa_uuid');
       
-    if (q) {
-      //重置数据
-      dispatch({
-        type: 'result/save',
-        payload: {
-          sgData: [],
-          answerData: [],
-          faqData: [],
-          repositoryData: [], //知识库数据
-          relatedData: [],
-          helpList: [],
-          communityAnswer: null
-        }
-      });
+  //   if (q) {
+  //     //重置数据
+  //     dispatch({
+  //       type: 'result/save',
+  //       payload: {
+  //         sgData: [],
+  //         answerData: [],
+  //         faqData: [],
+  //         repositoryData: [], //知识库数据
+  //         relatedData: [],
+  //         helpList: [],
+  //         communityAnswer: null
+  //       }
+  //     });
 
-      dispatch({
-        type: 'result/getAnswer',
-        payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-      });
-      dispatch({ type: 'result/collectQuestion', payload: { q } });
+  //     dispatch({
+  //       type: 'result/getAnswer',
+  //       payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+  //     });
+  //     dispatch({ type: 'result/collectQuestion', payload: { q } });
 
-      dispatch({
-        type: 'result/getSG',
-        payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-      });
-      dispatch({
-        type: 'result/getRelevantByAnswer',
-        payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
-      });
-      dispatch({
-        type: 'result/getCommunityAnswer',
-        payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
-      });
-      dispatch({
-        type: 'result/getHotHelpList'
-      });
-    }
+  //     dispatch({
+  //       type: 'result/getSG',
+  //       payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+  //     });
+  //     dispatch({
+  //       type: 'result/getRelevantByAnswer',
+  //       payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
+  //     });
+  //     dispatch({
+  //       type: 'result/getCommunityAnswer',
+  //       payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
+  //     });
+  //     dispatch({
+  //       type: 'result/getHotHelpList'
+  //     });
+  //   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [q]);
 
   useEffect(() => {
     setSubmitQ(q);
@@ -168,7 +168,7 @@ function ResultPage(props) {
         type: 'result/setQuestion',
         payload: {
           q: submitQ,
-          domain: answerData[0].domain,
+          domain: answerData.length ? answerData[0].domain : '',
           uid: RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid')

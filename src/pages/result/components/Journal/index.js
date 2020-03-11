@@ -9,11 +9,12 @@ function Journal(props) {
     <div className={styles.Journal}>
       {data.length
         ? data.map((item) => {
+          // const size = item.核心期刊版次 ? 'mid': 'small'
             return (
               <div key={item.ID} className={styles.Journal_wrapper}>
                 <div className={styles.Journal_left}>
                   <img
-                    src={`http://c61.cnki.net/CJFD/small/${RestTools.removeFlag(
+                    src={`http://c61.cnki.net/CJFD/${'big'}/${RestTools.removeFlag(
                       item.拼音刊名
                     )}.jpg`}
                     alt={RestTools.removeFlag(item.拼音刊名)}
@@ -22,7 +23,7 @@ function Journal(props) {
                 <div className={styles.Journal_right}>
                   {item.核心期刊版次 ? (
                     <div>
-                      <h3 style={{ color: 'red' }}>核心期刊</h3>
+                      <h3 style={{ color: 'red',fontWeight: 'bold' }}>核心期刊</h3>
                       <div>
                         收录版次：
                         {item.核心期刊版次

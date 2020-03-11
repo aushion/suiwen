@@ -65,7 +65,6 @@ export default {
       return history.listen(({ pathname, query }) => {
         const skillExamples = RestTools.getSession('skillExamples');
         if (pathname === '/home') {
-
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
           if (!skillExamples) {
             dispatch({ type: 'getDomainQuestions' });

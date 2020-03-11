@@ -15,88 +15,80 @@ function SgList(props) {
     setVisible(true);
     setText(text);
   }
+
+  function handleShowMore(e, str) {
+    if (e.target.className === 'showMore') {
+      showMore(str);
+    }
+  }
   return (
     <div className={styles.SgList}>
       {keys.map((item) => {
+        const year = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.年 || '';
+        const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
+        const qikanName = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.中文刊名 || ''
         return (
-        <div key={item} className={styles.wrapper}>
-          <List
-            itemLayout="vertical"
-            dataSource={groupByData[item]}
-            footer={
-              <div style={{ float: 'right', fontSize: 14, color: '#999', overflow: 'hidden' }}>
-                <div>
-                  <a
-                    style={{ color: '#999',  }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].Data.source_id}`}
-                  >
-                    {groupByData[item][0].Data.title}
-                  </a>
+          <div key={item} className={styles.wrapper}>
+            <List
+              itemLayout="vertical"
+              dataSource={groupByData[item]}
+              footer={
+                <div style={{ float: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
+                  <div>
                   <span>
-                    {groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.FieldValue
-                      ? groupByData[item][0].Data.additional_info.FieldValue.年
-                      : ''}
-                  </span>
+                     {`${year}/${qikan}/${qikanName}/`}
+                    </span>
+                    <a
+                      style={{ color: '#999' }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].Data.source_id}`}
+                    >
+                      {groupByData[item][0].Data.title}
+                    </a>
+                   
+                   
+                  </div>
+                  {/* 点赞模块预留 */}
+                  <div className={styles.sg_evaluate}>
+                    <Evaluate
+                      id={groupByData[item][0].id}
+                      goodCount={groupByData[item][0].evaluate.good}
+                      badCount={groupByData[item][0].evaluate.bad}
+                      isevalute={groupByData[item][0].evaluate.isevalute}
+                    />
+                  </div>
                 </div>
-                {/* 点赞模块预留 */}
-                <div className={styles.sg_evaluate}>
-                  <Evaluate
-                    id={groupByData[item][0].id}
-                    goodCount={groupByData[item][0].evaluate.good}
-                    badCount={groupByData[item][0].evaluate.bad}
-                    isevalute={groupByData[item][0].evaluate.isevalute}
-                  />
-                </div>
-              </div>
-            }
-            renderItem={(item, index) => (
-              <List.Item style={{ overflow: 'hidden' }}>
-                <div
-                  className={styles.fontStyle}
-                  dangerouslySetInnerHTML={{
-                    __html: RestTools.formatText(
-                      RestTools.translateToRed(item.Data.answer)
-                    )
-                  }}
-                />
-                {/* <Popover
-                  placement="right"
-                  content={
+              }
+              renderItem={(item, index) => {
+                const orginAnswer = item.Data.answer_context;
+                const answer = item.Data.answer + '<a class="showMore"> 更多>></a>';
+                return (
+                  <List.Item style={{ overflow: 'hidden' }}>
                     <div
-                      style={{
-                        width: 400,
-                        color: '#333',
-                        letterSpacing: '2px',
-                        lineHeight: '27.2px',
-                        marginLeft: 20,
-                        textIndent: '2em'
-                      }}
+                      onClick={(e) => handleShowMore(e, orginAnswer)}
+                      key={index}
                       className={styles.fontStyle}
                       dangerouslySetInnerHTML={{
-                        __html: RestTools.translateToRed( RestTools.formatText(item.Data.answer_context))
+                        __html: RestTools.formatText(RestTools.translateToRed(answer))
                       }}
                     />
-                  }
-                  trigger="click"
-                >
-                  <div className={styles.more}>显示更多>></div>
-                </Popover> */}
-                {item.Data.answer_context ? (
-                  <div
-                    className={styles.more}
-                    onClick={showMore.bind(this, item.Data.answer_context)}
-                  >
-                    显示更多>>
-                  </div>
-                ) : null}
-              </List.Item>
-            )}
-          />
-        </div>
-      )}
-      )}
+
+                    {/* {item.Data.answer_context ? (
+                      <div
+                        className={styles.more}
+                        onClick={(e) => handleShowMore(e, orginAnswer)}
+                      >
+                        显示更多>>
+                      </div>
+                    ) : null} */}
+                  </List.Item>
+                );
+              }}
+            />
+          </div>
+        );
+      })}
       <Modal
         visible={visible}
         footer={null}

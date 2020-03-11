@@ -15,6 +15,7 @@ import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
+// let tagSlider = null;
 const HISTORYKEY = RestTools.HISTORYKEY;
 message.config({
   maxCount: 1,
@@ -81,7 +82,7 @@ function Home(props) {
 
   function handleClickItem(item) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
-    router.push('/result?q=' + item);
+    router.push('/result?q=' + encodeURIComponent(item));
     RestTools.setSession('q', item);
     RestTools.setStorageInput(HISTORYKEY, item);
   }
@@ -167,7 +168,7 @@ function Home(props) {
           <div className={homeStyles.right}>
             <div className={homeStyles.right_top}>
               {/* <div style={{ whiteSpace: 'nowrap', }}> */}
-              <Slider {...tagSettings}>{tagList}</Slider>
+              <Slider {...tagSettings} >{tagList}</Slider>
               {/* </div> */}
             </div>
 

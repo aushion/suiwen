@@ -37,6 +37,16 @@ export default {
       const res = yield call(helpService.getMyAnswerQuestions, payload);
 
       yield put({ type: 'saveList', payload: { newHelpData: res.data.data, ...payload } });
+    },
+    *deleteQuestion({payload},{ call,put}) {
+      const res = yield call(helpService.deleteQuestion,payload)
+      const uid = RestTools.getLocalStorage('userInfo')
+      ? RestTools.getLocalStorage('userInfo').UserName
+      : Cookies.get('cnki_qa_uuid');
+      if(res.data.result) {
+        yield put({ type: 'getNewQuestions',
+        payload: { domain: encodeURIComponent('全部'), uid }})
+      }
     }
   },
   subscriptions: {

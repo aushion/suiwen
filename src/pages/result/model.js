@@ -210,11 +210,11 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        // const userId = Cookies.get('cnki_qa_uuid');
         let { q, domain = '' } = query;
-        // const userId = RestTools.getLocalStorage('userInfo')
-        //   ? RestTools.getLocalStorage('userInfo').UserName
-        //   : Cookies.get('cnki_qa_uuid');
+
+        const userId = RestTools.getLocalStorage('userInfo')
+          ? RestTools.getLocalStorage('userInfo').UserName
+          : Cookies.get('cnki_qa_uuid');
         if (pathname === '/result') {
           if (domain) {
             dispatch({
@@ -226,13 +226,51 @@ export default {
             });
           }
 
-          //重置问题
-          dispatch({
-            type: 'global/setQuestion',
-            payload: {
-              q: q
-            }
-          });
+          if (q) {
+            //重置问题
+            dispatch({
+              type: 'global/setQuestion',
+              payload: {
+                q: q
+              }
+            });
+            //重置数据
+
+            dispatch({
+              type: 'save',
+              payload: {
+                sgData: [],
+                answerData: [],
+                faqData: [],
+                repositoryData: [], //知识库数据
+                relatedData: [],
+                helpList: [],
+                communityAnswer: null
+              }
+            });
+
+            dispatch({
+              type: 'getAnswer',
+              payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+            });
+            dispatch({ type: 'collectQuestion', payload: { q } });
+
+            dispatch({
+              type: 'getSG',
+              payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+            });
+            dispatch({
+              type: 'getRelevantByAnswer',
+              payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
+            });
+            dispatch({
+              type: 'getCommunityAnswer',
+              payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
+            });
+            dispatch({
+              type: 'getHotHelpList'
+            });
+          }
         }
       });
     }

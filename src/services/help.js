@@ -1,5 +1,6 @@
 import request from '../utils/request';
 const serverurl = process.env.apiUrl_help;
+const otherServer = process.env.apiUrl;
 // const serverurl = 'http://192.168.103.24/qa.fb/api/'
 export default {
   getNewHelpList() {
@@ -48,4 +49,8 @@ export default {
   getDomain() {
     return request.get(serverurl + '/Domain');
   },
+  deleteQuestion(payload) {
+    const {qId} = payload;
+    return request.get(otherServer + `/delQuestion?qId=${qId}`)
+  }
 };

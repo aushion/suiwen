@@ -3,7 +3,7 @@ import { Layout, BackTop, Affix, Button } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
@@ -18,28 +18,29 @@ function BasicLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false)
-  const { title, headerStyle } = props;
+  const { title, headerStyle, dispatch } = props;
   function handleClickEnterOrItem(value) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: value.trim() } });
-    value && router.push(`/result?q=${value.trim()}`);
-    RestTools.setSession('q', value);
+    const q = value.trim();
+
+    dispatch({ type: 'global/setQuestion', payload: { q } });
+    value && router.push(`/result?q=${encodeURIComponent(q)}`);
+    RestTools.setSession('q', q);
+    
   }
 
   function goHome() {
     router.push('/home');
   }
 
-  // function goLogin() {
-  // console.log('goLogin');
-  // window.Ecp_ShowLoginLayer2('-60px', '42px');
-  //}
+ 
 
   function logout() {
-    Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
-    Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
-		Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
-		Cookies.remove("Ecp_session", { expires: -1 });
-		Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
+    // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
+    // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
+		// Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+		// Cookies.remove("Ecp_session", { expires: -1 });
+    // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
+    window.Ecp_LogoutOptr_my(0);
     localStorage.setItem('userInfo', null);
     setUsername(null);
   }
@@ -62,12 +63,12 @@ function BasicLayout(props) {
             />
           </div>
           <div className={styles.login}>
-            <span className={styles.tips}>您好! 欢迎 {username || '游客'}</span>
+            <span className={styles.tips}>您好!  {username || '游客'}</span>
             {username ? null : (
               <a
                 className={styles.login_btn}
-                 href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-                // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
+                // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
+                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
               >
                 登录
               </a>

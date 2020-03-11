@@ -1,4 +1,4 @@
-import { List, Input } from 'antd';
+import { List, Input, Popconfirm } from 'antd';
 
 const { Search } = Input;
 function HelpList(props) {
@@ -10,9 +10,18 @@ function HelpList(props) {
     domain,
     handleSearchOrChangePage,
     loading,
+    dispatch,
     handleClickItem
   } = props;
 
+  function confirm(id) {
+    dispatch({
+      type: 'help/deleteQuestion',
+      payload: {
+        qId: id
+      }
+    })
+  }
   return data ? (
     <div style={{ padding: '10px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -59,14 +68,27 @@ function HelpList(props) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap'
                 }}
+                // onMouseOver={() => { console.log('up'); setDelete(true)}}
+                // onMouseLeave={() =>{setDelete(false)}}
                 onClick={() => handleClickItem(item)}
               >
                 {current === 'myReply' ? item.Qeustion : item.Content}
               </div>
+
               {current === 'myReply' ? (
                 <div>查看回答</div>
               ) : (
                 <div>
+                  {current === 'myHelp' && item.CheckSum === 0 ? (
+                    <Popconfirm
+                      title="是否删除此问题?"
+                      onConfirm={confirm.bind(this,item.ID)}
+                      okText="是"
+                      cancelText="否"
+                    >
+                      <a style={{ paddingRight: 10,fontSize: 12 }} >删除</a>
+                    </Popconfirm>
+                  ) : null}
                   已有回答:{item.CheckSum}
                   <span>
                     <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>

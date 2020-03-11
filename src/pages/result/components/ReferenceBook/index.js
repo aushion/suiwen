@@ -63,7 +63,7 @@ function ReferenceBook(props) {
                   item.工具书编号
                 )}.html`}
                 dangerouslySetInnerHTML={{
-                  __html: '--' + RestTools.removeFlag(item.工具书名称 || item.Title)
+                  __html: `《${RestTools.removeFlag(item.工具书名称 || item.Title)}》`
                 }}
               />
             </div>

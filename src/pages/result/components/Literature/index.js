@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { List, Tag, Icon, Pagination, Input, message } from 'antd';
+import { List, Tag, Pagination, Input, message } from 'antd';
 import dayjs from 'dayjs';
 import findIndex from 'lodash/findIndex';
 import RestTools from '../../../../utils/RestTools';
@@ -8,6 +8,7 @@ import Evaluate from '../Evaluate';
 import DynamicArrow from './DynamicArrow';
 import SameNames from './SameNames';
 import PeopleInfo from './PeopleInfo';
+import SortTag from './SortTag';
 
 const { Search } = Input;
 export default function Literature(props) {
@@ -60,6 +61,43 @@ export default function Literature(props) {
   useEffect(() => {
     RestTools.setSession('preSearchValue', searchValue);
   }, []);
+
+  useEffect(() => {
+    const sortMap = {
+      发表时间: 'TIME',
+      被引频次: 'integer',
+      下载频次: 'integer',
+      ffd: 'rank'
+    };
+    let order = '';
+    if (sortKey === 'ffd') {
+      order = " ORDER BY (ffd,'rank') DESC";
+    } else {
+      order =
+        count % 2 === 0
+          ? ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) desc `
+          : ` ORDER BY (${sortKey},'TIME') asc `;
+    }
+    const { yearSql } = yearInfo;
+    const { subjectSql } = subjectInfo;
+
+    dispatch({
+      type: 'result/getCustomView',
+      payload: {
+        pageStart,
+        whereSql: sql,
+        yearSql,
+        subjectSql,
+        intent,
+        keyword: '',
+        fieldWord,
+        replaceSql,
+        searchword: '',
+        SN,
+        orderSql: order
+      }
+    });
+  }, [count, sortKey]);
 
   useEffect(() => {
     if (year.length) {
@@ -175,53 +213,12 @@ export default function Literature(props) {
   }
 
   function sortBy(key) {
-    let order = '';
-    const newCount = count + 1;
-    setCount(newCount);
-    if (key === 'time') {
-      if (count % 2 === 0) {
-        order = " ORDER BY (发表时间,'TIME') desc ";
-      } else {
-        order = " ORDER BY (发表时间,'TIME') asc ";
-      }
-      setSortKey('发表时间');
-    } else if (key === 'ref') {
-      if (count % 2 === 0) {
-        order = " ORDER BY  (被引频次,'integer') desc ";
-      } else {
-        order = " ORDER BY  (被引频次,'integer') asc ";
-      }
-      setSortKey('被引频次');
-    } else if (key === 'down') {
-      if (count % 2 === 0) {
-        order = " ORDER BY  (下载频次,'integer') desc ";
-      } else {
-        order = " ORDER BY  (下载频次,'integer') asc ";
-      }
-      setSortKey('下载频次');
-    } else if (key === 'ffd') {
-      order = " ORDER BY (ffd,'rank') DESC";
-      setSortKey('ffd');
+    if (sortKey === key) {
+      setCount(count + 1);
+    } else {
+      setCount(0);
     }
-    const { yearSql } = yearInfo;
-    const { subjectSql } = subjectInfo;
-
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart,
-        whereSql: sql,
-        yearSql,
-        subjectSql,
-        intent,
-        keyword: '',
-        fieldWord,
-        replaceSql,
-        searchword: '',
-        SN,
-        orderSql: order
-      }
-    });
+    setSortKey(key);
   }
 
   function filterByYear(year, index) {
@@ -285,7 +282,7 @@ export default function Literature(props) {
 
   function handleSearch(value) {
     const keyword = RestTools.getSession('preSearchValue');
-    if(!value.trim()){
+    if (!value.trim()) {
       message.warning('您还没有输入哟');
       return;
     }
@@ -293,7 +290,7 @@ export default function Literature(props) {
       return;
     }
     if (value.length > 20) {
-        message.warning('输入的字符不能超过20个');
+      message.warning('输入的字符不能超过20个');
       return;
     }
     setYearInfo({
@@ -326,21 +323,6 @@ export default function Literature(props) {
     //记录上一次搜索框的值
     RestTools.setSession('preSearchValue', value);
   }
-  //排序子组件
-  const SortTag = function(props) {
-    const { sortKeyText, name, sqlKey, tagStyle, activeTag, count, showArrow } = props;
-    return (
-      <Tag
-        onClick={sortBy.bind(this, sqlKey)}
-        style={sortKey === sortKeyText ? { ...tagStyle, ...activeTag } : { ...tagStyle }}
-      >
-        {sortKey === sortKeyText && showArrow ? (
-          <Icon type={count % 2 ? 'caret-down' : 'caret-up'} />
-        ) : null}
-        {name}
-      </Tag>
-    );
-  };
 
   function showOrHide(props) {
     const { currentLength, basicsLength, size, type } = props;
@@ -392,6 +374,8 @@ export default function Literature(props) {
                 name="默认排序"
                 sortKeyText="ffd"
                 showArrow={false}
+                sortKey={sortKey}
+                onClick={sortBy}
                 tagStyle={tagStyle}
                 activeTag={activeTag}
                 count={count}
@@ -400,6 +384,8 @@ export default function Literature(props) {
                 sqlKey="time"
                 name="时间"
                 sortKeyText="发表时间"
+                onClick={sortBy}
+                sortKey={sortKey}
                 tagStyle={tagStyle}
                 showArrow
                 activeTag={activeTag}
@@ -409,6 +395,8 @@ export default function Literature(props) {
                 sqlKey="ref"
                 name="引用"
                 showArrow
+                sortKey={sortKey}
+                onClick={sortBy}
                 sortKeyText="被引频次"
                 tagStyle={tagStyle}
                 activeTag={activeTag}
@@ -418,6 +406,8 @@ export default function Literature(props) {
                 sqlKey="down"
                 name="下载"
                 showArrow
+                sortKey={sortKey}
+                onClick={sortBy}
                 sortKeyText="下载频次"
                 tagStyle={tagStyle}
                 activeTag={activeTag}
@@ -501,22 +491,23 @@ export default function Literature(props) {
             ) : null}
 
             {sameNames ? <SameNames data={sameNames.dataNode.data} /> : null}
-           <div style={{ overflow: 'hidden' }}>
-           {linkName ? <div style={{ textAlign: 'right' }}>
-                <a
-                  style={{
-                    paddingBottom: 10,
-                    color: '#999',
-                    fontSize: 13
-                  }}
-                  href={linkMap[linkName].url(keyword)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  更多{linkMap[linkName].name}
-                </a>
-              </div>
-              :null}
+            <div style={{ overflow: 'hidden' }}>
+              {linkName ? (
+                <div style={{ textAlign: 'right' }}>
+                  <a
+                    style={{
+                      paddingBottom: 10,
+                      color: '#999',
+                      fontSize: 13
+                    }}
+                    href={linkMap[linkName].url(keyword)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    更多{linkMap[linkName].name}
+                  </a>
+                </div>
+              ) : null}
 
               <div>
                 <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
@@ -553,12 +544,12 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div style={{width: '20%'}}>
+              <div style={{ width: '20%' }}>
                 下载/被引：
                 {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
               </div>
-              <div style={{width: '5%'}}>{item.来源数据库}</div>
-              <div style={{ width: '15%', textAlign:'center' }}>
+              <div style={{ width: '5%' }}>{item.来源数据库}</div>
+              <div style={{ width: '15%', textAlign: 'center' }}>
                 {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
               </div>
               <div
