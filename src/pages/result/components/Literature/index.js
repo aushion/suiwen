@@ -76,7 +76,7 @@ export default function Literature(props) {
       order =
         count % 2 === 0
           ? ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) desc `
-          : ` ORDER BY (${sortKey},'TIME') asc `;
+          : ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) asc `;
     }
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;

@@ -68,7 +68,7 @@ function BasicLayout(props) {
               <a
                 className={styles.login_btn}
                 // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://local.cnki.net:8002`}
+                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${process.env.returnUrl}`}
               >
                 登录
               </a>

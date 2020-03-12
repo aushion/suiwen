@@ -63,7 +63,7 @@ function Sentence(props) {
                                   rel="noopener noreferrer"
                                   href={`http://gongjushu.cnki.net/RBook/Book/BookDetail?fn=${current.工具书编号}`}
                                 >
-                                  {`--${RestTools.removeFlag(current.工具书名称)}`}
+                                  {`${RestTools.removeFlag(current.工具书名称)}`}
                                 </a>
                               </div>
                             </div>
