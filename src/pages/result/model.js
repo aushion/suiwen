@@ -7,6 +7,7 @@ import {
   getHotHelpList,
   getCommunityAnswer,
   getAnswerByDomain,
+  getRelevant,
   setQuestion,
   getCustomView,
   collectQuestion,
@@ -27,6 +28,7 @@ export default {
     faqData: [], //faq数据
     repositoryData: [], //知识库数据,
     helpList: [],
+    relaventQuestions: [], //相关问题
     communityAnswer: null
   },
   reducers: {
@@ -52,6 +54,7 @@ export default {
         ip: '192.168.22.13',
         userid: userid
       });
+
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
@@ -79,6 +82,19 @@ export default {
       const { data } = res;
       if (data.result) {
         console.log(data);
+      }
+    },
+
+    *getRelavent({ payload }, { call, put }) {
+      const res = yield call(getRelevant, payload);
+      const { data } = res;
+      if (data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            relaventQuestions: data.result.metaList
+          }
+        });
       }
     },
 
@@ -252,6 +268,12 @@ export default {
             dispatch({
               type: 'getAnswer',
               payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+            });
+            dispatch({
+              type: 'getRelavent',
+              payload: {
+                q: encodeURIComponent(q)
+              }
             });
             dispatch({ type: 'collectQuestion', payload: { q } });
 

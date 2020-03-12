@@ -24,6 +24,12 @@ export function getRelevantByAnswer(payload) {
   });
 }
 
+export function getRelevant(payload) {
+  return request.get('/getRelavent', {
+    params: { ...payload }
+  });
+}
+
 export function getEvaluate(payload) {
   return request.post('/queryForEvaluate', null, {
     params: { ...payload }
@@ -61,6 +67,8 @@ export function setQuestion(payload) {
     }
   });
 }
+
+
 
 //获取问题收集，统计用
 export function collectQuestion(payload) {

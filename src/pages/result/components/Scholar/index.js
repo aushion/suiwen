@@ -30,7 +30,16 @@ export default function Scholar(props) {
         renderItem={(item) => {
           const relatedLiterature = item.literature
             ? item.literature.map((item, index) => (
-                <div key={index} style={{fontSize: 13}}>
+                <div
+                  key={index}
+                  style={{
+                    fontSize: 13,
+                    width: '100%',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
                   <a
                     href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
                       RestTools.sourceDb[item.来源数据库]
@@ -40,13 +49,28 @@ export default function Scholar(props) {
                     style={{
                       textDecoration: 'underline',
                       padding: '4px 0',
+                      width: '40%',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                       display: 'inline-block'
                     }}
                   >
                     {item.题名}
                   </a>
-                  <span style={{padding: '0 20px',color: '#666'}}>{item.作者}</span>
-                  <span style={{color: '#666'}}>{item.来源数据库}</span>
+                  <span style={{ padding: '0 10px', overflow: 'hidden', color: '#666' }}>
+                    {item.出版日期.substr(0, 10)}
+                  </span>
+                  <span style={{ padding: '0 20px', color: '#666' }}>{item.作者}</span>
+                  <span
+                    style={{
+                      color: '#666',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {item.来源}
+                  </span>
                 </div>
               ))
             : null;

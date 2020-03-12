@@ -39,57 +39,13 @@ function ResultPage(props) {
     dispatch,
     loading,
     helpList,
+    relaventQuestions,
     communityAnswer,
     visible,
     answerData
   } = props;
 
   const [submitQ, setSubmitQ] = useState(q);
-  // useEffect(() => {
-  //   const userId = RestTools.getLocalStorage('userInfo')
-  //     ? RestTools.getLocalStorage('userInfo').UserName
-  //     : Cookies.get('cnki_qa_uuid');
-      
-  //   if (q) {
-  //     //重置数据
-  //     dispatch({
-  //       type: 'result/save',
-  //       payload: {
-  //         sgData: [],
-  //         answerData: [],
-  //         faqData: [],
-  //         repositoryData: [], //知识库数据
-  //         relatedData: [],
-  //         helpList: [],
-  //         communityAnswer: null
-  //       }
-  //     });
-
-  //     dispatch({
-  //       type: 'result/getAnswer',
-  //       payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-  //     });
-  //     dispatch({ type: 'result/collectQuestion', payload: { q } });
-
-  //     dispatch({
-  //       type: 'result/getSG',
-  //       payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-  //     });
-  //     dispatch({
-  //       type: 'result/getRelevantByAnswer',
-  //       payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
-  //     });
-  //     dispatch({
-  //       type: 'result/getCommunityAnswer',
-  //       payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
-  //     });
-  //     dispatch({
-  //       type: 'result/getHotHelpList'
-  //     });
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [q]);
 
   useEffect(() => {
     setSubmitQ(q);
@@ -341,8 +297,12 @@ function ResultPage(props) {
                     data={relatedPatent[0].dataNode}
                   />
                 ) : null}
-                {relatedData.length && helpList.length ? <Divider dashed /> : null}
 
+                {relatedData.length && helpList.length ? <Divider dashed /> : null}
+                {relaventQuestions.length ? (
+                  <RelatedList q={q} title="相关问题" focus="问题" data={relaventQuestions} />
+                ) : null}
+                {relaventQuestions.length ? <Divider dashed /> : null}
                 {helpList.length ? <NewHelp data={helpList} /> : null}
               </Col>
             </Row>
