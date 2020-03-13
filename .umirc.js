@@ -44,7 +44,6 @@ export default {
             content: `try {
                   window.FlushLogin();
                 } catch (e) {}
-                window.RemoveCookie = window.Ecp_ReomveCookie;
                 function LoginSucess(data) {
                   window.localStorage.setItem('userInfo',JSON.stringify(data))
                   window.location.href = window.location.href.split("?")[0];

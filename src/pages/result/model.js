@@ -88,7 +88,7 @@ export default {
     *getRelavent({ payload }, { call, put }) {
       const res = yield call(getRelevant, payload);
       const { data } = res;
-      if (data.code === 200) {
+      if (data.result.metaList) {
         yield put({
           type: 'save',
           payload: {
@@ -261,7 +261,8 @@ export default {
                 repositoryData: [], //知识库数据
                 relatedData: [],
                 helpList: [],
-                communityAnswer: null
+                communityAnswer: null,
+                relaventQuestions:[]
               }
             });
 

@@ -10,7 +10,7 @@ function Graphic(props) {
     data,
     intentFocus,
     title,
-    pagination = null,
+    pagination = {},
     evaluate = null,
     id,
     domain,
