@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List, Modal } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
@@ -11,6 +11,12 @@ function SgList(props) {
   const keys = Object.keys(groupByData);
   const [visible, setVisible] = useState(false);
   const [initialText, setText] = useState('');
+
+
+  useEffect(() => {
+   
+  },[])
+
   function showMore(text) {
     setVisible(true);
     setText(text);
@@ -21,11 +27,14 @@ function SgList(props) {
       showMore(str);
     }
   }
+
+ 
+
   return (
-    <div className={styles.SgList}>
+    <div className={`${styles.SgList} copy`} id='sg' >
       {keys.map((item) => {
         const year = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.年 || '';
-        const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
+       // const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
         const qikanName = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.中文刊名 || ''
         return (
           <div key={item} className={styles.wrapper}>
@@ -35,8 +44,8 @@ function SgList(props) {
               footer={
                 <div style={{ float: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
                   <div>
-                  <span>
-                     {`${year}/${qikan}/${qikanName}/`}
+                  <span dangerouslySetInnerHTML={{__html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`}}>
+                     
                     </span>
                     <a
                       style={{ color: '#999' }}
@@ -106,7 +115,7 @@ function SgList(props) {
             lineHeight: '27.2px',
             textIndent: '2em'
           }}
-          className={styles.fontStyle}
+          className={`${styles.fontStyle} copy`}
           dangerouslySetInnerHTML={{
             __html: RestTools.translateToRed(RestTools.formatText(initialText))
           }}

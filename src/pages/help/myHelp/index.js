@@ -78,6 +78,7 @@ function MyHelp(props) {
               size={size}
               index={index}
               loading={loading}
+              current={'myHelp'}
               uid={uid}
               dispatch={dispatch}
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件

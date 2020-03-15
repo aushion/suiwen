@@ -241,7 +241,7 @@ function Graphic(props) {
 
   return (
     <div className={styles.Graphic}>
-      <div style={{ color: '#2f8bd6', fontSize: 20 }}>{title}</div>
+     {data ? <div style={{ color: '#2f8bd6', fontSize: 20 }}>{title}</div> : null}
 
       <div className={styles.wrapper}>
         {domain === '翻译' ? <Translate /> : answerMap[domain] && answerMap[domain][intentDomain] ? <SpecialCom /> : <Default />}

@@ -83,7 +83,7 @@ function BasicLayout(props) {
             )}
             {username ? (
               <button onClick={logout} className={styles.login_btn}>
-                注销
+                退出
               </button>
             ) : null}
           </div>

@@ -46,10 +46,36 @@ function ResultPage(props) {
   } = props;
 
   const [submitQ, setSubmitQ] = useState(q);
+  function handleCopy(event) {
+    if(event.target.tagName === 'INPUT') {
+      return;
+    }
+    let clipboardData = event.clipboardData || window.clipboardData;
+
+    if (!clipboardData) {
+      return;
+    }
+
+    let text = document.selection ? document.selection.createRange().text : window.getSelection().toString();
+    if (text) {
+      // 如果文本存在，首先取消文本的默认事件
+      event.preventDefault();
+      
+      clipboardData.setData('text/plain', text + '\n\n摘自【知网随问】');
+    }
+  }
 
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
+
+  useEffect(() => {
+    document.addEventListener('copy',handleCopy);
+    return function() {
+      document.removeEventListener('copy', handleCopy)
+    }
+  },[])
+  
   const referenceBookData = repositoryData.filter(
     (item) =>
       Array.isArray(item.dataNode) &&
@@ -142,12 +168,12 @@ function ResultPage(props) {
   }
 
   return (
-    <div className={styles.result}>
+    <div className={styles.result} id="result">
       <Spin spinning={loading} indicator={antIcon}>
         <div style={{ minHeight: 'calc(45vh)' }}>
-          {resultLength ? (
+         
             <div className={styles.result_tips}>
-              <span>为您找到{resultLength}条结果</span>
+            {resultLength ? ( <span>为您找到{resultLength}条结果</span> ) : null}
 
               <span
                 style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}
@@ -162,7 +188,7 @@ function ResultPage(props) {
                 我来回答
               </span>
             </div>
-          ) : null}
+          
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
               <Col span={18}>

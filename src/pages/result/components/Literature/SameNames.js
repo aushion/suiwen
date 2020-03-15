@@ -7,7 +7,7 @@ const SameNames = (props) => {
       <div style={{ padding: '20px 0', fontSize: 14 }}>
         同名学者：
         <a
-          href={`http://xuezhe.cnki.net/Search/Search.aspx?ac=result&sm=0&sv=${encodeURIComponent(
+          href={`http://xuezhe.cnki.net/Search/Search.aspx?ac=result&sm=0&nmv=${encodeURIComponent(
             RestTools.removeFlag(data[0].作者 || '')
           )}`}
           target="_blank"
