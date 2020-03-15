@@ -169,7 +169,7 @@ export default function Statistics(props) {
               position="prop*value"
               color="prop"
             >
-              <Label
+              {/* <Label
                 content="value"
                 offset={20} // 设置坐标轴文本 label 距离坐标轴线的距离
                 textStyle={{
@@ -185,7 +185,7 @@ export default function Statistics(props) {
                   return `${item.point.value}${item.point.unit}`;
                 }} // 回调函数，用于格式化坐标轴上显示的文本信息
                 // htmlTemplate= {()=>{}}, // 使用 html 自定义 label
-              />
+              /> */}
             </Geom>
           </Chart>
         </div>
