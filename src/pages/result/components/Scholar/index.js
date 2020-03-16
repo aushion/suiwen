@@ -10,7 +10,7 @@ export default function Scholar(props) {
   const { good, bad, isevalute } = evaluate;
   const { fields } = intentJson.results[0];
   const linkKey = {
-    学者名: 'sv',
+    学者名: 'nmv',
     学者单位: 'ut',
     研究领域: 'dn',
     主题: 'dn'

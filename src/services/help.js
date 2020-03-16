@@ -36,7 +36,7 @@ export default {
 
   getUserFAQ(payload) {
     const { question } = payload;
-    return request.get(serverurl + `/getUserFAQ?q=${question}`);
+    return request.get(otherServer + `/getUserFAQ?q=${question}`);
   },
 
   setAnswer(payload) {

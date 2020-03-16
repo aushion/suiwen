@@ -33,7 +33,7 @@ function RelatedLiteraure(props) {
         itemLayout="vertical"
         dataSource={data.filter((item) => item !== q)}
         renderItem={(item) => (
-          <List.Item>
+          <List.Item style={{padding: '8px 0'}}>
             <div>
               {focus === '问题' ? (
                 <Link
@@ -44,7 +44,6 @@ function RelatedLiteraure(props) {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
-                    lineHeight: '14px'
                   }}
                   to={`/result?q=${encodeURIComponent(item[focus])}`}
                 >
@@ -91,14 +90,16 @@ function RelatedLiteraure(props) {
           </List.Item>
         )}
       />
-      <a
-        style={{ textAlign: 'right', display: 'block', color: '#999', fontSize: 12 }}
-        href={moreLink(title, q)}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        更多>>
-      </a>
+      {focus !== '问题' ? (
+        <a
+          style={{ textAlign: 'right', display: 'block', color: '#999', fontSize: 12 }}
+          href={moreLink(title, q)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          更多>>
+        </a>
+      ) : null}
     </div>
   );
 }

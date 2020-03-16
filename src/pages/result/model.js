@@ -47,6 +47,9 @@ export default {
       const userid = RestTools.getLocalStorage('userInfo')
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
+
+      //数据持久化
+      RestTools.setSession('answer', null);
       yield call(submitQa, {
         clientType: 'pc',
         question: decodeURIComponent(q),
@@ -112,7 +115,8 @@ export default {
               sql: newSql,
               year: newYear,
               orderBy,
-              subject: newSubject
+              subject: newSubject,
+              subjectType: newSubjectType
             } = res.data.result[0].dataNode;
             const { dataNode } = item;
             const { data, year, subject, ...others } = dataNode;
@@ -124,6 +128,7 @@ export default {
                 ...others,
                 data: newData,
                 orderBy,
+                subjectType: newSubjectType,
                 year: newYear || [],
                 subject: newSubject || [],
                 sql: newSql
@@ -141,6 +146,8 @@ export default {
           repositoryData: newRepositoryData
         }
       });
+
+      document.body.scrollTop = document.documentElement.scrollTop = 0; //页面滚动到顶部
       RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData });
       return newRepositoryData;
     },
@@ -262,7 +269,7 @@ export default {
                 relatedData: [],
                 helpList: [],
                 communityAnswer: null,
-                relaventQuestions:[]
+                relaventQuestions: []
               }
             });
 

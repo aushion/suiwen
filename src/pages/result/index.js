@@ -42,12 +42,13 @@ function ResultPage(props) {
     relaventQuestions,
     communityAnswer,
     visible,
+    fetchLiterature,
     answerData
   } = props;
 
   const [submitQ, setSubmitQ] = useState(q);
   function handleCopy(event) {
-    if(event.target.tagName === 'INPUT') {
+    if (event.target.tagName === 'INPUT') {
       return;
     }
     let clipboardData = event.clipboardData || window.clipboardData;
@@ -56,11 +57,13 @@ function ResultPage(props) {
       return;
     }
 
-    let text = document.selection ? document.selection.createRange().text : window.getSelection().toString();
+    let text = document.selection
+      ? document.selection.createRange().text
+      : window.getSelection().toString();
     if (text) {
       // 如果文本存在，首先取消文本的默认事件
       event.preventDefault();
-      
+
       clipboardData.setData('text/plain', text + '\n\n摘自【知网随问】');
     }
   }
@@ -70,12 +73,12 @@ function ResultPage(props) {
   }, [q]);
 
   useEffect(() => {
-    document.addEventListener('copy',handleCopy);
+    document.addEventListener('copy', handleCopy);
     return function() {
-      document.removeEventListener('copy', handleCopy)
-    }
-  },[])
-  
+      document.removeEventListener('copy', handleCopy);
+    };
+  }, []);
+
   const referenceBookData = repositoryData.filter(
     (item) =>
       Array.isArray(item.dataNode) &&
@@ -161,7 +164,7 @@ function ResultPage(props) {
 
   function myReply() {
     if (RestTools.getLocalStorage('userInfo')) {
-      router.push('reply');
+      router.push(`reply?question=${q}`);
     } else {
       message.warn('请您登录后再操作');
     }
@@ -171,24 +174,20 @@ function ResultPage(props) {
     <div className={styles.result} id="result">
       <Spin spinning={loading} indicator={antIcon}>
         <div style={{ minHeight: 'calc(45vh)' }}>
-         
-            <div className={styles.result_tips}>
-            {resultLength ? ( <span>为您找到{resultLength}条结果</span> ) : null}
+          <div className={styles.result_tips}>
+            {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
 
-              <span
-                style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}
-                onClick={showModal}
-              >
-                问题求助
-              </span>
-              <span
-                style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}
-                onClick={myReply}
-              >
-                我来回答
-              </span>
-            </div>
-          
+            <span
+              style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}
+              onClick={showModal}
+            >
+              问题求助
+            </span>
+            <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
+              我来回答
+            </span>
+          </div>
+
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
               <Col span={18}>
@@ -222,7 +221,7 @@ function ResultPage(props) {
                   : null}
                 {literatureData.length &&
                 (literatureData.length === 1 || literatureData.length === 3) ? (
-                  <Literature literatureData={literatureData} dispatch={dispatch} />
+                  <Literature literatureData={literatureData} dispatch={dispatch} loading={fetchLiterature} />
                 ) : null}
                 {patentData.length
                   ? patentData.map((item) => <Patent key={item.id} data={item} />)
@@ -371,6 +370,12 @@ function ResultPage(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.result, ...state.global, loading: state.loading.models.result };
+  return {
+    ...state.result,
+    ...state.global,
+    loading:
+      state.loading.effects['result/getAnswer'],
+    fetchLiterature: state.loading.effects['result/getCustomView']  
+  };
 }
 export default connect(mapStateToProps)(ResultPage);

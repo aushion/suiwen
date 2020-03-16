@@ -12,7 +12,7 @@ import SortTag from './SortTag';
 
 const { Search } = Input;
 export default function Literature(props) {
-  const { literatureData, dispatch } = props;
+  const { literatureData, dispatch, loading } = props;
   const [works, people = null, sameNames = null] = literatureData;
 
   //嵌套解构
@@ -38,7 +38,6 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
-
   const subjectValid = subject ? subject.filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
@@ -61,6 +60,10 @@ export default function Literature(props) {
   useEffect(() => {
     RestTools.setSession('preSearchValue', searchValue);
   }, []);
+
+  useEffect(() => {
+    setSearchValue(searchword || keyword ||  '')
+  },[keyword, searchword])
 
   useEffect(() => {
     const sortMap = {
@@ -227,7 +230,7 @@ export default function Literature(props) {
     const newYearInfo = {
       index, //点击年份标签的索引，用于设置选中状态
       yearSql,
-      year: []
+      year
     };
     setYearInfo(newYearInfo); //修改年份选中状态
     changePage(1);
@@ -253,7 +256,7 @@ export default function Literature(props) {
   function filterBySubject(subject, index) {
     const subjectSql = subject === '全部' ? '' : subjectSqlMap[subjectType](subject);
     setSubjectInfo({
-      subject: [],
+      subject,
       index: index === 0 ? 0 : 1,
       subjectSql,
       item: {
@@ -352,6 +355,7 @@ export default function Literature(props) {
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}
       <List
+        loading={loading}
         header={
           <div style={{ overflow: 'hidden' }}>
             <div style={{ float: 'left' }}>
