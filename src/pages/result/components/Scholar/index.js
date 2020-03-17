@@ -47,7 +47,8 @@ export default function Scholar(props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                      textDecoration: 'underline',
+                      // textDecoration: 'underline',
+                      verticalAlign: 'middle',
                       padding: '4px 0',
                       width: '40%',
                       overflow: 'hidden',
@@ -58,12 +59,13 @@ export default function Scholar(props) {
                   >
                     {item.题名}
                   </a>
-                  <span style={{ padding: '0 10px', overflow: 'hidden', color: '#666' }}>
+                  <span style={{ padding: '4px 10px', overflow: 'hidden', color: '#666' }}>
                     {item.出版日期.substr(0, 10)}
                   </span>
-                  <span style={{ padding: '0 20px', color: '#666' }}>{item.作者}</span>
+                  <span style={{ padding: '4px 20px', color: '#666' }}>{item.作者}</span>
                   <span
                     style={{
+                      padding: '4px 0',
                       color: '#666',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
