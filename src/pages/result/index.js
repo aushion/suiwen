@@ -43,6 +43,7 @@ function ResultPage(props) {
     communityAnswer,
     visible,
     fetchLiterature,
+    fetchSg,
     answerData
   } = props;
 
@@ -331,7 +332,7 @@ function ResultPage(props) {
                 {helpList.length ? <NewHelp data={helpList} /> : null}
               </Col>
             </Row>
-          ) : !loading ? (
+          ) : !loading && !fetchLiterature && !fetchSg ? (
             <Result
               icon={<Icon type="smile" theme="twoTone" />}
               title="抱歉，您输入的问题，我暂时还不能识别出它的意思。请变换一下说法再问问我^_^。（提问方式：自然语言 or 关键词）"
@@ -375,7 +376,8 @@ function mapStateToProps(state) {
     ...state.global,
     loading:
       state.loading.effects['result/getAnswer'],
-    fetchLiterature: state.loading.effects['result/getCustomView']  
+    fetchLiterature: state.loading.effects['result/getCustomView'],
+    fetchSg: state.loading.effects['result/getSG']
   };
 }
 export default connect(mapStateToProps)(ResultPage);

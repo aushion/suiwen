@@ -48,8 +48,6 @@ export default {
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
 
-      //数据持久化
-      RestTools.setSession('answer', null);
       yield call(submitQa, {
         clientType: 'pc',
         question: decodeURIComponent(q),
@@ -75,7 +73,8 @@ export default {
         RestTools.setSession('answer', {
           answerData: data.result.metaList,
           faqData: faqData,
-          repositoryData: repositoryData
+          repositoryData: repositoryData,
+          source: 'getAnswer'
         });
       }
     },
@@ -104,6 +103,7 @@ export default {
     *getCustomView({ payload }, { call, put }) {
       const res = yield call(getCustomView, payload);
       const oldAnswer = RestTools.getSession('answer');
+      const answerSource = oldAnswer.source;
       const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
       let newRepositoryData = [];
       if (res.data.code === 200) {
@@ -116,25 +116,29 @@ export default {
               year: newYear,
               orderBy,
               subject: newSubject,
-              subjectType: newSubjectType
+              subjectType: newSubjectType,
+             
             } = res.data.result[0].dataNode;
             const { dataNode } = item;
             const { data, year, subject, ...others } = dataNode;
-
+          
             item = {
               ...item,
               ...res.data.result[0],
+              intentJson: item.intentJson,
               dataNode: {
                 ...others,
-                data: newData,
+                data: answerSource === 'getAnswer' ? data : newData,
                 orderBy,
                 subjectType: newSubjectType,
                 year: newYear || [],
                 subject: newSubject || [],
                 sql: newSql
-              }
+              },
+             
             };
           }
+
 
           return item;
         });
@@ -148,7 +152,7 @@ export default {
       });
 
       document.body.scrollTop = document.documentElement.scrollTop = 0; //页面滚动到顶部
-      RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData });
+      RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData, source: 'getCustomView' });
       return newRepositoryData;
     },
 
@@ -239,6 +243,7 @@ export default {
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
         if (pathname === '/result') {
+          sessionStorage.removeItem('answer')
           if (domain) {
             dispatch({
               type: 'global/save',

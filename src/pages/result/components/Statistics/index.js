@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chart, Geom, Axis, Tooltip, Label, Legend } from 'bizcharts';
+import { Chart, Geom, Axis, Tooltip, Coord, Legend } from 'bizcharts';
 import  flattenDeep  from 'lodash/flattenDeep';
 import Evaluate from '../Evaluate';
 import RestTools from 'Utils/RestTools';
@@ -151,6 +151,7 @@ export default function Statistics(props) {
       ) : (
         <div>
           <Chart height={400} data={data} forceFit>
+          <Coord transpose />
             <Axis name="prop" />
             <Axis name="value" />
             <Legend />
@@ -168,7 +169,10 @@ export default function Statistics(props) {
               type="interval"
               position="prop*value"
               color="prop"
+              // size="value"
+              size={18}
             >
+              
               {/* <Label
                 content="value"
                 offset={20} // 设置坐标轴文本 label 距离坐标轴线的距离
