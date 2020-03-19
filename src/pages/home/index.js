@@ -25,12 +25,9 @@ function Home(props) {
   const { skillExamples, specialQuestions, newHelpList, loading } = props;
   const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
-  // const activeStyle = {
-  //   backgroundColor: '#29A7F3',
-  //   padding: '8px 24px',
-  //   color: '#fff',
-  //   borderRadius: 4
-  // };
+
+  console.log(specialQuestions);
+
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
     return (
@@ -80,6 +77,17 @@ function Home(props) {
     arrows: false
   };
 
+  const specialItemSetting = {
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    swipe: true,
+    arrows: true,
+    dots: true,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />
+  };
+
   function handleClickItem(item) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
     router.push('/result?q=' + encodeURIComponent(item));
@@ -93,16 +101,13 @@ function Home(props) {
     skillSlider.slickGoTo(i, true);
   }
 
-  // function building() {
-  //   message.warn({
-  //     content: '正在建设中...',
-  //     icon: <Icon type="smile" />
-  //   });
-  // }
-
   // function gotoSpecial(q,domain) {
   //   router.push(`/result?q=${q}&domain=${domain}`);
   // }
+
+  function gotoSpecial(domain){
+    router.push(`/special?domain=${domain}`)
+  }
 
   const slideList = skillExamples.length
     ? skillExamples.map((item) => {
@@ -141,6 +146,38 @@ function Home(props) {
       })
     : null;
 
+  const specialItem = specialQuestions.concat(specialQuestions).map((item) => {
+    return (
+      <div className={homeStyles.specialWrapper} key={item.name} onClick={gotoSpecial.bind(this,item.name)}>
+        <div className={homeStyles.picture}>
+          <img src={法律} alt={item.name} />
+        </div>
+        <div className={homeStyles.title}>
+          <span style={{ color: '#23242A', fontSize: 24 }}>{item.name}</span>
+          <span style={{ color: '#C4C4C4', fontSize: 18 }}>{item.name}</span>
+        </div>
+        <div className={homeStyles.questions}>
+          {item.data.map((item)=> {
+            return (
+              <a
+                className={homeStyles.questions_item}
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
+                  item.q
+                )}&r=query&domain=${encodeURIComponent('法律')}`}
+                // href={`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(item.q)}`}
+                key={item.qid}
+              >
+                {item.q}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    );
+  });
+
   const tagList = skillExamples.length
     ? skillExamples.map((item, index) => (
         <div
@@ -168,7 +205,7 @@ function Home(props) {
           <div className={homeStyles.right}>
             <div className={homeStyles.right_top}>
               {/* <div style={{ whiteSpace: 'nowrap', }}> */}
-              <Slider {...tagSettings} >{tagList}</Slider>
+              <Slider {...tagSettings}>{tagList}</Slider>
               {/* </div> */}
             </div>
 
@@ -186,7 +223,7 @@ function Home(props) {
         <div className={homeStyles.special}>
           <div className={homeStyles.special_top}>
             <div className={homeStyles.title}>
-              <BlockTitle enTitle="Special" cnTitle="专题" />
+              <BlockTitle enTitle="Topics" cnTitle="专题" />
             </div>
             <div className={homeStyles.modular}>
               <span
@@ -215,7 +252,8 @@ function Home(props) {
           <div className={homeStyles.special_bottom}>
             <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}>
               <div className={homeStyles.special_questions}>
-                {specialQuestions.length ? (
+                <Slider {...specialItemSetting}>{specialItem}</Slider>
+                {/* {specialQuestions.length ? (
                   <Row gutter={56}>
                     <Col span={8} className={homeStyles.specialItem}>
                       <div className={homeStyles.specialWrapper}>
@@ -319,7 +357,7 @@ function Home(props) {
                       </div>
                     </Col>
                   </Row>
-                ) : null}
+                ) : null} */}
               </div>
               <div className={homeStyles.special_help}>
                 <div className={homeStyles.help_left}></div>

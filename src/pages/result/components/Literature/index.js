@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { List, Tag, Pagination, Input, message } from 'antd';
 import dayjs from 'dayjs';
 import findIndex from 'lodash/findIndex';
+import { useUpdateEffect } from '@umijs/hooks';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import DynamicArrow from './DynamicArrow';
@@ -65,7 +66,7 @@ export default function Literature(props) {
     setSearchValue(searchword || keyword ||  '')
   },[keyword, searchword])
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     const sortMap = {
       发表时间: 'TIME',
       被引频次: 'integer',

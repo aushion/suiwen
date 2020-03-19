@@ -13,6 +13,7 @@ export default {
   base: '/',
   publicPath: './',
   history: 'hash',
+  hash: true,
   targets: {
     ie: 9
   },

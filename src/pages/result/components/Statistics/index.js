@@ -1,15 +1,15 @@
 import React from 'react';
 import { Chart, Geom, Axis, Tooltip, Coord, Legend } from 'bizcharts';
-import  flattenDeep  from 'lodash/flattenDeep';
+import flattenDeep from 'lodash/flattenDeep';
 import Evaluate from '../Evaluate';
 import RestTools from 'Utils/RestTools';
 import styles from './index.less';
 
 export default function Statistics(props) {
-  let { intentDomain, id, evaluate = {}, data=[] } = props;
+  let { intentDomain, id, evaluate = {}, data = [] } = props;
   const { good = 0, bad = 0, isevalute = false } = evaluate;
 
-  if(data.length && data[0].name) {
+  if (data.length && data[0].name) {
     data = data.map((item) => {
       item = item.fileds.map((current) => {
         return {
@@ -21,9 +21,8 @@ export default function Statistics(props) {
       });
       return item;
     });
-    data = flattenDeep(data)
+    data = flattenDeep(data);
   }
-
 
   const tongjikanwu =
     data.length && intentDomain === '统计刊物'
@@ -121,7 +120,7 @@ export default function Statistics(props) {
     data.length && intentDomain === '数值问答' ? (
       data[0].name ? (
         <div>
-          <Chart height={400} data={data} forceFit>
+          <Chart height={500} data={data} forceFit>
             <Legend />
             <Axis name="key" />
             <Axis name="value" position={'left'} />
@@ -150,9 +149,9 @@ export default function Statistics(props) {
         </div>
       ) : (
         <div>
-          <Chart height={400} data={data} forceFit>
-          <Coord transpose />
-            <Axis name="prop" />
+          <Chart height={500} data={data} forceFit>
+            <Coord transpose />
+            <Axis name="prop" label={{ autoRotate: true, rotate: 30}} />
             <Axis name="value" />
             <Legend />
             <Tooltip />
@@ -172,7 +171,6 @@ export default function Statistics(props) {
               // size="value"
               size={18}
             >
-              
               {/* <Label
                 content="value"
                 offset={20} // 设置坐标轴文本 label 距离坐标轴线的距离
@@ -198,7 +196,6 @@ export default function Statistics(props) {
 
   return (
     <div className={styles.Statistics}>
-     
       {intentDomain === '数值问答' ? shuzhuwenda : null}
       {intentDomain === '年鉴名录' ? nianjianminglu : null}
       {intentDomain === '统计刊物' ? tongjikanwu : null}

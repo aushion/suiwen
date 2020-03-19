@@ -2,6 +2,7 @@
 import { ConfigProvider } from 'antd';
 import BasicLayout from './BasicLayout';
 import HomeLayout from './HomeLayout';
+import SpecialLayout from './SpecialLayout';
 import zhCN from 'antd/es/locale/zh_CN';
 
 export default function(props) {
@@ -9,6 +10,12 @@ export default function(props) {
     return (
       <ConfigProvider locale={zhCN}>
         <HomeLayout>{props.children}</HomeLayout>
+      </ConfigProvider>
+    );
+  } else if (props.location.pathname === '/special') {
+    return (
+      <ConfigProvider locale={zhCN}>
+        <SpecialLayout>{props.children}</SpecialLayout>
       </ConfigProvider>
     );
   }
