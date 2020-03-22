@@ -6,7 +6,7 @@ import {
   setEvaluate,
   getHotHelpList,
   getCommunityAnswer,
-  getAnswerByDomain,
+  // getAnswerByTopic,
   getRelevant,
   setQuestion,
   getCustomView,
@@ -79,13 +79,13 @@ export default {
       }
     },
 
-    *getAnswerByDomain({ payload }, { call }) {
-      const res = yield call(getAnswerByDomain, payload);
-      const { data } = res;
-      if (data.result) {
-        console.log(data);
-      }
-    },
+    // *getAnswerByTopic({ payload }, { call }) {
+    //   const res = yield call(getAnswerByTopic, payload);
+    //   const { data } = res;
+    //   if (data.result) {
+    //     console.log(data);
+    //   }
+    // },
 
     *getRelavent({ payload }, { call, put }) {
       const res = yield call(getRelevant, payload);
@@ -116,12 +116,11 @@ export default {
               year: newYear,
               orderBy,
               subject: newSubject,
-              subjectType: newSubjectType,
-             
+              subjectType: newSubjectType
             } = res.data.result[0].dataNode;
             const { dataNode } = item;
             const { data, year, subject, ...others } = dataNode;
-          
+
             item = {
               ...item,
               ...res.data.result[0],
@@ -134,11 +133,9 @@ export default {
                 year: newYear || [],
                 subject: newSubject || [],
                 sql: newSql
-              },
-             
+              }
             };
           }
-
 
           return item;
         });
@@ -152,7 +149,11 @@ export default {
       });
 
       document.body.scrollTop = document.documentElement.scrollTop = 0; //页面滚动到顶部
-      RestTools.setSession('answer', { ...oldAnswer, repositoryData: newRepositoryData, source: 'getCustomView' });
+      RestTools.setSession('answer', {
+        ...oldAnswer,
+        repositoryData: newRepositoryData,
+        source: 'getCustomView'
+      });
       return newRepositoryData;
     },
 
@@ -237,19 +238,18 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        let { q, domain = '' } = query;
-
+        let { q, topic = '' } = query;
         const userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
         if (pathname === '/result') {
-          sessionStorage.removeItem('answer')
-          if (domain) {
+          sessionStorage.removeItem('answer');
+          if (topic) {
             dispatch({
               type: 'global/save',
               payload: {
-                ...RestTools.headerInfo[domain],
-                domain
+                ...RestTools.headerInfo[topic],
+                domain: topic
               }
             });
           }
@@ -263,7 +263,6 @@ export default {
               }
             });
             //重置数据
-
             dispatch({
               type: 'save',
               payload: {
@@ -277,31 +276,57 @@ export default {
                 relaventQuestions: []
               }
             });
-
-            dispatch({
-              type: 'getAnswer',
-              payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-            });
-            dispatch({
-              type: 'getRelavent',
-              payload: {
-                q: encodeURIComponent(q)
-              }
-            });
+            if (topic) {
+              dispatch({
+                type: 'getAnswer',
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
+              });
+              dispatch({
+                type: 'getSG',
+                payload: {
+                  q: encodeURIComponent(q),
+                  pageStart: 1,
+                  pageCount: 10,
+                  userId,
+                  domain: topic
+                }
+              });
+              dispatch({
+                type: 'getRelavent',
+                payload: {
+                  q: encodeURIComponent(q),
+                  area: topic
+                }
+              });
+              dispatch({
+                type: 'getRelevantByAnswer',
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
+              });
+            } else {
+              dispatch({
+                type: 'getAnswer',
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+              });
+              dispatch({
+                type: 'getRelavent',
+                payload: {
+                  q: encodeURIComponent(q)
+                }
+              });
+              dispatch({
+                type: 'getSG',
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+              });
+              dispatch({
+                type: 'getRelevantByAnswer',
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
+              });
+              dispatch({
+                type: 'getCommunityAnswer',
+                payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
+              });
+            }
             dispatch({ type: 'collectQuestion', payload: { q } });
-
-            dispatch({
-              type: 'getSG',
-              payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-            });
-            dispatch({
-              type: 'getRelevantByAnswer',
-              payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
-            });
-            dispatch({
-              type: 'getCommunityAnswer',
-              payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
-            });
             dispatch({
               type: 'getHotHelpList'
             });

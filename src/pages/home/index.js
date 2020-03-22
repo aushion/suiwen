@@ -79,13 +79,15 @@ function Home(props) {
 
   const specialItemSetting = {
     infinite: true,
+    autoplay: true,
+    hoverPause: true,
     slidesToShow: 3,
     slidesToScroll: 1,
     swipe: true,
     arrows: true,
-    dots: true,
-    prevArrow: <PrevArrow />,
-    nextArrow: <NextArrow />
+    dots: true
+    // prevArrow: <PrevArrow style={{fontSize: 20}} />,
+    // nextArrow: <NextArrow />
   };
 
   function handleClickItem(item) {
@@ -105,8 +107,12 @@ function Home(props) {
   //   router.push(`/result?q=${q}&domain=${domain}`);
   // }
 
-  function gotoSpecial(domain){
-    router.push(`/special?domain=${domain}`)
+  function gotoSpecial(topicId) {
+    router.push(`/special?topicId=${topicId}`);
+  }
+
+  function getResultByTopic(topic, q) {
+    router.push(`/result?topic=${topic}&q=${q}`);
   }
 
   const slideList = skillExamples.length
@@ -146,30 +152,40 @@ function Home(props) {
       })
     : null;
 
-  const specialItem = specialQuestions.concat(specialQuestions).map((item) => {
+  const specialItem = specialQuestions.concat(specialQuestions).map((item, index) => {
+    const topicInfo = {
+      法律: { imgSrc: 法律, enText: 'Law', topic: 'FL' },
+      医学: { imgSrc: 医学, enText: 'Medical', topic: 'YX' },
+      农业: { imgSrc: 农业, enText: 'Argriculture', topic: 'NY' }
+    };
     return (
-      <div className={homeStyles.specialWrapper} key={item.name} onClick={gotoSpecial.bind(this,item.name)}>
+      <div className={homeStyles.specialWrapper} key={item.name}>
         <div className={homeStyles.picture}>
-          <img src={法律} alt={item.name} />
+          <img
+            src={topicInfo[item.name].imgSrc}
+            alt={item.name}
+            onClick={gotoSpecial.bind(this, item.data[0].topicId)}
+          />
         </div>
         <div className={homeStyles.title}>
           <span style={{ color: '#23242A', fontSize: 24 }}>{item.name}</span>
-          <span style={{ color: '#C4C4C4', fontSize: 18 }}>{item.name}</span>
+          <span style={{ color: '#C4C4C4', fontSize: 18 }}>{topicInfo[item.name].enText}</span>
         </div>
         <div className={homeStyles.questions}>
-          {item.data.map((item)=> {
+          {item.data.map((child) => {
             return (
               <a
                 className={homeStyles.questions_item}
                 target="_blank"
                 rel="noopener noreferrer"
-                href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
-                  item.q
-                )}&r=query&domain=${encodeURIComponent('法律')}`}
+                onClick={getResultByTopic.bind(this, topicInfo[item.name].topic, child.question)}
+                // href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
+                //   item.q
+                // )}&r=query&domain=${encodeURIComponent('法律')}`}
                 // href={`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(item.q)}`}
-                key={item.qid}
+                key={child.qId}
               >
-                {item.q}
+                {child.question}
               </a>
             );
           })}

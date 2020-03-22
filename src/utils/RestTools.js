@@ -162,7 +162,7 @@ export default {
     );
   },
   headerInfo: {
-    医学: {
+    YX: {
       title: {
         cnText: '医学',
         enText: 'Medical'
@@ -171,7 +171,7 @@ export default {
         background: 'lightPink'
       }
     },
-    农业: {
+    NY: {
       title: {
         cnText: '农业',
         enText: 'Agriculture'
@@ -302,5 +302,10 @@ export default {
   },
   getSession(key) {
     return JSON.parse(window.sessionStorage.getItem(key));
+  },
+  topicInfo: {
+    法律: { enText: 'Law', topic: 'FL' },
+    医学: { enText: 'Medical', topic: 'YX' },
+    农业: { enText: 'Argriculture', topic: 'NY'}
   }
 };

@@ -1,16 +1,20 @@
 import request from '../../../utils/request';
 
 export function getAnswer(payload) {
-  return request.get('/getAnswer', {
+  const {topic} = payload
+  return topic ? request.get('/getAnswerByTopic', {
+    params: { ...payload }
+  })
+  : request.get('/getAnswer', {
     params: { ...payload }
   });
 }
 
-export function getAnswerByDomain(payload) {
-  return request.get('/getAnswerByDomain', {
-    params: { ...payload }
-  });
-}
+// export function getAnswerByTopic(payload) {
+//   return request.get('/getAnswerByTopic', {
+//     params: { ...payload }
+//   });
+// }
 
 export function getSG(payload) {
   return request.get('/getSGData', {
