@@ -26,8 +26,6 @@ function Home(props) {
   const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
 
-  console.log(specialQuestions);
-
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
     return (
@@ -108,11 +106,19 @@ function Home(props) {
   // }
 
   function gotoSpecial(topicId) {
-    router.push(`/special?topicId=${topicId}`);
+    if (topicId === '3') {
+      window.open(`http://qa2.cnki.net/jcyqa/home`);
+    } else {
+      router.push(`/special?topicId=${topicId}`);
+    }
   }
 
   function getResultByTopic(topic, q) {
-    router.push(`/result?topic=${topic}&q=${q}`);
+    if (topic === 'FL') {
+      window.open(`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(q)}`);
+    } else {
+      router.push(`/result?topic=${topic}&q=${q}`);
+    }
   }
 
   const slideList = skillExamples.length
@@ -152,27 +158,35 @@ function Home(props) {
       })
     : null;
 
-  const specialItem = specialQuestions.concat(specialQuestions).map((item, index) => {
-    const topicInfo = {
+  const specialItem = specialQuestions.map((item, index) => {
+    let topicInfo = {
       法律: { imgSrc: 法律, enText: 'Law', topic: 'FL' },
       医学: { imgSrc: 医学, enText: 'Medical', topic: 'YX' },
       农业: { imgSrc: 农业, enText: 'Argriculture', topic: 'NY' }
     };
+    // topicInfo = Object.assign({},topicInfo, RestTools.getLocalStorage('topicTheme'))
+    // console.log('topicInfo', topicInfo)
     return (
       <div className={homeStyles.specialWrapper} key={item.name}>
-        <div className={homeStyles.picture}>
-          <img
-            src={topicInfo[item.name].imgSrc}
-            alt={item.name}
-            onClick={gotoSpecial.bind(this, item.data[0].topicId)}
-          />
-        </div>
+        {item.name === '法律' ? (
+          <div className={homeStyles.picture}>
+            <img
+              src={topicInfo[item.name].imgSrc}
+              alt={item.name}
+              onClick={gotoSpecial.bind(this, item.data[0].topicId)}
+            />
+          </div>
+        ) : (
+          <Link className={homeStyles.picture} to={`/special?topicId=${item.data[0].topicId}`} target="_blank">
+            <img src={topicInfo[item.name].imgSrc} alt={item.name} />
+          </Link>
+        )}
         <div className={homeStyles.title}>
           <span style={{ color: '#23242A', fontSize: 24 }}>{item.name}</span>
           <span style={{ color: '#C4C4C4', fontSize: 18 }}>{topicInfo[item.name].enText}</span>
         </div>
         <div className={homeStyles.questions}>
-          {item.data.map((child) => {
+          {item.data.slice(0,5).map((child) => {
             return (
               <a
                 className={homeStyles.questions_item}

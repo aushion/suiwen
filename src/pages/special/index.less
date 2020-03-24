@@ -1,27 +1,139 @@
-.header {
-  background: #90ee90;
-  height: 300px;
-  .inputWrap {
-    width: 50%;
+.wrapper{
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+  .header {
+    background: #fff;
+    height: 356px;
+    padding: 0;
+    .title {
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 36px;
+      color: white;
+      font-weight: bold;
+      font-style: italic;
+      letter-spacing: 4px;
+    }
+    .imgWrap {
+      width: 100%;
+      height: 356px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  
+    .inputWrap {
+      width: 670px;
+      position: absolute;
+      line-height: normal;
+      top: 180px;
+      left: 50%;
+      margin-left: -335px;
+      :global(.record-wrap){
+        width: calc(100% - 88px);
+      }
+      :global(.ant-input-lg){
+        height: 40px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+      :global(.ant-btn-primary){
+        height: 40px;
+        background-color: #0084FF;
+        margin-left: 10px;
+        font-size: 20px;
+      }
+    }
+  }
+  .main {
+    width: 960px;
+    margin: 0 auto;
+    .menu {
+      height: 400px;
+      padding-top: 40px;
+    }
+    .content {
+      height: 400px;
+      background-color: white;
+      .listWrap {
+        .title {
+          font-size: 16px;
+          font-weight: bold;
+          text-align: center;
+          width: 100%;
+          padding: 20px;
+          color: #606164;
+        }
+        :global(.ant-list-item) {
+          padding-left: 20px;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            background-color: #008eff;
+            color: white;
+          }
+        }
+        .question_item {
+          text-align: center;
+          width: 100%;
+        }
+      }
+    }
+    .hotQuestions {
+      // height: 300px;
+      .title {
+        color: #606164;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px 0;
+      }
+      .list {
+        background-color: #fff;
+        :global(.ant-list-item) {
+          padding: 10px 0 10px 10px;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            background-color: #008eff;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+  
+  .footer {
     position: absolute;
-    top: 100px;
-    right: 200px;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    .footer_wrap {
+      overflow: hidden;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      position: relative;
+      .footer_item {
+        display: inline-block;
+        padding: 14px 20px;
+        text-align: center;
+        list-style: none;
+        a {
+          color: #999;
+          &:hover {
+            color: lightsalmon;
+          }
+        }
+      }
+    }
   }
-}
-.main {
-  width: 960px;
-  margin: 0 auto;
-  .menu {
-    height: 400px;
-    background-color: lightblue;
-  }
-  .content {
-    height: 400px;
-    background-color: lightpink;
-  }
-  .hotQuestions{
-    height: 300px;
-    background-color: lightcyan;
-  }
+  
 }
 

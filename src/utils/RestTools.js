@@ -168,7 +168,7 @@ export default {
         enText: 'Medical'
       },
       headerStyle: {
-        background: 'lightPink'
+        background: '#008EFF'
       }
     },
     NY: {
@@ -177,8 +177,15 @@ export default {
         enText: 'Agriculture'
       },
       headerStyle: {
-        background: 'lightGreen'
+        background: '#00D356'
       }
+    },
+    default: {
+      title: {
+        cnText: '知网智能问答服务平台',
+        enText: 'Intelligent Question and Answer'
+      },
+      headerStyle: null
     }
   },
   sourceDb: {
@@ -306,6 +313,6 @@ export default {
   topicInfo: {
     法律: { enText: 'Law', topic: 'FL' },
     医学: { enText: 'Medical', topic: 'YX' },
-    农业: { enText: 'Argriculture', topic: 'NY'}
+    农业: { enText: 'Argriculture', topic: 'NY' }
   }
 };

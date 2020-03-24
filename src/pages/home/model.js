@@ -6,7 +6,8 @@ export default {
   state: {
     newHelpList: [],
     skillExamples: [],
-    specialQuestions: []
+    specialQuestions: [],
+    topicTheme: null
   },
 
   effects: {
@@ -35,15 +36,23 @@ export default {
         let newArray = data.result.map((item) => {
           return {
             name: Object.keys(item)[0],
-            data: Object.values(item)[0]
+            data: Object.values(item)[0],
+            background: Object.values(item)[0][0].classname
           };
         });
+        let topicTheme = {};
+        newArray.forEach(item => {
+          topicTheme[item.name] = item.background}
+        );
         yield put({
           type: 'save',
           payload: {
-            specialQuestions: newArray
+            specialQuestions: newArray,
+            topicTheme,
           }
         });
+        
+        RestTools.setLocalStorage('topicTheme', topicTheme)
       }
     },
 

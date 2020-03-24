@@ -371,7 +371,6 @@ function ResultPage(props) {
 }
 
 function mapStateToProps(state) {
-  console.log(state.loading)
   return {
     ...state.result,
     ...state.global,

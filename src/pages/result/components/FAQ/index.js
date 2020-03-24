@@ -12,7 +12,7 @@ function FAQ(props) {
         <div className={styles.icon}>Q</div>
         <div
           className={styles.text}
-          style={{ color: '#0079FF' }}
+          style={{ color: '#0079FF',fontSize: 16 }}
           dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(question) }}
         />
       </div>
@@ -27,7 +27,7 @@ function FAQ(props) {
         </div>
         <div
           className={styles.text}
-          style={{ color: '#5C5D5E' }}
+          // style={{ color: '#5C5D5E' }}
           dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(RestTools.completeToolsBook(answer)) }}
         />
         <div className={styles.source}>{domain} 常见问题集</div>

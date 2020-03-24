@@ -172,7 +172,7 @@ export default {
     *getRelevantByAnswer({ payload }, { call, put }) {
       const res = yield call(getRelevantByAnswer, payload);
       const { data } = res;
-      if (data.result) {
+      if (data.result && data.result.length) {
         yield put({
           type: 'save',
           payload: {
@@ -252,6 +252,14 @@ export default {
                 domain: topic
               }
             });
+          }else{
+            dispatch({
+              type: 'global/save',
+              payload: {
+                ...RestTools.headerInfo['default'],
+                domain: null
+              }
+            })
           }
 
           if (q) {

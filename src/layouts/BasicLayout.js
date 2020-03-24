@@ -14,31 +14,36 @@ const { Header, Footer, Content } = Layout;
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
 
-  let { q = RestTools.getSession('q') } = query;
+  let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   const { title, headerStyle, dispatch } = props;
   function handleClickEnterOrItem(value) {
     const q = value.trim();
 
     dispatch({ type: 'global/setQuestion', payload: { q } });
-    value && router.push(`/result?q=${encodeURIComponent(q)}`);
+    value && topic ? router.push(`/result?q=${encodeURIComponent(q)}&topic=${topic}`) : router.push(`/result?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
-    
   }
 
   function goHome() {
     router.push('/home');
   }
 
- 
+  function goHomeByDomain(title) {
+    const topic = {
+      医学: '4',
+      农业: '5'
+    };
+    router.push('/special?topicId=' + topic[title.cnText]);
+  }
 
   function logout() {
     // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
     // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
-		// Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
-		// Cookies.remove("Ecp_session", { expires: -1 });
+    // Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+    // Cookies.remove("Ecp_session", { expires: -1 });
     // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     window.Ecp_LogoutOptr_my(0);
     localStorage.setItem('userInfo', null);
@@ -50,7 +55,7 @@ function BasicLayout(props) {
       <Header className={styles.header} style={headerStyle ? headerStyle : null}>
         <div className={styles.inputGroup}>
           <div onClick={goHome} className={styles.logo} />
-          <div className={styles.title} onClick={goHome}>
+          <div className={styles.title} onClick={goHomeByDomain.bind(this, title)}>
             <div className={styles.cn}>{title.cnText}</div>
             <div className={styles.en}>{title.enText}</div>
           </div>
@@ -63,7 +68,7 @@ function BasicLayout(props) {
             />
           </div>
           <div className={styles.login}>
-            <span className={styles.tips}>您好!  {username || '游客'}</span>
+            <span className={styles.tips}>您好! {username || '游客'}</span>
             {username ? null : (
               <a
                 className={styles.login_btn}
