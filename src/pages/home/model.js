@@ -32,28 +32,24 @@ export default {
 
     *getTopicQuestions({ payload }, { call, put }) {
       const { data } = yield call(getTopicQuestions);
+      const urlPrefix = process.env.apiUrl + '/getTopicLogo';
+      const topicData = data.result.map(item => {
+        return item.name === '法律' ? item : {
+          ...item,
+          logoUrl: `${urlPrefix}?topicId=${item.data[0].topicId}`,
+          topicId: item.data[0].topicId
+
+        }
+      })
       if (data.code === 200) {
-        let newArray = data.result.map((item) => {
-          return {
-            name: Object.keys(item)[0],
-            data: Object.values(item)[0],
-            background: Object.values(item)[0][0].classname
-          };
-        });
-        let topicTheme = {};
-        newArray.forEach(item => {
-          topicTheme[item.name] = item.background}
-        );
         yield put({
           type: 'save',
           payload: {
-            specialQuestions: newArray,
-            topicTheme,
+            specialQuestions: topicData
           }
         });
-        
-        RestTools.setLocalStorage('topicTheme', topicTheme)
       }
+      RestTools.setSession('topicData', topicData)
     },
 
     *getHotHelpList({ payload }, { call, put }) {
@@ -77,10 +73,13 @@ export default {
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
           if (!skillExamples) {
             dispatch({ type: 'getDomainQuestions' });
-          }else{
-            dispatch({type: 'save', payload: {
-              skillExamples
-            }})
+          } else {
+            dispatch({
+              type: 'save',
+              payload: {
+                skillExamples
+              }
+            });
           }
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHotHelpList' });

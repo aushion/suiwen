@@ -78,6 +78,7 @@ function HomeLayout(props) {
             question={props.q}
             onClickEnter={handleClickEnterOrItem}
             onClickItem={handleClickEnterOrItem}
+            themeColor={props.theme}
           />
         </div>
       </Header>

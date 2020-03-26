@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Layout, BackTop, Affix, Button } from 'antd';
 import router from 'umi/router';
+import find from 'lodash/find';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
 // import Cookies from 'js-cookie';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
+import logo from '../assets/随问logo.png';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
@@ -16,35 +18,44 @@ function BasicLayout(props) {
 
   let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const topicData = RestTools.getSession('topicData');
+
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
-  const { title, headerStyle, dispatch } = props;
+  const currentTopic = find(topicData, { info: { topic: topic } });
+
+  let { title, dispatch, theme } = props;
+  const {
+    logoUrl = logo,
+    topicId,
+    info
+  } = currentTopic || {};
+
+  const themeColor = info ? info.themeColor : theme;
+
   function handleClickEnterOrItem(value) {
     const q = value.trim();
 
     dispatch({ type: 'global/setQuestion', payload: { q } });
-    value && topic ? router.push(`/result?q=${encodeURIComponent(q)}&topic=${topic}`) : router.push(`/result?q=${encodeURIComponent(q)}`);
+    value && topic
+      ? router.push(`/result?q=${encodeURIComponent(q)}&topic=${topic}`)
+      : router.push(`/result?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
-  function goHome() {
-    router.push('/home');
-  }
+  // function goHome() {
+  //   router.push('/home');
+  // }
 
-  function goHomeByDomain(title) {
-    const topic = {
-      医学: '4',
-      农业: '5'
-    };
-    router.push('/special?topicId=' + topic[title.cnText]);
+  function goHomeByDomain() {
+    if (topic) {
+      router.push('/special?topicId=' + topicId);
+    } else {
+      router.push('/home');
+    }
   }
 
   function logout() {
-    // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
-    // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
-    // Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
-    // Cookies.remove("Ecp_session", { expires: -1 });
-    // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     window.Ecp_LogoutOptr_my(0);
     localStorage.setItem('userInfo', null);
     setUsername(null);
@@ -52,19 +63,22 @@ function BasicLayout(props) {
 
   return (
     <div className={styles.wrapper}>
-      <Header className={styles.header} style={headerStyle ? headerStyle : null}>
+      <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-          <div onClick={goHome} className={styles.logo} />
-          <div className={styles.title} onClick={goHomeByDomain.bind(this, title)}>
+          <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
+            <img src={logoUrl} alt="" style={{ width: '100%', height: '100%' }} />
+          </div>
+          {/* <div className={styles.title} onClick={goHomeByDomain.bind(this, title)}>
             <div className={styles.cn}>{title.cnText}</div>
             <div className={styles.en}>{title.enText}</div>
-          </div>
+          </div> */}
           <div className={styles.inputWrap}>
             <SmartInput
               question={q}
               needTip
               onClickEnter={handleClickEnterOrItem}
               onClickItem={handleClickEnterOrItem}
+              // themeColor={themeColor}
             />
           </div>
           <div className={styles.login}>

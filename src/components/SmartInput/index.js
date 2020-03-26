@@ -120,7 +120,7 @@ const SmartInput = (props) => {
         }}
         onPressEnter={handleEnter}
         addonAfter={
-          <Button type="primary" onClick={handleEnter}>
+          <Button type="primary" onClick={handleEnter} style={{background: props.themeColor || '#0BB3FF'}}>
             提问
           </Button>
         }

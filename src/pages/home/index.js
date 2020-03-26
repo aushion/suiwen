@@ -160,39 +160,39 @@ function Home(props) {
 
   const specialItem = specialQuestions.map((item, index) => {
     let topicInfo = {
-      法律: { imgSrc: 法律, enText: 'Law', topic: 'FL' },
-      医学: { imgSrc: 医学, enText: 'Medical', topic: 'YX' },
-      农业: { imgSrc: 农业, enText: 'Argriculture', topic: 'NY' }
+      法律: { imgSrc: 法律,  },
+      医学: { imgSrc: 医学,  },
+      农业: { imgSrc: 农业,  }
     };
-    // topicInfo = Object.assign({},topicInfo, RestTools.getLocalStorage('topicTheme'))
-    // console.log('topicInfo', topicInfo)
+    
     return (
       <div className={homeStyles.specialWrapper} key={item.name}>
         {item.name === '法律' ? (
           <div className={homeStyles.picture}>
             <img
-              src={topicInfo[item.name].imgSrc}
+              src={topicInfo[item.name].imgSrc || 医学}
               alt={item.name}
-              onClick={gotoSpecial.bind(this, item.data[0].topicId)}
+              onClick={gotoSpecial.bind(this, item.topicId)}
             />
-          </div>
+          </div>|| 医学
         ) : (
-          <Link className={homeStyles.picture} to={`/special?topicId=${item.data[0].topicId}`} target="_blank">
-            <img src={topicInfo[item.name].imgSrc} alt={item.name} />
+          <Link className={homeStyles.picture} to={`/special?topicId=${item.topicId}`} target="_blank">
+            <img src={topicInfo[item.name].imgSrc || 医学} alt={item.name} />
           </Link>
         )}
-        <div className={homeStyles.title}>
-          <span style={{ color: '#23242A', fontSize: 24 }}>{item.name}</span>
-          <span style={{ color: '#C4C4C4', fontSize: 18 }}>{topicInfo[item.name].enText}</span>
-        </div>
+        <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
+          <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
+          <span style={{ color: '#C4C4C4', fontSize: 18 }}>{item.info.enText}</span>
+        </Link>
         <div className={homeStyles.questions}>
           {item.data.slice(0,5).map((child) => {
             return (
+              item.name === '法律' ?
               <a
                 className={homeStyles.questions_item}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={getResultByTopic.bind(this, topicInfo[item.name].topic, child.question)}
+                onClick={getResultByTopic.bind(this,item.info.topic, child.question)}
                 // href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                 //   item.q
                 // )}&r=query&domain=${encodeURIComponent('法律')}`}
@@ -200,7 +200,12 @@ function Home(props) {
                 key={child.qId}
               >
                 {child.question}
-              </a>
+              </a> :
+              <Link
+              className={homeStyles.questions_item}
+               to={`/result?topic=${item.info.topic}&q=${child.question}`} key={child.qId} target="_blank">
+                {child.question}
+              </Link>
             );
           })}
         </div>

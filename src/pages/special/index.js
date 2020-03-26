@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, List, Carousel, Skeleton,  } from 'antd';
 import router from 'umi/router';
+import find from 'lodash/find';
 import SmartInput from '../../components/SmartInput';
 import querystring from 'querystring';
 import { connect } from 'dva';
 import styles from './index.less';
 import RestTools from 'Utils/RestTools';
+import logo from '../../assets/随问logo.png'
 
 const { SubMenu } = Menu;
-
 const { Header, Sider, Content , Footer} = Layout;
-
 function Special(props) {
   const {
     topics,
@@ -25,18 +25,11 @@ function Special(props) {
   const [menuKey, setMenuKey] = useState(initialKey);
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
-  const imgMap = {
-    '4': {
-      topic: 'YX',
-      title: '随问医学专题',
-      background: '#008EFF'
-    },
-    '5': {
-      topic: 'NY',
-      title: '随问农业专题',
-      background: '#00D356'
-    }
-  };
+  const topicData = RestTools.getSession('topicData');
+  const topicInfo = find(topicData,{topicId: topicId});
+
+  const {name ,info: {topic, themeColor},logoUrl} = topicInfo
+ 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,10 +47,11 @@ function Special(props) {
     dispatch({
       type: 'global/setQuestion',
       payload: {
-        q: question
+        q: question,
+        logo: logoUrl
       }
     });
-    router.push(`/result?topic=${imgMap[topicId].topic}&q=${encodeURIComponent(question)}`);
+    router.push(`/result?topic=${topic}&q=${encodeURIComponent(question)}`);
     RestTools.setSession('q', question);
     RestTools.setStorageInput(RestTools.HISTORYKEY, question);
   }
@@ -65,13 +59,14 @@ function Special(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    q && router.push(`/result?topic=${imgMap[topicId].topic}&q=${encodeURIComponent(q)}`);
+    q && router.push(`/result?topic=${topic}&q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
   return (
     <Layout className={styles.wrapper}>
       <Header className={styles.header}>
+       <div className={styles.logo} onClick={() => {router.push('/home')}}><img  src={logo} alt=""/></div>
         <Carousel autoplay dots={false}>
           {imgData.length
             ? imgData.map((item, index) => (
@@ -82,11 +77,12 @@ function Special(props) {
             : null}
         </Carousel>
 
-        <div className={styles.title}>{imgMap[topicId].title}</div>
+        <div className={styles.title}>{`随问${name}专题`}</div>
         <div className={styles.inputWrap}>
           <SmartInput
             // needTip
             // question={props.q}
+            themeColor={themeColor}
             onClickEnter={handleClickEnterOrItem}
             onClickItem={handleClickEnterOrItem}
           />
@@ -147,7 +143,7 @@ function Special(props) {
                                 }}
                                 style={
                                   menuDataIndex === index
-                                    ? { color: '#fff', background: imgMap[topicId].background }
+                                    ? { color: '#fff', background: themeColor }
                                     : null
                                 }
                                 onClick={gotoResult.bind(this, item.qId, item.question)}
@@ -177,7 +173,7 @@ function Special(props) {
                             }}
                             style={
                               menuDataIndex === index
-                                ? { color: '#fff', background: imgMap[topicId].background }
+                                ? { color: '#fff', background: themeColor }
                                 : null
                             }
                             onClick={gotoResult.bind(this, item.qId, item.question)}
@@ -214,7 +210,7 @@ function Special(props) {
                     onMouseEnter={() => {
                       setHotDataIndex(index);
                     }}
-                    style={hotDataIndex === index ? { color: '#fff', background: imgMap[topicId].background } : null}
+                    style={hotDataIndex === index ? { color: '#fff', background: themeColor } : null}
                     onClick={gotoResult.bind(this, item.qId, item.question)}
                   >
                     {item.question}
