@@ -32,12 +32,14 @@ export default {
 
     *getTopicQuestions({ payload }, { call, put }) {
       const { data } = yield call(getTopicQuestions);
-      const urlPrefix = process.env.apiUrl + '/getTopicLogo';
+      const urlPrefix = process.env.apiUrl;
+
       const topicData = data.result.map(item => {
-        return item.name === '法律' ? item : {
+        return  {
           ...item,
-          logoUrl: `${urlPrefix}?topicId=${item.data[0].topicId}`,
-          topicId: item.data[0].topicId
+          logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
+          thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
+          topicId: item.data[0].topicId,
 
         }
       })

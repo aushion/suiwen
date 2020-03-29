@@ -160,24 +160,30 @@ function Home(props) {
 
   const specialItem = specialQuestions.map((item, index) => {
     let topicInfo = {
-      法律: { imgSrc: 法律,  },
-      医学: { imgSrc: 医学,  },
-      农业: { imgSrc: 农业,  }
+      法律: 法律,
+      医学: 医学,
+      农业: 农业
     };
-    
+
     return (
       <div className={homeStyles.specialWrapper} key={item.name}>
         {item.name === '法律' ? (
-          <div className={homeStyles.picture}>
-            <img
-              src={topicInfo[item.name].imgSrc || 医学}
-              alt={item.name}
-              onClick={gotoSpecial.bind(this, item.topicId)}
-            />
-          </div>|| 医学
+          (
+            <div className={homeStyles.picture}>
+              <img
+                src={item.thumbUrl || 医学}
+                alt={item.name}
+                onClick={gotoSpecial.bind(this, item.topicId)}
+              />
+            </div>
+          ) || 医学
         ) : (
-          <Link className={homeStyles.picture} to={`/special?topicId=${item.topicId}`} target="_blank">
-            <img src={topicInfo[item.name].imgSrc || 医学} alt={item.name} />
+          <Link
+            className={homeStyles.picture}
+            to={`/special?topicId=${item.topicId}`}
+            target="_blank"
+          >
+            <img src={item.thumbUrl || 医学} alt={item.name} />
           </Link>
         )}
         <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
@@ -185,14 +191,13 @@ function Home(props) {
           <span style={{ color: '#C4C4C4', fontSize: 18 }}>{item.info.enText}</span>
         </Link>
         <div className={homeStyles.questions}>
-          {item.data.slice(0,5).map((child) => {
-            return (
-              item.name === '法律' ?
+          {item.data.slice(0, 5).map((child) => {
+            return item.name === '法律' ? (
               <a
                 className={homeStyles.questions_item}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={getResultByTopic.bind(this,item.info.topic, child.question)}
+                onClick={getResultByTopic.bind(this, item.info.topic, child.question)}
                 // href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
                 //   item.q
                 // )}&r=query&domain=${encodeURIComponent('法律')}`}
@@ -200,10 +205,14 @@ function Home(props) {
                 key={child.qId}
               >
                 {child.question}
-              </a> :
+              </a>
+            ) : (
               <Link
-              className={homeStyles.questions_item}
-               to={`/result?topic=${item.info.topic}&q=${child.question}`} key={child.qId} target="_blank">
+                className={homeStyles.questions_item}
+                to={`/result?topic=${item.info.topic}&q=${child.question}`}
+                key={child.qId}
+                target="_blank"
+              >
                 {child.question}
               </Link>
             );
