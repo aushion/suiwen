@@ -49,7 +49,7 @@
           color: #fff;
           border-radius: 4px;
         }
-        .arrow{
+        .arrow {
           font-size: 14px;
           color: black;
           display: block;
@@ -135,99 +135,141 @@
     }
     .special_bottom {
       // height: 460px;
-      :global(.slick-slider) {
-        height: 100%;
-        :global(.slick-list) {
-          height: 100%;
-          .special_questions {
-            .specialWrapper {
-              background: #fff;
-              padding: 20px;
-              box-shadow: 0px 0px 4px 0px rgba(0, 132, 255, 0.2) inset;
-              &:hover {
-                box-shadow: 0px 0px 24px 0px rgba(0, 132, 255, 0.2);
-              }
-              .picture {
-                width: 100%;
-                height: 300px;
-                img {
-                  width: 100%;
-                  height: 300px;
-                  cursor: pointer;
-                }
-              }
-              .title {
-                display: block;
-                padding: 20px 20px 10px;
-              }
-              .questions {
-                // color: #9a9ca4;
-                color: rgb(35, 36, 42);
-                font-size: 15px;
-                font-weight: 400;
-                padding-left: 20px;
-                padding-bottom: 20px;
-                .questions_item {
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  color: #797979;
-                  line-height: 26px;
-                  display: block;
-                  &:hover {
-                    color: lightsalmon;
-                  }
-                }
-              }
+      :global(.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-nav-wrap) {
+        float: right;
+      }
+      :global(.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active) {
+        background-color: #1890ff;
+        color: #fff;
+      }
+      // :global(.slick-slider) {
+      //   height: 100%;
+      //   :global(.slick-list) {
+      //     height: 100%;
+      .topic {
+        position: relative;
+        .arrowBtn {
+          position: absolute;
+          top: 50%;
+          border-radius: 50%;
+          height: 40px;
+          width: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transform: translateY(-50%);
+          font-size: 30px;
+          background: rgba(0, 0, 0, 0.1);
+          color: #fff;
+          cursor: pointer;
+          &:hover{
+            background-color: rgba(0, 0, 0, 0.2);
+          }
+        }
+      }
+      .special_questions {
+        padding: 10px 0; 
+        width: 90%;
+        margin-left: 5%;
+        :global(.slick-slide){
+          transform: scale(0.9);
+          // box-shadow:0px 0px 35px 0px rgba(0,78,255,0.2);
+          // padding: 0 20px;
+        }
+        :global(.slick-center){
+          transform: scale(1.05);
+          box-shadow:0px 0px 76px 0px rgba(0,78,255,0.2);
+          padding: 0 20px;
+        }
+        .specialWrapper {
+          // background: #fff;
+          border-radius: 4px;
+          .picture {
+            width: 100%;
+            height: 300px;
+            img {
+              width: 100%;
+              height: 300px;
+              cursor: pointer;
             }
           }
-
-          .special_help {
-            width: 100%;
-            padding: 0 !important;
-            .help_more {
-              cursor: pointer;
-              width: 100;
-              float: right;
-              color: #c4c4c4;
-              font-size: 20px;
+          .title {
+            display: block;
+            padding: 20px 20px 10px;
+          }
+          .questions {
+            // color: #9a9ca4;
+            color: rgb(35, 36, 42);
+            font-size: 15px;
+            font-weight: 400;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            .questions_item {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              color: #797979;
+              line-height: 26px;
+              display: block;
               &:hover {
                 color: lightsalmon;
               }
             }
-            .help_left {
-              background: url(../../assets//hotHelp.png);
-              width: 400px;
-              height: 300px;
-              background-size: cover;
-              float: left;
-              margin-right: 40px;
+          }
+          //   }
+          // }
+        }
+      }
+
+      .special_help {
+        width: 100%;
+        padding: 0 !important;
+        .help_more {
+          cursor: pointer;
+          width: 100;
+          float: right;
+          color: #c4c4c4;
+          font-size: 20px;
+          &:hover {
+            color: lightsalmon;
+          }
+        }
+        .help_left {
+          background: url(../../assets//hotHelp.png);
+          width: 400px;
+          height: 300px;
+          background-size: cover;
+          float: left;
+          margin-right: 40px;
+        }
+
+        .help_right {
+          float: left;
+          width: 760px;
+          .help_item {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            padding-top: 15px;
+            line-height: 20px;
+
+            .help_item_content {
+              display: inline-block;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+              width: 70%;
+              cursor: pointer;
+              &:hover {
+                color: lightsalmon;
+              }
             }
-
-            .help_right {
-              float: left;
-              width: 760px;
-              .help_item {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                padding-top: 15px;
-                line-height: 20px;
-
-                .help_item_content {
-                  display: inline-block;
-                  text-overflow: ellipsis;
-                  overflow: hidden;
-                  white-space: nowrap;
-                  width: 70%;
-                  cursor: pointer;
-                  &:hover {
-                    color: lightsalmon;
-                  }
-                }
-                // &:last-child {
-                //   padding: 0;
-                // }
+            .myReply {
+              display: inline-block;
+              overflow: hidden;
+              cursor: pointer;
+              &:hover {
+                color: lightsalmon;
               }
             }
           }

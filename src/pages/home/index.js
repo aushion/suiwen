@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Spin, List, Row, Col, Divider, message, Icon } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Spin, List, Row, Col, Tabs, Divider, message, Icon } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -8,14 +8,13 @@ import homeStyles from './index.less';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import RestTools from '../../utils/RestTools';
-import 法律 from '../../assets/法律.png';
-import 农业 from '../../assets/农业.png';
 import 医学 from '../../assets/医学.png';
 import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
-// let tagSlider = null;
+let tagSlider = null;
+const { TabPane } = Tabs;
 const HISTORYKEY = RestTools.HISTORYKEY;
 message.config({
   maxCount: 1,
@@ -25,6 +24,13 @@ function Home(props) {
   const { skillExamples, specialQuestions, newHelpList, loading } = props;
   const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
   const [activeSpecial, setActiveSpecial] = useState('专题问答');
+
+  // useEffect(() => {
+  //   RestTools.setSession('tagIndex', activeTag); //存储索引，解决页面回退，索引丢失的问题
+  //   tagSlider.slickGoTo(activeTag, true);
+  //   skillSlider.slickGoTo(activeTag, true);
+  //   return () => {};
+  // }, [activeTag]);
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -50,7 +56,9 @@ function Home(props) {
     color: '#fff',
     borderRadius: 4
   };
-
+  function prevrClick() {
+    console.log(1);
+  }
   const tagSettings = {
     infinite: false,
     speed: 500,
@@ -72,20 +80,20 @@ function Home(props) {
     slidesToScroll: 1,
     slidesToShow: 1,
     swipe: false,
-    arrows: false
+    arrows: false,
+    adaptiveHeight: true
   };
 
   const specialItemSetting = {
-    infinite: true,
-    autoplay: true,
+    centerMode: true,
+    className: 'center',
+    centerPadding: '0px',
     hoverPause: true,
     slidesToShow: 3,
     slidesToScroll: 1,
-    swipe: true,
-    arrows: true,
+    // swipe: true,
+    // arrows: true,
     dots: true
-    // prevArrow: <PrevArrow style={{fontSize: 20}} />,
-    // nextArrow: <NextArrow />
   };
 
   function handleClickItem(item) {
@@ -105,21 +113,21 @@ function Home(props) {
   //   router.push(`/result?q=${q}&domain=${domain}`);
   // }
 
-  function gotoSpecial(topicId) {
-    if (topicId === '3') {
-      window.open(`http://qa2.cnki.net/jcyqa/home`);
-    } else {
-      router.push(`/special?topicId=${topicId}`);
-    }
-  }
+  // function gotoSpecial(topicId) {
+  //   if (topicId === '3') {
+  //     window.open(`http://qa2.cnki.net/jcyqa/home`);
+  //   } else {
+  //     router.push(`/special?topicId=${topicId}`);
+  //   }
+  // }
 
-  function getResultByTopic(topic, q) {
-    if (topic === 'FL') {
-      window.open(`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(q)}`);
-    } else {
-      router.push(`/result?topic=${topic}&q=${q}`);
-    }
-  }
+  // function getResultByTopic(topic, q) {
+  //   if (topic === 'FL') {
+  //     window.open(`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(q)}`);
+  //   } else {
+  //     router.push(`/result?topic=${topic}&q=${q}`);
+  //   }
+  // }
 
   const slideList = skillExamples.length
     ? skillExamples.map((item) => {
@@ -159,54 +167,23 @@ function Home(props) {
     : null;
 
   const specialItem = specialQuestions.map((item, index) => {
-    let topicInfo = {
-      法律: 法律,
-      医学: 医学,
-      农业: 农业
-    };
-
     return (
       <div className={homeStyles.specialWrapper} key={item.name}>
-        {item.name === '法律' ? (
-          (
-            <div className={homeStyles.picture}>
-              <img
-                src={item.thumbUrl || 医学}
-                alt={item.name}
-                onClick={gotoSpecial.bind(this, item.topicId)}
-              />
-            </div>
-          ) || 医学
-        ) : (
-          <Link
-            className={homeStyles.picture}
-            to={`/special?topicId=${item.topicId}`}
-            target="_blank"
-          >
-            <img src={item.thumbUrl || 医学} alt={item.name} />
-          </Link>
-        )}
+        <Link
+          className={homeStyles.picture}
+          to={`/special?topicId=${item.topicId}`}
+          target="_blank"
+        >
+          <img src={item.thumbUrl || 医学} alt={item.name} />
+        </Link>
+
         <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
           <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
           <span style={{ color: '#C4C4C4', fontSize: 18 }}>{item.info.enText}</span>
         </Link>
         <div className={homeStyles.questions}>
           {item.data.slice(0, 5).map((child) => {
-            return item.name === '法律' ? (
-              <a
-                className={homeStyles.questions_item}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={getResultByTopic.bind(this, item.info.topic, child.question)}
-                // href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
-                //   item.q
-                // )}&r=query&domain=${encodeURIComponent('法律')}`}
-                // href={`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(item.q)}`}
-                key={child.qId}
-              >
-                {child.question}
-              </a>
-            ) : (
+            return (
               <Link
                 className={homeStyles.questions_item}
                 to={`/result?topic=${item.info.topic}&q=${child.question}`}
@@ -248,9 +225,9 @@ function Home(props) {
 
           <div className={homeStyles.right}>
             <div className={homeStyles.right_top}>
-              {/* <div style={{ whiteSpace: 'nowrap', }}> */}
-              <Slider {...tagSettings}>{tagList}</Slider>
-              {/* </div> */}
+              <Slider {...tagSettings} ref={(slider) => (tagSlider = slider)}>
+                {tagList}
+              </Slider>
             </div>
 
             <div className={homeStyles.right_bottom}>
@@ -265,7 +242,7 @@ function Home(props) {
           </div>
         </div>
         <div className={homeStyles.special}>
-          <div className={homeStyles.special_top}>
+          {/* <div className={homeStyles.special_top}>
             <div className={homeStyles.title}>
               <BlockTitle enTitle="Topics" cnTitle="专题" />
             </div>
@@ -291,167 +268,94 @@ function Home(props) {
                 热门求助
               </span>
             </div>
-          </div>
+          </div> */}
 
           <div className={homeStyles.special_bottom}>
-            <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}>
-              <div className={homeStyles.special_questions}>
-                <Slider {...specialItemSetting}>{specialItem}</Slider>
-                {/* {specialQuestions.length ? (
-                  <Row gutter={56}>
-                    <Col span={8} className={homeStyles.specialItem}>
-                      <div className={homeStyles.specialWrapper}>
-                        <div className={homeStyles.picture}>
-                          <img src={法律} alt="法律" />
-                        </div>
-                        <div className={homeStyles.title}>
-                          <span style={{ color: '#23242A', fontSize: 24 }}>法律</span>{' '}
-                          <span style={{ color: '#C4C4C4', fontSize: 18 }}>Law</span>
-                        </div>
-                        <div className={homeStyles.questions}>
-                          {specialQuestions
-                            .filter((item) => item.name === '法律')[0]
-                            .data.slice(0, 2)
-                            .map((item) => {
-                              return (
-                                <a
-                                  className={homeStyles.questions_item}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
-                                    item.q
-                                  )}&r=query&domain=${encodeURIComponent('法律')}`}
-                                  // href={`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(item.q)}`}
-                                  key={item.qid}
-                                >
-                                  {item.q}
-                                </a>
-                              );
-                            })}
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col span={8} className={homeStyles.specialItem}>
-                      <div className={homeStyles.specialWrapper}>
-                        <div className={homeStyles.picture}>
-                          <img src={医学} alt="医学" />
-                        </div>
-                        <div className={homeStyles.title}>
-                          <span style={{ color: '#23242A', fontSize: 24 }}>医学</span>{' '}
-                          <span style={{ color: '#C4C4C4', fontSize: 18 }}>Medicine</span>
-                        </div>
-                        <div className={homeStyles.questions}>
-                          {specialQuestions
-                            .filter((item) => item.name === '医学')[0]
-                            .data.slice(0, 2)
-                            .map((item) => {
-                              return (
-                                <a
-                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
-                                    item.q
-                                  )}&r=query&domain=${encodeURIComponent('医学')}`}
-                                  // onClick={gotoSpecial.bind(this, item.q,'医学')}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={homeStyles.questions_item}
-                                  // onClick={building}
-                                  key={item.qid}
-                                >
-                                  {item.q}
-                                </a>
-                              );
-                            })}
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col span={8} className={homeStyles.specialItem}>
-                      <div className={homeStyles.specialWrapper}>
-                        <div className={homeStyles.picture}>
-                          <img src={农业} alt="农业" />
-                        </div>
-                        <div className={homeStyles.title}>
-                          <span style={{ color: '#23242A', fontSize: 24 }}>农业</span>{' '}
-                          <span style={{ color: '#C4C4C4', fontSize: 18 }}>Argiculture</span>
-                        </div>
-                        <div className={homeStyles.questions}>
-                          {specialQuestions
-                            .filter((item) => item.name === '农业')[0]
-                            .data.slice(0, 2)
-                            .map((item) => {
-                              return (
-                                <a
-                                  href={`http://qa.cnki.net/web/SQuery?q=${encodeURIComponent(
-                                    item.q
-                                  )}&r=query&domain=${encodeURIComponent('农业')}`}
-                                  // onClick={gotoSpecial.bind(this, item.q,'农业')}
-
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className={homeStyles.questions_item}
-                                  // onClick={building}
-                                  key={item.qid}
-                                >
-                                  {item.q}
-                                </a>
-                              );
-                            })}
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-                ) : null} */}
-              </div>
-              <div className={homeStyles.special_help}>
-                <div className={homeStyles.help_left}></div>
-
-                <div className={homeStyles.help_right}>
-                  <List
-                    grid={{ gutter: 16, column: 1 }}
-                    dataSource={newHelpList.slice(0, 5)}
-                    renderItem={(item) => (
-                      <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
-                        <div
-                          className={homeStyles.help_item}
-                          onClick={() => {
-                            RestTools.setSession('q', item.Content);
-                          }}
-                          // onClick={handleClickItem.bind(this, item.Content)}
-                        >
-                          <Link
-                            to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
-                            className={homeStyles.help_item_content}
-                          >
-                            <span title={item.Content}>{item.Content}</span>
-                          </Link>
-                          <span
-                            style={{
-                              display: 'inline-block',
-                              overflow: 'hidden',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            我来回答
-                          </span>
-                          <Divider type="vertical" style={{ top: '-5px' }}></Divider>
-                          <span style={{ float: 'right' }}>{item.Time}</span>
-                        </div>
-                      </List.Item>
-                    )}
-                  />
-
+            {/* <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}> */}
+            <Tabs defaultActiveKey="1" type="card" tabBarGutter={0}>
+              <TabPane tab="专题问答" key="1">
+                <div className={homeStyles.topic}>
                   <div
-                    className={homeStyles.help_more}
+                    className={homeStyles.arrowBtn}
                     onClick={() => {
-                      router.push('/help/newHelp');
+                      specialSlider.slickPrev();
                     }}
                   >
-                    MORE>>
+                    <Icon type="left" />
+                  </div>
+                  <div className={homeStyles.special_questions}>
+                    <Slider {...specialItemSetting} ref={(slider) => (specialSlider = slider)}>
+                      {specialItem}
+                    </Slider>
+                  </div>
+                  <div
+                    className={homeStyles.arrowBtn}
+                    style={{ right: 0 }}
+                    onClick={() => {
+                      specialSlider.slickNext();
+                    }}
+                  >
+                    <Icon type="right" />
                   </div>
                 </div>
-              </div>
-            </Slider>
+              </TabPane>
+
+              <TabPane tab="热门求助" key="2">
+                <div className={homeStyles.special_help}>
+                  <div className={homeStyles.help_left} />
+                  <div className={homeStyles.help_right}>
+                    <List
+                      grid={{ gutter: 16, column: 1 }}
+                      dataSource={newHelpList.slice(0, 5)}
+                      renderItem={(item) => (
+                        <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
+                          <div
+                            className={homeStyles.help_item}
+                            onClick={() => {
+                              RestTools.setSession('q', item.Content);
+                            }}
+                            // onClick={handleClickItem.bind(this, item.Content)}
+                          >
+                            <Link
+                              to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                              className={homeStyles.help_item_content}
+                            >
+                              <span title={item.Content}>{item.Content}</span>
+                            </Link>
+                            {item.CheckSum ? (
+                              <span style={{ display: 'inline-block', overflow: 'hidden' }}>
+                                回答数:{item.CheckSum}
+                              </span>
+                            ) : (
+                              <Link
+                                className={homeStyles.myReply}
+                                to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                              >
+                                我来回答
+                              </Link>
+                            )}
+                            <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                            <span style={{ float: 'right' }}>{item.Time}</span>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+
+                    <div
+                      className={homeStyles.help_more}
+                      onClick={() => {
+                        router.push('/help/newHelp');
+                      }}
+                    >
+                      MORE
+                      <Icon type="double-right" />
+                    </div>
+                  </div>
+                </div>
+              </TabPane>
+            </Tabs>
+
+            {/* </Slider> */}
           </div>
         </div>
       </Spin>

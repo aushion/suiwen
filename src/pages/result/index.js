@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message } from 'antd';
+import querystring from 'querystring';
 import Cookies from 'js-cookie';
 import router from 'umi/router';
 import styles from './index.less';
@@ -46,7 +47,9 @@ function ResultPage(props) {
     fetchSg,
     answerData
   } = props;
+  const query = querystring.parse(window.location.href.split('?')[1]);
 
+  let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
   function handleCopy(event) {
     if (event.target.tagName === 'INPUT') {
@@ -326,7 +329,7 @@ function ResultPage(props) {
 
                 {relatedData.length && helpList.length ? <Divider dashed /> : null}
                 {relaventQuestions.length ? (
-                  <RelatedList q={q} title="相关问题" focus="问题" data={relaventQuestions} />
+                  <RelatedList q={q} title="相关问题" focus="问题" data={relaventQuestions} topic={topic} />
                 ) : null}
                 {relaventQuestions.length ? <Divider dashed /> : null}
                 {helpList.length ? <NewHelp data={helpList} /> : null}

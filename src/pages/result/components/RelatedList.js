@@ -3,7 +3,7 @@ import Link from 'umi/link';
 import RestTools from '../../../utils/RestTools';
 
 function RelatedLiteraure(props) {
-  const { data, q, title, focus, extra } = props;
+  const { data, q, title, focus, extra, topic } = props;
   function outLink(type, filename, source) {
     if (type === '相关文献') {
       return `http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.sourceDb[source]}&filename=${filename}`;
@@ -45,7 +45,7 @@ function RelatedLiteraure(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}
-                  to={`/result?q=${encodeURIComponent(item[focus])}`}
+                  to={topic?`/result?q=${encodeURIComponent(item[focus])}&topic=${topic}`:`/result?q=${encodeURIComponent(item[focus])}`}
                 >
                   {item[focus]}
                 </Link>

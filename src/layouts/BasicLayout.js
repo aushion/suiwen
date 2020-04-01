@@ -8,7 +8,7 @@ import styles from './BasicLayout.less';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
-import logo from '../assets/随问logo.png';
+import logo from '../assets/logo1.png';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
@@ -19,19 +19,16 @@ function BasicLayout(props) {
   let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData = RestTools.getSession('topicData');
-
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
+
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme } = props;
-  const {
-    logoUrl = logo,
-    topicId,
-    info
-  } = currentTopic || {};
+  const { logoUrl = logo, topicId, info } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
+
 
   function handleClickEnterOrItem(value) {
     const q = value.trim();
@@ -42,10 +39,6 @@ function BasicLayout(props) {
       : router.push(`/result?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
-
-  // function goHome() {
-  //   router.push('/home');
-  // }
 
   function goHomeByDomain() {
     if (topic) {
@@ -66,13 +59,13 @@ function BasicLayout(props) {
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
-            <img src={logoUrl} alt="" style={{ width: '100%', height: '100%' }} />
+            <img src={logoUrl} alt="" style={{ height: '100%' }} />
           </div>
           {/* <div className={styles.title} onClick={goHomeByDomain.bind(this, title)}>
             <div className={styles.cn}>{title.cnText}</div>
             <div className={styles.en}>{title.enText}</div>
           </div> */}
-          <div className={styles.inputWrap}>
+          <div className={styles.inputWrap} style={topic ? { left: '16%' } : null}>
             <SmartInput
               question={q}
               needTip

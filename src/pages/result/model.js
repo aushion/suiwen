@@ -127,7 +127,7 @@ export default {
               intentJson: item.intentJson,
               dataNode: {
                 ...others,
-                data: answerSource === 'getAnswer' ? data : newData,
+                data:  newData,
                 orderBy,
                 subjectType: newSubjectType,
                 year: newYear || [],
