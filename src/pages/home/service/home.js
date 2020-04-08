@@ -7,8 +7,12 @@ export  function getDomainQuestions(payload) {
 export function getTopicQuestions(payload) {
   return request.get('/getTopicQuestions')
 }
-
-
-export function getHotHelpList(payload) {
-  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=12')
+export function getHomePictureIds(payload) {
+  const {type} = payload;
+  return request.get(`/getHomePictureIds?type=${type}`)
 }
+export function getHotHelpList(payload) {
+  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=10&index=1')
+}
+
+

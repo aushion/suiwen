@@ -83,12 +83,12 @@ export default {
 
           dispatch({
             type: 'getQuestionByTopic',
-            payload: { topicId }
+            payload: { topicId, }
           });
 
           dispatch({
             type: 'getTopicPictures',
-            payload: { topicId }
+            payload: { topicId , type: 'PC' }
           });
         }
       });

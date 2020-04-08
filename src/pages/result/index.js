@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message } from 'antd';
+import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message, Card } from 'antd';
+import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
 import router from 'umi/router';
@@ -48,7 +49,8 @@ function ResultPage(props) {
     answerData
   } = props;
   const query = querystring.parse(window.location.href.split('?')[1]);
-
+  const topicData = RestTools.getSession('topicData');
+  const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
   function handleCopy(event) {
@@ -194,7 +196,46 @@ function ResultPage(props) {
 
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
-              <Col span={18}>
+              <Col span={4} style={{padding: 0}}>
+                {topicData.length ? (
+                  <Card
+                    title="您也可以选择专题问答"
+                    headStyle={{ height: 20, lineHeight: '20px',fontSize: 14 }}
+                    style={{ boxShadow: 'rgb(165, 165, 165) 0px 0px 10.8px 0px' }}
+                  >
+                    {topicData.map((item) => (
+                      <div style={{ padding: '4px 0' }} key={item.name}>
+                        <Link to={`/result?topic=${item.info.topic}&q=${q}`} target="blank">
+                          {item.name}专题
+                        </Link>
+                        <Icon type="double-right" style={{ color: '#1890ff' }} />
+                      </div>
+                    ))}
+                  </Card>
+                ) : null}
+                <div style={{ height: 20 }}></div>
+                <Card
+                  title="历史搜索"
+                  headStyle={{ height: 20, lineHeight: '20px', fontSize: 14 }}
+                  style={{ boxShadow: 'rgb(165, 165, 165) 0px 0px 10.8px 0px' }}
+                >
+                  {historyQuestions.map((item) => (
+                    <div
+                      key={item}
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        padding: '4px 0'
+                      }}
+                      title={item}
+                    >
+                      <Link to={`/result?q=${item}`}>{item}</Link>
+                    </div>
+                  ))}
+                </Card>
+              </Col>
+              <Col span={15}>
                 {statisticsData.length
                   ? statisticsData.map((item) => (
                       <Statistics
@@ -225,7 +266,11 @@ function ResultPage(props) {
                   : null}
                 {literatureData.length &&
                 (literatureData.length === 1 || literatureData.length === 3) ? (
-                  <Literature literatureData={literatureData} dispatch={dispatch} loading={fetchLiterature} />
+                  <Literature
+                    literatureData={literatureData}
+                    dispatch={dispatch}
+                    loading={fetchLiterature}
+                  />
                 ) : null}
                 {patentData.length
                   ? patentData.map((item) => <Patent key={item.id} data={item} />)
@@ -302,7 +347,7 @@ function ResultPage(props) {
 
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
-              <Col span={6} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
+              <Col span={5} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
                 {relatedLiterature.length ? (
                   <RelatedList
                     q={q}
@@ -329,7 +374,13 @@ function ResultPage(props) {
 
                 {relatedData.length && helpList.length ? <Divider dashed /> : null}
                 {relaventQuestions.length ? (
-                  <RelatedList q={q} title="相关问题" focus="问题" data={relaventQuestions} topic={topic} />
+                  <RelatedList
+                    q={q}
+                    title="相关问题"
+                    focus="问题"
+                    data={relaventQuestions}
+                    topic={topic}
+                  />
                 ) : null}
                 {relaventQuestions.length ? <Divider dashed /> : null}
                 {helpList.length ? <NewHelp data={helpList} /> : null}
@@ -377,8 +428,7 @@ function mapStateToProps(state) {
   return {
     ...state.result,
     ...state.global,
-    loading:
-      state.loading.effects['result/getAnswer'],
+    loading: state.loading.effects['result/getAnswer'],
     fetchLiterature: state.loading.effects['result/getCustomView'],
     fetchSg: state.loading.effects['result/getSG']
   };

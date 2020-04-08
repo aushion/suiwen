@@ -33,7 +33,7 @@ function RelatedLiteraure(props) {
         itemLayout="vertical"
         dataSource={data.filter((item) => item !== q)}
         renderItem={(item) => (
-          <List.Item style={{padding: '8px 0'}}>
+          <List.Item style={{ padding: '8px 0' }}>
             <div>
               {focus === '问题' ? (
                 <Link
@@ -43,9 +43,13 @@ function RelatedLiteraure(props) {
                     width: '100%',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    whiteSpace: 'nowrap'
                   }}
-                  to={topic?`/result?q=${encodeURIComponent(item[focus])}&topic=${topic}`:`/result?q=${encodeURIComponent(item[focus])}`}
+                  to={
+                    topic
+                      ? `/result?q=${encodeURIComponent(item[focus])}&topic=${topic}`
+                      : `/result?q=${encodeURIComponent(item[focus])}`
+                  }
                 >
                   {item[focus]}
                 </Link>

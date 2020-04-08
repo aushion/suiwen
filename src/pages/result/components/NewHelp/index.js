@@ -26,7 +26,7 @@ function NewHelp(props) {
                 title={item.Content}
                 style={{
                   display: 'inline-block',
-                  width: '70%',
+                  width: '50%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',

@@ -4,7 +4,7 @@
     "start": "umi dev",
     "build": "cross-env UMI_ENV=prod umi build",
     "devs": "cross-env UMI_ENV=prod umi dev",
-    "test": "cross-env ANALYZE=1 UMI_ENV=test umi build",
+    "test": "cross-env  UMI_ENV=test umi build",
     "lint": "eslint --ext .js src mock tests",
     "precommit": "lint-staged"
   },

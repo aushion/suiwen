@@ -3,13 +3,13 @@
   min-height: 100%;
   padding-bottom: 50px;
   box-sizing: border-box;
-
+ 
   .header {
     background:linear-gradient(0deg,rgba(0,138,255,1),rgba(0,205,255,1));
     height: 84px;
     line-height: 0;
     position: relative;
-    padding-left: 100px;
+    // padding-left: calc(50% - 620px);
     .inputGroup {
       height: 100%;
       width: 100%;
@@ -19,7 +19,8 @@
         height: 40px;
         // width: 160px;
         margin-right: 10px;
-        margin-left: 50px;
+        // margin-left: 50px;
+        padding-left: calc(50% - 600px);
         background-size: contain;
         cursor: pointer;
         position: absolute;
@@ -50,7 +51,7 @@
       .inputWrap {
         float: left;
         position: absolute;
-        left: 12%;
+        left: calc(50% - 390px);
         top: 50%;
         margin-top: -20px;
         width: 38%;

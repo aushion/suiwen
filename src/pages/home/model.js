@@ -1,4 +1,4 @@
-import { getDomainQuestions, getTopicQuestions, getHotHelpList } from './service/home';
+import { getDomainQuestions, getTopicQuestions, getHotHelpList,getHomePictureIds } from './service/home';
 import RestTools from '../../utils/RestTools';
 
 export default {
@@ -7,6 +7,8 @@ export default {
     newHelpList: [],
     skillExamples: [],
     specialQuestions: [],
+    skillPicture: [],
+    helpPicture: [],
     topicTheme: null
   },
 
@@ -64,7 +66,30 @@ export default {
           }
         });
       }
+    },
+    
+    *getHomePicture({ payload }, { call, put }) {
+      const { data } = yield call(getHomePictureIds,payload);
+      const {type} = payload;
+      const urlPrefix = `${process.env.apiUrl}/getHomePicture?picId=`
+      if (data.result) {
+        const imgData = data.result.map(item => urlPrefix+item.picId)
+        type === 0 ?
+        yield put({
+          type: 'save',
+          payload: {
+            skillPicture: imgData
+          }
+        }):
+        yield put({
+          type: 'save',
+          payload: {
+            helpPicture: imgData
+          }
+        })
+      }
     }
+    
   },
 
   subscriptions: {
@@ -85,6 +110,9 @@ export default {
           }
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHotHelpList' });
+          dispatch({type: 'getHomePicture',payload:{type: 0}})
+          dispatch({type: 'getHomePicture',payload:{type: 1}})
+
         }
       });
     }

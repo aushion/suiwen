@@ -12,6 +12,6 @@ export function getQuestionByTopic(payload) {
 }
 //获取图片地址
 export function getTopicPictures(payload) {
-  const { topicId } = payload;
-  return request.get(`/getTopicPictures?topicId=${topicId}`);
+  const { topicId,type } = payload;
+  return request.get(`/getTopicPictures?topicId=${topicId}&type=${type}`);
 }

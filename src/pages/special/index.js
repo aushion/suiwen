@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, List, Carousel, Skeleton,  } from 'antd';
+import { Layout, Menu, List, Carousel, Skeleton, Popover, Icon } from 'antd';
 import router from 'umi/router';
 import find from 'lodash/find';
 import SmartInput from '../../components/SmartInput';
@@ -7,10 +7,13 @@ import querystring from 'querystring';
 import { connect } from 'dva';
 import styles from './index.less';
 import RestTools from 'Utils/RestTools';
-import logo from '../../assets/随问logo.png'
+import FeedBack from '../../components/FeedBack';
+import logo from '../../assets/随问logo.png';
+import topicLogo from '../../assets/topicLogo.png';
+import user from '../../assets/user.png';
 
 const { SubMenu } = Menu;
-const { Header, Sider, Content , Footer} = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 function Special(props) {
   const {
     topics,
@@ -25,11 +28,15 @@ function Special(props) {
   const [menuKey, setMenuKey] = useState(initialKey);
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
+  const [visible,setVisible] = useState(false);
   const topicData = RestTools.getSession('topicData');
-  const topicInfo = find(topicData,{topicId: topicId});
+  const topicInfo = find(topicData, { topicId: topicId });
 
-  const {name ,info: {topic, themeColor},logoUrl} = topicInfo
- 
+  const {
+    name,
+    info: { topic, themeColor },
+    logoUrl
+  } = topicInfo;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -66,7 +73,14 @@ function Special(props) {
   return (
     <Layout className={styles.wrapper}>
       <Header className={styles.header}>
-       <div className={styles.logo} onClick={() => {router.push('/home')}}><img  src={logo} alt=""/></div>
+        <div
+          className={styles.logo}
+          onClick={() => {
+            router.push('/home');
+          }}
+        >
+          <img src={logo} alt="" />
+        </div>
         <Carousel autoplay dots={false}>
           {imgData.length
             ? imgData.map((item, index) => (
@@ -77,7 +91,10 @@ function Special(props) {
             : null}
         </Carousel>
 
-        <div className={styles.title}>{`随问${name}专题`}</div>
+        <div className={styles.title}>
+          <img src={topicLogo} alt={name} style={{ width: '120px', marginRight: 20 }} />
+          {`随问${name}专题`}
+        </div>
         <div className={styles.inputWrap}>
           <SmartInput
             // needTip
@@ -86,6 +103,41 @@ function Special(props) {
             onClickEnter={handleClickEnterOrItem}
             onClickItem={handleClickEnterOrItem}
           />
+        </div>
+
+        <div className={styles.user}>
+          <Popover
+            content={
+              <div style={{ padding: 10, color: '#fff' }}>
+                <div style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #fff' }}>
+                  <a
+                    href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${process.env.returnUrl}`}
+                    style={{color: '#fff'}}
+                  >
+                    <Icon type="login" />
+                    登录
+                  </a>
+                </div>
+                <div style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #fff' }}>
+                  <a
+                    href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${process.env.returnUrl}`}
+                    style={{color: '#fff'}}
+                  >
+                    <Icon type="form" />
+                    注册
+                  </a>
+                </div>
+                <div style={{ padding: '10px', cursor: 'pointer' }} onClick={() => {setVisible(true)}}>
+                  <Icon type="message" />
+                  反馈
+                </div>
+              </div>
+            }
+            placement="bottom"
+            trigger="click"
+          >
+            <img src={user} alt="user" />
+          </Popover>
         </div>
       </Header>
       <Layout className={styles.main}>
@@ -210,7 +262,9 @@ function Special(props) {
                     onMouseEnter={() => {
                       setHotDataIndex(index);
                     }}
-                    style={hotDataIndex === index ? { color: '#fff', background: themeColor } : null}
+                    style={
+                      hotDataIndex === index ? { color: '#fff', background: themeColor } : null
+                    }
                     onClick={gotoResult.bind(this, item.qId, item.question)}
                   >
                     {item.question}
@@ -268,6 +322,7 @@ function Special(props) {
           </li>
         </ul>
       </Footer>
+      <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
     </Layout>
   );
 }

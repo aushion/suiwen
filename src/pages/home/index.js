@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, List, Row, Col, Tabs, Divider, message, Icon } from 'antd';
+import { Spin, List, Row, Col, Tabs, Divider, message, Icon, Carousel } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -13,7 +13,7 @@ import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
-let tagSlider = null;
+// let tagSlider = null;
 const { TabPane } = Tabs;
 const HISTORYKEY = RestTools.HISTORYKEY;
 message.config({
@@ -21,10 +21,17 @@ message.config({
   top: 50
 });
 function Home(props) {
-  const { skillExamples, specialQuestions, newHelpList, loading } = props;
+  const {
+    skillExamples,
+    specialQuestions,
+    newHelpList,
+    loading,
+    skillPicture,
+    helpPicture
+  } = props;
   const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
-  const [activeSpecial, setActiveSpecial] = useState('专题问答');
-
+  // const [activeSpecial, setActiveSpecial] = useState('专题问答');
+  // console.log('skillPicture', skillPicture)
   // useEffect(() => {
   //   RestTools.setSession('tagIndex', activeTag); //存储索引，解决页面回退，索引丢失的问题
   //   tagSlider.slickGoTo(activeTag, true);
@@ -56,9 +63,7 @@ function Home(props) {
     color: '#fff',
     borderRadius: 4
   };
-  function prevrClick() {
-    console.log(1);
-  }
+
   const tagSettings = {
     infinite: false,
     speed: 500,
@@ -75,15 +80,6 @@ function Home(props) {
     arrows: false
   };
 
-  const specialSettings = {
-    autoplay: false,
-    slidesToScroll: 1,
-    slidesToShow: 1,
-    swipe: false,
-    arrows: false,
-    adaptiveHeight: true
-  };
-
   const specialItemSetting = {
     centerMode: true,
     className: 'center',
@@ -91,8 +87,6 @@ function Home(props) {
     hoverPause: true,
     slidesToShow: 3,
     slidesToScroll: 1,
-    // swipe: true,
-    // arrows: true,
     dots: true
   };
 
@@ -108,26 +102,6 @@ function Home(props) {
     RestTools.setSession('tagIndex', i); //存储索引，解决页面回退，索引丢失的问题
     skillSlider.slickGoTo(i, true);
   }
-
-  // function gotoSpecial(q,domain) {
-  //   router.push(`/result?q=${q}&domain=${domain}`);
-  // }
-
-  // function gotoSpecial(topicId) {
-  //   if (topicId === '3') {
-  //     window.open(`http://qa2.cnki.net/jcyqa/home`);
-  //   } else {
-  //     router.push(`/special?topicId=${topicId}`);
-  //   }
-  // }
-
-  // function getResultByTopic(topic, q) {
-  //   if (topic === 'FL') {
-  //     window.open(`http://qa2.cnki.net/jcyqa/result?q=${encodeURIComponent(q)}`);
-  //   } else {
-  //     router.push(`/result?topic=${topic}&q=${q}`);
-  //   }
-  // }
 
   const slideList = skillExamples.length
     ? skillExamples.map((item) => {
@@ -220,14 +194,20 @@ function Home(props) {
             <div className={homeStyles.title}>
               <BlockTitle cnTitle="技能" enTitle="Skill" />
             </div>
-            <div className={homeStyles.bg}></div>
+            <div className={homeStyles.bg}>
+              <Carousel dotPosition="left" autoplay={skillPicture.length > 1} dots={false}>
+                {skillPicture.map((item) => (
+                  <div style={{ width: 400 }} key={item}>
+                    <img style={{ width: '100%', height: 320, borderRadius: 10 }} src={item} />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
           </div>
 
           <div className={homeStyles.right}>
             <div className={homeStyles.right_top}>
-              <Slider {...tagSettings} ref={(slider) => (tagSlider = slider)}>
-                {tagList}
-              </Slider>
+              <Slider {...tagSettings}>{tagList}</Slider>
             </div>
 
             <div className={homeStyles.right_bottom}>
@@ -277,6 +257,7 @@ function Home(props) {
                 <div className={homeStyles.topic}>
                   <div
                     className={homeStyles.arrowBtn}
+                    style={{left: 'calc(50% - 690px)'}}
                     onClick={() => {
                       specialSlider.slickPrev();
                     }}
@@ -290,7 +271,7 @@ function Home(props) {
                   </div>
                   <div
                     className={homeStyles.arrowBtn}
-                    style={{ right: 0 }}
+                    style={{ right: 'calc(50% - 690px)' }}
                     onClick={() => {
                       specialSlider.slickNext();
                     }}
@@ -302,13 +283,16 @@ function Home(props) {
 
               <TabPane tab="热门求助" key="2">
                 <div className={homeStyles.special_help}>
-                  <div className={homeStyles.help_left} />
+                  <div
+                    className={homeStyles.help_left}
+                    style={{ backgroundImage: `url(${helpPicture[0]})` }}
+                  />
                   <div className={homeStyles.help_right}>
                     <List
                       grid={{ gutter: 16, column: 1 }}
-                      dataSource={newHelpList.slice(0, 5)}
+                      dataSource={newHelpList.slice(0, 7)}
                       renderItem={(item) => (
-                        <List.Item style={{ fontSize: 16, color: '#5B5B5D', fontWeight: 400 }}>
+                        <List.Item style={{ fontSize: 15, color: '#5B5B5D', fontWeight: 400 }}>
                           <div
                             className={homeStyles.help_item}
                             onClick={() => {
@@ -322,18 +306,18 @@ function Home(props) {
                             >
                               <span title={item.Content}>{item.Content}</span>
                             </Link>
-                            {item.CheckSum ? (
-                              <span style={{ display: 'inline-block', overflow: 'hidden' }}>
-                                回答数:{item.CheckSum}
-                              </span>
-                            ) : (
-                              <Link
-                                className={homeStyles.myReply}
-                                to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
-                              >
-                                我来回答
-                              </Link>
-                            )}
+
+                            <span style={{ display: 'inline-block', overflow: 'hidden' }}>
+                              回答数:{item.CheckSum}
+                            </span>
+                            <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                            <Link
+                              className={homeStyles.myReply}
+                              to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                            >
+                              我来回答
+                            </Link>
+
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <span style={{ float: 'right' }}>{item.Time}</span>
                           </div>

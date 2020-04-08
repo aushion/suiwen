@@ -1,9 +1,11 @@
 .home {
-  width: 1200px;
+  // width: 1200px;
   margin: 0 auto;
   .skill {
+    width: 1200px;
+    margin: 0 auto;
     height: 416px;
-    width: 100%;
+    // width: 100%;
     padding-top: 50px;
     position: relative;
     margin-bottom: 60px;
@@ -15,9 +17,12 @@
         margin-bottom: 40px;
       }
       .bg {
-        background-image: url(../../assets/skill.png);
+        // background-image: url(../../assets/skill.png);
         width: 400px;
         height: 320px;
+        :global(.slick-list){
+          border-radius: 10px;
+        }
       }
     }
     .right {
@@ -112,7 +117,8 @@
   }
   .special {
     // height: 380px;
-    width: 100%;
+    // width: 1200px;
+    margin: 10px auto;
     .special_top {
       width: 100%;
       height: 45px;
@@ -135,12 +141,19 @@
     }
     .special_bottom {
       // height: 460px;
+      margin-bottom: 10px;
       :global(.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-nav-wrap) {
         float: right;
       }
       :global(.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active) {
         background-color: #1890ff;
         color: #fff;
+      }
+      :global(.ant-tabs-bar){
+        border-bottom: none;
+      }
+      :global(.ant-tabs-card-bar .ant-tabs-nav-wrap){
+        margin-right: calc(50% - 650px);
       }
       // :global(.slick-slider) {
       //   height: 100%;
@@ -162,34 +175,41 @@
           background: rgba(0, 0, 0, 0.1);
           color: #fff;
           cursor: pointer;
-          &:hover{
+          &:hover {
             background-color: rgba(0, 0, 0, 0.2);
           }
         }
       }
       .special_questions {
-        padding: 10px 0; 
-        width: 90%;
-        margin-left: 5%;
-        :global(.slick-slide){
-          transform: scale(0.9);
-          // box-shadow:0px 0px 35px 0px rgba(0,78,255,0.2);
-          // padding: 0 20px;
+        margin-bottom: 10px;
+        padding: 20px 0;
+        width: 1240px;
+        margin: 0 auto;
+        // margin-left: 3%;
+        box-sizing: border-box;
+        :global(.slick-list){
+          padding: 20px 0 !important;
         }
-        :global(.slick-center){
+        :global(.slick-slide) {
+          transform: scale(0.9);
+          box-shadow:0px 0px 32px 0px rgba(0,78,255,0.2);
+          
+        }
+        :global(.slick-center) {
           transform: scale(1.05);
-          box-shadow:0px 0px 76px 0px rgba(0,78,255,0.2);
-          padding: 0 20px;
         }
         .specialWrapper {
-          // background: #fff;
-          border-radius: 4px;
+          background: #fff;
+          border: none;
           .picture {
             width: 100%;
-            height: 300px;
+            height: 330px;
             img {
-              width: 100%;
-              height: 300px;
+              width: calc(100% - 40px);
+              display: block;
+              margin: 0 auto;
+              padding: 10px 0;
+              height: 330px;
               cursor: pointer;
             }
           }
@@ -199,6 +219,7 @@
           }
           .questions {
             // color: #9a9ca4;
+            
             color: rgb(35, 36, 42);
             font-size: 15px;
             font-weight: 400;
@@ -222,22 +243,25 @@
       }
 
       .special_help {
-        width: 100%;
-        padding: 0 !important;
+        width: 1200px;
+        margin: 0 auto;
+        overflow: hidden;
+        padding: 10px 0 !important;
         .help_more {
           cursor: pointer;
           width: 100;
           float: right;
-          color: #c4c4c4;
-          font-size: 20px;
+          color: #1890ff;
+          font-size: 16px;
           &:hover {
             color: lightsalmon;
           }
         }
         .help_left {
-          background: url(../../assets//hotHelp.png);
+          background: url(../../assets/hotHelp.png);
+          border-radius: 10px;
           width: 400px;
-          height: 300px;
+          height: 384px;
           background-size: cover;
           float: left;
           margin-right: 40px;
@@ -258,7 +282,7 @@
               text-overflow: ellipsis;
               overflow: hidden;
               white-space: nowrap;
-              width: 70%;
+              width: 62%;
               cursor: pointer;
               &:hover {
                 color: lightsalmon;

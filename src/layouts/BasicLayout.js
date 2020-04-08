@@ -65,7 +65,7 @@ function BasicLayout(props) {
             <div className={styles.cn}>{title.cnText}</div>
             <div className={styles.en}>{title.enText}</div>
           </div> */}
-          <div className={styles.inputWrap} style={topic ? { left: '16%' } : null}>
+          <div className={styles.inputWrap} >
             <SmartInput
               question={q}
               needTip
