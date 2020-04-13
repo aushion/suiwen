@@ -9,6 +9,7 @@ import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
 import logo from '../assets/logo1.png';
+import slogan from '../assets/homeLogo.png';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
@@ -58,13 +59,13 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-          <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
-            <img src={logoUrl} alt="" style={{ height: '100%' }} />
+          <div className={styles.slogan}>
+            <img src={slogan} alt="slogan"/>
           </div>
-          {/* <div className={styles.title} onClick={goHomeByDomain.bind(this, title)}>
-            <div className={styles.cn}>{title.cnText}</div>
-            <div className={styles.en}>{title.enText}</div>
-          </div> */}
+          <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
+            <img src={logoUrl} alt="logo"  />
+          </div>
+          
           <div className={styles.inputWrap} >
             <SmartInput
               question={q}

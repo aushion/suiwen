@@ -5,6 +5,7 @@ import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
 import router from 'umi/router';
+import findIndex from 'lodash/findIndex';
 import styles from './index.less';
 import SgList from './components/SgList';
 import FAQ from './components/FAQ';
@@ -49,10 +50,12 @@ function ResultPage(props) {
     answerData
   } = props;
   const query = querystring.parse(window.location.href.split('?')[1]);
-  const topicData = RestTools.getSession('topicData');
   const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
+  const topicData = RestTools.getSession('topicData');
+  const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
+  const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   function handleCopy(event) {
     if (event.target.tagName === 'INPUT') {
       return;
@@ -77,6 +80,10 @@ function ResultPage(props) {
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
+
+  useEffect(() => {
+    setTopicIndex(topicindex);
+  }, [topicindex]);
 
   useEffect(() => {
     document.addEventListener('copy', handleCopy);
@@ -196,8 +203,8 @@ function ResultPage(props) {
 
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
-              <Col span={4} style={{padding: 0}}>
-                {topicData.length ? (
+              <Col span={4} style={{ padding: 0 }}>
+                {/* {topicData.length ? (
                   <Card
                     title="您也可以选择专题问答"
                     headStyle={{ height: 20, lineHeight: '20px',fontSize: 14 }}
@@ -212,8 +219,49 @@ function ResultPage(props) {
                       </div>
                     ))}
                   </Card>
-                ) : null}
-                <div style={{ height: 20 }}></div>
+                ) : null} */}
+                <div
+                  style={{
+                    background: '#fff',
+                    borderLeft: '3px solid #0097FF',
+                    padding: '10px',
+                    fontWeight: 400,
+                    color: '#1D1D1D',
+                    boxShadow: '#a5a5a5 0px 0px 10.8px 0px'
+                  }}
+                >
+                  您也可以选择专题问答
+                </div>
+                <div>
+                  {topicData.length
+                    ? topicData.map((item, index) => (
+                        <div
+                          style={{
+                            background: '#fff',
+                            marginTop: '24px',
+                            padding: '8px 10px',
+                            borderRadius: '4px',
+                            boxShadow: '#a5a5a5 0px 1px 5px 0px',
+                            cursor: 'pointer'
+                          }}
+                          key={item.name}
+                        >
+                          <Link
+                            to={`/special?topicId=${item.topicId}`}
+                            target="blank"
+                            style={{
+                              color: index === topicIndex ? '#0097FF' : '#43474A',
+                              display: 'inline-block',
+                              width: '100%'
+                            }}
+                          >
+                            {item.name}专题
+                          </Link>
+                        </div>
+                      ))
+                    : null}
+                </div>
+                {/* <div style={{ height: 20 }}></div>
                 <Card
                   title="历史搜索"
                   headStyle={{ height: 20, lineHeight: '20px', fontSize: 14 }}
@@ -233,7 +281,7 @@ function ResultPage(props) {
                       <Link to={`/result?q=${item}`}>{item}</Link>
                     </div>
                   ))}
-                </Card>
+                </Card> */}
               </Col>
               <Col span={15}>
                 {statisticsData.length

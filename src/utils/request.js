@@ -8,7 +8,7 @@ const request = axios.create({
   // baseURL: process.env.apiUrl, // url = base url + request url,
   baseURL: process.env.apiUrl,
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 30000, // request timeout
+  timeout: 10000, // request timeout
 });
 
 // request拦截器里设置headers里的x-token

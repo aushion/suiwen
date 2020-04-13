@@ -19,7 +19,6 @@ function HomeLayout(props) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
     value && router.push(`/result?q=${encodeURIComponent(q)}`);
-  
     RestTools.setSession('q', q);
   }
 

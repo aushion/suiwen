@@ -49,7 +49,7 @@ const SmartInput = (props) => {
     setTips([]);
     setValue(item);
     if (item) {
-      RestTools.setStorageInput(HISTORYKEY, item);
+      RestTools.setStorageInput(HISTORYKEY, item.trim());
       props.onClickItem(item);
     } else {
       message.warning('请输入您的问题');
@@ -79,7 +79,7 @@ const SmartInput = (props) => {
         );
         newStr = value.substring(0, maxLength);
       }
-      RestTools.setStorageInput(HISTORYKEY, newStr); //存储输入
+      RestTools.setStorageInput(HISTORYKEY, newStr.trim()); //存储输入
       props.onClickEnter(newStr);
     } else {
       message.warning('请输入您的问题');

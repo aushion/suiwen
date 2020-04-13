@@ -81,20 +81,21 @@ function Home(props) {
   };
 
   const specialItemSetting = {
-    centerMode: true,
-    className: 'center',
+    centerMode: specialQuestions.length>3 && true,
+    className: specialQuestions.length > 3 ? 'center' :'',
     centerPadding: '0px',
     hoverPause: true,
     slidesToShow: 3,
     slidesToScroll: 1,
-    dots: true
+    dots: true,
+    autoplay: true,
   };
 
   function handleClickItem(item) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
     router.push('/result?q=' + encodeURIComponent(item));
     RestTools.setSession('q', item);
-    RestTools.setStorageInput(HISTORYKEY, item);
+    RestTools.setStorageInput(HISTORYKEY, item.trim());
   }
 
   function clickTag(i) {
@@ -195,7 +196,7 @@ function Home(props) {
               <BlockTitle cnTitle="技能" enTitle="Skill" />
             </div>
             <div className={homeStyles.bg}>
-              <Carousel dotPosition="left" autoplay={skillPicture.length > 1} dots={false}>
+              <Carousel dotPosition="bottom" autoplay={skillPicture.length > 1} dots>
                 {skillPicture.map((item) => (
                   <div style={{ width: 400 }} key={item}>
                     <img style={{ width: '100%', height: 320, borderRadius: 10 }} src={item} />

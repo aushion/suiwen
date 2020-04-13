@@ -14,18 +14,35 @@
       height: 100%;
       width: 100%;
       position: relative;
+      .slogan{
+        height: 30px;
+        width: auto;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        img{
+          height: 100%;
+          width: auto;
+        }
+      }
       .logo {
         // background: url(../assets/lo.png) no-repeat;
-        height: 40px;
-        // width: 160px;
-        margin-right: 10px;
         // margin-left: 50px;
-        padding-left: calc(50% - 600px);
+        // padding-left: calc(50% - 600px);
+        height: 38px;
+        width: 175px;
+        left: 18%;
+        text-align: right;
+        margin-right: 10px;
         background-size: contain;
         cursor: pointer;
         position: absolute;
         top: 50%;
         margin-top: -16px;
+        img{
+          height: 100%;
+          width: auto;
+        }
       }
       .title{
         color: rgba(255,255,255,.8);
@@ -54,7 +71,7 @@
         left: calc(50% - 390px);
         top: 50%;
         margin-top: -20px;
-        width: 38%;
+        width: 35%;
         :global(.record-wrap){
           width: calc(100% - 88px);
         }

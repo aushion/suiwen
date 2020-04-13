@@ -1,4 +1,9 @@
-import { getDomainQuestions, getTopicQuestions, getHotHelpList,getHomePictureIds } from './service/home';
+import {
+  getDomainQuestions,
+  getTopicQuestions,
+  getHotHelpList,
+  getHomePictureIds
+} from './service/home';
 import RestTools from '../../utils/RestTools';
 
 export default {
@@ -35,16 +40,14 @@ export default {
     *getTopicQuestions({ payload }, { call, put }) {
       const { data } = yield call(getTopicQuestions);
       const urlPrefix = process.env.apiUrl;
-
-      const topicData = data.result.map(item => {
+      const topicData = data.result.filter(item => item.data.length).map((item) => {
         return  {
           ...item,
           logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
           thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
-          topicId: item.data[0].topicId,
-
-        }
-      })
+          topicId: item.data[0].topicId
+        };
+      });
       if (data.code === 200) {
         yield put({
           type: 'save',
@@ -53,7 +56,7 @@ export default {
           }
         });
       }
-      RestTools.setSession('topicData', topicData)
+      RestTools.setSession('topicData', topicData);
     },
 
     *getHotHelpList({ payload }, { call, put }) {
@@ -67,29 +70,28 @@ export default {
         });
       }
     },
-    
+
     *getHomePicture({ payload }, { call, put }) {
-      const { data } = yield call(getHomePictureIds,payload);
-      const {type} = payload;
-      const urlPrefix = `${process.env.apiUrl}/getHomePicture?picId=`
+      const { data } = yield call(getHomePictureIds, payload);
+      const { type } = payload;
+      const urlPrefix = `${process.env.apiUrl}/getHomePicture?picId=`;
       if (data.result) {
-        const imgData = data.result.map(item => urlPrefix+item.picId)
-        type === 0 ?
-        yield put({
-          type: 'save',
-          payload: {
-            skillPicture: imgData
-          }
-        }):
-        yield put({
-          type: 'save',
-          payload: {
-            helpPicture: imgData
-          }
-        })
+        const imgData = data.result.map((item) => urlPrefix + item.picId);
+        type === 0
+          ? yield put({
+              type: 'save',
+              payload: {
+                skillPicture: imgData
+              }
+            })
+          : yield put({
+              type: 'save',
+              payload: {
+                helpPicture: imgData
+              }
+            });
       }
     }
-    
   },
 
   subscriptions: {
@@ -109,10 +111,9 @@ export default {
             });
           }
           dispatch({ type: 'getTopicQuestions' });
+          dispatch({ type: 'getHomePicture', payload: { type: 0 } });
+          dispatch({ type: 'getHomePicture', payload: { type: 1 } });
           dispatch({ type: 'getHotHelpList' });
-          dispatch({type: 'getHomePicture',payload:{type: 0}})
-          dispatch({type: 'getHomePicture',payload:{type: 1}})
-
         }
       });
     }
