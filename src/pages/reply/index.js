@@ -106,7 +106,7 @@ function Reply(props) {
       <div className={replyStyle.content}>
         <div className={replyStyle.title}>
           <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
-          {params.question}
+          {params.q}
         </div>
 
         <Spin spinning={loading}>

@@ -238,7 +238,7 @@ function ResultPage(props) {
                         <div
                           style={{
                             background: '#fff',
-                            marginTop: '24px',
+                            marginTop: '16px',
                             padding: '8px 10px',
                             borderRadius: '4px',
                             boxShadow: '#a5a5a5 0px 1px 5px 0px',

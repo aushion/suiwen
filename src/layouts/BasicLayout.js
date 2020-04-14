@@ -59,9 +59,9 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-          <div className={styles.slogan}>
+          {/* <div className={styles.slogan}>
             <img src={slogan} alt="slogan"/>
-          </div>
+          </div> */}
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logoUrl} alt="logo"  />
           </div>
@@ -72,7 +72,7 @@ function BasicLayout(props) {
               needTip
               onClickEnter={handleClickEnterOrItem}
               onClickItem={handleClickEnterOrItem}
-              // themeColor={themeColor}
+              themeColor={themeColor}
             />
           </div>
           <div className={styles.login}>

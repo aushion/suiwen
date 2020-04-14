@@ -302,7 +302,7 @@ function Home(props) {
                             // onClick={handleClickItem.bind(this, item.Content)}
                           >
                             <Link
-                              to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                              to={`/reply?q=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
                               className={homeStyles.help_item_content}
                             >
                               <span title={item.Content}>{item.Content}</span>
@@ -314,7 +314,7 @@ function Home(props) {
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
-                              to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                              to={`/reply?q=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
                             >
                               我来回答
                             </Link>

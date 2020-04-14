@@ -8,9 +8,10 @@ import { connect } from 'dva';
 import styles from './index.less';
 import RestTools from 'Utils/RestTools';
 import FeedBack from '../../components/FeedBack';
-import logo from '../../assets/随问logo.png';
+import logo from '../../assets/logo1.png';
 import topicLogo from '../../assets/topicLogo.png';
 import user from '../../assets/user.png';
+import home from '../../assets/home.png';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
@@ -134,7 +135,8 @@ function Special(props) {
               router.push('/home');
             }}
           >
-            <img src={logo} alt="" />
+            <img src={logo} alt="logo" />
+            <img src={home} alt="home" style={{width: 31,height: 30 ,marginLeft: 16}} />
           </div>
           <Carousel autoplay dots={false}>
             {imgData.length
