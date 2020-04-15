@@ -34,7 +34,7 @@ function NewHelp(props) {
                   fontSize: 14,
                   color: '#848484'
                 }}
-                to={`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`}
+                to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`}
               >
                 {item.Content}
               </Link>

@@ -50,8 +50,8 @@ function NewHelp(props) {
     });
   }
   function handleClickItem(item) {
-    dispatch({ type: 'global/setQuestion', payload: { question: item.Content } });
-    router.push(`/reply?question=${item.Content}&QID=${item.ID}&domain=${item.Domain}`);
+    dispatch({ type: 'global/setQuestion', payload: { q: item.Content } });
+    router.push(`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`);
   }
 
   function handleSearchOrChangePage(payload) {

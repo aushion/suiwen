@@ -24,7 +24,7 @@ const CommunityAnswer = (props) => {
   }
   return (
     <div className={styles.CommunityAnswer}>
-      <Link to={`/reply?question=${question}&QID=${qid}`} target="_blank" className={styles.CommunityAnswer_question}>{question + '_网友回答'}</Link>
+      <Link to={`/reply?q=${encodeURIComponent(question)}&QID=${qid}`} target="_blank" className={styles.CommunityAnswer_question}>{question + '_网友回答'}</Link>
       <div
         onClick={(e) => handleShowMore(e, prepared_ANSWER)}
         className={styles.CommunityAnswer_answer}

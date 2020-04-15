@@ -50,7 +50,7 @@ function ResultPage(props) {
     answerData
   } = props;
   const query = querystring.parse(window.location.href.split('?')[1]);
-  const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
+  //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
   const topicData = RestTools.getSession('topicData');
@@ -177,7 +177,7 @@ function ResultPage(props) {
 
   function myReply() {
     if (RestTools.getLocalStorage('userInfo')) {
-      router.push(`reply?question=${q}`);
+      router.push(`reply?q=${encodeURIComponent(q)}`);
     } else {
       message.warn('请您登录后再操作');
     }
@@ -204,62 +204,27 @@ function ResultPage(props) {
           {answerData.length || sgData.length ? (
             <Row gutter={24}>
               <Col span={4} style={{ padding: 0 }}>
-                {/* {topicData.length ? (
-                  <Card
-                    title="您也可以选择专题问答"
-                    headStyle={{ height: 20, lineHeight: '20px',fontSize: 14 }}
-                    style={{ boxShadow: 'rgb(165, 165, 165) 0px 0px 10.8px 0px' }}
-                  >
-                    {topicData.map((item) => (
-                      <div style={{ padding: '4px 0' }} key={item.name}>
-                        <Link to={`/result?topic=${item.info.topic}&q=${q}`} target="blank">
-                          {item.name}专题
-                        </Link>
-                        <Icon type="double-right" style={{ color: '#1890ff' }} />
-                      </div>
-                    ))}
-                  </Card>
-                ) : null} */}
-                <div
-                  style={{
-                    background: '#fff',
-                    borderLeft: '3px solid #0097FF',
-                    padding: '10px',
-                    fontWeight: 400,
-                    color: '#1D1D1D',
-                    boxShadow: '#a5a5a5 0px 0px 10.8px 0px'
-                  }}
-                >
-                  您也可以选择专题问答
-                </div>
-                <div>
-                  {topicData.length
-                    ? topicData.map((item, index) => (
-                        <div
-                          style={{
-                            background: '#fff',
-                            marginTop: '16px',
-                            padding: '8px 10px',
-                            borderRadius: '4px',
-                            boxShadow: '#a5a5a5 0px 1px 5px 0px',
-                            cursor: 'pointer'
-                          }}
-                          key={item.name}
-                        >
-                          <Link
-                            to={`/special?topicId=${item.topicId}`}
-                            target="blank"
-                            style={{
-                              color: index === topicIndex ? '#0097FF' : '#43474A',
-                              display: 'inline-block',
-                              width: '100%'
-                            }}
-                          >
-                            {item.name}专题
-                          </Link>
-                        </div>
-                      ))
-                    : null}
+                <div className={styles.topicList}>
+                  <div className={styles.title}>您也可以选择专题问答</div>
+                  <div>
+                    {topicData.length
+                      ? topicData.map((item, index) => (
+                          <div className={styles.item} key={item.name}>
+                            <Link
+                              to={`/special?topicId=${item.topicId}`}
+                              target="blank"
+                              style={{
+                                color: index === topicIndex ? '#0097FF' : '#43474A',
+                                display: 'inline-block',
+                                width: '100%'
+                              }}
+                            >
+                              {item.name}专题
+                            </Link>
+                          </div>
+                        ))
+                      : null}
+                  </div>
                 </div>
                 {/* <div style={{ height: 20 }}></div>
                 <Card

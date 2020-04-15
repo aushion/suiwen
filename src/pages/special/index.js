@@ -150,7 +150,7 @@ function Special(props) {
 
           <div className={styles.title}>
             <img src={topicLogo} alt={name} style={{ width: '120px', marginRight: 20 }} />
-            {`随问${name}专题`}
+            {`${name}专题`}
           </div>
           <div className={styles.inputWrap}>
             <SmartInput

@@ -26,18 +26,17 @@ function BasicLayout(props) {
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme } = props;
-  const { logoUrl = logo, topicId, info } = currentTopic || {};
+  const { logoUrl = logo, topicId, info, name } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
-
 
   function handleClickEnterOrItem(value) {
     const q = value.trim();
 
     dispatch({ type: 'global/setQuestion', payload: { q } });
     value && topic
-      ? router.push(`/result?q=${encodeURIComponent(q)}&topic=${topic}`)
-      : router.push(`/result?q=${encodeURIComponent(q)}`);
+      ? router.replace(`/result?q=${encodeURIComponent(q)}&topic=${topic}`)
+      : router.replace(`/result?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
@@ -63,10 +62,11 @@ function BasicLayout(props) {
             <img src={slogan} alt="slogan"/>
           </div> */}
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
-            <img src={logoUrl} alt="logo"  />
+            <img src={logo} alt="logo" />
+            {name ?<span style={{fontSize: 20,paddingLeft: 5}}>{name}</span>: null}
           </div>
-          
-          <div className={styles.inputWrap} >
+
+          <div className={styles.inputWrap}>
             <SmartInput
               question={q}
               needTip

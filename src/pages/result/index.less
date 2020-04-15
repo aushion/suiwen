@@ -1,10 +1,34 @@
-.result{
+.result {
   width: 1200px;
   margin: 0 auto;
   padding-top: 20px;
   min-height: calc(100vh - 84px - 50px);
-  .result_tips{
+  .result_tips {
     padding-bottom: 10px;
     padding-left: 200px;
+  }
+  .topicList {
+    .title {
+      background: #fff;
+      border-left: 3px solid #0097ff;
+      padding: 10px;
+      font-weight: 400;
+      color: #1d1d1d;
+      box-shadow: #a5a5a5 0px 0px 10.8px 0px;
+    }
+    .item {
+      background: #fff;
+      margin-top: 16px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-weight: 400;
+      box-shadow: #a5a5a5 0px 1px 5px 0px;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 2px;
+      &:hover{
+        box-shadow: #0097ff 0px 1px 5px 0px;
+      }
+    }
   }
 }
