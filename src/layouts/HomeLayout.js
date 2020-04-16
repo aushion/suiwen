@@ -46,6 +46,8 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
+        <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a>
+
           您好!  {username || '游客'}
           {username ? null : (
             <a
