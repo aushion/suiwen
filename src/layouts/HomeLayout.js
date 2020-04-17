@@ -18,7 +18,7 @@ function HomeLayout(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    value && router.push(`/result?q=${encodeURIComponent(q)}`);
+    value && router.push(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
@@ -46,7 +46,7 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-        <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a>
+        <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20,textDecoration:"underline"}}>回到旧版</a>
 
           您好!  {username || '游客'}
           {username ? null : (

@@ -51,7 +51,7 @@ function Special(props) {
         logo: logoUrl
       }
     });
-    router.push(`/result?topic=${topic}&q=${encodeURIComponent(question)}`);
+    router.push(`/query?topic=${topic}&q=${encodeURIComponent(question)}`);
     RestTools.setSession('q', question);
     RestTools.setStorageInput(RestTools.HISTORYKEY, question);
   }
@@ -59,7 +59,7 @@ function Special(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    q && router.push(`/result?topic=${topic}&q=${encodeURIComponent(q)}`);
+    q && router.push(`/query?topic=${topic}&q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 

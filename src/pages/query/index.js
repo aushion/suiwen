@@ -243,7 +243,7 @@ function ResultPage(props) {
                       }}
                       title={item}
                     >
-                      <Link to={`/result?q=${item}`}>{item}</Link>
+                      <Link to={`/query?q=${item}`}>{item}</Link>
                     </div>
                   ))}
                 </Card> */}
