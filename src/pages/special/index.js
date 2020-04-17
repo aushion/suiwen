@@ -82,7 +82,7 @@ function Special(props) {
             margin: '10px 0'
           }}
         >
-          <Icon type="login" />
+          <Icon type="login" style={{marginRight: 6}} />
           登录
         </a>
       </div>
@@ -103,7 +103,7 @@ function Special(props) {
             margin: '10px 0'
           }}
         >
-          <Icon type="form" />
+          <Icon type="form" style={{marginRight: 6}} />
           注册
         </a>
       </div>
@@ -119,7 +119,7 @@ function Special(props) {
           e.currentTarget.style.backgroundColor = '';
         }}
       >
-        <Icon type="message" />
+        <Icon type="message" style={{marginRight: 6}} />
         反馈
       </div>
     </div>
