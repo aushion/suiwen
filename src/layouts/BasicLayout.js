@@ -35,8 +35,8 @@ function BasicLayout(props) {
 
     dispatch({ type: 'global/setQuestion', payload: { q } });
     value && topic
-      ? router.replace(`/result?q=${encodeURIComponent(q)}&topic=${topic}`)
-      : router.replace(`/result?q=${encodeURIComponent(q)}`);
+      ? router.replace(`/query?q=${encodeURIComponent(q)}&topic=${topic}`)
+      : router.replace(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 

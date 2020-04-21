@@ -211,7 +211,7 @@ function ResultPage(props) {
                       ? topicData.map((item, index) => (
                           <div className={styles.item} key={item.name}>
                             <Link
-                              to={`/special?topicId=${item.topicId}`}
+                              to={`/special?topicId=${item.topicId}&q=${q}`}
                               target="blank"
                               style={{
                                 color: index === topicIndex ? '#0097FF' : '#43474A',
@@ -243,7 +243,7 @@ function ResultPage(props) {
                       }}
                       title={item}
                     >
-                      <Link to={`/result?q=${item}`}>{item}</Link>
+                      <Link to={`/query?q=${item}`}>{item}</Link>
                     </div>
                   ))}
                 </Card> */}

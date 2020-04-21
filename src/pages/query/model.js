@@ -242,7 +242,7 @@ export default {
         const userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
-        if (pathname === '/result') {
+        if (pathname === '/query') {
           sessionStorage.removeItem('answer');
           if (topic) {
             dispatch({

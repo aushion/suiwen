@@ -93,7 +93,7 @@ function Home(props) {
 
   function handleClickItem(item) {
     props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
-    router.push('/result?q=' + encodeURIComponent(item));
+    router.push('/query?q=' + encodeURIComponent(item));
     RestTools.setSession('q', item);
     RestTools.setStorageInput(HISTORYKEY, item.trim());
   }
@@ -161,7 +161,7 @@ function Home(props) {
             return (
               <Link
                 className={homeStyles.questions_item}
-                to={`/result?topic=${item.info.topic}&q=${child.question}`}
+                to={`/query?topic=${item.info.topic}&q=${child.question}`}
                 key={child.qId}
                 target="_blank"
               >

@@ -47,8 +47,8 @@ function RelatedLiteraure(props) {
                   }}
                   to={
                     topic
-                      ? `/result?q=${encodeURIComponent(item[focus])}&topic=${topic}`
-                      : `/result?q=${encodeURIComponent(item[focus])}`
+                      ? `/query?q=${encodeURIComponent(item[focus])}&topic=${topic}`
+                      : `/query?q=${encodeURIComponent(item[focus])}`
                   }
                 >
                   {item[focus]}

@@ -17,7 +17,7 @@ const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
 function Special(props) {
   const { topics, initialKey, hotQuestions, imgData, dispatch, loading } = props;
-  const { topicId } = querystring.parse(window.location.href.split('?')[1]);
+  const { topicId,q } = querystring.parse(window.location.href.split('?')[1]);
   const [menuKey, setMenuKey] = useState(initialKey);
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
@@ -51,7 +51,7 @@ function Special(props) {
         logo: logoUrl
       }
     });
-    router.push(`/result?topic=${topic}&q=${encodeURIComponent(question)}`);
+    router.push(`/query?topic=${topic}&q=${encodeURIComponent(question)}`);
     RestTools.setSession('q', question);
     RestTools.setStorageInput(RestTools.HISTORYKEY, question);
   }
@@ -59,7 +59,7 @@ function Special(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    q && router.push(`/result?topic=${topic}&q=${encodeURIComponent(q)}`);
+    q && router.push(`/query?topic=${topic}&q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
@@ -155,7 +155,7 @@ function Special(props) {
           <div className={styles.inputWrap}>
             <SmartInput
               // needTip
-              // question={props.q}
+              question={q || ''}
               themeColor={themeColor}
               onClickEnter={handleClickEnterOrItem}
               onClickItem={handleClickEnterOrItem}

@@ -10,9 +10,9 @@ export default {
     'process.env.returnUrl': 'http://local.cnki.net:8002'
 
   },
-  base: '/',
+  base: '/sw.web',
   publicPath: './',
-  history: 'hash',
+  history: 'browser',
   hash: true,
   targets: {
     ie: 9
