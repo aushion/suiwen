@@ -9,14 +9,13 @@ import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
 import logo from '../assets/logo1.png';
-import slogan from '../assets/homeLogo.png';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
+  console.log(window.location)
   const query = querystring.parse(window.location.href.split('?')[1]);
-
   let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData = RestTools.getSession('topicData');
@@ -26,7 +25,7 @@ function BasicLayout(props) {
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme } = props;
-  const { logoUrl = logo, topicId, info, name } = currentTopic || {};
+  const {  topicId, info, name } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
 
@@ -82,7 +81,7 @@ function BasicLayout(props) {
               <a
                 className={styles.login_btn}
                 // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${process.env.returnUrl}`}
+                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
               >
                 登录
               </a>
@@ -90,7 +89,7 @@ function BasicLayout(props) {
             {username ? null : (
               <a
                 className={styles.register_btn}
-                href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://qa.cnki.net/sw.web"
+                href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
               >
                 注册
               </a>

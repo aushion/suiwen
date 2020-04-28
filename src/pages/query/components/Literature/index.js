@@ -10,6 +10,7 @@ import DynamicArrow from './DynamicArrow';
 import SameNames from './SameNames';
 import PeopleInfo from './PeopleInfo';
 import SortTag from './SortTag';
+import uniqBy from 'lodash/uniqBy';
 
 const { Search } = Input;
 export default function Literature(props) {
@@ -39,7 +40,7 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
-  const subjectValid = subject ? subject.filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
+  const subjectValid = subject ? uniqBy(subject,'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
@@ -49,7 +50,7 @@ export default function Literature(props) {
   const [yearInfo, setYearInfo] = useState({
     index: 0, //年份信息的初始状态
     yearSql: '',
-    year: year ? year.slice(0, 12) : []
+    year: year ? year.slice(0, 10) : []
   });
 
   const [subjectInfo, setSubjectInfo] = useState({
@@ -107,7 +108,7 @@ export default function Literature(props) {
     if (year.length) {
       setYearInfo({
         ...yearInfo,
-        year: yearInfo.index > 12 ? year : year.slice(0, 12) //当索引大于初始值是，去所有
+        year: yearInfo.index > 10 ? year : year.slice(0, 10) //当索引大于初始值是，去所有
       });
     }
 
@@ -439,13 +440,13 @@ export default function Literature(props) {
                     </Tag>
                   );
                 })}
-                {year && year.length > 12 ? (
+                {year && year.length > 10 ? (
                   <DynamicArrow
                     currentLength={yearInfo.year.length}
                     basicsLength={year.length}
                     index={yearInfo.index}
                     onClick={showOrHide}
-                    size={12}
+                    size={10}
                     type="year"
                   />
                 ) : null}
@@ -464,7 +465,7 @@ export default function Literature(props) {
                           ? { ...tagStyle, ...activeTag }
                           : { ...tagStyle }
                       }
-                      key={item.g}
+                      key={item.g+index}
                     >
                       {item.g}
                     </Tag>
@@ -534,11 +535,12 @@ export default function Literature(props) {
                 }
                 return item;
               })
-              .join(';');
+              .join(';')
+              const realAuthor = (/\d+/g.test(item.作者) ? item.作者名称 : item.作者)
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
               <a
-                style={Object.assign({}, spanStyle, { width: '45%' })}
+                style={Object.assign({}, spanStyle, { width: '38%' })}
                 dangerouslySetInnerHTML={{
                   __html: RestTools.translateToRed(item.题名 || '-')
                 }}
@@ -549,7 +551,7 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div style={{ width: '20%' }}>
+              <div style={{ width: '25%',textAlign: 'center' }}>
                 下载/被引：
                 {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
               </div>
@@ -559,12 +561,12 @@ export default function Literature(props) {
               </div>
               <div
                 title={RestTools.removeFlag(
-                  (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
+                  realAuthor.substring(0,realAuthor.length-1) || '-'
                 )}
-                style={{ ...spanStyle, width: '15%' }}
+                style={{ ...spanStyle, width: '17%' }}
                 dangerouslySetInnerHTML={{
                   __html: RestTools.translateToRed(
-                    (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
+                    ( realAuthor.substring(0,realAuthor.length-1) || '-').replace(/;;;/g, '###')
                   )
                 }}
               />

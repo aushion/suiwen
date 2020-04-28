@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, List, Carousel, Spin, Popover, Icon } from 'antd';
+import { Layout, Menu, List, Carousel, Spin, Popover, Icon, Button } from 'antd';
 import router from 'umi/router';
 import find from 'lodash/find';
 import SmartInput from '../../components/SmartInput';
@@ -17,7 +17,9 @@ const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
 function Special(props) {
   const { topics, initialKey, hotQuestions, imgData, dispatch, loading } = props;
-  const { topicId,q } = querystring.parse(window.location.href.split('?')[1]);
+  const { topicId, q } = querystring.parse(window.location.href.split('?')[1]);
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [menuKey, setMenuKey] = useState(initialKey);
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
@@ -63,11 +65,19 @@ function Special(props) {
     RestTools.setSession('q', q);
   }
 
+  function logout() {
+    window.Ecp_LogoutOptr_my(0);
+    localStorage.setItem('userInfo', null);
+    setUsername(null);
+  }
+
   const btnGruop = (
     <div style={{ color: '#fff' }}>
       <div style={{ cursor: 'pointer', borderBottom: '1px solid #fff' }}>
         <a
-          href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${process.env.returnUrl}`}
+          href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
+            window.location.href
+          )}`}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = themeColor;
           }}
@@ -82,7 +92,7 @@ function Special(props) {
             margin: '10px 0'
           }}
         >
-          <Icon type="login" style={{marginRight: 6}} />
+          <Icon type="login" style={{ marginRight: 6 }} />
           登录
         </a>
       </div>
@@ -94,7 +104,9 @@ function Special(props) {
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = '';
           }}
-          href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${process.env.returnUrl}`}
+          href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
+            window.location.href
+          )}`}
           style={{
             display: 'block',
             padding: '10px 30px',
@@ -103,7 +115,7 @@ function Special(props) {
             margin: '10px 0'
           }}
         >
-          <Icon type="form" style={{marginRight: 6}} />
+          <Icon type="form" style={{ marginRight: 6 }} />
           注册
         </a>
       </div>
@@ -119,7 +131,7 @@ function Special(props) {
           e.currentTarget.style.backgroundColor = '';
         }}
       >
-        <Icon type="message" style={{marginRight: 6}} />
+        <Icon type="message" style={{ marginRight: 6 }} />
         反馈
       </div>
     </div>
@@ -136,7 +148,7 @@ function Special(props) {
             }}
           >
             <img src={logo} alt="logo" />
-            <img src={home} alt="home" style={{width: 31,height: 30 ,marginLeft: 16}} />
+            <img src={home} alt="home" style={{ width: 31, height: 30, marginLeft: 16 }} />
           </div>
           <Carousel autoplay dots={false}>
             {imgData.length
@@ -163,9 +175,22 @@ function Special(props) {
           </div>
 
           <div className={styles.user}>
-            <Popover content={btnGruop} placement="bottom" trigger="click">
-              <img src={user} alt="user" />
-            </Popover>
+            {username ? (
+              <div>
+                {`您好，${username}`}{' '}
+                <Button
+                  style={{ background: 'transparent', border: '1px solid #fff', color: '#fff' }}
+                  onClick={logout}
+                  icon="logout"
+                >
+                  退出
+                </Button>
+              </div>
+            ) : (
+              <Popover content={btnGruop} placement="bottom" trigger="click">
+                <img src={user} alt="user" style={{ width: 30, height: 30 }} />
+              </Popover>
+            )}
           </div>
         </Header>
 
@@ -360,7 +385,6 @@ function mapStateToProps(state) {
   return {
     ...state.special,
     loading: state.loading.models.special
-    
   };
 }
 

@@ -15,10 +15,6 @@ if (Cookies.get('Ecp_LoginStuts')) {
   }
 }
 
-
-
-
-
 if (/Android|Windows Phone|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   window.location.href = 'http://qa.cnki.net/sw.mobile';
 } else if (/iPad/i.test(navigator.userAgent)) {

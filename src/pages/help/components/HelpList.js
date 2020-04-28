@@ -20,7 +20,7 @@ function HelpList(props) {
       payload: {
         qId: id
       }
-    })
+    });
   }
   return data ? (
     <div style={{ padding: '10px 0' }}>
@@ -82,11 +82,13 @@ function HelpList(props) {
                   {current === 'myHelp' && item.CheckSum === 0 ? (
                     <Popconfirm
                       title="是否删除此问题?"
-                      onConfirm={confirm.bind(this,item.ID)}
+                      onConfirm={confirm.bind(this, item.ID)}
                       okText="是"
                       cancelText="否"
                     >
-                      <a style={{ paddingRight: 10,fontSize: 12 }} >删除</a>
+                      <span style={{ paddingRight: 10, fontSize: 12, cursor: 'pointer', color: '#1890ff' }}>
+                        删除
+                      </span>
                     </Popconfirm>
                   ) : null}
                   已有回答:{item.CheckSum}

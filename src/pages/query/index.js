@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message, Card } from 'antd';
+import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -136,7 +136,13 @@ function ResultPage(props) {
     JournalData.length +
     literatureData.length +
     scholarData.length +
-    communityAnswerLength;
+    communityAnswerLength +
+    medicalData.length +
+    patentData.length +
+    poemData.length +
+    sentenceData.length +
+    statisticsData.length +
+    kaifangyuData.length;
 
   function showModal() {
     dispatch({
@@ -216,7 +222,8 @@ function ResultPage(props) {
                               style={{
                                 color: index === topicIndex ? '#0097FF' : '#43474A',
                                 display: 'inline-block',
-                                width: '100%'
+                                width: '100%',
+                                padding: '8px 10px'
                               }}
                             >
                               {item.name}专题

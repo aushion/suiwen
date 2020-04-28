@@ -49,7 +49,7 @@ function Journal(props) {
                   </a>
                   <div className={styles.Journal_right_item}>
                     <label htmlFor="">主办单位：</label>
-                    <span>{item.主办单位名称 || '-'}</span>
+                    <span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.主办单位名称 || '-') }} />
                   </div>
                   <div className={styles.Journal_right_item}>
                     <label htmlFor="">ISSN：</label>

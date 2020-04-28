@@ -77,7 +77,7 @@ export default function Scholar(props) {
               ))
             : null;
           return (
-            <List.Item a>
+            <List.Item >
               <div className={styles.Scholar_pic}>
                 <img style={{ verticalAlign: 'text-top' }} src={face} alt={item.学者名} />
               </div>

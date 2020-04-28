@@ -10,7 +10,8 @@ export default {
     'process.env.returnUrl': 'http://local.cnki.net:8002'
 
   },
-  base: '/sw.web',
+
+  base: '/iis',
   publicPath: './',
   history: 'browser',
   hash: true,
@@ -37,7 +38,7 @@ export default {
           {
             src:
              'http://login.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://qa2.cnki.net/sw.web'
-            //  'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://local.cnki.net:8000'
+            //'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://local.cnki.net:8000'
 
             // 'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
           },
@@ -46,8 +47,8 @@ export default {
                   window.FlushLogin();
                 } catch (e) {}
                 function LoginSucess(data) {
-                  window.localStorage.setItem('userInfo',JSON.stringify(data))
-                  window.location.href = window.location.href.split("?")[0];
+                  window.localStorage.setItem('userInfo',JSON.stringify(data));
+                  window.location.href = window.location.href;
                 }
                 function Ecp_LogoutOptr(data) { 
                  

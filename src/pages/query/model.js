@@ -18,6 +18,7 @@ import router from 'umi/router';
 import Cookies from 'js-cookie';
 import RestTools from 'Utils/RestTools';
 
+
 export default {
   namespace: 'result',
   state: {
@@ -103,7 +104,7 @@ export default {
     *getCustomView({ payload }, { call, put }) {
       const res = yield call(getCustomView, payload);
       const oldAnswer = RestTools.getSession('answer');
-      const answerSource = oldAnswer.source;
+    //  const answerSource = oldAnswer.source;
       const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
       let newRepositoryData = [];
       if (res.data.code === 200) {
@@ -118,13 +119,13 @@ export default {
               subject: newSubject,
               subjectType: newSubjectType
             } = res.data.result[0].dataNode;
-            const { dataNode } = item;
+            const { dataNode, intentJson } = item;
             const { data, year, subject, ...others } = dataNode;
 
             item = {
               ...item,
               ...res.data.result[0],
-              intentJson: item.intentJson,
+              intentJson,
               dataNode: {
                 ...others,
                 data:  newData,
