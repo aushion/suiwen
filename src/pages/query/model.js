@@ -13,11 +13,11 @@ import {
   collectQuestion,
   submitQa
 } from './service/result';
+import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
 import router from 'umi/router';
 import Cookies from 'js-cookie';
 import RestTools from 'Utils/RestTools';
-
 
 export default {
   namespace: 'result',
@@ -30,7 +30,8 @@ export default {
     repositoryData: [], //知识库数据,
     helpList: [],
     relaventQuestions: [], //相关问题
-    communityAnswer: null
+    communityAnswer: null,
+    specialQuestions: []
   },
   reducers: {
     save(state, { payload }) {
@@ -80,13 +81,30 @@ export default {
       }
     },
 
-    // *getAnswerByTopic({ payload }, { call }) {
-    //   const res = yield call(getAnswerByTopic, payload);
-    //   const { data } = res;
-    //   if (data.result) {
-    //     console.log(data);
-    //   }
-    // },
+    *getTopicQuestions({ payload }, { call, put }) {
+      const { data } = yield call(getTopicQuestions);
+      const urlPrefix = process.env.apiUrl;
+      const topicData = data.result
+        .filter((item) => item.data.length)
+        .map((item) => {
+          return {
+            ...item,
+            logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
+            thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
+            topicId: item.data[0].topicId
+          };
+        });
+      if (data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            specialQuestions: topicData
+          }
+        });
+      }
+      RestTools.setSession('topicData', topicData);
+      RestTools.setLocalStorage('topicData', topicData);
+    },
 
     *getRelavent({ payload }, { call, put }) {
       const res = yield call(getRelevant, payload);
@@ -104,7 +122,7 @@ export default {
     *getCustomView({ payload }, { call, put }) {
       const res = yield call(getCustomView, payload);
       const oldAnswer = RestTools.getSession('answer');
-    //  const answerSource = oldAnswer.source;
+      //  const answerSource = oldAnswer.source;
       const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
       let newRepositoryData = [];
       if (res.data.code === 200) {
@@ -128,7 +146,7 @@ export default {
               intentJson,
               dataNode: {
                 ...others,
-                data:  newData,
+                data: newData,
                 orderBy,
                 subjectType: newSubjectType,
                 year: newYear || [],
@@ -173,7 +191,7 @@ export default {
     *getRelevantByAnswer({ payload }, { call, put }) {
       const res = yield call(getRelevantByAnswer, payload);
       const { data } = res;
-      if (data.result && data.result.length) {
+      if (data.result && data.code === 200) {
         yield put({
           type: 'save',
           payload: {
@@ -243,6 +261,13 @@ export default {
         const userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
+        const topicData =
+          RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+        if (!topicData) {
+          dispatch({
+            type: 'getTopicQuestions'
+          });
+        }
         if (pathname === '/query') {
           sessionStorage.removeItem('answer');
           if (topic) {
@@ -253,14 +278,14 @@ export default {
                 domain: topic
               }
             });
-          }else{
+          } else {
             dispatch({
               type: 'global/save',
               payload: {
                 ...RestTools.headerInfo['default'],
                 domain: null
               }
-            })
+            });
           }
 
           if (q) {
@@ -285,6 +310,7 @@ export default {
                 relaventQuestions: []
               }
             });
+
             if (topic) {
               dispatch({
                 type: 'getAnswer',

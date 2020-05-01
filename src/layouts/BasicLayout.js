@@ -14,11 +14,10 @@ import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
-  console.log(window.location)
   const query = querystring.parse(window.location.href.split('?')[1]);
   let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const topicData = RestTools.getSession('topicData');
+  const topicData =  RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
 

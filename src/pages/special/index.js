@@ -16,6 +16,7 @@ import home from '../../assets/home.png';
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
 function Special(props) {
+  console.log(props)
   const { topics, initialKey, hotQuestions, imgData, dispatch, loading } = props;
   const { topicId, q } = querystring.parse(window.location.href.split('?')[1]);
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -24,7 +25,7 @@ function Special(props) {
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
   const [visible, setVisible] = useState(false);
-  const topicData = RestTools.getSession('topicData');
+  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
   const topicInfo = find(topicData, { topicId: topicId });
 
   const {

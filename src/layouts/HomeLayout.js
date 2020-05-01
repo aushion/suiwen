@@ -46,7 +46,7 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-        <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a>
+        <a href="http://qa.cnki.net/old" style={{color: '#fac500',marginRight: 20}}>回到旧版</a>
 
           您好!  {username || '游客'}
           {username ? null : (
@@ -133,7 +133,7 @@ function HomeLayout(props) {
       </Footer>
 
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
-      <Affix offsetBottom={10} style={{ position: 'absolute', right: 10,}}>
+      <Affix offsetBottom={50} style={{ position: 'absolute', right: 10,}}>
         <Button
           type="primary"
           onClick={() => {

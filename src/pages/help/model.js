@@ -52,7 +52,7 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        const match = pathname.match(/help/i);
+        const match = pathname.match(/Help/i);
         const { username } = query;
         if (match) {
           dispatch({

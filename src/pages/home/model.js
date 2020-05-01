@@ -57,6 +57,7 @@ export default {
         });
       }
       RestTools.setSession('topicData', topicData);
+      RestTools.setLocalStorage('topicData',topicData);
     },
 
     *getHotHelpList({ payload }, { call, put }) {

@@ -116,6 +116,7 @@ function Reply(props) {
           </div>
           <Divider style={{ margin: '0' }}></Divider>
           {answerList.map((item, index) => {
+            const username = item.UserName || item.userName;
             return (
               <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
                 <div
@@ -124,8 +125,8 @@ function Reply(props) {
                 />
                 <div>
                   <span style={{ paddingRight: 20 }}>{index}#</span>
-                  <Link to={`help/otherHelp?username=${item.UserName || item.userName}`} style={{ paddingRight: 20 }}>
-                    <Icon type="user" /> {item.UserName || item.userName}
+                  <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+                    <Icon type="user" /> {/^1[3-9]\d{9}$/.test(username) ? username.substring(0,3)+'****'+username.substring(7,11):username}
                   </Link>
                   <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
                   <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>

@@ -48,12 +48,13 @@ function ResultPage(props) {
     fetchLiterature,
     fetchSg,
     answerData
+    // specialQuestions
   } = props;
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
-  const topicData = RestTools.getSession('topicData');
+  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
   const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
   const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   function handleCopy(event) {
@@ -102,9 +103,12 @@ function ResultPage(props) {
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
   const literatureData = repositoryData.filter((item) => item.domain === '文献'); //文献数据
   const scholarData = repositoryData.filter((item) => item.domain === '学者'); //学者数据
-  const relatedLiterature =
-    relatedData.length && relatedData.filter((item) => item.domain === '文献'); //相关文献
-  const relatedPatent = relatedData.length && relatedData.filter((item) => item.domain === '专利'); //相关专利
+  const relatedLiterature = relatedData.length
+    ? relatedData.filter((item) => item.domain === '文献')
+    : []; //相关文献
+  const relatedPatent = relatedData.length
+    ? relatedData.filter((item) => item.domain === '专利')
+    : []; //相关专利
 
   const medicalData = repositoryData.filter(
     (item) => item.domain === '医学' && !item.dataNode[0].工具书编号
@@ -218,7 +222,7 @@ function ResultPage(props) {
                           <div className={styles.item} key={item.name}>
                             <Link
                               to={`/special?topicId=${item.topicId}&q=${q}`}
-                              target="blank"
+                              target="_blank"
                               style={{
                                 color: index === topicIndex ? '#0097FF' : '#43474A',
                                 display: 'inline-block',

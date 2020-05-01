@@ -11,8 +11,8 @@ export default {
 
   },
 
-  base: '/iis',
-  publicPath: './',
+  base: '/web',
+  publicPath: '/web/',
   history: 'browser',
   hash: true,
   targets: {
