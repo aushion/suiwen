@@ -6,6 +6,7 @@ import SpecialLayout from './SpecialLayout';
 import zhCN from 'antd/es/locale/zh_CN';
 
 export default function(props) {
+  // console.log('props.location.pathname', props.location.pathname);
   if (props.location.pathname === '/home') {
     return (
       <ConfigProvider locale={zhCN}>
@@ -18,10 +19,11 @@ export default function(props) {
         <SpecialLayout>{props.children}</SpecialLayout>
       </ConfigProvider>
     );
+  } else {
+    return (
+      <ConfigProvider locale={zhCN}>
+        <BasicLayout>{props.children}</BasicLayout>
+      </ConfigProvider>
+    );
   }
-  return (
-    <ConfigProvider locale={zhCN}>
-      <BasicLayout>{props.children}</BasicLayout>
-    </ConfigProvider>
-  );
 }

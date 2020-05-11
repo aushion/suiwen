@@ -15,41 +15,43 @@ const FormItem = Form.Item;
 // const { Option } = Select;
 function Reply(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
-  const userInfo = RestTools.getLocalStorage('userInfo')? RestTools.getLocalStorage('userInfo') : null;
+  const userInfo = RestTools.getLocalStorage('userInfo')
+    ? RestTools.getLocalStorage('userInfo')
+    : null;
   // const { domain } = params;
   const { total, answerList, loading } = props;
   const { getFieldDecorator } = props.form;
   const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
   const menus = RestTools.getLocalStorage('userInfo')
-  ? [
-      {
-        key: 'newHelp',
-        text: '新求助'
-      },
-      {
-        key: 'hotHelp',
-        text: '热门求助'
-      },
-      {
-        key: 'myHelp',
-        text: '我的求助'
-      },
-      {
-        key: 'myReply',
-        text: '我的回答'
-      }
-    ]
-  : [
-      {
-        key: 'newHelp',
-        text: '新求助'
-      },
-      {
-        key: 'hotHelp',
-        text: '热门求助'
-      }
-    ];
+    ? [
+        {
+          key: 'newHelp',
+          text: '新求助'
+        },
+        {
+          key: 'hotHelp',
+          text: '热门求助'
+        },
+        {
+          key: 'myHelp',
+          text: '我的求助'
+        },
+        {
+          key: 'myReply',
+          text: '我的回答'
+        }
+      ]
+    : [
+        {
+          key: 'newHelp',
+          text: '新求助'
+        },
+        {
+          key: 'hotHelp',
+          text: '热门求助'
+        }
+      ];
   function submitContent(e) {
     if (userInfo) {
       // const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
@@ -65,7 +67,7 @@ function Reply(props) {
     props.form.validateFields((error, values) => {
       if (!error) {
         const submitData = {
-          contents: values.contents.toHTML(), // or values.content.toHTML()
+          contents: values.contents.toHTML() // or values.content.toHTML()
           // domain: values.domain,
         };
         const QID = props.QID || params.QID;
@@ -77,13 +79,13 @@ function Reply(props) {
               username: props.username,
               // domain: submitData.domain,
               uid: props.uid,
-              isedit: false,
+              isedit: false
             }
           : {
               question: params.question,
               answer: submitData.contents,
               username: props.username,
-              uid: props.uid,
+              uid: props.uid
               // domain: submitData.domain,
             };
         if (QID) {
@@ -93,7 +95,7 @@ function Reply(props) {
         }
 
         props.form.setFieldsValue({
-          contents: BraftEditor.createEditorState(''),
+          contents: BraftEditor.createEditorState('')
         });
       }
     });
@@ -126,7 +128,10 @@ function Reply(props) {
                 <div>
                   <span style={{ paddingRight: 20 }}>{index}#</span>
                   <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
-                    <Icon type="user" /> {/^1[3-9]\d{9}$/.test(username) ? username.substring(0,3)+'****'+username.substring(7,11):username}
+                    <Icon type="user" />{' '}
+                    {/^1[3-9]\d{9}$/.test(username)
+                      ? username.substring(0, 3) + '****' + username.substring(7, 11)
+                      : username}
                   </Link>
                   <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
                   <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
@@ -135,10 +140,10 @@ function Reply(props) {
             );
           })}
         </Spin>
-        {userInfo && username !== userInfo.UserName? (
-          <div className={replyStyle.draft}>
-            <Form>
-              {/* <Form.Item label="问题分类" hasFeedback>
+
+        <div className={replyStyle.draft}>
+          <Form>
+            {/* <Form.Item label="问题分类" hasFeedback>
                 {getFieldDecorator('domain', {
                   rules: [{ required: true, message: '请选择问题分类' }],
                   initialValue: domain,
@@ -153,44 +158,43 @@ function Reply(props) {
                   </Select>,
                 )}
               </Form.Item> */}
-              <FormItem>
-                {getFieldDecorator('contents', {
-                  validateTrigger: 'onBlur',
-                  rules: [
-                    {
-                      required: true,
-                      validator: (_, value, callback) => {
-                        if (value.isEmpty()) {
-                          callback('请输入正文内容');
-                        } else {
-                          callback();
-                        }
-                      },
-                    },
-                  ],
-                })(
-                  <BraftEditor
-                    style={{ border: '1px solid #ccc', height: 360 }}
-                    contentStyle={{ height: 240 }}
-                    controls={controls}
-                    placeholder="请输入正文内容"
-                  />,
-                )}
-              </FormItem>
-              <FormItem>
-                <Button
-                  loading={props.loading}
-                  size="large"
-                  type="primary"
-                  htmlType="submit"
-                  onClick={submitContent}
-                >
-                  提交
-                </Button>
-              </FormItem>
-            </Form>
-          </div>
-        ) : null}
+            <FormItem>
+              {getFieldDecorator('contents', {
+                validateTrigger: 'onBlur',
+                rules: [
+                  {
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入正文内容');
+                      } else {
+                        callback();
+                      }
+                    }
+                  }
+                ]
+              })(
+                <BraftEditor
+                  style={{ border: '1px solid #ccc', height: 360 }}
+                  contentStyle={{ height: 240 }}
+                  controls={controls}
+                  placeholder="请输入正文内容"
+                />
+              )}
+            </FormItem>
+            <FormItem>
+              <Button
+                loading={props.loading}
+                size="large"
+                type="primary"
+                htmlType="submit"
+                onClick={submitContent}
+              >
+                提交
+              </Button>
+            </FormItem>
+          </Form>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,15 @@
 import React from 'react';
+import { Table } from 'antd';
 import { Chart, Geom, Axis, Tooltip, Coord, Legend } from 'bizcharts';
 import flattenDeep from 'lodash/flattenDeep';
 import Evaluate from '../Evaluate';
 import RestTools from 'Utils/RestTools';
 import styles from './index.less';
-
+const { Column } = Table;
 export default function Statistics(props) {
-  let { intentDomain, id, evaluate = {}, data = [] } = props;
+  let { intentDomain, id, evaluate = {}, data = [], intentJson, title } = props;
   const { good = 0, bad = 0, isevalute = false } = evaluate;
+  const fields = intentJson && intentJson.results[0].fields;
 
   if (data.length && data[0].name) {
     data = data.map((item) => {
@@ -22,6 +24,11 @@ export default function Statistics(props) {
       return item;
     });
     data = flattenDeep(data);
+  }
+
+  function unitIsUnite(data) {
+    const unitArray = data.map((item) => item.unit);
+    return unitArray.every((item) => item === unitArray[0]);
   }
 
   const tongjikanwu =
@@ -118,60 +125,61 @@ export default function Statistics(props) {
 
   const shuzhuwenda =
     data.length && intentDomain === '数值问答' ? (
-      data[0].name ? (
-        <div>
-          <Chart height={500} data={data} forceFit>
-            <Legend />
-            <Axis name="key" />
-            <Axis name="value" position={'left'} />
-            <Tooltip />
-            <Geom
-              type="interval"
-              position="key*value"
-              color={['name']}
-              adjust={[
-                {
-                  type: 'dodge',
-                  marginRatio: 1 / 32
-                }
-              ]}
-              tooltip={[
-                'name*value*unit',
-                (name, value, unit) => {
-                  return {
-                    name: name,
-                    value: value + unit
-                  };
-                }
-              ]}
-            />
-          </Chart>
-        </div>
-      ) : (
-        <div>
-          <Chart height={500} data={data} forceFit>
-            <Coord transpose />
-            <Axis name="prop" label={{ autoRotate: true, rotate: 30}} />
-            <Axis name="value" />
-            <Legend />
-            <Tooltip />
-            <Geom
-              tooltip={[
-                'prop*value*unit',
-                (prop, value, unit) => {
-                  return {
-                    name: prop,
-                    value: value + unit
-                  };
-                }
-              ]}
-              type="interval"
-              position="prop*value"
-              color="prop"
-              // size="value"
-              size={18}
-            >
-              {/* <Label
+      unitIsUnite(data) ? (
+        data[0].name ? (
+          <div>
+            <Chart height={500} data={data} forceFit>
+              <Legend />
+              <Axis name="key" />
+              <Axis name="value" position={'left'} />
+              <Tooltip />
+              <Geom
+                type="interval"
+                position="key*value"
+                color={['name']}
+                adjust={[
+                  {
+                    type: 'dodge',
+                    marginRatio: 1 / 32
+                  }
+                ]}
+                tooltip={[
+                  'name*value*unit',
+                  (name, value, unit) => {
+                    return {
+                      name: name,
+                      value: value + unit
+                    };
+                  }
+                ]}
+              />
+            </Chart>
+          </div>
+        ) : (
+          <div>
+            <Chart height={500} data={data} forceFit>
+              <Coord transpose />
+              <Axis name="prop" label={{ autoRotate: true, rotate: 30 }} />
+              <Axis name="value" />
+              <Legend />
+              <Tooltip />
+              <Geom
+                tooltip={[
+                  'prop*value*unit',
+                  (prop, value, unit) => {
+                    return {
+                      name: prop,
+                      value: value + unit
+                    };
+                  }
+                ]}
+                type="interval"
+                position="prop*value"
+                color="prop"
+                // size="value"
+                size={18}
+              >
+                {/* <Label
                 content="value"
                 offset={20} // 设置坐标轴文本 label 距离坐标轴线的距离
                 textStyle={{
@@ -188,9 +196,42 @@ export default function Statistics(props) {
                 }} // 回调函数，用于格式化坐标轴上显示的文本信息
                 // htmlTemplate= {()=>{}}, // 使用 html 自定义 label
               /> */}
-            </Geom>
-          </Chart>
-        </div>
+              </Geom>
+            </Chart>
+          </div>
+        )
+      ) : (
+        <>
+        <div style={{
+          paddingTop: 8,
+          paddingBottom: 8,
+          color: '#777',
+          textAlign: 'left'
+        }}>{title}</div>
+        <Table
+          dataSource={data}
+          size="middle"
+          rowKey="prop"
+          pagination={false}
+          bordered={false}
+         
+        >
+          <Column
+            title={fields['focus']}
+            dataIndex="prop"
+            render={(record) => (
+              <span dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(record) }} />
+            )}
+          />
+          <Column
+            title={fields['指标']}
+            key="value"
+            render={(record) => {
+              return <span>{`${record.value} (${record.unit})`}</span>;
+            }}
+          />
+        </Table>
+        </>
       )
     ) : null;
 
@@ -201,7 +242,7 @@ export default function Statistics(props) {
       {intentDomain === '统计刊物' ? tongjikanwu : null}
 
       <a
-        style={{ display: 'block', textAlign: 'right', color: '#999', fontSize: 14 }}
+        style={{ display: 'block', textAlign: 'right', color: '#999', fontSize: 14,paddingTop: 10 }}
         href="http://data.cnki.net/Yearbook"
         target="_blank"
         rel="noopener noreferrer"

@@ -178,11 +178,11 @@ function Special(props) {
           <div className={styles.user}>
             {username ? (
               <div>
-                {`您好，${username}`}{' '}
+                {`您好！ ${username}`}
                 <Button
-                  style={{ background: 'transparent', border: '1px solid #fff', color: '#fff' }}
+                  style={{ background: 'transparent', border: '1px solid #fff', color: '#fff', marginLeft: 10 }}
                   onClick={logout}
-                  icon="logout"
+                  // icon="logout"
                 >
                   退出
                 </Button>

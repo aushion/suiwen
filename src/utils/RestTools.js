@@ -260,13 +260,23 @@ export default {
       .replace(/\&/g, '%26');
   },
 
-  completeToolsBook(str) {
-    return (
-      str
-        // .replace(/\n/g, '<br/>')
-        .replace(/src="/g, 'src="http://refbook.img.cnki.net')
-        .replace(/src='/g, "src='http://refbook.img.cnki.net")
-    );
+  completeToolsBook(str, intentDomain) {
+    return intentDomain === '植物篇' || intentDomain === '病虫害'
+      ? str
+          .replace(/<img/g, '<img style="width:50%"')
+          .replace(/src="/g, 'src="http://refbook.img.cnki.net')
+          .replace(/src='/g, "src='http://refbook.img.cnki.net")
+      : str
+          .replace(/src="/g, 'src="http://refbook.img.cnki.net')
+          .replace(/src='/g, "src='http://refbook.img.cnki.net");
+  },
+
+  formatPhoneNumber(str) {
+    return str
+      ? /^1[3-9]\d{9}$/.test(str)
+        ? str.substring(0, 3) + '****' + str.substring(7, 11)
+        : str
+      : '-';
   },
   status: {
     '0': '状态：未审核',

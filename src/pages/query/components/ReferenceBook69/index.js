@@ -2,13 +2,13 @@ import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
-function ReferenceBook(props) {
+function ReferenceBook69(props) {
   const { data, id, evaluate, title, domain, intentFocus, intentDomain } = props;
   const { good, bad, isevalute } = evaluate;
 
-  function handleAnswer(str, code) {
+  function cutAnswer(str, code) {
     if (str) {
-      if (str.length > 300) {
+      // if (str.length > 300) {
         return (
           RestTools.subHtml(str, 300, false) +
           '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
@@ -20,25 +20,34 @@ function ReferenceBook(props) {
           '> 查看全文>>' +
           '</a>'
         );
-      } else {
-        return str;
-      }
+      // } else {
+      //   return str;
+      // }
     }
     return '-';
+  }
+
+  function handleAnswer(str) {
+    console.log('item.answer', str.toString().split(/【(.*?)】/));
+    let answerArray = str.toString().split(/【(.*?)】/);
+    let answerObj = {};
+    const answerProp = ['生态习性', '生长习性', '习性'];
+
+    if (answerArray.length) {
+      answerObj['front'] = answerArray[0];
+      for (let i = 1; i < answerArray.length - 1; i++) {
+        answerObj[answerArray[i]] = answerArray[i + 1];
+      }
+      const answerKey = answerProp.filter((item) => answerObj[item]);
+      return answerKey.length ? `【###${answerKey}$$$】：${answerObj[answerKey]}` : str;
+    }
   }
 
   return (
     <div className={styles.ReferenceBook}>
       {data.map((item, index) => {
-        const answer =
-          intentFocus === '谜语'
-            ? `谜底：${handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
-            : handleAnswer(item.Answer || item.介绍 || '-', item.条目编码);
-        const title =
-          intentFocus === '谜语'
-            ? `谜面: ${item.TITLE || item.Title || '-'}`
-            : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
-
+        const title = item.植物名称 || item.Title;
+        const answer = handleAnswer(item.Answer || item.植物介绍);
 
         return (
           <div key={item.工具书编号 + index}>
@@ -52,7 +61,9 @@ function ReferenceBook(props) {
               key={item.工具书编号 + index}
               className={styles.ReferenceBook_answer}
               dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer, intentDomain))
+                __html: RestTools.translateToRed(
+                  RestTools.completeToolsBook(cutAnswer(answer), intentDomain)
+                )
               }}
             />
             <div className={styles.ReferenceBook_extra}>
@@ -74,24 +85,13 @@ function ReferenceBook(props) {
       <div style={{ textAlign: 'right' }}>
         <a
           className={styles.ReferenceBook_more}
-          href={
-            domain === '翻译'
-              ? `http://dict.cnki.net/dict_result.aspx?searchword=${encodeURIComponent(
-                  RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
-                )}`
-              : intentFocus === '成语'
-              ? `http://gongjushu.cnki.net/rbook/`
-              : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
-                  RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
-                )}&c=crfdsearch`
-          }
+          href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
+            RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
+          )}&c=crfdsearch`}
           target="_blank"
           rel="noopener noreferrer"
           dangerouslySetInnerHTML={{
-            __html:
-              domain === '翻译'
-                ? 'CNKI翻译助手'
-                : `更多“${RestTools.removeFlag(title || '-')}”的工具书`
+            __html: `更多“${RestTools.removeFlag(title || '-')}”的工具书`
           }}
         />
       </div>
@@ -102,4 +102,4 @@ function ReferenceBook(props) {
   );
 }
 
-export default ReferenceBook;
+export default ReferenceBook69;

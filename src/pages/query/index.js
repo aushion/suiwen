@@ -23,6 +23,8 @@ import Statistics from './components/Statistics';
 import Poem from './components/Poem';
 import RestTools from 'Utils/RestTools';
 import Sentence from './components/Sentence';
+import ReferenceBook63 from './components/ReferenceBook63';
+import ReferenceBook69 from './components/ReferenceBook69';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -97,17 +99,19 @@ function ResultPage(props) {
     (item) =>
       Array.isArray(item.dataNode) &&
       item.dataNode[0].工具书编号 &&
-      item.intentDomain !== '句型覆盖'
+      item.intentDomain !== '句型覆盖' &&
+      item.intentDomain !== '工具书书目' &&
+      item.intentId !== '69'
   ); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
   const literatureData = repositoryData.filter((item) => item.domain === '文献'); //文献数据
   const scholarData = repositoryData.filter((item) => item.domain === '学者'); //学者数据
   const relatedLiterature = relatedData.length
-    ? relatedData.filter((item) => item.domain === '文献')
+    ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
   const relatedPatent = relatedData.length
-    ? relatedData.filter((item) => item.domain === '专利')
+    ? relatedData.filter((item) => /专利/g.test(item.domain))
     : []; //相关专利
 
   const medicalData = repositoryData.filter(
@@ -117,6 +121,12 @@ function ResultPage(props) {
   const poemData = repositoryData.filter((item) => item.domain === '诗词'); //诗词
   const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
   const sentenceData = repositoryData.filter((item) => item.intentDomain === '句型覆盖');
+  const referenceBook63 = repositoryData.filter(
+    (item) => item.intentDomain === '工具书书目' && item.intentId === '63'
+  );
+  const referenceBook69 = repositoryData.filter(
+    (item) => item.intentDomain === '植物篇' && item.intentId === '69'
+  );
   const communityAnswerLength = communityAnswer ? 1 : 0;
   const kaifangyuData = repositoryData.filter(
     (item) =>
@@ -302,6 +312,34 @@ function ResultPage(props) {
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
                       <ReferenceBook
+                        key={item.id}
+                        id={item.id}
+                        domain={item.domain}
+                        intentDomain={item.intentDomain}
+                        intentFocus={item.intentFocus}
+                        evaluate={item.evaluate}
+                        title={item.title}
+                        data={item.dataNode}
+                      />
+                    ))
+                  : null}
+                {referenceBook63.length
+                  ? referenceBook63.map((item) => (
+                      <ReferenceBook63
+                        key={item.id}
+                        id={item.id}
+                        domain={item.domain}
+                        intentDomain={item.intentDomain}
+                        intentFocus={item.intentFocus}
+                        evaluate={item.evaluate}
+                        title={item.title}
+                        data={item.dataNode}
+                      />
+                    ))
+                  : null}
+                   {referenceBook69.length
+                  ? referenceBook69.map((item) => (
+                      <ReferenceBook69
                         key={item.id}
                         id={item.id}
                         domain={item.domain}

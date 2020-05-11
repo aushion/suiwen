@@ -75,7 +75,7 @@ function BasicLayout(props) {
           </div>
           <div className={styles.login}>
           {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-            <span className={styles.tips}>您好! {username || '游客'}</span>
+            <span className={styles.tips}>您好! { username ? RestTools.formatPhoneNumber(username) : '游客'}</span>
             {username ? null : (
               <a
                 className={styles.login_btn}

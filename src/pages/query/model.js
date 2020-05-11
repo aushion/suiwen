@@ -50,13 +50,7 @@ export default {
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
 
-      yield call(submitQa, {
-        clientType: 'pc',
-        question: decodeURIComponent(q),
-        answerStatus: res.data.code === 200 ? 'yes' : 'no',
-        ip: '192.168.22.13',
-        userid: userid
-      });
+     
 
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
@@ -77,6 +71,14 @@ export default {
           faqData: faqData,
           repositoryData: repositoryData,
           source: 'getAnswer'
+        });
+
+        yield call(submitQa, {
+          clientType: 'pc',
+          question: decodeURIComponent(q),
+          answerStatus: res.data.code === 200 ? 'yes' : 'no',
+          ip: '192.168.22.13',
+          userid: userid
         });
       }
     },

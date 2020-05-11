@@ -101,16 +101,16 @@ export default {
         const skillExamples = RestTools.getSession('skillExamples');
         if (pathname === '/home') {
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
-          if (!skillExamples) {
+          // if (!skillExamples) {
             dispatch({ type: 'getDomainQuestions' });
-          } else {
-            dispatch({
-              type: 'save',
-              payload: {
-                skillExamples
-              }
-            });
-          }
+          // } else {
+          //   dispatch({
+          //     type: 'save',
+          //     payload: {
+          //       skillExamples
+          //     }
+          //   });
+          // }
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHomePicture', payload: { type: 0 } });
           dispatch({ type: 'getHomePicture', payload: { type: 1 } });

@@ -40,7 +40,7 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
-  const subjectValid = subject ? uniqBy(subject,'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
+  const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
@@ -64,8 +64,8 @@ export default function Literature(props) {
   }, []);
 
   useEffect(() => {
-    setSearchValue(searchword || keyword ||  '')
-  },[keyword, searchword])
+    setSearchValue(searchword || keyword || '');
+  }, [keyword, searchword]);
 
   useUpdateEffect(() => {
     const sortMap = {
@@ -365,7 +365,7 @@ export default function Literature(props) {
                 <PeopleInfo data={people.dataNode.data[0]} />
               ) : (
                 <Search
-                  placeholder=""
+                  placeholder="请输入关键字"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   onSearch={(value) => handleSearch(value)}
@@ -465,7 +465,7 @@ export default function Literature(props) {
                           ? { ...tagStyle, ...activeTag }
                           : { ...tagStyle }
                       }
-                      key={item.g+index}
+                      key={item.g + index}
                     >
                       {item.g}
                     </Tag>
@@ -524,19 +524,24 @@ export default function Literature(props) {
         dataSource={data}
         renderItem={(item) => {
           const author = intent.results[0].fields['作者'];
-          item.作者名称 =
-            item.作者名称 &&
-            item.作者名称
-              .split(';')
-              .filter((item) => item)
-              .map((item, index) => {
-                if (author === item) {
-                  return `###${item}$$$`;
-                }
-                return item;
-              })
-              .join(';')
-              const realAuthor = (/\d+/g.test(item.作者) ? item.作者名称 : item.作者)
+          const name = item.作者名称 && item.作者名称
+            .replace(/\$\$\$/g, '')
+            .replace(/###/, '')
+            .replace(new RegExp(author), '###$&$$$$$$');
+
+          // item.作者名称 =
+          //   item.作者名称 &&
+          //   item.作者名称
+          //     .split(';')
+          //     .filter((item) => item)
+          //     .map((item, index) => {
+          //       if (author === item) {
+          //         return `###${item}$$$`;
+          //       }
+          //       return item;
+          //     })
+          //     .join(';')
+          const realAuthor = /\d+/g.test(item.作者) ? name : item.作者;
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
               <a
@@ -551,7 +556,7 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div style={{ width: '25%',textAlign: 'center' }}>
+              <div style={{ width: '25%', textAlign: 'center' }}>
                 下载/被引：
                 {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
               </div>
@@ -560,14 +565,10 @@ export default function Literature(props) {
                 {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
               </div>
               <div
-                title={RestTools.removeFlag(
-                  realAuthor.substring(0,realAuthor.length-1) || '-'
-                )}
+                title={RestTools.removeFlag(realAuthor.substring(0, realAuthor.length) || '-')}
                 style={{ ...spanStyle, width: '17%' }}
                 dangerouslySetInnerHTML={{
-                  __html: RestTools.translateToRed(
-                    ( realAuthor.substring(0,realAuthor.length-1) || '-').replace(/;;;/g, '###')
-                  )
+                  __html: RestTools.translateToRed(realAuthor)
                 }}
               />
             </List.Item>
