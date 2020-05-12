@@ -1,28 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Spin, message } from 'antd';
+import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List } from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
+import groupBy from 'lodash/groupBy';
+
 import Link from 'umi/link';
-// import Cookies from 'js-cookie';
+// import { useTextSelection } from '@umijs/hooks';
 import RestTools from '../../utils/RestTools';
-import 'braft-editor/dist/index.css';
+
 import HelpMenu from '../help/components/HelpMenu';
 
 import replyStyle from './index.less';
+import 'braft-editor/dist/index.css';
 
 const FormItem = Form.Item;
-// const { Option } = Select;
+const { Search } = Input;
+const contentArray = [];
+const resourceArray = [];
+const quoteArray = [];
 function Reply(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
   const userInfo = RestTools.getLocalStorage('userInfo')
     ? RestTools.getLocalStorage('userInfo')
     : null;
-  // const { domain } = params;
-  const { total, answerList, loading } = props;
+
+  const { total, answerList, loading, sgData } = props;
   const { getFieldDecorator } = props.form;
-  const controls = ['bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
+  const { q } = params;
+  const controls = ['font-size', 'bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
+
+  const [selectText, setSelectText] = useState('');
+  const [resourceInfo, setResourceInfo] = useState(null);
+  // const [quoteArray, setQuoteArray] = useState([]);
+
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
         {
@@ -52,6 +64,90 @@ function Reply(props) {
           text: '热门求助'
         }
       ];
+
+  const groupByData = groupBy(sgData, 'id');
+  const keys = Object.keys(groupByData);
+  function addQuoteIndex(text, resourceInfo) {
+    const { year, qikanName, title, source_id, author } = resourceInfo;
+    const len = quoteArray.length;
+    if (len > 0 && quoteArray[len - 1].source_id !== source_id) {
+      quoteArray.push({
+        text: `${text}[${len + 1}]`,
+        resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${quoteArray.length +
+          1}. 《${title}》 ${author} ${qikanName} ${year}</a>`,
+        source_id: source_id
+      });
+    } else {
+      quoteArray.push({
+        text: `${text}[1]`,
+        resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${1}. 《${title}》 ${author} ${qikanName} ${year}</a>`,
+        source_id: source_id
+      });
+    }
+
+    return quoteArray;
+  }
+  function copyTextToEditor(text, resourceInfo) {
+    const quoteArrayList = addQuoteIndex(text, resourceInfo); //给引用添加索引
+    console.log('quoteArrayList', quoteArrayList);
+
+    let newText = '';
+    let newResourceStr = '';
+    for (let i = 0; i < quoteArrayList.length; i++) {
+      newText += '<br>' + quoteArrayList[i].text;
+      newResourceStr += '<br>' + quoteArrayList[i].resourceStr;
+    }
+    console.log('newText', newText);
+    console.log('newResourceStr', newResourceStr);
+    const { year, qikanName, title, source_id, author } = resourceInfo;
+    const resourceStr = `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">1. 《${title}》 ${author} ${qikanName} ${year}</a>`;
+    if (text) {
+      props.form.setFieldsValue({
+        contents: BraftEditor.createEditorState(newText),
+        resource: BraftEditor.createEditorState(newResourceStr)
+      });
+    }
+    const addQuote = document.getElementById('addQuote');
+    addQuote.style.display = 'none';
+  }
+
+  function selectHtml() {
+    let selectedHtml = '';
+    if (document.selection) {
+      //IE
+      let selectionObj = document.selection;
+      let rangeObj = selectionObj.createRange();
+      selectedHtml = rangeObj.htmlText;
+    } else {
+      //ff chrom
+      let selectionObj = window.getSelection();
+      let rangeObj = selectionObj.getRangeAt(0);
+      let docFragment = rangeObj.cloneContents();
+      let testDiv = document.createElement('div');
+      testDiv.appendChild(docFragment);
+      selectedHtml = testDiv.innerHTML;
+    }
+    return selectedHtml;
+  }
+
+  function handleMouseUp(e, info) {
+    let x = e.clientX;
+    let y = e.clientY;
+    const selectedHtml = selectHtml();
+    setSelectText(selectedHtml);
+    setResourceInfo(info);
+    const addQuote = document.getElementById('addQuote');
+    if (selectedHtml.length) {
+      setTimeout(function() {
+        addQuote.style.display = 'block';
+        addQuote.style.left = x + 'px';
+        addQuote.style.top = y + 'px';
+      }, 100);
+    } else {
+      addQuote.style.display = 'none';
+    }
+  }
+
   function submitContent(e) {
     if (userInfo) {
       // const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
@@ -103,98 +199,203 @@ function Reply(props) {
   return (
     <div className={replyStyle.reply}>
       <div>
-        <HelpMenu data={menus}></HelpMenu>
+        <HelpMenu data={menus} />
       </div>
+
       <div className={replyStyle.content}>
         <div className={replyStyle.title}>
           <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
           {params.q}
         </div>
-
         <Spin spinning={loading}>
-          <div className={replyStyle.replyCount}>
-            <span style={{ paddingRight: 10 }}>回答数:</span>
-            {total}
-          </div>
-          <Divider style={{ margin: '0' }}></Divider>
-          {answerList.map((item, index) => {
-            const username = item.UserName || item.userName;
-            return (
-              <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
-                <div
-                  className={replyStyle.itemTitle}
-                  dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
-                />
-                <div>
-                  <span style={{ paddingRight: 20 }}>{index}#</span>
-                  <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
-                    <Icon type="user" />{' '}
-                    {/^1[3-9]\d{9}$/.test(username)
-                      ? username.substring(0, 3) + '****' + username.substring(7, 11)
-                      : username}
-                  </Link>
-                  <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
-                  <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
-                </div>
+          <Row gutter={16}>
+            <Col span={12}>
+              <div className={replyStyle.replyCount}>
+                <span style={{ paddingRight: 10 }}>回答数:</span>
+                {total}
               </div>
-            );
-          })}
-        </Spin>
+              <Divider style={{ margin: '0' }}></Divider>
+              {answerList.map((item, index) => {
+                const username = item.UserName || item.userName;
+                return (
+                  <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
+                    <div
+                      className={replyStyle.itemTitle}
+                      dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
+                    />
+                    <div>
+                      <span style={{ paddingRight: 20 }}>{index}#</span>
+                      <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+                        <Icon type="user" />
+                        {/^1[3-9]\d{9}$/.test(username)
+                          ? username.substring(0, 3) + '****' + username.substring(7, 11)
+                          : username}
+                      </Link>
+                      <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
+                      <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
+                    </div>
+                  </div>
+                );
+              })}
 
-        <div className={replyStyle.draft}>
-          <Form>
-            {/* <Form.Item label="问题分类" hasFeedback>
-                {getFieldDecorator('domain', {
-                  rules: [{ required: true, message: '请选择问题分类' }],
-                  initialValue: domain,
-                })(
-                  <Select placeholder="请选择问题分类">
-                    {domains.length &&
-                      domains.map(item => (
-                        <Option key={item.领域} value={item.领域}>
-                          {item.领域}
-                        </Option>
-                      ))}
-                  </Select>,
-                )}
-              </Form.Item> */}
-            <FormItem>
-              {getFieldDecorator('contents', {
-                validateTrigger: 'onBlur',
-                rules: [
-                  {
-                    required: true,
-                    validator: (_, value, callback) => {
-                      if (value.isEmpty()) {
-                        callback('请输入正文内容');
-                      } else {
-                        callback();
+              <div className={replyStyle.draft}>
+                <Form>
+                  <FormItem>
+                    {getFieldDecorator('contents', {
+                      // initialValue: contentState,
+                      validateTrigger: 'onBlur',
+                      rules: [
+                        {
+                          required: true,
+                          validator: (_, value, callback) => {
+                            if (value.isEmpty()) {
+                              callback('请输入正文内容');
+                            } else {
+                              callback();
+                            }
+                          }
+                        }
+                      ]
+                    })(
+                      <BraftEditor
+                        style={{ border: '1px solid #ccc', height: 300 }}
+                        contentStyle={{ height: 240, fontSize: 14 }}
+                        controls={controls}
+                        placeholder="请输入正文内容"
+                      />
+                    )}
+                  </FormItem>
+
+                  <FormItem label="文献链接">
+                    {getFieldDecorator('resource', {
+                      // initialValue: contentState,
+                      validateTrigger: 'onBlur',
+                      rules: [
+                        {
+                          required: false,
+                          validator: (_, value, callback) => {
+                            if (value.isEmpty()) {
+                              callback('请输入文献链接');
+                            } else {
+                              callback();
+                            }
+                          }
+                        }
+                      ]
+                    })(
+                      <BraftEditor
+                        style={{ border: '1px solid #ccc', height: 240 }}
+                        contentStyle={{ height: 200, fontSize: 14 }}
+                        controls={['link']}
+                      />
+                    )}
+                  </FormItem>
+                  <FormItem>
+                    <Button
+                      loading={props.loading}
+                      size="large"
+                      type="primary"
+                      htmlType="submit"
+                      onClick={submitContent}
+                    >
+                      提交
+                    </Button>
+                  </FormItem>
+                </Form>
+              </div>
+            </Col>
+            <Col span={12} style={{ paddingTop: 20 }}>
+              <Search style={{ width: 400, marginBottom: 10 }} placeholder={q} />
+              <div id="sg">
+                {keys.map((item) => {
+                  const year =
+                    (groupByData[item][0].Data.additional_info &&
+                      groupByData[item][0].Data.additional_info.年) ||
+                    '';
+                  const author =
+                    (groupByData[item][0].Data.additional_info &&
+                      groupByData[item][0].Data.additional_info.作者) ||
+                    '';
+                  const qikanName =
+                    (groupByData[item][0].Data.additional_info &&
+                      groupByData[item][0].Data.additional_info.中文刊名) ||
+                    '';
+
+                  const title = groupByData[item][0].Data.title || '';
+                  const source_id = groupByData[item][0].Data.source_id || '';
+                  return (
+                    <div
+                      className={replyStyle.wrapper}
+                      key={item}
+                      onMouseUp={(e) =>
+                        handleMouseUp(e, { year, qikanName, title, source_id, author })
                       }
-                    }
-                  }
-                ]
-              })(
-                <BraftEditor
-                  style={{ border: '1px solid #ccc', height: 360 }}
-                  contentStyle={{ height: 240 }}
-                  controls={controls}
-                  placeholder="请输入正文内容"
-                />
-              )}
-            </FormItem>
-            <FormItem>
-              <Button
-                loading={props.loading}
-                size="large"
-                type="primary"
-                htmlType="submit"
-                onClick={submitContent}
+                    >
+                      <List
+                        itemLayout="vertical"
+                        dataSource={groupByData[item]}
+                        footer={
+                          <div
+                            style={{
+                              float: 'right',
+                              fontSize: 13,
+                              color: '#999',
+                              overflow: 'hidden'
+                            }}
+                          >
+                            <div>
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                                }}
+                              />
+                              <a
+                                style={{ color: '#999' }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].Data.source_id}`}
+                              >
+                                {groupByData[item][0].Data.title}
+                              </a>
+                            </div>
+                          </div>
+                        }
+                        renderItem={(item, index) => {
+                          const answer = item.Data.answer;
+                          return (
+                            <List.Item style={{ overflow: 'hidden' }}>
+                              <div
+                                className={replyStyle.fontStyle}
+                                key={index}
+                                dangerouslySetInnerHTML={{
+                                  __html: RestTools.formatText(RestTools.translateToRed(answer))
+                                }}
+                              />
+                            </List.Item>
+                          );
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                }} />
+              </div>
+              <div
+                id="addQuote"
+                style={{
+                  display: 'none',
+                  position: 'fixed',
+                  background: '#fff',
+                  border: '1px solid #ccc'
+                }}
+                onClick={copyTextToEditor.bind(this, selectText, resourceInfo)}
               >
-                提交
-              </Button>
-            </FormItem>
-          </Form>
-        </div>
+                <Icon type="copy" theme="twoTone" />
+                添加引用
+              </div>
+            </Col>
+          </Row>
+        </Spin>
       </div>
     </div>
   );

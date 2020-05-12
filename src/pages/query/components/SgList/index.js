@@ -6,16 +6,12 @@ import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
 function SgList(props) {
-  const data = props.data;
+  const {data, needEvaluate=true} = props;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
   const [visible, setVisible] = useState(false);
   const [initialText, setText] = useState('');
 
-
-  useEffect(() => {
-   
-  },[])
 
   function showMore(text) {
     setVisible(true);
@@ -28,14 +24,18 @@ function SgList(props) {
     }
   }
 
- 
-
   return (
-    <div className={`${styles.SgList} copy`} id='sg' >
+    <div className={`${styles.SgList} copy`} id="sg">
       {keys.map((item) => {
-        const year = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.年 || '';
-       // const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
-        const qikanName = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.中文刊名 || ''
+        const year =
+          (groupByData[item][0].Data.additional_info &&
+            groupByData[item][0].Data.additional_info.年) ||
+          '';
+        // const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
+        const qikanName =
+          (groupByData[item][0].Data.additional_info &&
+            groupByData[item][0].Data.additional_info.中文刊名) ||
+          '';
         return (
           <div key={item} className={styles.wrapper}>
             <List
@@ -44,9 +44,11 @@ function SgList(props) {
               footer={
                 <div style={{ float: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
                   <div>
-                  <span dangerouslySetInnerHTML={{__html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`}}>
-                     
-                    </span>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                      }}
+                    ></span>
                     <a
                       style={{ color: '#999' }}
                       target="_blank"
@@ -55,17 +57,15 @@ function SgList(props) {
                     >
                       {groupByData[item][0].Data.title}
                     </a>
-                   
-                   
                   </div>
                   {/* 点赞模块预留 */}
                   <div className={styles.sg_evaluate}>
-                    <Evaluate
+                   {needEvaluate? <Evaluate
                       id={groupByData[item][0].id}
                       goodCount={groupByData[item][0].evaluate.good}
                       badCount={groupByData[item][0].evaluate.bad}
                       isevalute={groupByData[item][0].evaluate.isevalute}
-                    />
+                    />: null}
                   </div>
                 </div>
               }
@@ -76,6 +76,7 @@ function SgList(props) {
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div
                       onClick={(e) => handleShowMore(e, orginAnswer)}
+                      
                       key={index}
                       className={styles.fontStyle}
                       dangerouslySetInnerHTML={{

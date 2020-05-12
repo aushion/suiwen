@@ -50,8 +50,6 @@ export default {
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
 
-     
-
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
@@ -181,6 +179,7 @@ export default {
     *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
       const { data } = res;
+      console.log('data', data);
       if (data.result) {
         yield put({
           type: 'save',

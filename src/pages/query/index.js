@@ -95,6 +95,8 @@ function ResultPage(props) {
     };
   }, []);
 
+  console.log('sgData', sgData)
+
   const referenceBookData = repositoryData.filter(
     (item) =>
       Array.isArray(item.dataNode) &&
@@ -337,7 +339,7 @@ function ResultPage(props) {
                       />
                     ))
                   : null}
-                   {referenceBook69.length
+                {referenceBook69.length
                   ? referenceBook69.map((item) => (
                       <ReferenceBook69
                         key={item.id}
