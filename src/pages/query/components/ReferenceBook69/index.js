@@ -3,23 +3,23 @@ import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 function ReferenceBook69(props) {
-  const { data, id, evaluate, title, domain, intentFocus, intentDomain } = props;
+  const { data, id, evaluate, title, intentDomain } = props;
   const { good, bad, isevalute } = evaluate;
 
   function cutAnswer(str, code) {
     if (str) {
       // if (str.length > 300) {
-        return (
-          RestTools.subHtml(str, 300, false) +
-          '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
-          code +
-          '&db=crfd"' +
-          'target="_blank"' +
-          'rel="noopener noreferrer"' +
-          'style="white-space:nowrap"' +
-          '> 查看全文>>' +
-          '</a>'
-        );
+      return (
+        RestTools.subHtml(str, 300, false) +
+        '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
+        code +
+        '&db=crfd"' +
+        'target="_blank"' +
+        'rel="noopener noreferrer"' +
+        'style="white-space:nowrap"' +
+        '> 查看全文>>' +
+        '</a>'
+      );
       // } else {
       //   return str;
       // }

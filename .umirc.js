@@ -18,7 +18,8 @@ export default {
     ie: 9
   },
   alias: {
-    Utils: path.resolve(__dirname, 'src/utils')
+    Utils: path.resolve(__dirname, 'src/utils'),
+    '@assets': path.resolve(__dirname, 'src/assets'),
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html

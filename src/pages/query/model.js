@@ -44,11 +44,8 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(getAnswer, payload);
-      const { q } = payload;
+      const { q, userId } = payload;
       const { data } = res;
-      const userid = RestTools.getLocalStorage('userInfo')
-        ? RestTools.getLocalStorage('userInfo').UserName
-        : Cookies.get('cnki_qa_uuid');
 
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
@@ -76,7 +73,7 @@ export default {
           question: decodeURIComponent(q),
           answerStatus: res.data.code === 200 ? 'yes' : 'no',
           ip: '192.168.22.13',
-          userid: userid
+          userid: userId
         });
       }
     },
@@ -179,7 +176,6 @@ export default {
     *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
       const { data } = res;
-      console.log('data', data);
       if (data.result) {
         yield put({
           type: 'save',
@@ -241,17 +237,15 @@ export default {
       return res;
     },
     *collectQuestion({ payload }, { call }) {
-      const { q } = payload;
-      const userid = RestTools.getLocalStorage('userInfo')
-        ? RestTools.getLocalStorage('userInfo').UserName
-        : Cookies.get('cnki_qa_uuid');
+      const { q, userId } = payload;
+
       yield call(collectQuestion, {
         ClientType: 'pc',
         browser: 'Chrome',
         ip: '182.98.177.137',
         question: q,
         type: 'search',
-        userid
+        userid: userId
       });
     }
   },
@@ -259,9 +253,15 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         let { q, topic = '' } = query;
-        const userId = RestTools.getLocalStorage('userInfo')
+        let userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
+        if (!userId) {
+          userId = RestTools.createUid();
+          Cookies.set('cnki_qa_uuid', userId, {
+            expires: 3650
+          });
+        }
         const topicData =
           RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
         if (!topicData) {
@@ -362,7 +362,7 @@ export default {
                 payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
               });
             }
-            dispatch({ type: 'collectQuestion', payload: { q } });
+            dispatch({ type: 'collectQuestion', payload: { q, userId } });
             dispatch({
               type: 'getHotHelpList'
             });

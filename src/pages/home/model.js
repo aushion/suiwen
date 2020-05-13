@@ -98,7 +98,7 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        const skillExamples = RestTools.getSession('skillExamples');
+        // const skillExamples = RestTools.getSession('skillExamples');
         if (pathname === '/home') {
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
           // if (!skillExamples) {

@@ -16,16 +16,16 @@ import 'braft-editor/dist/index.css';
 
 const FormItem = Form.Item;
 const { Search } = Input;
-const contentArray = [];
-const resourceArray = [];
+
 const quoteArray = [];
+
 function Reply(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
   const userInfo = RestTools.getLocalStorage('userInfo')
     ? RestTools.getLocalStorage('userInfo')
     : null;
 
-  const { total, answerList, loading, sgData } = props;
+  const { total, answerList, loading, sgData, dispatch } = props;
   const { getFieldDecorator } = props.form;
   const { q } = params;
   const controls = ['font-size', 'bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
@@ -33,7 +33,6 @@ function Reply(props) {
 
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
-  // const [quoteArray, setQuoteArray] = useState([]);
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
@@ -67,41 +66,61 @@ function Reply(props) {
 
   const groupByData = groupBy(sgData, 'id');
   const keys = Object.keys(groupByData);
+
+  useEffect(() => {
+    function hideAddQuote(e) {
+      const addQuote = document.getElementById('addQuote');
+      if (e.target !== addQuote) {
+        addQuote.style.display = 'none';
+      }
+    }
+    document.addEventListener('click', hideAddQuote);
+    return () => {
+      document.removeEventListener('click', hideAddQuote);
+    };
+  }, []);
+
   function addQuoteIndex(text, resourceInfo) {
     const { year, qikanName, title, source_id, author } = resourceInfo;
     const len = quoteArray.length;
-    if (len > 0 && quoteArray[len - 1].source_id !== source_id) {
+    const sourceidArray = quoteArray.length > 0 ? quoteArray.map((item) => item.source_id) : [];
+    //定义一个索引，设置引用序号
+    let index = len > 0 ? quoteArray[len - 1].index : 1;
+    //判断如果来自同一个句群内容，引用内容及引用文献链接不变，简单处理
+    if (len > 0 && !sourceidArray.includes(source_id)) {
       quoteArray.push({
-        text: `${text}[${len + 1}]`,
-        resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${quoteArray.length +
+        index: index + 1,
+        text: `${text}[${index + 1}]`,
+        resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${index +
           1}. 《${title}》 ${author} ${qikanName} ${year}</a>`,
         source_id: source_id
       });
     } else {
       quoteArray.push({
+        index: index,
         text: `${text}[1]`,
         resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${1}. 《${title}》 ${author} ${qikanName} ${year}</a>`,
         source_id: source_id
       });
     }
-
     return quoteArray;
   }
   function copyTextToEditor(text, resourceInfo) {
-    const quoteArrayList = addQuoteIndex(text, resourceInfo); //给引用添加索引
-    console.log('quoteArrayList', quoteArrayList);
-
+    //把引用信息转成引用数组
+    const quoteArrayList = addQuoteIndex(text, resourceInfo);
+    //获取文献引用数组并去重
+    const resourceArray = [...new Set(quoteArrayList.map((item) => item.resourceStr))];
+    //重新定义引文内容字符串，引用文献字符串，并处理格式
     let newText = '';
     let newResourceStr = '';
     for (let i = 0; i < quoteArrayList.length; i++) {
-      newText += '<br>' + quoteArrayList[i].text;
-      newResourceStr += '<br>' + quoteArrayList[i].resourceStr;
+      newText += quoteArrayList[i].text + '<br>';
     }
-    console.log('newText', newText);
-    console.log('newResourceStr', newResourceStr);
-    const { year, qikanName, title, source_id, author } = resourceInfo;
-    const resourceStr = `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">1. 《${title}》 ${author} ${qikanName} ${year}</a>`;
-    if (text) {
+    for (let i = 0; i < resourceArray.length; i++) {
+      newResourceStr += resourceArray[i] + '<br>';
+    }
+
+    if (newText) {
       props.form.setFieldsValue({
         contents: BraftEditor.createEditorState(newText),
         resource: BraftEditor.createEditorState(newResourceStr)
@@ -171,7 +190,7 @@ function Reply(props) {
           ? {
               qid: QID,
               answer: submitData.contents,
-              resource: '',
+              resource: submitData.resource,
               username: props.username,
               // domain: submitData.domain,
               uid: props.uid,
@@ -207,105 +226,121 @@ function Reply(props) {
           <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
           {params.q}
         </div>
-        <Spin spinning={loading}>
-          <Row gutter={16}>
-            <Col span={12}>
-              <div className={replyStyle.replyCount}>
-                <span style={{ paddingRight: 10 }}>回答数:</span>
-                {total}
-              </div>
-              <Divider style={{ margin: '0' }}></Divider>
-              {answerList.map((item, index) => {
-                const username = item.UserName || item.userName;
-                return (
-                  <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
-                    <div
-                      className={replyStyle.itemTitle}
-                      dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
-                    />
-                    <div>
-                      <span style={{ paddingRight: 20 }}>{index}#</span>
-                      <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
-                        <Icon type="user" />
-                        {/^1[3-9]\d{9}$/.test(username)
-                          ? username.substring(0, 3) + '****' + username.substring(7, 11)
-                          : username}
-                      </Link>
-                      <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
-                      <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
-                    </div>
+
+        <Row gutter={40}>
+          <Col span={12}>
+            <div className={replyStyle.replyCount}>
+              <span style={{ paddingRight: 10 }}>回答数:</span>
+              {total}
+            </div>
+            <Divider style={{ margin: '0' }}></Divider>
+            {answerList.map((item, index) => {
+              const username = item.UserName || item.userName;
+              return (
+                <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
+                  <div
+                    className={replyStyle.itemTitle}
+                    dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
+                  />
+                  <div>
+                    <span style={{ paddingRight: 20 }}>{index}#</span>
+                    <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+                      <Icon type="user" />
+                      {/^1[3-9]\d{9}$/.test(username)
+                        ? username.substring(0, 3) + '****' + username.substring(7, 11)
+                        : username}
+                    </Link>
+                    <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
+                    <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
 
-              <div className={replyStyle.draft}>
-                <Form>
-                  <FormItem>
-                    {getFieldDecorator('contents', {
-                      // initialValue: contentState,
-                      validateTrigger: 'onBlur',
-                      rules: [
-                        {
-                          required: true,
-                          validator: (_, value, callback) => {
-                            if (value.isEmpty()) {
-                              callback('请输入正文内容');
-                            } else {
-                              callback();
-                            }
+            <div className={replyStyle.draft}>
+              <Form>
+                <FormItem>
+                  {getFieldDecorator('contents', {
+                    // initialValue: contentState,
+                    validateTrigger: 'onBlur',
+                    rules: [
+                      {
+                        required: true,
+                        validator: (_, value, callback) => {
+                          if (value.isEmpty()) {
+                            callback('请输入正文内容');
+                          } else {
+                            callback();
                           }
                         }
-                      ]
-                    })(
-                      <BraftEditor
-                        style={{ border: '1px solid #ccc', height: 300 }}
-                        contentStyle={{ height: 240, fontSize: 14 }}
-                        controls={controls}
-                        placeholder="请输入正文内容"
-                      />
-                    )}
-                  </FormItem>
+                      }
+                    ]
+                  })(
+                    <BraftEditor
+                      style={{ border: '1px solid #ccc', height: 300 }}
+                      contentStyle={{ height: 240, fontSize: 14 }}
+                      controls={controls}
+                      placeholder="请输入正文内容"
+                    />
+                  )}
+                </FormItem>
 
-                  <FormItem label="文献链接">
-                    {getFieldDecorator('resource', {
-                      // initialValue: contentState,
-                      validateTrigger: 'onBlur',
-                      rules: [
-                        {
-                          required: false,
-                          validator: (_, value, callback) => {
-                            if (value.isEmpty()) {
-                              callback('请输入文献链接');
-                            } else {
-                              callback();
-                            }
+                <FormItem label="文献链接">
+                  {getFieldDecorator('resource', {
+                    // initialValue: contentState,
+                    validateTrigger: 'onBlur',
+                    rules: [
+                      {
+                        required: false,
+                        validator: (_, value, callback) => {
+                          if (value.isEmpty()) {
+                            callback('请输入文献链接');
+                          } else {
+                            callback();
                           }
                         }
-                      ]
-                    })(
-                      <BraftEditor
-                        style={{ border: '1px solid #ccc', height: 240 }}
-                        contentStyle={{ height: 200, fontSize: 14 }}
-                        controls={['link']}
-                      />
-                    )}
-                  </FormItem>
-                  <FormItem>
-                    <Button
-                      loading={props.loading}
-                      size="large"
-                      type="primary"
-                      htmlType="submit"
-                      onClick={submitContent}
-                    >
-                      提交
-                    </Button>
-                  </FormItem>
-                </Form>
-              </div>
-            </Col>
-            <Col span={12} style={{ paddingTop: 20 }}>
-              <Search style={{ width: 400, marginBottom: 10 }} placeholder={q} />
+                      }
+                    ]
+                  })(
+                    <BraftEditor
+                      style={{ border: '1px solid #ccc', height: 240 }}
+                      contentStyle={{ height: 200, fontSize: 14 }}
+                      controls={['link']}
+                    />
+                  )}
+                </FormItem>
+                <FormItem>
+                  <Button
+                    loading={props.loading}
+                    size="large"
+                    type="primary"
+                    htmlType="submit"
+                    onClick={submitContent}
+                  >
+                    提交
+                  </Button>
+                </FormItem>
+              </Form>
+            </div>
+          </Col>
+          <Col span={12} style={{ paddingTop: 20 }}>
+            <span>参考回答助手：</span>
+            <Search
+              style={{ width: '50%', marginBottom: 10 }}
+              onSearch={(value) => {
+                dispatch({
+                  type: 'reply/getSG',
+                  payload: {
+                    q: encodeURIComponent(value),
+                    pageStart: 1,
+                    pageCount: 10,
+                    userId: ''
+                  }
+                });
+              }}
+              placeholder={q}
+            />
+            <Spin spinning={loading}>
               <div id="sg">
                 {keys.map((item) => {
                   const year =
@@ -378,24 +413,26 @@ function Reply(props) {
                     </div>
                   );
                 })}
-                }} />
               </div>
-              <div
-                id="addQuote"
-                style={{
-                  display: 'none',
-                  position: 'fixed',
-                  background: '#fff',
-                  border: '1px solid #ccc'
-                }}
-                onClick={copyTextToEditor.bind(this, selectText, resourceInfo)}
-              >
-                <Icon type="copy" theme="twoTone" />
-                添加引用
-              </div>
-            </Col>
-          </Row>
-        </Spin>
+            </Spin>
+            <div
+              id="addQuote"
+              style={{
+                display: 'none',
+                position: 'fixed',
+                cursor: 'pointer',
+                background: '#fff',
+                border: '1px solid #ccc',
+                padding: '5px 10px',
+                boxShadow: '2px 2px 10px #999'
+              }}
+              onClick={copyTextToEditor.bind(this, selectText, resourceInfo)}
+            >
+              <Icon type="copy" theme="twoTone" />
+              添加引用
+            </div>
+          </Col>
+        </Row>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { List, Modal } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';

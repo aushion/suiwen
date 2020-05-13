@@ -25,6 +25,7 @@ import RestTools from 'Utils/RestTools';
 import Sentence from './components/Sentence';
 import ReferenceBook63 from './components/ReferenceBook63';
 import ReferenceBook69 from './components/ReferenceBook69';
+import Weather from './components/Weather';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -95,8 +96,6 @@ function ResultPage(props) {
     };
   }, []);
 
-  console.log('sgData', sgData)
-
   const referenceBookData = repositoryData.filter(
     (item) =>
       Array.isArray(item.dataNode) &&
@@ -129,10 +128,12 @@ function ResultPage(props) {
   const referenceBook69 = repositoryData.filter(
     (item) => item.intentDomain === '植物篇' && item.intentId === '69'
   );
+  const weather = repositoryData.filter((item) => item.domain === '天气');
+
   const communityAnswerLength = communityAnswer ? 1 : 0;
   const kaifangyuData = repositoryData.filter(
     (item) =>
-      // item.domain !== 'CNKI知识' &&
+      item.domain !== '天气' &&
       item.domain !== '诗词' &&
       item.domain !== '期刊' &&
       item.domain !== '学者' &&
@@ -223,7 +224,7 @@ function ResultPage(props) {
             </span>
           </div>
 
-          {answerData.length || sgData.length ? (
+          {answerData.length || sgData.length || communityAnswer ? (
             <Row gutter={24}>
               <Col span={4} style={{ padding: 0 }}>
                 <div className={styles.topicList}>
@@ -408,7 +409,7 @@ function ResultPage(props) {
                   </div>
                 ) : null}
                 {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
-
+                {weather.length ? <Weather weatherData={weather[0]} /> : null}
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
               <Col span={5} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>

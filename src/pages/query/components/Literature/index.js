@@ -358,6 +358,7 @@ export default function Literature(props) {
       ) : null}
       <List
         loading={loading}
+        size="small"
         header={
           <div style={{ overflow: 'hidden' }}>
             <div style={{ float: 'left' }}>
@@ -524,24 +525,17 @@ export default function Literature(props) {
         dataSource={data}
         renderItem={(item) => {
           const author = intent.results[0].fields['作者'];
-          const name = item.作者名称 && item.作者名称
-            .replace(/\$\$\$/g, '')
-            .replace(/###/, '')
-            .replace(new RegExp(author), '###$&$$$$$$');
+          const name = item.作者名称
+            ? item.作者名称
+                .replace(/\$\$\$/g, '')
+                .replace(/###/, '')
+                .replace(new RegExp(author), '###$&$$$$$$')
+            : '-';
 
-          // item.作者名称 =
-          //   item.作者名称 &&
-          //   item.作者名称
-          //     .split(';')
-          //     .filter((item) => item)
-          //     .map((item, index) => {
-          //       if (author === item) {
-          //         return `###${item}$$$`;
-          //       }
-          //       return item;
-          //     })
-          //     .join(';')
-          const realAuthor = /\d+/g.test(item.作者) ? name : item.作者;
+          const realAuthor = item.作者 ? (/\d+/g.test(item.作者) ? name : item.作者) : '-';
+          // console.log(realAuthor)
+          const randomKey =
+            fieldWord === '题名' ? item['来源'] : item[fieldWord]
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
               <a
@@ -556,12 +550,20 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div style={{ width: '25%', textAlign: 'center' }}>
-                下载/被引：
-                {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
-              </div>
-              <div style={{ width: '5%' }}>{item.来源数据库}</div>
               <div style={{ width: '15%', textAlign: 'center' }}>
+                <div>下载/被引</div>
+                <div>
+                  {item.被引频次
+                    ? `${item.下载频次 || '-'}/${item.被引频次}`
+                    : `${item.下载频次}/-`}
+                </div>
+              </div>
+              {randomKey ? <div
+                title={RestTools.removeFlag(randomKey)}
+                style={{ width: '15%', textAlign: 'center', overflow: 'hidden', textOverflow:'ellipsis',whiteSpace: 'nowrap' }}
+                dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(randomKey) }}
+              /> :null}
+              <div style={{ width: '15%', textAlign: 'center',  }}>
                 {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
               </div>
               <div

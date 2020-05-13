@@ -85,9 +85,14 @@ function RelatedLiteraure(props) {
                 <span style={{ display: 'inline-block', marginRight: 10 }}>
                   {item[extra.author]}
                 </span>
-                <span style={{ display: 'inline-block', marginRight: 10 }}>
-                  {item[extra.source]}
-                </span>
+                {item[extra.source] ? (
+                  <span
+                    style={{ display: 'inline-block', marginRight: 10 }}
+                    dangerouslySetInnerHTML={{
+                      __html: RestTools.removeFlag(item[extra.source])
+                    }}
+                  />
+                ) : null}
                 <span>{item[extra.time]}</span>
               </div>
             ) : null}
