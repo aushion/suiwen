@@ -26,7 +26,13 @@ function Reply(props) {
     : null;
 
   const { total, answerList, loading, sgData, dispatch } = props;
-  const { getFieldDecorator } = props.form;
+  const {
+    getFieldDecorator,
+    resetFields,
+    getFieldValue,
+    validateFields,
+    setFieldsValue
+  } = props.form;
   const { q } = params;
   const controls = ['font-size', 'bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
@@ -90,15 +96,13 @@ function Reply(props) {
     if (len > 0 && !sourceidArray.includes(source_id)) {
       quoteArray.push({
         index: index + 1,
-        text: `${text}[${index + 1}]`,
         resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${index +
           1}. 《${title}》 ${author} ${qikanName} ${year}</a>`,
         source_id: source_id
       });
-    } else {
+    } else if (len === 0) {
       quoteArray.push({
         index: index,
-        text: `${text}[1]`,
         resourceStr: `<a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}"  style="text-decoration:none" target="_blank">${1}. 《${title}》 ${author} ${qikanName} ${year}</a>`,
         source_id: source_id
       });
@@ -111,17 +115,17 @@ function Reply(props) {
     //获取文献引用数组并去重
     const resourceArray = [...new Set(quoteArrayList.map((item) => item.resourceStr))];
     //重新定义引文内容字符串，引用文献字符串，并处理格式
-    let newText = '';
+    let str = getFieldValue('contents') ? getFieldValue('contents').toHTML() : '';
+    console.log(str);
+    let newText = (str += `${text}[${resourceArray.length}]`);
     let newResourceStr = '';
-    for (let i = 0; i < quoteArrayList.length; i++) {
-      newText += quoteArrayList[i].text + '<br>';
-    }
+
     for (let i = 0; i < resourceArray.length; i++) {
       newResourceStr += resourceArray[i] + '<br>';
     }
 
     if (newText) {
-      props.form.setFieldsValue({
+      setFieldsValue({
         contents: BraftEditor.createEditorState(newText),
         resource: BraftEditor.createEditorState(newResourceStr)
       });
@@ -179,7 +183,7 @@ function Reply(props) {
       return;
     }
     e.preventDefault();
-    props.form.validateFields((error, values) => {
+    validateFields((error, values) => {
       if (!error) {
         const submitData = {
           contents: values.contents.toHTML() // or values.content.toHTML()
@@ -208,10 +212,11 @@ function Reply(props) {
         } else {
           props.dispatch({ type: 'reply/setQanswer', payload });
         }
-
-        props.form.setFieldsValue({
-          contents: BraftEditor.createEditorState('')
-        });
+        resetFields();
+        // props.form.setFieldsValue({
+        //   contents: BraftEditor.createEditorState(''),
+        //   resource: BraftEditor.createEditorState('')
+        // });
       }
     });
   }

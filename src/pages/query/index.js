@@ -81,6 +81,7 @@ function ResultPage(props) {
     }
   }
 
+
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
@@ -312,6 +313,29 @@ function ResultPage(props) {
                 {patentData.length
                   ? patentData.map((item) => <Patent key={item.id} data={item} />)
                   : null}
+                 {scholarData.length
+                  ? scholarData.map((item) => (
+                      <Scholar
+                        key={item.id}
+                        id={item.id}
+                        evaluate={item.evaluate}
+                        title={item.title}
+                        data={item.dataNode}
+                        intentJson={item.intentJson}
+                      />
+                    ))
+                  : null}
+
+                {JournalData.length
+                  ? JournalData.slice(0, 1).map((item) => (
+                      <Journal
+                        key={item.id}
+                        id={item.id}
+                        evaluate={item.evaluate}
+                        data={item.dataNode}
+                      />
+                    ))
+                  : null}  
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
                       <ReferenceBook
@@ -356,29 +380,7 @@ function ResultPage(props) {
                   : null}
                 {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
-                {scholarData.length
-                  ? scholarData.map((item) => (
-                      <Scholar
-                        key={item.id}
-                        id={item.id}
-                        evaluate={item.evaluate}
-                        title={item.title}
-                        data={item.dataNode}
-                        intentJson={item.intentJson}
-                      />
-                    ))
-                  : null}
-
-                {JournalData.length
-                  ? JournalData.slice(0, 1).map((item) => (
-                      <Journal
-                        key={item.id}
-                        id={item.id}
-                        evaluate={item.evaluate}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
+               
 
                 {kaifangyuData.length
                   ? kaifangyuData.map((item) => (
@@ -485,6 +487,8 @@ function ResultPage(props) {
       >
         <TextArea rows={4} value={submitQ} onChange={changeQuestion}></TextArea>
       </Modal>
+
+      
     </div>
   );
 }
