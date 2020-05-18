@@ -16,7 +16,6 @@ const { Search } = Input;
 export default function Literature(props) {
   const { literatureData, dispatch, loading } = props;
   const [works, people = null, sameNames = null] = literatureData;
-
   //嵌套解构
   let {
     dataNode: {
@@ -40,8 +39,12 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
+  const relevant = orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
-  const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
+  const [sortKey, setSortKey] = useState(
+    relevant > 0 ? 'relevant' : orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]
+  );
+
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
   const { pageStart, pageCount, total } = pagination;
@@ -533,8 +536,7 @@ export default function Literature(props) {
             : '-';
 
           const realAuthor = item.作者 ? (/\d+/g.test(item.作者) ? name : item.作者) : '-';
-          const randomKey =
-            fieldWord === '题名' ? item['来源数据库'] : item[fieldWord]
+          const randomKey = fieldWord === '题名' ? item['来源数据库'] : item[fieldWord];
 
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -558,12 +560,20 @@ export default function Literature(props) {
                     : `${item.下载频次}/-`}
                 </div>
               </div>
-              {randomKey ? <div
-                title={RestTools.removeFlag(randomKey)}
-                style={{ width: '15%', textAlign: 'center', overflow: 'hidden', textOverflow:'ellipsis',whiteSpace: 'nowrap' }}
-                dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(randomKey) }}
-              /> :null}
-              <div style={{ width: '15%', textAlign: 'center',  }}>
+              {randomKey ? (
+                <div
+                  title={RestTools.removeFlag(randomKey)}
+                  style={{
+                    width: '15%',
+                    textAlign: 'center',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(randomKey) }}
+                />
+              ) : null}
+              <div style={{ width: '15%', textAlign: 'center' }}>
                 {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
               </div>
               <div

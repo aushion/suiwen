@@ -5,7 +5,7 @@ export default {
   define: {
     'process.env.apiUrl': 'http://192.168.103.25:8080/sw.api',
     'process.env.UMI_ENV': process.env.UMI_ENV,
-    'process.env.apiUrl_help': 'http://192.168.103.24/qa.fb/api',
+    'process.env.apiUrl_help': 'http://192.168.107.232/qa.fb/api',
     'process.env.apiUrl_collect': 'http://192.168.103.25:8080/SWcollect',
     'process.env.returnUrl': 'http://local.cnki.net:8002'
   },
@@ -20,7 +20,7 @@ export default {
   alias: {
     'Utils': path.resolve(__dirname, 'src/utils'),
     '@assets': path.resolve(__dirname, 'src/assets'),
-    '@ant-design/icons/lib/dist$': path.resolve(__dirname, 'src/icon.js'),
+    // '@ant-design/icons/lib/dist$': path.resolve(__dirname, 'src/icon.js'),
     // '@': path.resolve(__dirname, 'src')
   },
   plugins: [
@@ -35,7 +35,6 @@ export default {
           webpackChunkName: true
         },
         title: '知网随问',
-        links: [{ rel: 'icon', href: '<%= PUBLIC_PATH %>static/cnki.ico' }],
         scripts: [
           {
             src:

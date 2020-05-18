@@ -18,7 +18,8 @@ export default function MyAnswerList(props) {
               >
                 <p dangerouslySetInnerHTML={{ __html: item.Content }} />
                 {from?<div>来自：{item.Domain}</div>:null}
-              </Panel>
+                <div dangerouslySetInnerHTML={{__html: item.resource}} />
+             </Panel> 
             );
           })
         }

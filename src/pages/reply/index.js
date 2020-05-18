@@ -17,7 +17,7 @@ import 'braft-editor/dist/index.css';
 const FormItem = Form.Item;
 const { Search } = Input;
 
-const quoteArray = [];
+let quoteArray = [];
 
 function Reply(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
@@ -83,6 +83,8 @@ function Reply(props) {
     document.addEventListener('click', hideAddQuote);
     return () => {
       document.removeEventListener('click', hideAddQuote);
+      resetFields(); //重置表单值
+      quoteArray = []; //重置缓存数组
     };
   }, []);
 
@@ -157,7 +159,7 @@ function Reply(props) {
     let x = e.clientX;
     let y = e.clientY;
     const selectedHtml = selectHtml();
-    setSelectText(selectedHtml);
+    setSelectText(selectedHtml.replace(/<span style="color:red">/g, '').replace(/<\/span>/g, ''));
     setResourceInfo(info);
     const addQuote = document.getElementById('addQuote');
     if (selectedHtml.length) {
@@ -212,8 +214,8 @@ function Reply(props) {
         } else {
           props.dispatch({ type: 'reply/setQanswer', payload });
         }
-        resetFields();
-       
+        resetFields(); //重置表单值
+        quoteArray = []; //重置缓存数组
       }
     });
   }
@@ -244,13 +246,12 @@ function Reply(props) {
                     className={replyStyle.itemTitle}
                     dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                   />
-                  {item.resource ? <div
-                    dangerouslySetInnerHTML={{__html: item.resource}}
-                  /> : null}
+                  {item.resource ? (
+                    <div dangerouslySetInnerHTML={{ __html: item.resource }} />
+                  ) : null}
 
-                 
                   <div>
-                    <span style={{ paddingRight: 20 }}>#{index+1}</span>
+                    <span style={{ paddingRight: 20 }}>#{index + 1}</span>
                     <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
                       <Icon type="user" />
                       {/^1[3-9]\d{9}$/.test(username)
@@ -287,7 +288,13 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 300 }}
                       contentStyle={{ height: 240, fontSize: 14 }}
                       controls={controls}
-                      placeholder="请输入正文内容"
+                      placeholder={`   
+                      标准格式更容易被采纳 
+                      文献内容                                                  
+                         XXXXXXXXXXXXX
+                      XXXXXXXXXXXXX[1]
+                        XXXXXXXXXXXXXX
+                      XXXXXXXXXXXXX[2]`}
                     />
                   )}
                 </FormItem>
@@ -313,6 +320,10 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 240 }}
                       contentStyle={{ height: 200, fontSize: 14 }}
                       controls={['link']}
+                      placeholder={`    
+                      引用文献示例
+                      1.篇名  作者 机构 年份
+                      2.篇名  作者 机构 年份`}
                     />
                   )}
                 </FormItem>
@@ -330,7 +341,7 @@ function Reply(props) {
               </Form>
             </div>
           </Col>
-          <Col span={12} style={{ paddingTop: 20 }}>
+          <Col span={12} style={{ marginTop: '-20px' }}>
             <span>参考回答助手：</span>
             <Search
               style={{ width: '50%', marginBottom: 10 }}
