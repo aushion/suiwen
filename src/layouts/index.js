@@ -7,7 +7,7 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 export default function(props) {
   // console.log('props.location.pathname', props.location.pathname);
-  if (props.location.pathname === '/home') {
+  if (props.location.pathname === '/home' || props.location.pathname === '/') {
     return (
       <ConfigProvider locale={zhCN}>
         <HomeLayout>{props.children}</HomeLayout>

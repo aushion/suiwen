@@ -186,7 +186,8 @@ function Reply(props) {
     validateFields((error, values) => {
       if (!error) {
         const submitData = {
-          contents: values.contents.toHTML() // or values.content.toHTML()
+          contents: values.contents.toHTML(), // or values.content.toHTML()
+          resource: values.resource.toHTML()
           // domain: values.domain,
         };
         const QID = props.QID || params.QID;
@@ -196,16 +197,15 @@ function Reply(props) {
               answer: submitData.contents,
               resource: submitData.resource,
               username: props.username,
-              // domain: submitData.domain,
               uid: props.uid,
               isedit: false
             }
           : {
               question: params.question,
               answer: submitData.contents,
+              resource: submitData.resource,
               username: props.username,
               uid: props.uid
-              // domain: submitData.domain,
             };
         if (QID) {
           props.dispatch({ type: 'reply/setAnswer', payload });
@@ -213,10 +213,7 @@ function Reply(props) {
           props.dispatch({ type: 'reply/setQanswer', payload });
         }
         resetFields();
-        // props.form.setFieldsValue({
-        //   contents: BraftEditor.createEditorState(''),
-        //   resource: BraftEditor.createEditorState('')
-        // });
+       
       }
     });
   }
@@ -247,8 +244,13 @@ function Reply(props) {
                     className={replyStyle.itemTitle}
                     dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                   />
+                  {item.resource ? <div
+                    dangerouslySetInnerHTML={{__html: item.resource}}
+                  /> : null}
+
+                 
                   <div>
-                    <span style={{ paddingRight: 20 }}>{index}#</span>
+                    <span style={{ paddingRight: 20 }}>#{index+1}</span>
                     <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
                       <Icon type="user" />
                       {/^1[3-9]\d{9}$/.test(username)
@@ -290,7 +292,7 @@ function Reply(props) {
                   )}
                 </FormItem>
 
-                <FormItem label="文献链接">
+                <FormItem label="引用文献">
                   {getFieldDecorator('resource', {
                     // initialValue: contentState,
                     validateTrigger: 'onBlur',

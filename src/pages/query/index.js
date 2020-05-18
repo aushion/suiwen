@@ -81,7 +81,6 @@ function ResultPage(props) {
     }
   }
 
-
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
@@ -209,7 +208,7 @@ function ResultPage(props) {
 
   return (
     <div className={styles.result} id="result">
-      <Spin spinning={loading} indicator={antIcon}>
+      <Spin spinning={loading && fetchSg} indicator={antIcon}>
         <div style={{ minHeight: 'calc(45vh)' }}>
           <div className={styles.result_tips}>
             {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
@@ -313,7 +312,7 @@ function ResultPage(props) {
                 {patentData.length
                   ? patentData.map((item) => <Patent key={item.id} data={item} />)
                   : null}
-                 {scholarData.length
+                {scholarData.length
                   ? scholarData.map((item) => (
                       <Scholar
                         key={item.id}
@@ -335,7 +334,7 @@ function ResultPage(props) {
                         data={item.dataNode}
                       />
                     ))
-                  : null}  
+                  : null}
                 {referenceBookData.length
                   ? referenceBookData.map((item) => (
                       <ReferenceBook
@@ -379,8 +378,6 @@ function ResultPage(props) {
                     ))
                   : null}
                 {sentenceData.length ? <Sentence data={sentenceData} /> : null}
-
-               
 
                 {kaifangyuData.length
                   ? kaifangyuData.map((item) => (
@@ -487,8 +484,6 @@ function ResultPage(props) {
       >
         <TextArea rows={4} value={submitQ} onChange={changeQuestion}></TextArea>
       </Modal>
-
-      
     </div>
   );
 }

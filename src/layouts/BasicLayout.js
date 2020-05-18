@@ -42,7 +42,7 @@ function BasicLayout(props) {
     if (topic) {
       router.push('/special?topicId=' + topicId);
     } else {
-      router.push('/home');
+      router.push('/');
     }
   }
 

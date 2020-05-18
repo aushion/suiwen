@@ -1,6 +1,13 @@
 import React from 'react';
 import { Table } from 'antd';
-import { Chart, Geom, Axis, Tooltip, Coord, Legend } from 'bizcharts';
+// import { Chart, Geom, Axis, Tooltip, Coord, Legend } from 'bizcharts';
+import Chart from 'bizcharts/lib/components/Chart';
+import Axis from 'bizcharts/lib/components/Axis';
+import Interval from 'bizcharts/lib/components/TypedGeom/Interval';
+import Tooltip from 'bizcharts/lib/components/Tooltip';
+import Coord from 'bizcharts/lib/components/Coord';
+import Legend from 'bizcharts/lib/components/Legend';
+
 import flattenDeep from 'lodash/flattenDeep';
 import Evaluate from '../Evaluate';
 import RestTools from 'Utils/RestTools';
@@ -125,7 +132,7 @@ export default function Statistics(props) {
 
   const shuzhuwenda =
     data.length && intentDomain === '数值问答' ? (
-      unitIsUnite(data) ? (
+      unitIsUnite(data) && data.length > 1 ? (
         data[0].name ? (
           <div>
             <Chart height={500} data={data} forceFit>
@@ -133,7 +140,7 @@ export default function Statistics(props) {
               <Axis name="key" />
               <Axis name="value" position={'left'} />
               <Tooltip />
-              <Geom
+              <Interval
                 type="interval"
                 position="key*value"
                 color={['name']}
@@ -163,7 +170,7 @@ export default function Statistics(props) {
               <Axis name="value" />
               <Legend />
               <Tooltip />
-              <Geom
+              <Interval
                 tooltip={[
                   'prop*value*unit',
                   (prop, value, unit) => {
@@ -173,7 +180,6 @@ export default function Statistics(props) {
                     };
                   }
                 ]}
-                type="interval"
                 position="prop*value"
                 color="prop"
                 // size="value"
@@ -196,41 +202,38 @@ export default function Statistics(props) {
                 }} // 回调函数，用于格式化坐标轴上显示的文本信息
                 // htmlTemplate= {()=>{}}, // 使用 html 自定义 label
               /> */}
-              </Geom>
+              </Interval>
             </Chart>
           </div>
         )
       ) : (
         <>
-        <div style={{
-          paddingTop: 8,
-          paddingBottom: 8,
-          color: '#777',
-          textAlign: 'left'
-        }}>{title}</div>
-        <Table
-          dataSource={data}
-          size="middle"
-          rowKey="prop"
-          pagination={false}
-          bordered={false}
-         
-        >
-          <Column
-            title={fields['focus']}
-            dataIndex="prop"
-            render={(record) => (
-              <span dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(record) }} />
-            )}
-          />
-          <Column
-            title={fields['指标']}
-            key="value"
-            render={(record) => {
-              return <span>{`${record.value} (${record.unit})`}</span>;
+          <div
+            style={{
+              paddingTop: 8,
+              paddingBottom: 8,
+              color: '#777',
+              textAlign: 'left'
             }}
-          />
-        </Table>
+          >
+            {title}
+          </div>
+          <Table dataSource={data} size="middle" rowKey="prop" pagination={false} bordered={false}>
+            <Column
+              title={fields['focus']}
+              dataIndex="prop"
+              render={(record) => (
+                <span dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(record) }} />
+              )}
+            />
+            <Column
+              title={fields['指标']}
+              key="value"
+              render={(record) => {
+                return <span>{`${record.value} (${record.unit})`}</span>;
+              }}
+            />
+          </Table>
         </>
       )
     ) : null;
@@ -242,7 +245,13 @@ export default function Statistics(props) {
       {intentDomain === '统计刊物' ? tongjikanwu : null}
 
       <a
-        style={{ display: 'block', textAlign: 'right', color: '#999', fontSize: 14,paddingTop: 10 }}
+        style={{
+          display: 'block',
+          textAlign: 'right',
+          color: '#999',
+          fontSize: 14,
+          paddingTop: 10
+        }}
         href="http://data.cnki.net/Yearbook"
         target="_blank"
         rel="noopener noreferrer"

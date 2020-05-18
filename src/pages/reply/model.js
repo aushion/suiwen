@@ -71,8 +71,15 @@ export default {
     },
 
     *getSG({ payload }, { call, put }) {
+    
       const res = yield call(getSG, payload);
       const { data } = res;
+      yield put({
+        type: 'saveAnswers',
+        payload: {
+          sgData: []
+        }
+      })
       if (data.result) {
         yield put({
           type: 'saveAnswers',

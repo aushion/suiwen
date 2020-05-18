@@ -18,8 +18,10 @@ export default {
     ie: 9
   },
   alias: {
-    Utils: path.resolve(__dirname, 'src/utils'),
+    'Utils': path.resolve(__dirname, 'src/utils'),
     '@assets': path.resolve(__dirname, 'src/assets'),
+    '@ant-design/icons/lib/dist$': path.resolve(__dirname, 'src/icon.js'),
+    // '@': path.resolve(__dirname, 'src')
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html

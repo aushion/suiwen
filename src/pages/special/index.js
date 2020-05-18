@@ -16,7 +16,6 @@ import home from '../../assets/home.png';
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
 function Special(props) {
-  console.log(props)
   const { topics, initialKey, hotQuestions, imgData, dispatch, loading } = props;
   const { topicId, q } = querystring.parse(window.location.href.split('?')[1]);
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -145,7 +144,7 @@ function Special(props) {
           <div
             className={styles.logo}
             onClick={() => {
-              router.push('/home');
+              router.push('/');
             }}
           >
             <img src={logo} alt="logo" />

@@ -38,6 +38,7 @@ function Home(props) {
   //   skillSlider.slickGoTo(activeTag, true);
   //   return () => {};
   // }, [activeTag]);
+  
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -351,9 +352,9 @@ function Home(props) {
 function mapStateToProps(state) {
   // const { newHelpList } = state.home;
   return {
-    ...state.home,
+    ...state.index,
     ...state.global,
-    loading: state.loading.models.home
+    loading: state.loading.models.index
   };
 }
 

@@ -1,4 +1,6 @@
 import request from './request';
+import {Tag} from 'antd';
+
 export default {
   createUid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -279,9 +281,9 @@ export default {
       : '-';
   },
   status: {
-    '0': '状态：未审核',
-    '1': '',
-    '-1': '状态：审核未通过'
+    '0':   <Tag color="#2db7f5">未审核</Tag>,
+    '1': <Tag color="#87d068">已审核</Tag>,
+    '-1': <Tag color="#f50">审核未通过</Tag>
   },
 
   title: {
