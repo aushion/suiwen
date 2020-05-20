@@ -1,4 +1,6 @@
 import request from './request';
+import {Tag} from 'antd';
+
 export default {
   createUid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -260,18 +262,28 @@ export default {
       .replace(/\&/g, '%26');
   },
 
-  completeToolsBook(str) {
-    return (
-      str
-        // .replace(/\n/g, '<br/>')
-        .replace(/src="/g, 'src="http://refbook.img.cnki.net')
-        .replace(/src='/g, "src='http://refbook.img.cnki.net")
-    );
+  completeToolsBook(str, intentDomain) {
+    return intentDomain === '植物篇' || intentDomain === '病虫害'
+      ? str
+          .replace(/<img/g, '<img style="width:90%"')
+          .replace(/src="/g, 'src="http://refbook.img.cnki.net')
+          .replace(/src='/g, "src='http://refbook.img.cnki.net")
+      : str
+          .replace(/src="/g, 'src="http://refbook.img.cnki.net')
+          .replace(/src='/g, "src='http://refbook.img.cnki.net");
+  },
+
+  formatPhoneNumber(str) {
+    return str
+      ? /^1[3-9]\d{9}$/.test(str)
+        ? str.substring(0, 3) + '****' + str.substring(7, 11)
+        : str
+      : '';
   },
   status: {
-    '0': '状态：未审核',
-    '1': '',
-    '-1': '状态：审核未通过'
+    '0':   <Tag color="#2db7f5">未审核</Tag>,
+    '1': <Tag color="#87d068">已审核</Tag>,
+    '-1': <Tag color="#f50">审核未通过</Tag>
   },
 
   title: {
@@ -295,7 +307,8 @@ export default {
     P0104: '2004年版',
     P0105: '2008年版',
     P0106: '2011年版',
-    P0107: '2014年版'
+    P0107: '2014年版',
+    P0108: '2017年版'
   },
 
   getLocalStorage(key) {

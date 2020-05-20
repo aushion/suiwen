@@ -1,11 +1,12 @@
 .reply{
   .content{
-    width: 62.5%;
+    width: 75%;
     margin: auto;
     .title{
       font-size: 24px;
       color: #666;
       padding: 10px 10px 20px;
+      margin-bottom: 20px;
     }
     .replyCount{
       color: #999;
@@ -22,6 +23,29 @@
 
     .draft{
       margin: 20px 0;
+      font-size: 14px;
     }
+
+    .wrapper {
+      box-shadow: #a5a5a5 0 0 2px 0;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #fff;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+    .fontStyle {
+      color: #333;
+      letter-spacing: 2px;
+      line-height: 27.2px;
+      text-indent: 2em;
+      p{
+        margin: 0;
+      }
+    }
+   
+  }
+  :global(.bf-container .public-DraftEditorPlaceholder-root){
+    font-size: 13px;
   }
 }

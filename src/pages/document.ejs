@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>知网随问</title>
+  <link rel="icon" type="image/x-icon" href="<%= context.publicPath %>favicon.ico" />
+  <script>
+   try {
+        window.FlushLogin();
+      } catch (e) {
+
+      }
+    window.RemoveCookie = window.Ecp_ReomveCookie;
+    function LoginSucess(data) {
+      window.localStorage.setItem('userInfo',JSON.stringify(data))
+      if(data.UserType === 'bk'){
+        window.location.reload()
+
+      }
+
+    }
+    function Ecp_LogoutOptr(data) { 
+      
+  }
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>

@@ -10,12 +10,12 @@ import DynamicArrow from './DynamicArrow';
 import SameNames from './SameNames';
 import PeopleInfo from './PeopleInfo';
 import SortTag from './SortTag';
+import uniqBy from 'lodash/uniqBy';
 
 const { Search } = Input;
 export default function Literature(props) {
   const { literatureData, dispatch, loading } = props;
   const [works, people = null, sameNames = null] = literatureData;
-
   //嵌套解构
   let {
     dataNode: {
@@ -39,8 +39,12 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
-  const subjectValid = subject ? subject.filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
-  const [sortKey, setSortKey] = useState(orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]);
+  const relevant = orderBy.indexOf('relevant');
+  const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
+  const [sortKey, setSortKey] = useState(
+    relevant > 0 ? 'relevant' : orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]
+  );
+
   const [count, setCount] = useState(0);
   const { good, bad, isevalute } = evaluate;
   const { pageStart, pageCount, total } = pagination;
@@ -49,7 +53,7 @@ export default function Literature(props) {
   const [yearInfo, setYearInfo] = useState({
     index: 0, //年份信息的初始状态
     yearSql: '',
-    year: year ? year.slice(0, 12) : []
+    year: year ? year.slice(0, 10) : []
   });
 
   const [subjectInfo, setSubjectInfo] = useState({
@@ -63,8 +67,8 @@ export default function Literature(props) {
   }, []);
 
   useEffect(() => {
-    setSearchValue(searchword || keyword ||  '')
-  },[keyword, searchword])
+    setSearchValue(searchword || keyword || '');
+  }, [keyword, searchword]);
 
   useUpdateEffect(() => {
     const sortMap = {
@@ -107,7 +111,7 @@ export default function Literature(props) {
     if (year.length) {
       setYearInfo({
         ...yearInfo,
-        year: yearInfo.index > 12 ? year : year.slice(0, 12) //当索引大于初始值是，去所有
+        year: yearInfo.index > 10 ? year : year.slice(0, 10) //当索引大于初始值是，去所有
       });
     }
 
@@ -357,6 +361,7 @@ export default function Literature(props) {
       ) : null}
       <List
         loading={loading}
+        size="small"
         header={
           <div style={{ overflow: 'hidden' }}>
             <div style={{ float: 'left' }}>
@@ -364,7 +369,7 @@ export default function Literature(props) {
                 <PeopleInfo data={people.dataNode.data[0]} />
               ) : (
                 <Search
-                  placeholder=""
+                  placeholder="请输入关键字"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   onSearch={(value) => handleSearch(value)}
@@ -439,13 +444,13 @@ export default function Literature(props) {
                     </Tag>
                   );
                 })}
-                {year && year.length > 12 ? (
+                {year && year.length > 10 ? (
                   <DynamicArrow
                     currentLength={yearInfo.year.length}
                     basicsLength={year.length}
                     index={yearInfo.index}
                     onClick={showOrHide}
-                    size={12}
+                    size={10}
                     type="year"
                   />
                 ) : null}
@@ -464,7 +469,7 @@ export default function Literature(props) {
                           ? { ...tagStyle, ...activeTag }
                           : { ...tagStyle }
                       }
-                      key={item.g}
+                      key={item.g + index}
                     >
                       {item.g}
                     </Tag>
@@ -523,22 +528,23 @@ export default function Literature(props) {
         dataSource={data}
         renderItem={(item) => {
           const author = intent.results[0].fields['作者'];
-          item.作者名称 =
-            item.作者名称 &&
-            item.作者名称
-              .split(';')
-              .filter((item) => item)
-              .map((item, index) => {
-                if (author === item) {
-                  return `###${item}$$$`;
-                }
-                return item;
-              })
-              .join(';');
+          const name = item.作者名称
+            ? item.作者名称
+                .replace(/\$\$\$/g, '')
+                .replace(/###/, '')
+                .replace(new RegExp(author), '###$&$$$$$$')
+            : '-';
+
+          const realAuthor = item.作者 ? (/\d+/g.test(item.作者) ? name : item.作者) : '-';
+          const randomKey =
+            fieldWord === '题名' || fieldWord === '主题' || fieldWord === '作者'
+              ? item['来源数据库']
+              :  item[fieldWord];
+
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
               <a
-                style={Object.assign({}, spanStyle, { width: '45%' })}
+                style={Object.assign({}, spanStyle, { width: '38%' })}
                 dangerouslySetInnerHTML={{
                   __html: RestTools.translateToRed(item.题名 || '-')
                 }}
@@ -549,23 +555,35 @@ export default function Literature(props) {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <div style={{ width: '20%' }}>
-                下载/被引：
-                {item.被引频次 ? `${item.下载频次 || '-'}/${item.被引频次}` : `${item.下载频次}/-`}
+              <div style={{ width: '15%', textAlign: 'center' }}>
+                <div>下载/被引</div>
+                <div>
+                  {item.被引频次
+                    ? `${item.下载频次 || '-'}/${item.被引频次}`
+                    : `${item.下载频次}/-`}
+                </div>
               </div>
-              <div style={{ width: '5%' }}>{item.来源数据库}</div>
+              {randomKey ? (
+                <div
+                  title={RestTools.removeFlag(randomKey)}
+                  style={{
+                    width: '15%',
+                    textAlign: 'center',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(randomKey) }}
+                />
+              ) : null}
               <div style={{ width: '15%', textAlign: 'center' }}>
                 {item.出版日期 ? dayjs(item.出版日期).format('YYYY-MM-DD') : '-'}
               </div>
               <div
-                title={RestTools.removeFlag(
-                  (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
-                )}
-                style={{ ...spanStyle, width: '15%' }}
+                title={RestTools.removeFlag(realAuthor.substring(0, realAuthor.length) || '-')}
+                style={{ ...spanStyle, width: '17%' }}
                 dangerouslySetInnerHTML={{
-                  __html: RestTools.translateToRed(
-                    (/\d+/g.test(item.作者) ? item.作者名称 : item.作者) || '-'
-                  )
+                  __html: RestTools.translateToRed(realAuthor)
                 }}
               />
             </List.Item>

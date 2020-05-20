@@ -14,7 +14,7 @@ function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
-  const {dispatch} = props;
+  const { dispatch } = props;
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
@@ -31,11 +31,11 @@ function HomeLayout(props) {
   function logout() {
     // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
     // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
-		// Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
-		// Cookies.remove("Ecp_session", { expires: -1 });
+    // Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
+    // Cookies.remove("Ecp_session", { expires: -1 });
     // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     window.Ecp_LogoutOptr_my(0);
-    
+
     localStorage.setItem('userInfo', null);
     setUsername(null);
   }
@@ -46,14 +46,17 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-        <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20,textDecoration:"underline"}}>回到旧版</a>
-
-          您好!  {username || '游客'}
+          {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
+            回到旧版
+          </a> */}
+          您好! {RestTools.formatPhoneNumber(username) || '游客'}
           {username ? null : (
             <a
               className={styles.login_btn}
               // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${process.env.returnUrl}`}
+              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
+                window.location.href
+              )}`}
             >
               登录
             </a>
@@ -61,7 +64,9 @@ function HomeLayout(props) {
           {username ? null : (
             <a
               className={styles.register_btn}
-              href="http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=http://qa.cnki.net/sw.web"
+              href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
+                window.location.href
+              )}`}
             >
               注册
             </a>
@@ -133,7 +138,7 @@ function HomeLayout(props) {
       </Footer>
 
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
-      <Affix offsetBottom={10} style={{ position: 'absolute', right: 10,}}>
+      <Affix offsetBottom={50} style={{ position: 'absolute', right: 10 }}>
         <Button
           type="primary"
           onClick={() => {

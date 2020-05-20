@@ -8,13 +8,17 @@ function Journal(props) {
   return (
     <div className={styles.Journal}>
       {data.length
-        ? data.map((item) => {
-          // const size = item.核心期刊版次 ? 'mid': 'small'
+        ? data.map((item, index) => {
+            const size = item.核心期刊版次 ? 'mid' : 'mid';
             return (
-              <div key={item.ID} className={styles.Journal_wrapper}>
+              <div
+                key={item.ID}
+                className={styles.Journal_wrapper}
+                style={{ borderBottom: index === data.length - 1 ? 'none' : '1px dashed #ccc' }}
+              >
                 <div className={styles.Journal_left}>
                   <img
-                    src={`http://c61.cnki.net/CJFD/${'big'}/${RestTools.removeFlag(
+                    src={`http://c61.cnki.net/CJFD/${size}/${RestTools.removeFlag(
                       item.拼音刊名
                     )}.jpg`}
                     alt={RestTools.removeFlag(item.拼音刊名)}
@@ -23,7 +27,7 @@ function Journal(props) {
                 <div className={styles.Journal_right}>
                   {item.核心期刊版次 ? (
                     <div>
-                      <h3 style={{ color: 'red',fontWeight: 'bold' }}>核心期刊</h3>
+                      <h3 style={{ color: 'red', fontWeight: 'bold' }}>核心期刊</h3>
                       <div>
                         收录版次：
                         {item.核心期刊版次
@@ -32,6 +36,8 @@ function Journal(props) {
                           .join(';')}
                       </div>
                     </div>
+                  ) : item.核心期刊 === '0' ? (
+                    <h3 style={{ color: 'red', fontWeight: 'bold' }}>非核心期刊</h3>
                   ) : null}
                   <a
                     className={styles.Journal_right_item}
@@ -49,7 +55,11 @@ function Journal(props) {
                   </a>
                   <div className={styles.Journal_right_item}>
                     <label htmlFor="">主办单位：</label>
-                    <span>{item.主办单位名称 || '-'}</span>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.主办单位名称 || '-')
+                      }}
+                    />
                   </div>
                   <div className={styles.Journal_right_item}>
                     <label htmlFor="">ISSN：</label>
@@ -77,25 +87,22 @@ function Journal(props) {
                       <span>{item.期刊网址 || '-'}</span>
                     </div>
                   ) : null}
-                  <div>
-                    {item.收录来源 ? (
-                      <div className={styles.Journal_right_item}>
-                        <div style={{ color: 'red', fontWeight: 'bold' }}>
-                          该刊被以下数据库录取：
-                        </div>
-                        <div>
-                          <span>{item.收录来源}</span>
-                        </div>
-                      </div>
-                    ) : null}
 
-                    {item.核心期刊版次 ? (
-                      <div  style={{ color: '#999', fontSize: 12 }}>
-                        注:按照惯例，北大核心期刊每四年由北大图书馆评定一次，并出版
-                        《北大核心期刊目录要览》一书.当前最新版次2014年版。
+                  {item.收录来源 ? (
+                    <div className={styles.Journal_right_item}>
+                      <div style={{ color: 'red', fontWeight: 'bold' }}>该刊被以下数据库录取：</div>
+                      <div>
+                        <span>{item.收录来源}</span>
                       </div>
-                    ) : null}
-                  </div>
+                    </div>
+                  ) : null}
+
+                  {item.核心期刊版次 ? (
+                    <div style={{ color: '#999', fontSize: 12 }}>
+                      注:按照惯例，北大核心期刊每四年由北大图书馆评定一次，并出版
+                      《北大核心期刊目录要览》一书.当前最新版次2014年版。
+                    </div>
+                  ) : null}
                 </div>
               </div>
             );
@@ -103,7 +110,13 @@ function Journal(props) {
         : null}
 
       <a
-        style={{ display: 'block', textAlign: 'right', color: '#999', fontSize: 14 }}
+        style={{
+          display: 'block',
+          textAlign: 'right',
+          color: '#999',
+          fontSize: 14,
+          paddingTop: 10
+        }}
         href="http://navi.cnki.net/KNavi/All.html"
         target="_blank"
         rel="noopener noreferrer"

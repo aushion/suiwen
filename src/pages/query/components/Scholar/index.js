@@ -62,13 +62,13 @@ export default function Scholar(props) {
                   <span style={{ padding: '4px 10px', overflow: 'hidden', color: '#666' }}>
                     {item.出版日期.substr(0, 10)}
                   </span>
-                  <span style={{ padding: '4px 20px', color: '#666' }}>{item.作者}</span>
+                  {/* <span style={{ padding: '4px 20px', color: '#666' }}>{item.作者}</span> */}
                   <span
                     style={{
                       padding: '4px 0',
                       color: '#666',
                       textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
+                      whiteSpace: 'nowrap'
                     }}
                   >
                     {item.来源}
@@ -77,7 +77,7 @@ export default function Scholar(props) {
               ))
             : null;
           return (
-            <List.Item a>
+            <List.Item>
               <div className={styles.Scholar_pic}>
                 <img style={{ verticalAlign: 'text-top' }} src={face} alt={item.学者名} />
               </div>
@@ -99,42 +99,48 @@ export default function Scholar(props) {
                     }}
                   />
                 </div>
+                {item.研究领域 && (
+                  <div className={styles.Scholar_info_item}>
+                    <label>研究领域：</label>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.研究领域 || '-')
+                      }}
+                    />
+                  </div>
+                )}
+                {item.研究方向 && (
+                  <div className={styles.Scholar_info_item}>
+                    <label>研究方向：</label>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.研究方向 || '-')
+                      }}
+                    />
+                  </div>
+                )}
 
-                <div className={styles.Scholar_info_item}>
-                  <label>研究领域：</label>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: RestTools.translateToRed(item.研究领域 || '-')
-                    }}
-                  />
-                </div>
+                {item.学者职称 && (
+                  <div className={styles.Scholar_info_item}>
+                    <label>学者职称：</label>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.学者职称 || '-')
+                      }}
+                    />
+                  </div>
+                )}
 
-                <div className={styles.Scholar_info_item}>
-                  <label>研究方向：</label>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: RestTools.translateToRed(item.研究方向 || '-')
-                    }}
-                  />
-                </div>
-
-                <div className={styles.Scholar_info_item}>
-                  <label>学者职称：</label>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: RestTools.translateToRed(item.学者职称 || '-')
-                    }}
-                  />
-                </div>
-
-                <div className={styles.Scholar_info_item}>
-                  <label>成果数：</label>
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: RestTools.translateToRed(item.文献篇数 || '-')
-                    }}
-                  />
-                </div>
+                {item.文献篇数 && (
+                  <div className={styles.Scholar_info_item}>
+                    <label>成果数：</label>
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.文献篇数 || '-')
+                      }}
+                    />
+                  </div>
+                )}
 
                 <div className={styles.Scholar_info_item}>
                   <label>下载数/被引数：</label>

@@ -1,29 +1,38 @@
-.Journal{
+.Journal {
   box-shadow: #a5a5a5 0 0 10.8px 0;
   margin-bottom: 20px;
   padding: 20px;
   background: #fff;
-  .Journal_wrapper{
+  .Journal_wrapper {
     overflow: hidden;
     padding: 10px 0;
     border-bottom: 1px dashed #ccc;
     color: #333;
-    .Journal_left{
+
+    .Journal_left {
       float: left;
       margin-right: 20px;
       overflow: hidden;
-      img{
-        width: 180px;
+      img {
+        // width: 180px;
+        height: 240px;
         height: auto;
       }
     }
     .Journal_right {
+      min-height: 240px;
       overflow: hidden;
-      .Journal_right_item{
-        // height: 24px;
+      display: -ms-flexbox;
+      display: flex;
+      flex-direction: column;
+      -ms-flex-direction: column;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+      .Journal_right_item {
         line-height: 24px;
       }
     }
   }
-
 }

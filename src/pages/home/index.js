@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Spin, List, Row, Col, Tabs, Divider, message, Icon, Carousel } from 'antd';
+import React, { useState,  } from 'react';
+import { Spin, List,  Tabs, Divider, message, Icon, Carousel } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -38,6 +38,7 @@ function Home(props) {
   //   skillSlider.slickGoTo(activeTag, true);
   //   return () => {};
   // }, [activeTag]);
+  
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -57,12 +58,12 @@ function Home(props) {
     );
   };
 
-  const specialActiveStyle = {
-    backgroundColor: '#29A7F3',
-    padding: '8px 14px',
-    color: '#fff',
-    borderRadius: 4
-  };
+  // const specialActiveStyle = {
+  //   backgroundColor: '#29A7F3',
+  //   padding: '8px 14px',
+  //   color: '#fff',
+  //   borderRadius: 4
+  // };
 
   const tagSettings = {
     infinite: false,
@@ -199,7 +200,7 @@ function Home(props) {
               <Carousel dotPosition="bottom" autoplay={skillPicture.length > 1} dots>
                 {skillPicture.map((item) => (
                   <div style={{ width: 400 }} key={item}>
-                    <img style={{ width: '100%', height: 320, borderRadius: 10 }} src={item} />
+                    <img style={{ width: '100%', height: 320, borderRadius: 10 }} src={item} alt={item} />
                   </div>
                 ))}
               </Carousel>
@@ -311,7 +312,7 @@ function Home(props) {
                             <span style={{ display: 'inline-block', overflow: 'hidden' }}>
                               回答数:{item.CheckSum}
                             </span>
-                            <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                            {/* <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`}
@@ -319,7 +320,7 @@ function Home(props) {
                               我来回答
                             </Link>
 
-                            <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                            <Divider type="vertical" style={{ top: '-5px' }}></Divider> */}
                             <span style={{ float: 'right' }}>{item.Time}</span>
                           </div>
                         </List.Item>
@@ -351,9 +352,9 @@ function Home(props) {
 function mapStateToProps(state) {
   // const { newHelpList } = state.home;
   return {
-    ...state.home,
+    ...state.index,
     ...state.global,
-    loading: state.loading.models.home
+    loading: state.loading.models.index
   };
 }
 

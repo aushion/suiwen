@@ -16,7 +16,8 @@ function Patent(props) {
           title="专利名"
           dataIndex="TITLE"
           key="TITLE"
-          width={300}
+          width={250}
+          ellipsis
           render={(text, item) => (
             <a
               className={styles.title}
@@ -32,11 +33,12 @@ function Patent(props) {
           title="发明机构"
           dataIndex="发明机构"
           key="发明机构"
-          width={250}
+          width={200}
+          ellipsis
           render={(text, record) => <span>{record.发明机构 ? record.发明机构 : '-'}</span>}
         />
-        <Column title="发表时间" dataIndex="发表时间" key="发表时间" width={100} />
-        <Column title="发明人" dataIndex="发明人" key="发明人" />
+        <Column title="发表时间" dataIndex="发表时间" key="发表时间" width={100} ellipsis />
+        <Column title="发明人" dataIndex="发明人" key="发明人" ellipsis style={{overflow: 'hidden'}} />
       </Table>
 
       <div>

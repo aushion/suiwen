@@ -1,14 +1,15 @@
 import helpServer from '../../services/help';
 import qaServer from '../../services/qa';
 import RestTools from '../../utils/RestTools';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 import { message } from 'antd';
 import router from 'umi/router';
+import {getSG} from '../query/service/result'
 
 message.config({
   top: 500,
   duration: 2,
-  maxCount: 3,
+  maxCount: 3
 });
 export default {
   namespace: 'reply',
@@ -16,8 +17,11 @@ export default {
     answerList: [],
     total: 0,
     domains: [],
-    username: RestTools.getLocalStorage('userInfo')? RestTools.getLocalStorage('userInfo').UserName: '',
-    uid: RestTools.getLocalStorage('userInfo')? RestTools.getLocalStorage('userInfo').UserName : '',
+    sgData: [],
+    username: RestTools.getLocalStorage('userInfo')
+      ? RestTools.getLocalStorage('userInfo').UserName
+      : '',
+    uid: RestTools.getLocalStorage('userInfo') ? RestTools.getLocalStorage('userInfo').UserName : ''
   },
 
   effects: {
@@ -26,7 +30,7 @@ export default {
 
       yield put({
         type: 'saveAnswers',
-        payload: { answerList: res.data.data.list, total: res.data.data.total },
+        payload: { answerList: res.data.data.list, total: res.data.data.total }
       });
     },
     *getUserFAQ({ payload }, { call, put }) {
@@ -35,7 +39,7 @@ export default {
       if (Object.keys(res.data.result).length) {
         yield put({
           type: 'saveAnswers',
-          payload: { answerList: res.data.result.metaList, total: res.data.result.metaList.length },
+          payload: { answerList: res.data.result.metaList, total: res.data.result.metaList.length }
         });
       }
     },
@@ -47,14 +51,7 @@ export default {
       } else {
         message.warning(res.data.message);
       }
-      //获取答案
-      // const params = querystring.parse(window.location.search.replace('?', ''));
-      // const uid = Cookies.get('userInfo') ? JSON.parse(Cookies.get('userInfo')).user_name : '';
-      // const result = yield call(helpServer.getAnwser, { ...params, uid: uid });
-      // yield put({
-      //   type: 'saveAnswers',
-      //   payload: { answerList: result.data.list, total: result.data.total },
-      // });
+      
     },
     *getDomains({ payload }, { call, put }) {
       const res = yield call(qaServer.getDomains, payload);
@@ -70,14 +67,27 @@ export default {
       } else {
         message.warning(res.data.message);
       }
-      // const params = querystring.parse(window.location.search.replace('?', ''));
-      // const uid = Cookies.get('userInfo') ? JSON.parse(Cookies.get('userInfo')).user_name : '';
-      // const result = yield call(helpServer.getAnwser, { ...params, uid: uid });
+     
+    },
 
-      // yield put({
-      //   type: 'saveAnswers',
-      //   payload: { answerList: result.data.list, total: result.data.total },
-      // });
+    *getSG({ payload }, { call, put }) {
+    
+      const res = yield call(getSG, payload);
+      const { data } = res;
+      yield put({
+        type: 'saveAnswers',
+        payload: {
+          sgData: []
+        }
+      })
+      if (data.result) {
+        yield put({
+          type: 'saveAnswers',
+          payload: {
+            sgData: data.metaList
+          }
+        });
+      }
     },
   },
   subscriptions: {
@@ -85,26 +95,38 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/reply') {
           const params = query;
-          const uid = RestTools.getLocalStorage('userInfo') ? RestTools.getLocalStorage('userInfo').UserName : '';
-          const { QID } = params;
+          const uid = RestTools.getLocalStorage('userInfo')
+            ? RestTools.getLocalStorage('userInfo').UserName
+            : '';
+            const userId = RestTools.getLocalStorage('userInfo')
+          ? RestTools.getLocalStorage('userInfo').UserName
+          : Cookies.get('cnki_qa_uuid');
+          const { QID, q } = params;
 
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
           } else {
             dispatch({ type: 'getUserFAQ', payload: params });
           }
-          // dispatch({ type: 'getDomains' });
-
+          dispatch({
+            type: 'getSG',
+            payload: {
+              q: encodeURIComponent(q),
+              pageStart: 1,
+              pageCount: 10,
+              userId
+            }
+          });
         }
       });
-    },
+    }
   },
   reducers: {
     saveAnswers(state, { payload }) {
       return {
         ...state,
-        ...payload,
+        ...payload
       };
-    },
-  },
+    }
+  }
 };

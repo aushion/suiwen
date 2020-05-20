@@ -3,7 +3,7 @@ import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 function ReferenceBook(props) {
-  const { data, id, evaluate, title, domain, intentFocus, } = props;
+  const { data, id, evaluate, title, domain, intentFocus, intentDomain } = props;
   const { good, bad, isevalute } = evaluate;
 
   function handleAnswer(str, code) {
@@ -35,9 +35,10 @@ function ReferenceBook(props) {
             ? `谜底：${handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
             : handleAnswer(item.Answer || item.介绍 || '-', item.条目编码);
         const title =
-         intentFocus === '谜语'
+          intentFocus === '谜语'
             ? `谜面: ${item.TITLE || item.Title || '-'}`
-            : `${item.TITLE || item.Title || '-'} ${item.条目拼音|| ''}`;
+            : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
+
 
         return (
           <div key={item.工具书编号 + index}>
@@ -51,7 +52,7 @@ function ReferenceBook(props) {
               key={item.工具书编号 + index}
               className={styles.ReferenceBook_answer}
               dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer))
+                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer, intentDomain))
               }}
             />
             <div className={styles.ReferenceBook_extra}>
@@ -63,7 +64,7 @@ function ReferenceBook(props) {
                   item.工具书编号
                 )}.html`}
                 dangerouslySetInnerHTML={{
-                  __html: `《${RestTools.removeFlag(item.工具书名称 || item.Title)}》`
+                  __html: `《${RestTools.removeFlag(item.工具书名称 || item.Title || item.TITLE)}》`
                 }}
               />
             </div>

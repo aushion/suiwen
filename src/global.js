@@ -7,6 +7,7 @@ if (!Cookies.get('cnki_qa_uuid')) {
     expires: 3650
   });
 }
+
 if (Cookies.get('Ecp_LoginStuts')) {
   window.localStorage.setItem('userInfo', Cookies.get('Ecp_LoginStuts'));
 } else {
@@ -14,10 +15,6 @@ if (Cookies.get('Ecp_LoginStuts')) {
     window.localStorage.setItem('userInfo', null);
   }
 }
-
-
-
-
 
 if (/Android|Windows Phone|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   window.location.href = 'http://qa.cnki.net/sw.mobile';

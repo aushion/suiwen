@@ -68,7 +68,7 @@ export default function Medical(props) {
           className={styles.title}
           target="_blank"
           rel="noopener noreferrer"
-          href={`http://qa.cnki.net/web/query/link?id=${tableId}&db=${data[0].table}`}
+          href={`http://qa.cnki.net/old/query/link?id=${tableId}&db=${data[0].table}`}
         >
           {intentJson.parsed_key + '_医药知识库'}
         </a>

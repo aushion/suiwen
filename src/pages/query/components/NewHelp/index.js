@@ -18,37 +18,41 @@ function NewHelp(props) {
             <div
               style={{
                 width: '100%',
-                fontSize: 12
+                fontSize: 12,
+                overflow: 'hidden'
               }}
-              onClick={() => {RestTools.setSession('q', item.Content)}}
+              onClick={() => {
+                RestTools.setSession('q', item.Content);
+              }}
             >
               <Link
-                title={item.Content}
                 style={{
-                  display: 'inline-block',
-                  width: '50%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  marginRight: 10,
                   fontSize: 14,
-                  color: '#848484'
+                  color: '#848484',
+                  display: 'block'
                 }}
-                to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`}
+                title={item.Content}
+                to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${
+                  item.Domain
+                }`}
               >
                 {item.Content}
               </Link>
-              <span
+
+              <div
                 style={{
-                  display: 'inline-block',
                   float: 'right',
                   color: '#999',
                   fontSize: 12,
+                  width: 60,
                   lineHeight: '25px'
                 }}
               >
                 回答数：{item.CheckSum}
-              </span>
+              </div>
             </div>
           </List.Item>
         )}
