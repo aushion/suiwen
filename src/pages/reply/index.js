@@ -288,7 +288,7 @@ function Reply(props) {
                     </Link>
                     <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
                     <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
-                    {RestTools.getLocalStorage('userInfo').ShowName === username &&
+                    {RestTools.getLocalStorage('userInfo') && RestTools.getLocalStorage('userInfo').ShowName === username &&
                     item.Status === 0 ? (
                       <span
                         style={{ paddingLeft: 10 }}

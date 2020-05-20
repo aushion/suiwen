@@ -278,7 +278,7 @@ export default {
       ? /^1[3-9]\d{9}$/.test(str)
         ? str.substring(0, 3) + '****' + str.substring(7, 11)
         : str
-      : '-';
+      : '';
   },
   status: {
     '0':   <Tag color="#2db7f5">未审核</Tag>,
