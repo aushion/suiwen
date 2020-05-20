@@ -46,9 +46,9 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-          <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
+          {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
             回到旧版
-          </a>
+          </a> */}
           您好! {RestTools.formatPhoneNumber(username) || '游客'}
           {username ? null : (
             <a
