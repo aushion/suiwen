@@ -36,7 +36,7 @@ function Reply(props) {
   const { q } = params;
   const controls = ['font-size', 'bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
-
+  const [editStatus, setEditorStatus] = useState(null);
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
 
@@ -88,6 +88,31 @@ function Reply(props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (editStatus) {
+      // console.log(editStatus.resource.split(/<\/p><p>/g))
+      //创建临时数组，以渲染索引
+      let tempArray = editStatus.resource.split(/<\/p><p>/g).map((item, index) => ({
+        resourceStr: item.replace(/<p>/g, '').replace(/<\/p>/g, ''),
+        index: index + 1,
+        source_id: index
+      }));
+
+      quoteArray = tempArray;
+      setFieldsValue({
+        contents: BraftEditor.createEditorState(editStatus.Content),
+        resource: BraftEditor.createEditorState(editStatus.resource)
+      });
+    } else {
+      quoteArray = [];
+      setFieldsValue({
+        contents: BraftEditor.createEditorState(null),
+        resource: BraftEditor.createEditorState(null)
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editStatus]);
+
   function addQuoteIndex(text, resourceInfo) {
     const { year, qikanName, title, source_id, author } = resourceInfo;
     const len = quoteArray.length;
@@ -118,7 +143,6 @@ function Reply(props) {
     const resourceArray = [...new Set(quoteArrayList.map((item) => item.resourceStr))];
     //重新定义引文内容字符串，引用文献字符串，并处理格式
     let str = getFieldValue('contents') ? getFieldValue('contents').toHTML() : '';
-    console.log(str);
     let newText = (str += `${text}[${resourceArray.length}]`);
     let newResourceStr = '';
 
@@ -193,22 +217,24 @@ function Reply(props) {
           // domain: values.domain,
         };
         const QID = props.QID || params.QID;
-        const payload = QID
-          ? {
-              qid: QID,
-              answer: submitData.contents,
-              resource: submitData.resource,
-              username: props.username,
-              uid: props.uid,
-              isedit: false
-            }
-          : {
-              question: params.question,
-              answer: submitData.contents,
-              resource: submitData.resource,
-              username: props.username,
-              uid: props.uid
-            };
+        let payload = {
+          answer: submitData.contents,
+          resource: submitData.resource,
+          username: props.username,
+          uid: props.uid
+        };
+        if (QID) {
+          if (!!editStatus) {
+            //编辑态的传参
+            payload = { ...payload, qid: QID, isedit: true, aid: editStatus.answerid };
+          } else {
+            //编辑完成的传参
+            payload = { ...payload, qid: QID, isedit: false };
+          }
+        } else {
+          payload = { ...payload, question: params.question };
+        }
+
         if (QID) {
           props.dispatch({ type: 'reply/setAnswer', payload });
         } else {
@@ -219,6 +245,7 @@ function Reply(props) {
       }
     });
   }
+
   return (
     <div className={replyStyle.reply}>
       <div>
@@ -246,6 +273,7 @@ function Reply(props) {
                     className={replyStyle.itemTitle}
                     dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                   />
+                  <div>引用文献：</div>
                   {item.resource ? (
                     <div dangerouslySetInnerHTML={{ __html: item.resource }} />
                   ) : null}
@@ -260,6 +288,15 @@ function Reply(props) {
                     </Link>
                     <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
                     <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
+                    {RestTools.getLocalStorage('userInfo').ShowName === username &&
+                    item.Status === 0 ? (
+                      <span
+                        style={{ paddingLeft: 10 }}
+                        onClick={() => setEditorStatus(editStatus ? null : item)}
+                      >
+                        <a>{editStatus ? '取消编辑' : '编辑答案'}</a>
+                      </span>
+                    ) : null}
                   </div>
                 </div>
               );
@@ -288,6 +325,7 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 300 }}
                       contentStyle={{ height: 240, fontSize: 14 }}
                       controls={controls}
+                      readOnly
                       placeholder={`   
                       标准格式更容易被采纳 
                       文献内容                                                  
@@ -320,6 +358,7 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 240 }}
                       contentStyle={{ height: 200, fontSize: 14 }}
                       controls={['link']}
+                      readOnly
                       placeholder={`    
                       引用文献示例
                       1.篇名  作者 机构 年份
@@ -327,17 +366,17 @@ function Reply(props) {
                     />
                   )}
                 </FormItem>
-                <FormItem>
+                {/* <FormItem style={{float: 'right'}}>
                   <Button
                     loading={props.loading}
-                    size="large"
+                    // size="large"
                     type="primary"
                     htmlType="submit"
                     onClick={submitContent}
                   >
-                    提交
+                    {editStatus ? '提交修改' : '提交回答'}
                   </Button>
-                </FormItem>
+                </FormItem> */}
               </Form>
             </div>
           </Col>
@@ -359,7 +398,10 @@ function Reply(props) {
               placeholder={q}
             />
             <Spin spinning={loading}>
-              <div id="sg">
+              <div
+                id="sg"
+                style={{ padding: '2px 2px', height: 'calc(100vh)', overflowY: 'scroll' }}
+              >
                 {keys.map((item) => {
                   const year =
                     (groupByData[item][0].Data.additional_info &&
@@ -391,7 +433,7 @@ function Reply(props) {
                           <div
                             style={{
                               float: 'right',
-                              fontSize: 13,
+                              fontSize: 11,
                               color: '#999',
                               overflow: 'hidden'
                             }}

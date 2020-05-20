@@ -536,7 +536,10 @@ export default function Literature(props) {
             : '-';
 
           const realAuthor = item.作者 ? (/\d+/g.test(item.作者) ? name : item.作者) : '-';
-          const randomKey = fieldWord === '题名' ? item['来源数据库'] : item[fieldWord];
+          const randomKey =
+            fieldWord === '题名' || fieldWord === '主题' || fieldWord === '作者'
+              ? item['来源数据库']
+              :  item[fieldWord];
 
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>

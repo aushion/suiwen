@@ -312,7 +312,7 @@ function Home(props) {
                             <span style={{ display: 'inline-block', overflow: 'hidden' }}>
                               回答数:{item.CheckSum}
                             </span>
-                            <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                            {/* <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`}
@@ -320,7 +320,7 @@ function Home(props) {
                               我来回答
                             </Link>
 
-                            <Divider type="vertical" style={{ top: '-5px' }}></Divider>
+                            <Divider type="vertical" style={{ top: '-5px' }}></Divider> */}
                             <span style={{ float: 'right' }}>{item.Time}</span>
                           </div>
                         </List.Item>

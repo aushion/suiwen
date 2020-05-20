@@ -2,6 +2,7 @@ import { List, Icon } from 'antd';
 import Link from 'umi/link';
 import RestTools from '../../../utils/RestTools';
 
+
 function RelatedLiteraure(props) {
   const { data, q, title, focus, extra, topic } = props;
   function outLink(type, filename, source) {
@@ -23,10 +24,20 @@ function RelatedLiteraure(props) {
       )}&korder=0&sel=1`;
     }
   }
+
+  const iconType = {
+    '相关文献': 'read',
+    '相关问题': 'question-circle',
+    '相关专利': 'file-protect'
+    
+  }
   return (
     <div>
       <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
-        <Icon type="read" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
+        <Icon
+          type={iconType[title]}
+          style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }}
+        />
         {title}
       </div>
       <List
