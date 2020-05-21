@@ -213,7 +213,7 @@ function ResultPage(props) {
           <div className={styles.result_tips}>
             {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
 
-            {/* <span
+            <span
               style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}
               onClick={showModal}
             >
@@ -221,7 +221,7 @@ function ResultPage(props) {
             </span>
             <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
               我来回答
-            </span> */}
+            </span>
           </div>
 
           {answerData.length || sgData.length || communityAnswer ? (

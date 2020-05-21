@@ -51,7 +51,7 @@ export default {
       } else {
         message.warning(res.data.message);
       }
-      
+
     },
     *getDomains({ payload }, { call, put }) {
       const res = yield call(qaServer.getDomains, payload);
@@ -67,11 +67,11 @@ export default {
       } else {
         message.warning(res.data.message);
       }
-     
+
     },
 
     *getSG({ payload }, { call, put }) {
-    
+
       const res = yield call(getSG, payload);
       const { data } = res;
       yield put({
@@ -95,6 +95,12 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/reply') {
           const params = query;
+          dispatch({
+            type: 'saveAnswers',
+            payload: {
+              sgData: []
+            }
+          })
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : '';

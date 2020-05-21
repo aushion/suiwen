@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List } from 'antd';
+import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List, Empty } from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
 import groupBy from 'lodash/groupBy';
@@ -86,7 +86,7 @@ function Reply(props) {
       resetFields(); //重置表单值
       quoteArray = []; //重置缓存数组
     };
-  }, []);
+  }, [resetFields]);
 
   useEffect(() => {
     if (editStatus) {
@@ -325,10 +325,9 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 300 }}
                       contentStyle={{ height: 240, fontSize: 14 }}
                       controls={controls}
-                      readOnly
-                      placeholder={`   
-                      标准格式更容易被采纳 
-                      文献内容                                                  
+                      placeholder={`
+                      标准格式更容易被采纳
+                      文献内容
                          XXXXXXXXXXXXX
                       XXXXXXXXXXXXX[1]
                         XXXXXXXXXXXXXX
@@ -358,25 +357,24 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 240 }}
                       contentStyle={{ height: 200, fontSize: 14 }}
                       controls={['link']}
-                      readOnly
-                      placeholder={`    
+                      placeholder={`
                       引用文献示例
                       1.篇名  作者 机构 年份
                       2.篇名  作者 机构 年份`}
                     />
                   )}
                 </FormItem>
-                {/* <FormItem style={{float: 'right'}}>
+                <FormItem style={{float: 'right'}}>
                   <Button
                     loading={props.loading}
-                    // size="large"
+
                     type="primary"
                     htmlType="submit"
                     onClick={submitContent}
                   >
                     {editStatus ? '提交修改' : '提交回答'}
                   </Button>
-                </FormItem> */}
+                </FormItem>
               </Form>
             </div>
           </Col>
@@ -400,9 +398,9 @@ function Reply(props) {
             <Spin spinning={loading}>
               <div
                 id="sg"
-                style={{ padding: '2px 2px', height: 'calc(100vh)', overflowY: 'scroll' }}
+                style={{ padding: '2px 2px', height: keys.length?'80vh':'auto', overflowY: keys.length?'scroll':'auto' }}
               >
-                {keys.map((item) => {
+                {keys.length ? keys.map((item) => {
                   const year =
                     (groupByData[item][0].Data.additional_info &&
                       groupByData[item][0].Data.additional_info.年) ||
@@ -472,7 +470,7 @@ function Reply(props) {
                       />
                     </div>
                   );
-                })}
+                }): <Empty />}
               </div>
             </Spin>
             <div
