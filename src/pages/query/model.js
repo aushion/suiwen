@@ -67,15 +67,14 @@ export default {
           repositoryData: repositoryData,
           source: 'getAnswer'
         });
-
-        yield call(submitQa, {
-          clientType: 'pc',
-          question: decodeURIComponent(q),
-          answerStatus: res.data.code === 200 ? 'yes' : 'no',
-          ip: '192.168.22.13',
-          userid: userId
-        });
       }
+      yield call(submitQa, {
+        clientType: 'pc',
+        question: decodeURIComponent(q),
+        answerStatus: res.data.code === 200 ? 'yes' : 'no',
+        ip: '192.168.22.13',
+        userid: userId
+      });
     },
 
     *getTopicQuestions({ payload }, { call, put }) {
