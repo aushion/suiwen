@@ -144,7 +144,7 @@ function Home(props) {
 
   const specialItem = specialQuestions.map((item, index) => {
     return (
-      <div className={homeStyles.specialWrapper} key={item.name}>
+      <div className={homeStyles.specialWrapper} key={item.name} style={{width: '90% !important'}}>
         <Link
           className={homeStyles.picture}
           to={`/special?topicId=${item.topicId}`}
