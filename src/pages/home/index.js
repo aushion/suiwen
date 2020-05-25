@@ -350,7 +350,6 @@ function Home(props) {
 }
 
 function mapStateToProps(state) {
-  // const { newHelpList } = state.home;
   return {
     ...state.index,
     ...state.global,
