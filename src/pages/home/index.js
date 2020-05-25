@@ -144,7 +144,7 @@ function Home(props) {
 
   const specialItem = specialQuestions.map((item, index) => {
     return (
-      <div className={homeStyles.specialWrapper} key={item.name}>
+      <div className={homeStyles.specialWrapper} key={item.name} style={{width: '90% !important'}}>
         <Link
           className={homeStyles.picture}
           to={`/special?topicId=${item.topicId}`}
@@ -155,7 +155,6 @@ function Home(props) {
 
         <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
           <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
-          {/* <span style={{ color: '#C4C4C4', fontSize: 18 }}>{item.info.enText}</span> */}
         </Link>
         <div className={homeStyles.questions}>
           {item.data.slice(0, 5).map((child) => {
@@ -350,7 +349,6 @@ function Home(props) {
 }
 
 function mapStateToProps(state) {
-  // const { newHelpList } = state.home;
   return {
     ...state.index,
     ...state.global,
