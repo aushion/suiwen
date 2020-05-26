@@ -26,6 +26,7 @@ import Sentence from './components/Sentence';
 import ReferenceBook63 from './components/ReferenceBook63';
 import ReferenceBook69 from './components/ReferenceBook69';
 import Weather from './components/Weather';
+import ReadComp from './components/ReadComp';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -39,6 +40,7 @@ function ResultPage(props) {
   const {
     sgData,
     faqData,
+    semanticData,
     repositoryData,
     q,
     relatedData,
@@ -148,6 +150,7 @@ function ResultPage(props) {
   const resultLength =
     cnkizhishi.length +
     sgData.length +
+    semanticData.length+
     faqData.length +
     referenceBookData.length +
     JournalData.length +
@@ -409,7 +412,9 @@ function ResultPage(props) {
                 ) : null}
                 {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
                 {weather.length ? <Weather weatherData={weather[0]} /> : null}
-                {sgData.length ? <SgList data={sgData} /> : null}
+                {semanticData.length ? <ReadComp data={semanticData} />:null}
+                {sgData.length ? <SgList data={sgData} /> : null}  
+              
               </Col>
               <Col span={5} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
                 {relatedLiterature.length ? (

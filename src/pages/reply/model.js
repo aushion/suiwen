@@ -80,11 +80,11 @@ export default {
           sgData: []
         }
       })
-      if (data.result) {
+      if (data.result && data.result.length) {
         yield put({
           type: 'saveAnswers',
           payload: {
-            sgData: data.metaList
+            sgData: data.result
           }
         });
       }

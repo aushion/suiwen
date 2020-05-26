@@ -1,5 +1,5 @@
 import request from './request';
-import {Tag} from 'antd';
+import { Tag } from 'antd';
 
 export default {
   createUid() {
@@ -116,22 +116,6 @@ export default {
         s: encodeURIComponent(value)
       }
     });
-    // return new Promise(function(reslove, reject) {
-    //   fetch(
-    //     `${process.env.apiUrl}/qa.api/sug?q=${value}`
-    //   )
-    //     .then(function(response) {
-    //       return response.text();
-    //     })
-    //     .then(function(myJson) {
-    //       const tipsData = JSON.parse(myJson.replace(/var oJson = /g, '')).results;
-    //       reslove(tipsData);
-    //     })
-    //     .catch((err) => {
-    //       console.log('err:', err); //网络请求失败返回的数据
-    //       reject(err);
-    //     });
-    // });
   },
   removeTag(str) {
     return str.replace(/<p>/g, '').replace(/<\/p>/g, '');
@@ -154,15 +138,23 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return (
-      str
-        // .replace(/<[^p]/g,' < ')
-        // .replace(/>[^p]/g,' > ')
-        .replace(/###/g, '<span style="color:red">')
-        .replace(/\$\$\$/g, '</span>')
-        .replace(/&nbsp;/g, '')
-    );
+    return str
+      .replace(/###/g, '<span style="color:red">')
+      .replace(/\$\$\$/g, '</span>')
+      .replace(/&nbsp;/g, '');
   },
+
+  superMarkRed(str) {
+    return str
+      .replace(/###/g, '<span style="color:red">')
+      .replace(/\$\$\$/g, '</span>')
+      .replace(/\|\|\|<<</g, '<span style="color:#f00">')
+      .replace(/>>>\|\|\|/g, '</span>')
+      .replace(/\|\|\|___/g, '<span style="color:#f00;font-weight:bold;">')
+      .replace(/---\|\|\|/g, '</span>')
+      .replace(/&nbsp;/g, '');
+  },
+
   headerInfo: {
     YX: {
       title: {
@@ -281,7 +273,7 @@ export default {
       : '';
   },
   status: {
-    '0':   <Tag color="#2db7f5">未审核</Tag>,
+    '0': <Tag color="#2db7f5">未审核</Tag>,
     '1': <Tag color="#87d068">已审核</Tag>,
     '-1': <Tag color="#f50">审核未通过</Tag>
   },
