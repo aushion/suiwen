@@ -325,9 +325,10 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 300 }}
                       contentStyle={{ height: 240, fontSize: 14 }}
                       controls={controls}
-                      placeholder={`
-                      标准格式更容易被采纳
-                      文献内容
+                      // readOnly
+                      placeholder={`   
+                      标准格式更容易被采纳 
+                      文献内容                                                  
                          XXXXXXXXXXXXX
                       XXXXXXXXXXXXX[1]
                         XXXXXXXXXXXXXX
@@ -357,7 +358,8 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 240 }}
                       contentStyle={{ height: 200, fontSize: 14 }}
                       controls={['link']}
-                      placeholder={`
+                      // readOnly
+                      placeholder={`    
                       引用文献示例
                       1.篇名  作者 机构 年份
                       2.篇名  作者 机构 年份`}
