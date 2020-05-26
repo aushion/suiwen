@@ -86,7 +86,7 @@ function Reply(props) {
       resetFields(); //重置表单值
       quoteArray = []; //重置缓存数组
     };
-  }, []);
+  }, [resetFields]);
 
   useEffect(() => {
     if (editStatus) {
@@ -325,7 +325,7 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 300 }}
                       contentStyle={{ height: 240, fontSize: 14 }}
                       controls={controls}
-                      readOnly
+                      // readOnly
                       placeholder={`   
                       标准格式更容易被采纳 
                       文献内容                                                  
@@ -358,7 +358,7 @@ function Reply(props) {
                       style={{ border: '1px solid #ccc', height: 240 }}
                       contentStyle={{ height: 200, fontSize: 14 }}
                       controls={['link']}
-                      readOnly
+                      // readOnly
                       placeholder={`    
                       引用文献示例
                       1.篇名  作者 机构 年份

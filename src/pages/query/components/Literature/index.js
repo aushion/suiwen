@@ -167,7 +167,7 @@ export default function Literature(props) {
         )}&korder=${korderValue}&sel=1`
     },
     硕博: {
-      name: '硕博士论文',
+      name: '博硕士论文',
       url: (kw) =>
         `http://kns.cnki.net/kns/brief/Default_Result.aspx?code=CDMD&kw=${encodeURIComponent(
           kw
