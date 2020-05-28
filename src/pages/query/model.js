@@ -327,35 +327,39 @@ export default {
             });
 
             if (topic) {
-              dispatch({
-                type: 'getAnswer',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
-              });
-              dispatch({
-                type: 'getSG',
-                payload: {
-                  q: encodeURIComponent(q),
-                  pageStart: 1,
-                  pageCount: 10,
-                  userId,
-                  domain: topic
-                }
-              });
-              dispatch({
-                type: 'getSemanticData',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-              });
-              dispatch({
-                type: 'getRelavent',
-                payload: {
-                  q: encodeURIComponent(q),
-                  area: topic
-                }
-              });
-              dispatch({
-                type: 'getRelevantByAnswer',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
-              });
+              if (topic === 'YD') {
+                dispatch({
+                  type: 'getSemanticData',
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                });
+              } else {
+                dispatch({
+                  type: 'getAnswer',
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
+                });
+                dispatch({
+                  type: 'getSG',
+                  payload: {
+                    q: encodeURIComponent(q),
+                    pageStart: 1,
+                    pageCount: 10,
+                    userId,
+                    domain: topic
+                  }
+                });
+
+                dispatch({
+                  type: 'getRelavent',
+                  payload: {
+                    q: encodeURIComponent(q),
+                    area: topic
+                  }
+                });
+                dispatch({
+                  type: 'getRelevantByAnswer',
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
+                });
+              }
             } else {
               dispatch({
                 type: 'getAnswer',
@@ -371,10 +375,7 @@ export default {
                 type: 'getSG',
                 payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
               });
-              dispatch({
-                type: 'getSemanticData',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-              });
+
               dispatch({
                 type: 'getRelevantByAnswer',
                 payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }

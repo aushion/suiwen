@@ -4,6 +4,7 @@ import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message } 
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
+import Viewer from 'react-viewer';
 import router from 'umi/router';
 import findIndex from 'lodash/findIndex';
 import styles from './index.less';
@@ -52,9 +53,11 @@ function ResultPage(props) {
     visible,
     fetchLiterature,
     fetchSg,
+    fetchSemanticData,
     answerData
     // specialQuestions
   } = props;
+
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
@@ -62,6 +65,8 @@ function ResultPage(props) {
   const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
   const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
   const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
+  const [imgVisible, setVisible] = useState(false); //图片状态
+  const [previewImgSrc, setPreviewImgSrc] = useState('');
   function handleCopy(event) {
     if (event.target.tagName === 'INPUT') {
       return;
@@ -83,6 +88,14 @@ function ResultPage(props) {
     }
   }
 
+  function handleClick(e) {
+    if (e.target.className === 'imgpreview') {
+      setVisible(true);
+      setPreviewImgSrc(e.target.src);
+    }
+    return;
+  }
+
   useEffect(() => {
     setSubmitQ(q);
   }, [q]);
@@ -93,6 +106,7 @@ function ResultPage(props) {
 
   useEffect(() => {
     document.addEventListener('copy', handleCopy);
+    document.addEventListener('click', handleClick);
     return function() {
       document.removeEventListener('copy', handleCopy);
     };
@@ -150,7 +164,7 @@ function ResultPage(props) {
   const resultLength =
     cnkizhishi.length +
     sgData.length +
-    semanticData.length+
+    semanticData.length +
     faqData.length +
     referenceBookData.length +
     JournalData.length +
@@ -227,7 +241,7 @@ function ResultPage(props) {
             </span>
           </div>
 
-          {answerData.length || sgData.length || communityAnswer ? (
+          {answerData.length || sgData.length || communityAnswer || semanticData ? (
             <Row gutter={24}>
               <Col span={4} style={{ padding: 0 }}>
                 <div className={styles.topicList}>
@@ -412,9 +426,10 @@ function ResultPage(props) {
                 ) : null}
                 {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
                 {weather.length ? <Weather weatherData={weather[0]} /> : null}
-                {semanticData.length ? <ReadComp data={semanticData} />:null}
-                {sgData.length ? <SgList data={sgData} /> : null}  
-              
+                <Spin spinning={fetchSemanticData}>
+                  <div >{semanticData.length ? <ReadComp data={semanticData} /> : null}</div>
+                </Spin>
+                {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
               <Col span={5} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
                 {relatedLiterature.length ? (
@@ -479,7 +494,16 @@ function ResultPage(props) {
           ) : null}
         </div>
       </Spin>
-
+      <Viewer
+        visible={imgVisible}
+        onClose={() => {
+          setVisible(false);
+        }}
+        onMaskClick={() => {
+          setVisible(false);
+        }}
+        images={[{ src: previewImgSrc, alt: '' }]}
+      />
       <Modal
         visible={visible}
         onCancel={hideModal}
@@ -497,9 +521,10 @@ function mapStateToProps(state) {
   return {
     ...state.result,
     ...state.global,
-    loading: state.loading.effects['result/getAnswer'],
-    fetchLiterature: state.loading.effects['result/getCustomView'],
-    fetchSg: state.loading.effects['result/getSG']
+    loading: state.loading.effects['result/getAnswer'] || false,
+    fetchLiterature: state.loading.effects['result/getCustomView'] || false,
+    fetchSemanticData: state.loading.effects['result/getSemanticData'] || false,
+    fetchSg: state.loading.effects['result/getSG'] || false
   };
 }
 export default connect(mapStateToProps)(ResultPage);
