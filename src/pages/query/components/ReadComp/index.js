@@ -77,7 +77,7 @@ function ReadComp(props) {
                       key={index}
                       className={styles.fontStyle}
                       dangerouslySetInnerHTML={{
-                        __html: RestTools.formatText(RestTools.superMarkRed(answer))
+                        __html: RestTools.superMarkRed(answer)
                       }}
                     />
                   </List.Item>

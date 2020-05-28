@@ -1,6 +1,8 @@
+
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
+
 
 function ReferenceBook(props) {
   const { data, id, evaluate, title, domain, intentFocus, intentDomain } = props;
@@ -28,7 +30,7 @@ function ReferenceBook(props) {
   }
 
   return (
-    <div className={styles.ReferenceBook}>
+    <div className={`${styles.ReferenceBook} reference`} >
       {data.map((item, index) => {
         const answer =
           intentFocus === '谜语'
@@ -98,6 +100,7 @@ function ReferenceBook(props) {
       <div className={styles.ReferenceBook_evaluate}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
       </div>
+   
     </div>
   );
 }

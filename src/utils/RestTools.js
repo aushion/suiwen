@@ -148,9 +148,9 @@ export default {
     return str
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
-      .replace(/\|\|\|<<</g, '<span style="color:#f00">')
+      .replace(/\|\|\|<<</g, '<span style="background:yellow">')
       .replace(/>>>\|\|\|/g, '</span>')
-      .replace(/\|\|\|___/g, '<span style="color:#f00;font-weight:bold;">')
+      .replace(/\|\|\|___/g, '<span style="color:red;font-weight:800;background:yellow;">')
       .replace(/---\|\|\|/g, '</span>')
       .replace(/&nbsp;/g, '');
   },
@@ -257,10 +257,11 @@ export default {
   completeToolsBook(str, intentDomain) {
     return intentDomain === '植物篇' || intentDomain === '病虫害'
       ? str
-          .replace(/<img/g, '<img style="width:90%"')
+          .replace(/<img/g, '<img class="imgpreview" style="width:70%"')
           .replace(/src="/g, 'src="http://refbook.img.cnki.net')
           .replace(/src='/g, "src='http://refbook.img.cnki.net")
       : str
+          .replace(/<img/g, '<img class="imgpreview"')
           .replace(/src="/g, 'src="http://refbook.img.cnki.net')
           .replace(/src='/g, "src='http://refbook.img.cnki.net");
   },

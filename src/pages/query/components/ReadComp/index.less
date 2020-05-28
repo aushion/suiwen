@@ -1,13 +1,18 @@
 .ReadComp {
   .wrapper {
-    box-shadow: #a5a5a5 0 0 10.8px 0;
+    // box-shadow: #a5a5a5 0 0 10.8px 0;
+    border: 10px solid transparent;
     margin-bottom: 20px;
     padding: 20px;
     background: #fff;
     word-break: break-all;
     word-wrap: break-word;
+    -moz-border-image: url(../../../../assets/border3.png) 30  round; /* Old Firefox */
+    -webkit-border-image: url(../../../../assets/border3.png) 30  round; /* Safari and Chrome */
+    -o-border-image: url(../../../../assets/border3.png) 30  round; /* Opera */
+    border-image: url(../../../../assets/border3.png) 30  round;
   }
-  :global(.ant-list-footer){
+  :global(.ant-list-footer) {
     overflow: hidden;
     padding-bottom: 0;
   }
@@ -16,7 +21,7 @@
     letter-spacing: 2px;
     line-height: 27.2px;
     text-indent: 2em;
-    p{
+    p {
       margin: 0;
     }
   }
@@ -25,10 +30,10 @@
     text-align: right;
     cursor: pointer;
     // color: #999;
-    p{
+    p {
       margin: 0;
     }
-    &:hover{
+    &:hover {
       color: lightsalmon;
     }
   }
