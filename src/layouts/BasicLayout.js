@@ -101,7 +101,7 @@ function BasicLayout(props) {
           </div>
         </div>
       </Header>
-      <Content className={styles.content}>{props.children}</Content>
+      <Content className={styles.content} style={{background: '#f6f6f6'}}>{props.children}</Content>
       <Footer className={styles.footer}>
         <ul className={styles.footer_wrap}>
           <li className={styles.footer_item}>
