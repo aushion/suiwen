@@ -72,6 +72,14 @@ export function setQuestion(payload) {
   });
 }
 
+export function getSemanticData(payload) {
+  return request.get('/getSemanticData',{
+    params: {
+      ...payload
+    }
+  })
+}
+
 
 
 //获取问题收集，统计用

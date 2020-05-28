@@ -5,7 +5,7 @@ import Evaluate from '../Evaluate/index';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
-function SgList(props) {
+function ReadComp(props) {
   const { data, needEvaluate = true } = props;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
@@ -24,7 +24,7 @@ function SgList(props) {
   }
 
   return (
-    <div className={`${styles.SgList} copy`} id="sg">
+    <div className={`${styles.ReadComp} copy`} id="ReadComp">
       {keys.map((item) => {
         const year =
           (groupByData[item][0].sgAdditionInfo && groupByData[item][0].sgAdditionInfo.年) || '';
@@ -69,7 +69,7 @@ function SgList(props) {
               }
               renderItem={(item, index) => {
                 const orginAnswer = item.data.sub_context;
-                const answer = item.data.context + '<a class="showMore"> 更多>></a>';
+                const answer = item.data.semantic_text + '<a class="showMore"> 更多>></a>';
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div
@@ -77,7 +77,7 @@ function SgList(props) {
                       key={index}
                       className={styles.fontStyle}
                       dangerouslySetInnerHTML={{
-                        __html: RestTools.formatText(RestTools.translateToRed(answer))
+                        __html: RestTools.superMarkRed(answer)
                       }}
                     />
                   </List.Item>
@@ -106,7 +106,7 @@ function SgList(props) {
           }}
           className={`${styles.fontStyle} copy`}
           dangerouslySetInnerHTML={{
-            __html: RestTools.translateToRed(RestTools.formatText(initialText))
+            __html: RestTools.superMarkRed(RestTools.formatText(initialText))
           }}
         />
       </Modal>
@@ -114,4 +114,4 @@ function SgList(props) {
   );
 }
 
-export default SgList;
+export default ReadComp;

@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List } from 'antd';
+import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List, Empty } from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
 import groupBy from 'lodash/groupBy';
@@ -294,6 +295,7 @@ function Reply(props) {
                         style={{ paddingLeft: 10 }}
                         onClick={() => setEditorStatus(editStatus ? null : item)}
                       >
+                        
                         <a>{editStatus ? '取消编辑' : '编辑答案'}</a>
                       </span>
                     ) : null}
@@ -366,17 +368,17 @@ function Reply(props) {
                     />
                   )}
                 </FormItem>
-                {/* <FormItem style={{float: 'right'}}>
+                <FormItem style={{float: 'right'}}>
                   <Button
                     loading={props.loading}
-                    // size="large"
+
                     type="primary"
                     htmlType="submit"
                     onClick={submitContent}
                   >
                     {editStatus ? '提交修改' : '提交回答'}
                   </Button>
-                </FormItem> */}
+                </FormItem>
               </Form>
             </div>
           </Col>
@@ -400,24 +402,24 @@ function Reply(props) {
             <Spin spinning={loading}>
               <div
                 id="sg"
-                style={{ padding: '2px 2px', height: 'calc(100vh)', overflowY: 'scroll' }}
+                style={{ padding: '2px 2px', height: keys.length?'80vh':'auto', overflowY: keys.length?'scroll':'auto' }}
               >
-                {keys.map((item) => {
+                {keys.length ? keys.map((item) => {
                   const year =
-                    (groupByData[item][0].Data.additional_info &&
-                      groupByData[item][0].Data.additional_info.年) ||
+                    (groupByData[item][0].sgAdditionInfo &&
+                      groupByData[item][0].sgAdditionInfo.年) ||
                     '';
                   const author =
-                    (groupByData[item][0].Data.additional_info &&
-                      groupByData[item][0].Data.additional_info.作者) ||
+                    (groupByData[item][0].sgAdditionInfo &&
+                      groupByData[item][0].sgAdditionInfo.作者) ||
                     '';
                   const qikanName =
-                    (groupByData[item][0].Data.additional_info &&
-                      groupByData[item][0].Data.additional_info.中文刊名) ||
+                    (groupByData[item][0].sgAdditionInfo &&
+                      groupByData[item][0].sgAdditionInfo.中文刊名) ||
                     '';
 
-                  const title = groupByData[item][0].Data.title || '';
-                  const source_id = groupByData[item][0].Data.source_id || '';
+                  const title = groupByData[item][0].data.caption || '';
+                  const source_id = groupByData[item][0].data.source_id || '';
                   return (
                     <div
                       className={replyStyle.wrapper}
@@ -448,15 +450,15 @@ function Reply(props) {
                                 style={{ color: '#999' }}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].Data.source_id}`}
+                                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
                               >
-                                {groupByData[item][0].Data.title}
+                                {groupByData[item][0].data.title}
                               </a>
                             </div>
                           </div>
                         }
                         renderItem={(item, index) => {
-                          const answer = item.Data.answer;
+                          const answer = item.data.context;
                           return (
                             <List.Item style={{ overflow: 'hidden' }}>
                               <div
@@ -472,7 +474,7 @@ function Reply(props) {
                       />
                     </div>
                   );
-                })}
+                }): <Empty />}
               </div>
             </Spin>
             <div

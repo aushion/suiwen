@@ -6,7 +6,7 @@ import {
   setEvaluate,
   getHotHelpList,
   getCommunityAnswer,
-  // getAnswerByTopic,
+  getSemanticData,
   getRelevant,
   setQuestion,
   getCustomView,
@@ -23,6 +23,7 @@ export default {
   namespace: 'result',
   state: {
     sgData: [],
+    semanticData: [],
     relatedData: [],
     answerData: [],
     visible: false,
@@ -175,11 +176,24 @@ export default {
     *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
       const { data } = res;
-      if (data.result) {
+      if (data.result && data.result.length) {
         yield put({
           type: 'save',
           payload: {
-            sgData: data.metaList
+            sgData: data.result
+          }
+        });
+      }
+    },
+
+    *getSemanticData({ payload }, { call, put }) {
+      const res = yield call(getSemanticData, payload);
+      const { data } = res;
+      if (data.result && data.result.length) {
+        yield put({
+          type: 'save',
+          payload: {
+            semanticData: data.result
           }
         });
       }
@@ -301,6 +315,7 @@ export default {
               type: 'save',
               payload: {
                 sgData: [],
+                semanticData: [],
                 answerData: [],
                 faqData: [],
                 repositoryData: [], //知识库数据
@@ -312,31 +327,39 @@ export default {
             });
 
             if (topic) {
-              dispatch({
-                type: 'getAnswer',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
-              });
-              dispatch({
-                type: 'getSG',
-                payload: {
-                  q: encodeURIComponent(q),
-                  pageStart: 1,
-                  pageCount: 10,
-                  userId,
-                  domain: topic
-                }
-              });
-              dispatch({
-                type: 'getRelavent',
-                payload: {
-                  q: encodeURIComponent(q),
-                  area: topic
-                }
-              });
-              dispatch({
-                type: 'getRelevantByAnswer',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
-              });
+              if (topic === 'YD') {
+                dispatch({
+                  type: 'getSemanticData',
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                });
+              } else {
+                dispatch({
+                  type: 'getAnswer',
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
+                });
+                dispatch({
+                  type: 'getSG',
+                  payload: {
+                    q: encodeURIComponent(q),
+                    pageStart: 1,
+                    pageCount: 10,
+                    userId,
+                    domain: topic
+                  }
+                });
+
+                dispatch({
+                  type: 'getRelavent',
+                  payload: {
+                    q: encodeURIComponent(q),
+                    area: topic
+                  }
+                });
+                dispatch({
+                  type: 'getRelevantByAnswer',
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
+                });
+              }
             } else {
               dispatch({
                 type: 'getAnswer',
@@ -352,6 +375,7 @@ export default {
                 type: 'getSG',
                 payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
               });
+
               dispatch({
                 type: 'getRelevantByAnswer',
                 payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10 }
