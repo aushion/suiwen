@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message } from 'antd';
+import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message, Empty } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -55,8 +55,8 @@ function ResultPage(props) {
     fetchSg,
     fetchSemanticData,
     answerData
-    // specialQuestions
   } = props;
+
 
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
@@ -225,7 +225,7 @@ function ResultPage(props) {
 
   return (
     <div className={styles.result} id="result">
-      <Spin spinning={loading && fetchSg} indicator={antIcon}>
+      <Spin spinning={fetchSemanticData || (loading && fetchSg)} indicator={antIcon}>
         <div style={{ minHeight: 'calc(45vh)' }}>
           <div className={styles.result_tips}>
             {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
@@ -241,7 +241,7 @@ function ResultPage(props) {
             </span>
           </div>
 
-          {answerData.length || sgData.length || communityAnswer || semanticData ? (
+          {answerData.length || sgData.length || communityAnswer || semanticData.length ? (
             <Row gutter={24}>
               <Col span={4} style={{ padding: 0 }}>
                 <div className={styles.topicList}>
@@ -426,12 +426,12 @@ function ResultPage(props) {
                 ) : null}
                 {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
                 {weather.length ? <Weather weatherData={weather[0]} /> : null}
-                <Spin spinning={fetchSemanticData}>
-                  <div >{semanticData.length ? <ReadComp data={semanticData} /> : null}</div>
-                </Spin>
+
+                {semanticData.length ? <ReadComp data={semanticData} /> : null}
+
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
-              <Col span={5} style={{ boxShadow: '#a5a5a5 0 0 10.8px 0', padding: 20 }}>
+              <Col span={5} style={{ boxShadow: '#cecece 0 0 6px 0', background: '#fff', padding: 20 }}>
                 {relatedLiterature.length ? (
                   <RelatedList
                     q={q}
@@ -470,10 +470,17 @@ function ResultPage(props) {
                 {helpList.length ? <NewHelp data={helpList} /> : null}
               </Col>
             </Row>
-          ) : !loading && !fetchLiterature && !fetchSg ? (
+          ) : !loading && !fetchLiterature && !fetchSg && !fetchSemanticData ? (
             <Result
-              icon={<Icon type="smile" theme="twoTone" />}
-              title="抱歉，您输入的问题，我暂时还不能识别出它的意思。请变换一下说法再问问我^_^。（提问方式：自然语言 or 关键词）"
+              style={{ width: 960, margin: 'auto' }}
+              icon={<Icon type="frown" theme="twoTone" />}
+              subTitle={
+                <div style={{ textAlign: 'center' }}>
+                  <p>抱歉，您输入的问题，我暂时还不能识别出它的意思。</p>
+                  <p>请变换一下说法再问问我^_^。</p>
+                  <p>（提问方式：自然语言 or 关键词）</p>
+                </div>
+              }
               extra={
                 <Button
                   type="primary"

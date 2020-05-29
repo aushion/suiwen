@@ -74,6 +74,7 @@ export function setQuestion(payload) {
 
 export function getSemanticData(payload) {
   return request.get('/getSemanticData',{
+    timeout: 30000,
     params: {
       ...payload
     }

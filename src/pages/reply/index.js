@@ -90,8 +90,7 @@ function Reply(props) {
   }, [resetFields]);
 
   useEffect(() => {
-    if (editStatus) {
-      // console.log(editStatus.resource.split(/<\/p><p>/g))
+    if (editStatus && editStatus.resource) {
       //创建临时数组，以渲染索引
       let tempArray = editStatus.resource.split(/<\/p><p>/g).map((item, index) => ({
         resourceStr: item.replace(/<p>/g, '').replace(/<\/p>/g, ''),
@@ -103,6 +102,12 @@ function Reply(props) {
       setFieldsValue({
         contents: BraftEditor.createEditorState(editStatus.Content),
         resource: BraftEditor.createEditorState(editStatus.resource)
+      });
+    } else if (editStatus && editStatus.Content) {
+      quoteArray = [];
+      setFieldsValue({
+        contents: BraftEditor.createEditorState(editStatus.Content),
+        resource: BraftEditor.createEditorState(null)
       });
     } else {
       quoteArray = [];
@@ -274,9 +279,12 @@ function Reply(props) {
                     className={replyStyle.itemTitle}
                     dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                   />
-                  <div>引用文献：</div>
+
                   {item.resource ? (
-                    <div dangerouslySetInnerHTML={{ __html: item.resource }} />
+                    <>
+                      <div>引用文献：</div>
+                      <div dangerouslySetInnerHTML={{ __html: item.resource }} />
+                    </>
                   ) : null}
 
                   <div>
@@ -289,13 +297,13 @@ function Reply(props) {
                     </Link>
                     <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
                     <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
-                    {RestTools.getLocalStorage('userInfo') && RestTools.getLocalStorage('userInfo').ShowName === username &&
+                    {RestTools.getLocalStorage('userInfo') &&
+                    RestTools.getLocalStorage('userInfo').ShowName === username &&
                     item.Status === 0 ? (
                       <span
                         style={{ paddingLeft: 10 }}
                         onClick={() => setEditorStatus(editStatus ? null : item)}
                       >
-                        
                         <a>{editStatus ? '取消编辑' : '编辑答案'}</a>
                       </span>
                     ) : null}
@@ -324,7 +332,12 @@ function Reply(props) {
                     ]
                   })(
                     <BraftEditor
-                      style={{ border: '1px solid #ccc', height: 300 }}
+                      style={{
+                        border: '1px solid #eee',
+                        height: 300,
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
                       contentStyle={{ height: 240, fontSize: 14 }}
                       controls={controls}
                       // readOnly
@@ -346,18 +359,23 @@ function Reply(props) {
                     rules: [
                       {
                         required: false,
-                        validator: (_, value, callback) => {
-                          if (value.isEmpty()) {
-                            callback('请输入文献链接');
-                          } else {
-                            callback();
-                          }
-                        }
+                        // validator: (_, value, callback) => {
+                        //   if (value.isEmpty()) {
+                        //     callback('请输入文献链接');
+                        //   } else {
+                        //     callback();
+                        //   }
+                        // }
                       }
                     ]
                   })(
                     <BraftEditor
-                      style={{ border: '1px solid #ccc', height: 240 }}
+                      style={{
+                        border: '1px solid #eee',
+                        height: 240,
+                        backgroundColor: '#fff',
+                        borderRadius: 4
+                      }}
                       contentStyle={{ height: 200, fontSize: 14 }}
                       controls={['link']}
                       // readOnly
@@ -368,10 +386,9 @@ function Reply(props) {
                     />
                   )}
                 </FormItem>
-                <FormItem style={{float: 'right'}}>
+                <FormItem style={{ float: 'right' }}>
                   <Button
                     loading={props.loading}
-
                     type="primary"
                     htmlType="submit"
                     onClick={submitContent}
@@ -402,79 +419,87 @@ function Reply(props) {
             <Spin spinning={loading}>
               <div
                 id="sg"
-                style={{ padding: '2px 2px', height: keys.length?'80vh':'auto', overflowY: keys.length?'scroll':'auto' }}
+                style={{
+                  padding: '2px 2px'
+                  // height: keys.length ? '80vh' : 'auto',
+                  // overflowY: keys.length ? 'scroll' : 'auto'
+                }}
               >
-                {keys.length ? keys.map((item) => {
-                  const year =
-                    (groupByData[item][0].sgAdditionInfo &&
-                      groupByData[item][0].sgAdditionInfo.年) ||
-                    '';
-                  const author =
-                    (groupByData[item][0].sgAdditionInfo &&
-                      groupByData[item][0].sgAdditionInfo.作者) ||
-                    '';
-                  const qikanName =
-                    (groupByData[item][0].sgAdditionInfo &&
-                      groupByData[item][0].sgAdditionInfo.中文刊名) ||
-                    '';
+                {keys.length ? (
+                  keys.map((item) => {
+                    const year =
+                      (groupByData[item][0].sgAdditionInfo &&
+                        groupByData[item][0].sgAdditionInfo.年) ||
+                      '';
+                    const author =
+                      (groupByData[item][0].sgAdditionInfo &&
+                        groupByData[item][0].sgAdditionInfo.作者) ||
+                      '';
+                    const qikanName =
+                      (groupByData[item][0].sgAdditionInfo &&
+                        groupByData[item][0].sgAdditionInfo.中文刊名) ||
+                      '';
 
-                  const title = groupByData[item][0].data.caption || '';
-                  const source_id = groupByData[item][0].data.source_id || '';
-                  return (
-                    <div
-                      className={replyStyle.wrapper}
-                      key={item}
-                      onMouseUp={(e) =>
-                        handleMouseUp(e, { year, qikanName, title, source_id, author })
-                      }
-                    >
-                      <List
-                        itemLayout="vertical"
-                        dataSource={groupByData[item]}
-                        footer={
-                          <div
-                            style={{
-                              float: 'right',
-                              fontSize: 11,
-                              color: '#999',
-                              overflow: 'hidden'
-                            }}
-                          >
-                            <div>
-                              <span
-                                dangerouslySetInnerHTML={{
-                                  __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                                }}
-                              />
-                              <a
-                                style={{ color: '#999' }}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
-                              >
-                                {groupByData[item][0].data.title}
-                              </a>
-                            </div>
-                          </div>
+                    const title = groupByData[item][0].data.caption || '';
+                    const source_id = groupByData[item][0].data.source_id || '';
+                    return (
+                      <div
+                        className={replyStyle.wrapper}
+                        key={item}
+                        onMouseUp={(e) =>
+                          handleMouseUp(e, { year, qikanName, title, source_id, author })
                         }
-                        renderItem={(item, index) => {
-                          const answer = item.data.context;
-                          return (
-                            <List.Item style={{ overflow: 'hidden' }}>
-                              <div
-                                className={replyStyle.fontStyle}
-                                key={index}
-                                dangerouslySetInnerHTML={{
-                                  __html: RestTools.formatText(RestTools.translateToRed(answer))
-                                }}
-                              />
-                            </List.Item>
-                          );
-                        }}
-                      />
-                    </div>
-                  );
-                }): <Empty />}
+                      >
+                        <List
+                          itemLayout="vertical"
+                          dataSource={groupByData[item]}
+                          footer={
+                            <div
+                              style={{
+                                float: 'right',
+                                fontSize: 11,
+                                color: '#999',
+                                overflow: 'hidden'
+                              }}
+                            >
+                              <div>
+                                <span
+                                  dangerouslySetInnerHTML={{
+                                    __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                                  }}
+                                />
+                                <a
+                                  style={{ color: '#999' }}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
+                                >
+                                  {groupByData[item][0].data.title}
+                                </a>
+                              </div>
+                            </div>
+                          }
+                          renderItem={(item, index) => {
+                            const answer = item.data.context;
+                            return (
+                              <List.Item style={{ overflow: 'hidden' }}>
+                                <div
+                                  className={replyStyle.fontStyle}
+                                  key={index}
+                                  dangerouslySetInnerHTML={{
+                                    __html: RestTools.formatText(RestTools.translateToRed(answer))
+                                  }}
+                                />
+                              </List.Item>
+                            );
+                          }}
+                        />
+                      </div>
+                    );
+                  })
+                ) : (
+                  <Empty />
+                )}
               </div>
             </Spin>
             <div
