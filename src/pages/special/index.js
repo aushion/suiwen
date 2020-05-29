@@ -179,7 +179,12 @@ function Special(props) {
               <div>
                 {`您好！ ${username}`}
                 <Button
-                  style={{ background: 'transparent', border: '1px solid #fff', color: '#fff', marginLeft: 10 }}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #fff',
+                    color: '#fff',
+                    marginLeft: 10
+                  }}
                   onClick={logout}
                   // icon="logout"
                 >
@@ -193,6 +198,14 @@ function Special(props) {
             )}
           </div>
         </Header>
+        <Layout className={styles.main}>
+          <Content className={styles.hotQuestions}>
+          <div className={styles.title}>
+            <div>概念</div>
+          </div>
+          </Content>
+          
+        </Layout>
 
         <Layout className={styles.main}>
           <Sider className={styles.menu} theme="light">
@@ -230,7 +243,6 @@ function Special(props) {
                       item.children.map((child) => {
                         return (
                           <div key={child.id} hidden={menuKey !== item.name + child.name}>
-                            <div className={styles.title}>{item.name}</div>
                             <List
                               header={null}
                               footer={null}
@@ -261,7 +273,6 @@ function Special(props) {
                       })
                     ) : (
                       <div key={item.id} hidden={menuKey !== item.name}>
-                        <div className={styles.title}>{item.name}</div>
                         <List
                           header={null}
                           footer={null}
