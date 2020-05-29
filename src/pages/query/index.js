@@ -55,10 +55,8 @@ function ResultPage(props) {
     fetchSg,
     fetchSemanticData,
     answerData
-    // specialQuestions
   } = props;
 
-  console.log(fetchSemanticData);
 
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
