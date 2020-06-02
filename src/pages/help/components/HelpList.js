@@ -23,7 +23,7 @@ function HelpList(props) {
     });
   }
   return data ? (
-    <div style={{ padding: '10px 0', }}>
+    <div style={{ padding: '10px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 16 }}>
           共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
@@ -39,7 +39,7 @@ function HelpList(props) {
         </div>
       </div>
       <List
-        style={{backgroundColor: '#fff',padding: '0 20px 10px 20px', borderRadius: '4px'}}
+        style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
         loading={loading}
         dataSource={data.list}
         pagination={
@@ -87,7 +87,14 @@ function HelpList(props) {
                       okText="是"
                       cancelText="否"
                     >
-                      <span style={{ paddingRight: 10, fontSize: 12, cursor: 'pointer', color: '#1890ff' }}>
+                      <span
+                        style={{
+                          paddingRight: 10,
+                          fontSize: 12,
+                          cursor: 'pointer',
+                          color: '#1890ff'
+                        }}
+                      >
                         删除
                       </span>
                     </Popconfirm>

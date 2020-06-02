@@ -1,5 +1,5 @@
-import React, { useState,  } from 'react';
-import { Spin, List,  Tabs, Divider, message, Icon, Carousel } from 'antd';
+import React, { useState } from 'react';
+import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Slider from 'react-slick';
@@ -38,7 +38,6 @@ function Home(props) {
   //   skillSlider.slickGoTo(activeTag, true);
   //   return () => {};
   // }, [activeTag]);
-
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -82,14 +81,14 @@ function Home(props) {
   };
 
   const specialItemSetting = {
-    centerMode: specialQuestions.length>3 && true,
-    className: specialQuestions.length > 3 ? 'center' :'',
+    centerMode: specialQuestions.length > 3 && true,
+    className: specialQuestions.length > 3 ? 'center' : '',
     centerPadding: '0px',
     hoverPause: true,
     slidesToShow: 3,
     slidesToScroll: 1,
     dots: true,
-    autoplay: true,
+    autoplay: true
   };
 
   function handleClickItem(item) {
@@ -144,7 +143,11 @@ function Home(props) {
 
   const specialItem = specialQuestions.map((item, index) => {
     return (
-      <div className={homeStyles.specialWrapper} key={item.name} style={{width: '90% !important'}}>
+      <div
+        className={homeStyles.specialWrapper}
+        key={item.name}
+        style={{ width: '90% !important' }}
+      >
         <Link
           className={homeStyles.picture}
           to={`/special?topicId=${item.topicId}`}
@@ -154,7 +157,13 @@ function Home(props) {
         </Link>
 
         <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
-          <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
+          {item.name === '阅读理解' ? (
+            <Badge count={<div style={{backgroundColor: '#f50',color:'#fff',padding: '2px 4px'}}>Beta</div>}>
+              <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name} </span>
+             </Badge>
+          ) : (
+            <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
+          )}
         </Link>
         <div className={homeStyles.questions}>
           {item.data.slice(0, 5).map((child) => {
@@ -199,7 +208,11 @@ function Home(props) {
               <Carousel dotPosition="bottom" autoplay={skillPicture.length > 1} dots>
                 {skillPicture.map((item) => (
                   <div style={{ width: 400 }} key={item}>
-                    <img style={{ width: '100%', height: 320, borderRadius: 10 }} src={item} alt={item} />
+                    <img
+                      style={{ width: '100%', height: 320, borderRadius: 10 }}
+                      src={item}
+                      alt={item}
+                    />
                   </div>
                 ))}
               </Carousel>
@@ -258,7 +271,7 @@ function Home(props) {
                 <div className={homeStyles.topic}>
                   <div
                     className={homeStyles.arrowBtn}
-                    style={{left: 'calc(50% - 690px)'}}
+                    style={{ left: 'calc(50% - 690px)' }}
                     onClick={() => {
                       specialSlider.slickPrev();
                     }}
@@ -302,7 +315,9 @@ function Home(props) {
                             // onClick={handleClickItem.bind(this, item.Content)}
                           >
                             <Link
-                              to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`}
+                              to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${
+                                item.ID
+                              }&domain=${item.Domain}`}
                               className={homeStyles.help_item_content}
                             >
                               <span title={item.Content}>{item.Content}</span>
@@ -314,7 +329,9 @@ function Home(props) {
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
-                              to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`}
+                              to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${
+                                item.ID
+                              }&domain=${item.Domain}`}
                             >
                               我来回答
                             </Link>

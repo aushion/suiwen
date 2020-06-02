@@ -480,7 +480,7 @@ function Reply(props) {
                             </div>
                           }
                           renderItem={(item, index) => {
-                            const answer = item.data.context;
+                            const answer = item.data.context+item.data.sub_context;
                             return (
                               <List.Item style={{ overflow: 'hidden' }}>
                                 <div

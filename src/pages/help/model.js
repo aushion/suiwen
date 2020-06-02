@@ -17,7 +17,7 @@ export default {
 
   effects: {
     *getNewQuestions({ payload }, { call, put }) {
-      const res = yield call(helpService.getNewQuestions, payload);
+      const res = yield call(helpService.getNewQuestions, { ...payload });
       const result = res.data;
       yield put({ type: 'saveList', payload: { newHelpData: result.data, ...payload } });
     },
@@ -38,14 +38,16 @@ export default {
 
       yield put({ type: 'saveList', payload: { newHelpData: res.data.data, ...payload } });
     },
-    *deleteQuestion({payload},{ call,put}) {
-      const res = yield call(helpService.deleteQuestion,payload)
+    *deleteQuestion({ payload }, { call, put }) {
+      const res = yield call(helpService.deleteQuestion, payload);
       const uid = RestTools.getLocalStorage('userInfo')
-      ? RestTools.getLocalStorage('userInfo').UserName
-      : Cookies.get('cnki_qa_uuid');
-      if(res.data.result) {
-        yield put({ type: 'getNewQuestions',
-        payload: { domain: encodeURIComponent('全部'), uid }})
+        ? RestTools.getLocalStorage('userInfo').UserName
+        : Cookies.get('cnki_qa_uuid');
+      if (res.data.result) {
+        yield put({
+          type: 'getNewQuestions',
+          payload: { domain: encodeURIComponent('全部'), uid }
+        });
       }
     }
   },
@@ -63,7 +65,7 @@ export default {
             ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid');
           const current = pathname;
-          dispatch({ type: 'saveList', payload: { newHelpData: null } }); //重置状态
+          dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1 } }); //重置状态
           if (current === '/help/newHelp') {
             dispatch({
               type: 'getNewQuestions',
