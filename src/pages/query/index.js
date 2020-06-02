@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message, Empty } from 'antd';
+import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message, Badge } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -56,7 +56,6 @@ function ResultPage(props) {
     fetchSemanticData,
     answerData
   } = props;
-
 
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
@@ -260,7 +259,29 @@ function ResultPage(props) {
                                 padding: '8px 10px'
                               }}
                             >
-                              {item.name}专题
+                              {item.name === '阅读理解' ? (
+                                <Badge
+                                  count={
+                                    <div
+                                      style={{
+                                        backgroundColor: '#f50',
+                                        color: '#fff',
+                                        fontSize: 10,
+                                        top: '-2px',
+                                        right: '-20px',
+                                        padding: '2px'
+                                      }}
+                                    >
+                                      Beta
+                                    </div>
+                                  }
+                                >
+                                  {item.name}专题
+                                </Badge>
+                              ) : (
+                                item.name + '专题'
+                              )}
+                              
                             </Link>
                           </div>
                         ))
@@ -431,7 +452,10 @@ function ResultPage(props) {
 
                 {sgData.length ? <SgList data={sgData} /> : null}
               </Col>
-              <Col span={5} style={{ boxShadow: '#cecece 0 0 6px 0', background: '#fff', padding: 20 }}>
+              <Col
+                span={5}
+                style={{ boxShadow: '#cecece 0 0 6px 0', background: '#fff', padding: 20 }}
+              >
                 {relatedLiterature.length ? (
                   <RelatedList
                     q={q}
