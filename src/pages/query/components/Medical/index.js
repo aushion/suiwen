@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, Modal, Table } from 'antd';
+import Link from 'umi/link';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
@@ -8,6 +9,7 @@ const { TabPane } = Tabs;
 const { Column } = Table;
 export default function Medical(props) {
   const {id, intentFocus, intentDomain, data, evaluate, intentJson } = props;
+  RestTools.setLocalStorage('medicalData',data[0])
   const { good, bad, isevalute } = evaluate;
   const tabs = {
     疾病: ['治疗', '别名', '发病机制', '并发症', '流行病学', '病因', '诊断'].filter(
@@ -64,14 +66,15 @@ export default function Medical(props) {
   return (
     <div className={styles.Medical}>
       {tableId ? (
-        <a
+        <Link
           className={styles.title}
           target="_blank"
           rel="noopener noreferrer"
-          href={`http://qa.cnki.net/old/query/link?id=${tableId}&db=${data[0].table}`}
+          to={`/detail`}
+          // href={`http://qa.cnki.net/old/query/link?id=${tableId}&db=${data[0].table}`}
         >
           {intentJson.parsed_key + '_医药知识库'}
-        </a>
+        </Link>
       ) : (
         <div className={styles.title}>{intentJson.parsed_key + '_医药知识库'}</div>
       )}

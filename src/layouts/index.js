@@ -13,7 +13,7 @@ export default function(props) {
         <HomeLayout>{props.children}</HomeLayout>
       </ConfigProvider>
     );
-  } else if (props.location.pathname === '/special') {
+  } else if (props.location.pathname === '/special' || props.location.pathname === '/detail') {
     return (
       <ConfigProvider locale={zhCN}>
         <SpecialLayout>{props.children}</SpecialLayout>
