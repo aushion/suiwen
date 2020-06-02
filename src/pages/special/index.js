@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, List, Carousel, Spin, Popover, Icon, Button } from 'antd';
+import { Layout, Menu, List, Carousel, Spin, Popover, Icon, Button, Badge } from 'antd';
 import router from 'umi/router';
 import find from 'lodash/find';
 import SmartInput from '../../components/SmartInput';
@@ -162,7 +162,14 @@ function Special(props) {
 
           <div className={styles.title}>
             <img src={topicLogo} alt={name} style={{ width: '120px', marginRight: 20 }} />
-            {`${name}专题`}
+            {name === '阅读理解' ? (
+              <>
+                {name + '专题'}
+                <Badge count={<div style={{background:'#f50',right:'-30px',top:'-10px',}}>Beta</div>}></Badge>
+              </>
+            ) : (
+              `${name}专题`
+            )}
           </div>
           <div className={styles.inputWrap}>
             <SmartInput
@@ -200,11 +207,10 @@ function Special(props) {
         </Header>
         <Layout className={styles.main}>
           <Content className={styles.hotQuestions}>
-          <div className={styles.title}>
-            <div>概念</div>
-          </div>
+            <div className={styles.title}>
+              <div>概念</div>
+            </div>
           </Content>
-          
         </Layout>
 
         <Layout className={styles.main}>
