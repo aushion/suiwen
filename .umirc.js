@@ -9,7 +9,6 @@ export default {
     'process.env.apiUrl_collect': 'http://192.168.103.25:8080/SWcollect',
     'process.env.returnUrl': 'http://local.cnki.net:8002'
   },
-
   base: '/web',
   publicPath: '/web/',
   history: 'browser',
@@ -18,8 +17,8 @@ export default {
     ie: 9
   },
   alias: {
-    'Utils': path.resolve(__dirname, 'src/utils'),
-    '@assets': path.resolve(__dirname, 'src/assets'),
+    Utils: path.resolve(__dirname, 'src/utils'),
+    '@assets': path.resolve(__dirname, 'src/assets')
     // '@ant-design/icons/lib/dist$': path.resolve(__dirname, 'src/icon.js'),
     // '@': path.resolve(__dirname, 'src')
   },
@@ -43,13 +42,12 @@ export default {
 
             // 'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
           },
-          {
-            content: `try {
-                  window.FlushLogin();
-                } catch (e) {}
-                
-             `
-          }
+          // {
+          //   content: `try {
+          //         window.FlushLogin();
+          //       } catch (e) {}   
+          //    `
+          // }
         ],
 
         routes: {
@@ -62,7 +60,8 @@ export default {
           ]
         }
       }
-    ]
+    ],
+   
   ],
   chainWebpack(config) {
     config.optimization.splitChunks({
