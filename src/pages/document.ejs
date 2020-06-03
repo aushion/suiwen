@@ -48,12 +48,12 @@
   }
 };
 
-const loginStatus = docCookies.getItem('Ecp_LoginStuts');
-const domain = window.document.domain;
+var loginStatus = docCookies.getItem('Ecp_LoginStuts');
+var domain = window.document.domain;
 if(loginStatus){
   window.localStorage.setItem('userInfo',loginStatus)
 }else{
-  if (domain.endsWith('cnki.net')) {
+  if (domain.indexOf('cnki.net')>-1) {
     window.localStorage.setItem('userInfo', null);
   }
 }

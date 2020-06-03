@@ -70,7 +70,7 @@ export default function Medical(props) {
           className={styles.title}
           target="_blank"
           rel="noopener noreferrer"
-          to={`/detail`}
+          to={`/detail?name=${data[0].table}&id=${tableId}`}
           // href={`http://qa.cnki.net/old/query/link?id=${tableId}&db=${data[0].table}`}
         >
           {intentJson.parsed_key + '_医药知识库'}

@@ -1,35 +1,47 @@
-import React, { useState } from 'react';
-import { Anchor, Layout } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Anchor, Layout, Spin, Empty } from 'antd';
+import querystring from 'querystring';
 import styles from './index.less';
 import RestTools from '../../utils/RestTools';
+import request from '../../utils/request';
+import router from 'umi/router';
 
 const { Link } = Anchor;
-const { Header, Footer, Sider, Content } = Layout;
+const { Footer, Sider, Content } = Layout;
 
 function Detail() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  const medicalData = RestTools.getLocalStorage('medicalData');
-  console.log('medicalData', medicalData);
+  const [medicalData, setMedicalData] = useState(null);
 
-  let initKeys = [
-    '疾病中文名',
-    '疾病英文名',
-    '英文名',
-    '别名',
-    '概述',
-    '病因',
-    '发病机制',
-    '临床表现',
-    '流行病学',
-    '并发症',
-    '诊断',
-    '治疗',
-    '预防'
-  ];
+  useEffect(() => {
+    let searchword = window.location.href.split('?')[1]; //获取参数字符串
+    searchword = searchword.includes('#') ? searchword.split('#')[0] : searchword; //截取锚点之前的参数
+    const query = querystring.parse(searchword);
+    const { name, id } = query;
+    if (name && id) {
+      request
+        .get(`/getMedicineDetailInfo`, {
+          params: {
+            id,
+            name
+          }
+        })
+        .then((res) => {
+          if (res.data.code === 200) {
+            setMedicalData(res.data.result[0]);
+          } else {
+            setMedicalData(true);
+          }
+        })
+        .catch((err) => {
+          setMedicalData(true);
+        });
+    }
 
-  initKeys = initKeys.filter((item) => medicalData[item]);
-  console.log('initKeys', initKeys);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function logout() {
     window.Ecp_LogoutOptr_my(0);
     localStorage.setItem('userInfo', null);
@@ -37,9 +49,9 @@ function Detail() {
   }
   return (
     <Layout className={styles.detail}>
-      <Header className={styles.header}>
+      <div className={styles.header}>
         {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-        <div>
+        <div className={styles.user}>
           <span className={styles.tips}>
             您好! {username ? RestTools.formatPhoneNumber(username) : '游客'}
           </span>
@@ -70,33 +82,46 @@ function Detail() {
           ) : null}
         </div>
         <div className={styles.wrapper}>
-          <div className={styles.logo} />
+          <div
+            className={styles.logo}
+            onClick={() => {
+              router.push('/');
+            }}
+          />
           <div className={styles.title}>医药知识库</div>
         </div>
-      </Header>
-      <Layout className={styles.main}>
-        <Sider className={styles.sider} width={258}>
-          <div className={styles.wrapper}>
-            <Anchor>
-              <div className={styles.title}>目录</div>
-              {initKeys.map((item) => (
-                <Link href={`#${item}`} title={item} className={styles.link_item} />
+      </div>
+      <Spin spinning={!medicalData} style={{ height: 'calc(100vh - 150px)' }}>
+        {medicalData && typeof medicalData === 'object' ? (
+          <Layout className={styles.main}>
+            <Sider className={styles.sider} width={258}>
+              <div className={styles.wrapper}>
+                <Anchor bounds={10}>
+                  <div className={styles.title}>目录</div>
+                  {Object.keys(medicalData).map((item) => (
+                    <Link key={item} href={`#${item}`} title={item} className={styles.link_item} />
+                  ))}
+                </Anchor>
+              </div>
+            </Sider>
+            <Content className={styles.content} id="content">
+              {Object.keys(medicalData).map((item) => (
+                <div key={item} id={item} className={styles.content_item}>
+                  <div className={styles.title}>{item}</div>
+                  <div
+                    className={styles.detail}
+                    dangerouslySetInnerHTML={{
+                      __html: RestTools.removeHtmlTag(RestTools.removeFlag(medicalData[item]))
+                    }}
+                  />
+                </div>
               ))}
-            </Anchor>
-          </div>
-        </Sider>
-        <Content className={styles.content}>
-          {initKeys.map((item) => (
-            <div id={item} className={styles.content_item}>
-              <div className={styles.title}>{item}</div>
-              <div
-                className={styles.detail}
-                dangerouslySetInnerHTML={{ __html: RestTools.removeHtmlTag(RestTools.removeFlag(medicalData[item])) }}
-              />
-            </div>
-          ))}
-        </Content>
-      </Layout>
+            </Content>
+          </Layout>
+        ) : medicalData === true ? (
+          <Empty style={{ minHeight: 'calc(100vh - 160px)' }} />
+        ) : null}
+      </Spin>
       <Footer className={styles.footer}>Footer</Footer>
     </Layout>
   );
