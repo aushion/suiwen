@@ -100,13 +100,13 @@ function Reply(props) {
 
       quoteArray = tempArray;
       setFieldsValue({
-        contents: BraftEditor.createEditorState(editStatus.Content),
+        contents: BraftEditor.createEditorState(editStatus.answer),
         resource: BraftEditor.createEditorState(editStatus.resource)
       });
-    } else if (editStatus && editStatus.Content) {
+    } else if (editStatus && editStatus.answer) {
       quoteArray = [];
       setFieldsValue({
-        contents: BraftEditor.createEditorState(editStatus.Content),
+        contents: BraftEditor.createEditorState(editStatus.answer),
         resource: BraftEditor.createEditorState(null)
       });
     } else {
@@ -224,25 +224,32 @@ function Reply(props) {
         };
         const QID = props.QID || params.QID;
         let payload = {
-          answer: submitData.contents,
+          content: submitData.contents,
           resource: submitData.resource,
-          username: props.username,
-          uid: props.uid
+          userName: props.username,
+          uId: props.uid
         };
         if (QID) {
-          if (!!editStatus) {
-            //编辑态的传参
-            payload = { ...payload, qid: QID, isedit: true, aid: editStatus.answerid };
-          } else {
-            //编辑完成的传参
-            payload = { ...payload, qid: QID, isedit: false };
-          }
+          payload = { ...payload, qId: QID };
         } else {
-          payload = { ...payload, question: params.question };
+          payload = {
+            content: submitData.contents,
+            resource: submitData.resource,
+            uId: props.uid,
+            domain: '',
+            question: params.q
+          };
         }
-
         if (QID) {
-          props.dispatch({ type: 'reply/setAnswer', payload });
+          if (params && params.aid && editStatus) {
+            //修改答案
+            props.dispatch({
+              type: 'reply/editAnswer',
+              payload: { ...payload, id: params.aid, eidtorId: '' }
+            });
+          } else {
+            props.dispatch({ type: 'reply/setAnswer', payload });
+          }
         } else {
           props.dispatch({ type: 'reply/setQanswer', payload });
         }
@@ -280,7 +287,7 @@ function Reply(props) {
                     dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                   />
 
-                  {item.resource ? (
+                  {item.resource.includes('<a') ? (
                     <>
                       <div>引用文献：</div>
                       <div dangerouslySetInnerHTML={{ __html: item.resource }} />
@@ -295,11 +302,11 @@ function Reply(props) {
                         ? username.substring(0, 3) + '****' + username.substring(7, 11)
                         : username}
                     </Link>
-                    <span style={{ padding: '0 10px' }}>{RestTools.status[item.Status]}</span>
-                    <span style={{ color: '#c3c3c3' }}>{item.OPTime}</span>
+                    <span style={{ padding: '0 10px' }}>{RestTools.status[item.status]}</span>
+                    <span style={{ color: '#c3c3c3' }}>{item.opTime}</span>
                     {RestTools.getLocalStorage('userInfo') &&
                     RestTools.getLocalStorage('userInfo').ShowName === username &&
-                    item.Status === 0 ? (
+                    item.status === 0 ? (
                       <span
                         style={{ paddingLeft: 10 }}
                         onClick={() => setEditorStatus(editStatus ? null : item)}
@@ -358,7 +365,7 @@ function Reply(props) {
                     validateTrigger: 'onBlur',
                     rules: [
                       {
-                        required: false,
+                        required: false
                         // validator: (_, value, callback) => {
                         //   if (value.isEmpty()) {
                         //     callback('请输入文献链接');
@@ -480,7 +487,7 @@ function Reply(props) {
                             </div>
                           }
                           renderItem={(item, index) => {
-                            const answer = item.data.context+item.data.sub_context;
+                            const answer = item.data.context + item.data.sub_context;
                             return (
                               <List.Item style={{ overflow: 'hidden' }}>
                                 <div

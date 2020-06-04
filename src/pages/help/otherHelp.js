@@ -30,8 +30,8 @@ function OhterHelp(props) {
     });
   }
   function handleClickItem(item) {
-    dispatch({ type: 'global/setQuestion', payload: { q: item.Content } });
-    router.push(`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}`);
+    dispatch({ type: 'global/setQuestion', payload: { q: item.content } });
+    router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}`);
   }
 
   function handleSearchOrChangePage(payload) {

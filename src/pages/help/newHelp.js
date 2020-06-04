@@ -11,7 +11,7 @@ import helpStyle from './index.less';
 
 function NewHelp(props) {
 
-  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props;
+  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props; 
   const menus = RestTools.getLocalStorage('userInfo')
   ? [
       {
@@ -49,8 +49,8 @@ function NewHelp(props) {
     });
   }
   function handleClickItem(item) {
-    dispatch({ type: 'global/setQuestion', payload: { q: item.Content } });
-    router.push(`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`);
+    dispatch({ type: 'global/setQuestion', payload: { q: item.content } });
+    router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}&domain=${item.domain}`);
   }
 
   function handleSearchOrChangePage(payload) {

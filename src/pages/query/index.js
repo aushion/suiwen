@@ -206,7 +206,7 @@ function ResultPage(props) {
         payload: {
           q: submitQ,
           domain: answerData.length ? answerData[0].domain : '',
-          uid: RestTools.getLocalStorage('userInfo')
+          uId: RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid')
         }

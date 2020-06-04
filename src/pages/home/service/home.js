@@ -12,7 +12,11 @@ export function getHomePictureIds(payload) {
   return request.get(`/getHomePictureIds?type=${type}`)
 }
 export function getHotHelpList(payload) {
-  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=10&index=1')
+  return request.get(process.env.apiUrl + '/getNewQuestion',{
+    params: {
+      ...payload
+    }
+  })
 }
 
 

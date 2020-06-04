@@ -48,8 +48,8 @@ function HotHelp(props) {
     });
   }
   function handleClickItem(item) {
-    dispatch({ type: 'global/setQuestion', payload: { q: item.Content } });
-    router.push(`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${item.Domain}`);
+    dispatch({ type: 'global/setQuestion', payload: { q: item.content } });
+    router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}&domain=${item.domain}`);
   }
 
   function handleSearchOrChangePage(payload) {

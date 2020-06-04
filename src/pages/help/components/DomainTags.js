@@ -8,10 +8,10 @@ function DomainTags(props) {
   };
   const normalStyle = {
     cursor: 'pointer',
-    marginBottom: 10,
+    marginBottom: 10
   };
   const { data, onClickTag, localDomain } = props;
-  const localChecked = data.map((item) => item._domainname).indexOf(localDomain);
+  const localChecked = data.map((item) => item).indexOf(localDomain);
   const [checked, setChecked] = useState(localChecked || -1);
   useEffect(() => {
     setChecked(localChecked);
@@ -24,19 +24,19 @@ function DomainTags(props) {
   return (
     <div>
       <Tag
-        style={checked === -1 ? {...checkedStyle,...normalStyle} : normalStyle}
-        onClick={handleClick.bind(this, -1, '全部')}
+        style={checked === -1 ? { ...checkedStyle, ...normalStyle } : normalStyle}
+        onClick={handleClick.bind(this, -1, '')}
       >
         全部
       </Tag>
       {data.map((item, index) => {
         return (
           <Tag
-            style={checked === index ? {...checkedStyle,...normalStyle} : normalStyle}
-            key={item._domainname}
-            onClick={handleClick.bind(this, index, item._domainname)}
+            style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
+            key={item}
+            onClick={handleClick.bind(this, index, item)}
           >
-            {item._domainname}
+            {item}
           </Tag>
         );
       })}

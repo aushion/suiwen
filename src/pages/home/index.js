@@ -310,34 +310,34 @@ function Home(props) {
                           <div
                             className={homeStyles.help_item}
                             onClick={() => {
-                              RestTools.setSession('q', item.Content);
+                              RestTools.setSession('q', item.content);
                             }}
                             // onClick={handleClickItem.bind(this, item.Content)}
                           >
                             <Link
-                              to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${
-                                item.ID
+                              to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
+                                item.id
                               }&domain=${item.Domain}`}
                               className={homeStyles.help_item_content}
                             >
-                              <span title={item.Content}>{item.Content}</span>
+                              <span title={item.Content}>{item.content}</span>
                             </Link>
 
                             <span style={{ display: 'inline-block', overflow: 'hidden' }}>
-                              回答数:{item.CheckSum}
+                              回答数:{item.checkSum}
                             </span>
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${
-                                item.ID
+                                item.id
                               }&domain=${item.Domain}`}
                             >
                               我来回答
                             </Link>
 
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
-                            <span style={{ float: 'right' }}>{item.Time}</span>
+                            <span style={{ float: 'right' }}>{item.time}</span>
                           </div>
                         </List.Item>
                       )}

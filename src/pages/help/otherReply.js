@@ -30,7 +30,7 @@ function OtherReply(props) {
 
   return (
     <div className={helpStyle.help}>
-      <HelpMenu current="otherReply" data={menus}></HelpMenu>
+      <HelpMenu current="otherReply" data={menus} />
 
       <div className={helpStyle.content}>
         {domainList.length ? (
@@ -41,7 +41,7 @@ function OtherReply(props) {
         <div>
           <Divider style={{ margin: 0 }} />
           <Spin spinning={loading}>
-            {newHelpData ? <MyAnswerList from={false} data={newHelpData}></MyAnswerList> : null}
+            {newHelpData ? <MyAnswerList from={false} data={newHelpData} /> : null}
           </Spin>
         </div>
       </div>

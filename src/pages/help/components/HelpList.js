@@ -26,7 +26,7 @@ function HelpList(props) {
     <div style={{ padding: '10px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 16 }}>
-          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
+          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.pageTotal}</span>条
         </div>
         <div>
           <Search
@@ -41,11 +41,11 @@ function HelpList(props) {
       <List
         style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
         loading={loading}
-        dataSource={data.list}
+        dataSource={data.dataList}
         pagination={
-          data.total && data.total > size
+          data.pageTotal && data.pageTotal > size
             ? {
-                total: data.total,
+                total: data.pageTotal,
                 pageSize: size,
                 current: index,
                 onChange: function(page, pageSize) {
@@ -73,14 +73,14 @@ function HelpList(props) {
                 // onMouseLeave={() =>{setDelete(false)}}
                 onClick={() => handleClickItem(item)}
               >
-                {current === 'myReply' ? item.Qeustion : item.Content}
+                {current === 'myReply' ? item.question : item.content}
               </div>
 
               {current === 'myReply' ? (
                 <div>查看回答</div>
               ) : (
                 <div>
-                  {current === 'myHelp' && item.CheckSum === 0 ? (
+                  {current === 'myHelp' && item.checkSum === 0 ? (
                     <Popconfirm
                       title="是否删除此问题?"
                       onConfirm={confirm.bind(this, item.ID)}
@@ -99,10 +99,10 @@ function HelpList(props) {
                       </span>
                     </Popconfirm>
                   ) : null}
-                  已有回答:{item.CheckSum}
+                  已有回答:{item.checkSum}
                   <span>
                     <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
-                    {item.Time}
+                    {item.time}
                   </span>
                 </div>
               )}

@@ -65,7 +65,7 @@ export function getCustomView(payload) {
 }
 
 export function setQuestion(payload) {
-  return request.post(process.env.apiUrl_help + '/SetQuestion', null, {
+  return request.post(process.env.apiUrl + '/commitQuestion', null, {
     params: {
       ...payload
     }

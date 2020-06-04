@@ -40,14 +40,16 @@ export default {
     *getTopicQuestions({ payload }, { call, put }) {
       const { data } = yield call(getTopicQuestions);
       const urlPrefix = process.env.apiUrl;
-      const topicData = data.result.filter(item => item.data.length).map((item) => {
-        return  {
-          ...item,
-          logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
-          thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
-          topicId: item.data[0].topicId
-        };
-      });
+      const topicData = data.result
+        .filter((item) => item.data.length)
+        .map((item) => {
+          return {
+            ...item,
+            logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
+            thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
+            topicId: item.data[0].topicId
+          };
+        });
       if (data.code === 200) {
         yield put({
           type: 'save',
@@ -57,16 +59,17 @@ export default {
         });
       }
       RestTools.setSession('topicData', topicData);
-      RestTools.setLocalStorage('topicData',topicData);
+      RestTools.setLocalStorage('topicData', topicData);
     },
 
     *getHotHelpList({ payload }, { call, put }) {
-      const { data } = yield call(getHotHelpList);
-      if (data.length) {
+      const { data } = yield call(getHotHelpList, payload);
+      const {code, result} = data;
+      if (code === 200 && result) {
         yield put({
           type: 'save',
           payload: {
-            newHelpList: data
+            newHelpList: result.dataList
           }
         });
       }
@@ -98,23 +101,13 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        // const skillExamples = RestTools.getSession('skillExamples');
         if (pathname === '/') {
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
-          // if (!skillExamples) {
-            dispatch({ type: 'getDomainQuestions' });
-          // } else {
-          //   dispatch({
-          //     type: 'save',
-          //     payload: {
-          //       skillExamples
-          //     }
-          //   });
-          // }
+          dispatch({ type: 'getDomainQuestions' });
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHomePicture', payload: { type: 0 } });
           dispatch({ type: 'getHomePicture', payload: { type: 1 } });
-          dispatch({ type: 'getHotHelpList' });
+          dispatch({ type: 'getHotHelpList', payload: { pageStart: 1, pageSize: 10, type: 'hot'} });
         }
       });
     }

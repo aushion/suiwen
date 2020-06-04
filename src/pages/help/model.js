@@ -18,25 +18,25 @@ export default {
   effects: {
     *getNewQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getNewQuestions, { ...payload });
-      const result = res.data;
-      yield put({ type: 'saveList', payload: { newHelpData: result.data, ...payload } });
+      const resultData = res.data;
+
+      yield put({ type: 'saveList', payload: { newHelpData: resultData.result, ...payload } });
     },
 
     *getDomain({ payload }, { call, put }) {
       const res = yield call(helpService.getDomain);
-      const result = res.data;
-      yield put({ type: 'saveDomainList', payload: { domainList: result } });
+      const resultData = res.data;
+      yield put({ type: 'saveDomainList', payload: { domainList: resultData.result } });
     },
 
     *getHotQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getHotQuestions, payload);
-      yield put({ type: 'saveList', payload: { newHelpData: res.data.data, ...payload } });
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
     },
 
     *getMyAnswerQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getMyAnswerQuestions, payload);
-
-      yield put({ type: 'saveList', payload: { newHelpData: res.data.data, ...payload } });
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
     },
     *deleteQuestion({ payload }, { call, put }) {
       const res = yield call(helpService.deleteQuestion, payload);
@@ -69,32 +69,32 @@ export default {
           if (current === '/help/newHelp') {
             dispatch({
               type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent('全部') }
+              payload: { domain: encodeURIComponent('') }
             });
           } else if (current === '/help/hotHelp') {
             dispatch({
               type: 'getHotQuestions',
-              payload: { domain: encodeURIComponent('全部') }
+              payload: { domain: encodeURIComponent('') }
             });
           } else if (current === '/help/myHelp') {
             dispatch({
               type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent('全部'), uid }
+              payload: { domain: encodeURIComponent(''), uid }
             });
           } else if (current === '/help/myReply') {
             dispatch({
               type: 'getMyAnswerQuestions',
-              payload: { domain: encodeURIComponent('全部'), uid }
+              payload: { domain: encodeURIComponent(''), uid }
             });
           } else if (current === '/help/otherHelp') {
             dispatch({
               type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent('全部'), uid: username }
+              payload: { domain: encodeURIComponent(''), uid: username }
             });
           } else if (current === '/help/otherReply') {
             dispatch({
               type: 'getMyAnswerQuestions',
-              payload: { domain: encodeURIComponent('全部'), uid: username }
+              payload: { domain: encodeURIComponent(''), uid: username }
             });
           }
         }

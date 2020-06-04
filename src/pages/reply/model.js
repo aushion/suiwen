@@ -1,10 +1,9 @@
 import helpServer from '../../services/help';
-import qaServer from '../../services/qa';
 import RestTools from '../../utils/RestTools';
 import Cookies from 'js-cookie';
 import { message } from 'antd';
 import router from 'umi/router';
-import {getSG} from '../query/service/result'
+import { getSG } from '../query/service/result';
 
 message.config({
   top: 500,
@@ -30,7 +29,7 @@ export default {
 
       yield put({
         type: 'saveAnswers',
-        payload: { answerList: res.data.data.list, total: res.data.data.total }
+        payload: { answerList: res.data.result, total: res.data.result.length }
       });
     },
     *getUserFAQ({ payload }, { call, put }) {
@@ -45,33 +44,35 @@ export default {
     },
     *setAnswer({ payload }, { call }) {
       const res = yield call(helpServer.setAnswer, payload);
-      if (res.data && res.data.success) {
+      if (res.data && res.data.code===200) {
         message.success('回答成功，感谢您的参与');
         router.push('/help/myReply');
       } else {
-        message.warning(res.data.message);
+        message.warning(res.data.msg);
       }
+    },
 
-    },
-    *getDomains({ payload }, { call, put }) {
-      const res = yield call(qaServer.getDomains, payload);
-      if (res.data) {
-        yield put({ type: 'saveAnswers', payload: { domains: res.data.result } });
+    *editAnswer({ payload }, { call }) {
+      const res = yield call(helpServer.editAnswer, payload);
+      if (res.data && res.data.code===200) {
+        message.success('修改成功，感谢您的参与');
+        router.push('/help/myReply');
+      } else {
+        message.warning(res.data.msg);
       }
     },
+
     *setQanswer({ payload }, { call }) {
       const res = yield call(helpServer.setQanswer, payload);
-      if (res.data && res.data.success) {
+      if (res.data && res.data.code===200) {
         message.success('回答成功，感谢您的参与');
         router.push('/help/myReply');
       } else {
-        message.warning(res.data.message);
+        message.warning(res.data.msg);
       }
-
     },
 
     *getSG({ payload }, { call, put }) {
-
       const res = yield call(getSG, payload);
       const { data } = res;
       yield put({
@@ -79,7 +80,7 @@ export default {
         payload: {
           sgData: []
         }
-      })
+      });
       if (data.result && data.result.length) {
         yield put({
           type: 'saveAnswers',
@@ -88,27 +89,30 @@ export default {
           }
         });
       }
-    },
+    }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/reply') {
           const params = query;
+
           dispatch({
             type: 'saveAnswers',
             payload: {
-              sgData: []
+              sgData: [],
+              answerList: [],
+              total: 0,
+              domains: []
             }
-          })
+          });
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : '';
-            const userId = RestTools.getLocalStorage('userInfo')
-          ? RestTools.getLocalStorage('userInfo').UserName
-          : Cookies.get('cnki_qa_uuid');
+          const userId = RestTools.getLocalStorage('userInfo')
+            ? RestTools.getLocalStorage('userInfo').UserName
+            : Cookies.get('cnki_qa_uuid');
           const { QID, q } = params;
-
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
           } else {
