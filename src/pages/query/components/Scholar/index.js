@@ -10,16 +10,17 @@ export default function Scholar(props) {
   const { good, bad, isevalute } = evaluate;
   const { fields } = intentJson.results[0];
   const linkKey = {
-    学者名: 'nmv',
-    学者单位: 'ut',
-    研究领域: 'dn',
-    主题: 'dn'
+    学者名: '0',
+    学者单位: '1'
+    // 研究领域: 'dn',
+    // 主题: 'dn'
   };
   const resultKey = Object.keys(fields);
   const filterKey = resultKey.filter((item) => linkKey[item]);
   let paramObj = {};
   filterKey.forEach((item) => {
-    paramObj[linkKey[item]] = RestTools.removeFlag(fields[item]);
+    paramObj['q'] = RestTools.removeFlag(fields[item]);
+    paramObj['type'] = linkKey[item];
   });
   const paramString = querystring.stringify(paramObj);
   return (
@@ -161,14 +162,16 @@ export default function Scholar(props) {
           );
         }}
       />
-      <a
-        className={styles.Scholar_more}
-        target="_blank"
-        rel="noopener noreferrer"
-        href={`http://papers.cnki.net/Search/Search.aspx?ac=result&sm=0&${paramString}`}
-      >
-        CNKI学者成果库
-      </a>
+      {filterKey.length ? (
+        <a
+          className={styles.Scholar_more}
+          target="_blank"
+          rel="noopener noreferrer"
+          href={`http://expert.cnki.net/Search/Find?${paramString}`}
+        >
+          CNKI学者成果库
+        </a>
+      ) : null}
       <div className={styles.Scholar_evaluate}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
       </div>

@@ -107,7 +107,7 @@ export default {
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHomePicture', payload: { type: 0 } });
           dispatch({ type: 'getHomePicture', payload: { type: 1 } });
-          dispatch({ type: 'getHotHelpList', payload: { pageStart: 1, pageSize: 10, type: 'hot'} });
+          dispatch({ type: 'getHotHelpList', payload: { pageStart: 1, pageSize: 10, type: 'new'} });
         }
       });
     }

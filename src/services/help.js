@@ -6,7 +6,6 @@ export default {
     return request.get(serverurl + '/GetNewQuestion?size=6');
   },
   getNewQuestions(payload) {
-    
     const { size = 10, index = 1, searchKey = '', domain = '全部', uid = '' } = payload;
     return request.get(serverurl + `/getNewQuestion`, {
       params: {
@@ -73,6 +72,12 @@ export default {
   },
   getDomain() {
     return request.get(serverurl + '/getCommiuntyDomain');
+  },
+
+  getPersonDomain(payload) {
+    return request.get(serverurl + '/getPersonCommiuntyDomain', {
+      params: { ...payload }
+    });
   },
   deleteQuestion(payload) {
     const { qId } = payload;

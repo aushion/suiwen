@@ -29,6 +29,12 @@ export default {
       yield put({ type: 'saveDomainList', payload: { domainList: resultData.result } });
     },
 
+    *getPersonDomain({ payload }, { call, put }) {
+      const res = yield call(helpService.getPersonDomain, payload);
+      const resultData = res.data;
+      yield put({ type: 'saveDomainList', payload: { domainList: resultData.result } });
+    },
+
     *getHotQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getHotQuestions, payload);
       yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
@@ -57,10 +63,6 @@ export default {
         const match = pathname.match(/Help/i);
         const { username } = query;
         if (match) {
-          dispatch({
-            type: 'getDomain'
-          });
-
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid');
@@ -68,15 +70,27 @@ export default {
           dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1 } }); //重置状态
           if (current === '/help/newHelp') {
             dispatch({
+              type: 'getDomain'
+            });
+
+            dispatch({
               type: 'getNewQuestions',
               payload: { domain: encodeURIComponent('') }
             });
           } else if (current === '/help/hotHelp') {
             dispatch({
+              type: 'getDomain'
+            });
+
+            dispatch({
               type: 'getHotQuestions',
               payload: { domain: encodeURIComponent('') }
             });
           } else if (current === '/help/myHelp') {
+            dispatch({
+              type: 'getPersonDomain',
+              payload: { uId: uid }
+            });
             dispatch({
               type: 'getNewQuestions',
               payload: { domain: encodeURIComponent(''), uid }
@@ -86,12 +100,25 @@ export default {
               type: 'getMyAnswerQuestions',
               payload: { domain: encodeURIComponent(''), uid }
             });
+
+            dispatch({
+              type: 'getPersonDomain',
+              payload: { uId: uid }
+            });
           } else if (current === '/help/otherHelp') {
+            dispatch({
+              type: 'getPersonDomain',
+              payload: { uId: uid }
+            });
             dispatch({
               type: 'getNewQuestions',
               payload: { domain: encodeURIComponent(''), uid: username }
             });
           } else if (current === '/help/otherReply') {
+            dispatch({
+              type: 'getPersonDomain',
+              payload: { uId: uid }
+            });
             dispatch({
               type: 'getMyAnswerQuestions',
               payload: { domain: encodeURIComponent(''), uid: username }
