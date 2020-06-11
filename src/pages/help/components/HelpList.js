@@ -83,7 +83,7 @@ function HelpList(props) {
                   {current === 'myHelp' && item.checkSum === 0 ? (
                     <Popconfirm
                       title="是否删除此问题?"
-                      onConfirm={confirm.bind(this, item.ID)}
+                      onConfirm={confirm.bind(this, item.id)}
                       okText="是"
                       cancelText="否"
                     >
@@ -99,7 +99,7 @@ function HelpList(props) {
                       </span>
                     </Popconfirm>
                   ) : null}
-                  已有回答:{item.checkSum}
+                  已有回答:{item.checkCount}
                   <span>
                     <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
                     {item.time}

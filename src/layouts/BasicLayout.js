@@ -9,6 +9,7 @@ import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
 import logo from '../assets/logo1.png';
+import LoginRegister from '../components/LoginRegister';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
@@ -17,14 +18,14 @@ function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
   let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const topicData =  RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
-
+  const [showLogin, setShowLogin] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme } = props;
-  const {  topicId, info, name } = currentTopic || {};
+  const { topicId, info, name } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
 
@@ -61,7 +62,7 @@ function BasicLayout(props) {
           </div> */}
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logo} alt="logo" />
-            {name ?<span style={{fontSize: 20,paddingLeft: 5}}>{name}</span>: null}
+            {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
           </div>
 
           <div className={styles.inputWrap}>
@@ -74,25 +75,32 @@ function BasicLayout(props) {
             />
           </div>
           <div className={styles.login}>
-          {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-            <span className={styles.tips}>您好! { username ? RestTools.formatPhoneNumber(username) : '游客'}</span>
+            {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
+            <span className={styles.tips}>
+              您好! {username ? RestTools.formatPhoneNumber(username) : '游客'}
+            </span>
             {username ? null : (
-              <a
+              <Button
+               
                 className={styles.login_btn}
+                ghost
+                onClick={() => {
+                  setShowLogin(true);
+                }}
                 // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-                href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
+                // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
               >
-                登录
-              </a>
+                登录/注册
+              </Button>
             )}
-            {username ? null : (
+            {/* {username ? null : (
               <a
                 className={styles.register_btn}
                 href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
               >
                 注册
               </a>
-            )}
+            )} */}
             {username ? (
               <button onClick={logout} className={styles.login_btn}>
                 退出
@@ -101,7 +109,7 @@ function BasicLayout(props) {
           </div>
         </div>
       </Header>
-      <Content className={styles.content} >{props.children}</Content>
+      <Content className={styles.content}>{props.children}</Content>
       <Footer className={styles.footer}>
         <ul className={styles.footer_wrap}>
           <li className={styles.footer_item}>
@@ -150,6 +158,12 @@ function BasicLayout(props) {
         </ul>
       </Footer>
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
+      <LoginRegister
+        visible={showLogin}
+        triggerCancel={() => {
+          setShowLogin(false);
+        }}
+      />
       <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>
         <Button
           type="primary"

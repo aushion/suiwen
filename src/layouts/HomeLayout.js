@@ -7,6 +7,7 @@ import FeedBack from '../components/FeedBack';
 // import Cookies from 'js-cookie';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
+import LoginRegister from '../components/LoginRegister';
 
 const { Header, Footer, Content } = Layout;
 
@@ -14,6 +15,8 @@ function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [visible, setVisible] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+
   const { dispatch } = props;
   function handleClickEnterOrItem(value) {
     const q = value.trim();
@@ -22,11 +25,6 @@ function HomeLayout(props) {
     RestTools.setSession('q', q);
   }
 
-  // function goLogin() {
-  // window.Ecp_ShowLoginLayer2('-90px', '42px');
-  // window.Ecp_ShowLoginLayer2('-10px','120px')
-  // request({url: `http://132.cnki.net/TopLogin/api/loginapi/Login?callback=jQuery111307605174265725956_1577339722053&userName=chenaosheng&pwd=cnki12399&isAutoLogin=false&p=0&_=1577339722059`,method: 'get'})
-  // }
 
   function logout() {
     // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
@@ -51,17 +49,19 @@ function HomeLayout(props) {
           </a> */}
           您好! {RestTools.formatPhoneNumber(username) || '游客'}
           {username ? null : (
-            <a
+            <Button
+              ghost
               className={styles.login_btn}
+              onClick={() => { setShowLogin(true) }}
               // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
-                window.location.href
-              )}`}
+              // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
+              //   window.location.href
+              // )}`}
             >
-              登录
-            </a>
+              登录/注册
+            </Button>
           )}
-          {username ? null : (
+          {/* {username ? null : (
             <a
               className={styles.register_btn}
               href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
@@ -70,7 +70,7 @@ function HomeLayout(props) {
             >
               注册
             </a>
-          )}
+          )} */}
           {username ? (
             <button onClick={logout} className={styles.login_btn}>
               退出
@@ -138,6 +138,12 @@ function HomeLayout(props) {
       </Footer>
 
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
+      <LoginRegister
+        visible={showLogin}
+        triggerCancel={() => {
+          setShowLogin(false);
+        }}
+      />
       <Affix offsetBottom={50} style={{ position: 'absolute', right: 10 }}>
         <Button
           type="primary"

@@ -52,7 +52,7 @@ export default {
       if (res.data.result) {
         yield put({
           type: 'getNewQuestions',
-          payload: { domain: encodeURIComponent('全部'), uid }
+          payload: { domain: '', uid }
         });
       }
     }
