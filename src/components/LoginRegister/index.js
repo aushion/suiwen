@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Tabs, Form, Input, message, Button, Icon } from 'antd';
+import { Modal, Tabs, Form, Input, Button, Icon } from 'antd';
 import request from '../../utils/request';
-import styles from './index.less';
 import RestTools from '../../utils/RestTools';
+import styles from './index.less';
 const { TabPane } = Tabs;
 
 function LoginRegister(props) {
@@ -10,6 +10,8 @@ function LoginRegister(props) {
   const { getFieldDecorator } = props.form;
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
+  const [errMsg, setErrMsg] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const formItemLayout = {
     wrapperCol: { span: 24 }
@@ -44,8 +46,22 @@ function LoginRegister(props) {
     triggerCancel();
   }
 
-  function handleOk(e) {
+  function handleThirdLogin(type) {
+    const handleRedirectUrl = encodeURIComponent(
+      window.location.origin + '/web/handleRedirect?Redirect=' + window.location.href
+    );
+    window.open(
+      `https://my.cnki.net/ThirdLogin/ThirdLogin.aspx?to=${type}&RedirectUrl=${handleRedirectUrl}`,
+      'login',
+      'width=960,height=640,top=100,left=100;resizable,scrollbars=yes,status=1'
+    );
+  }
+
+  function handleOk(e, type) {
     e.preventDefault();
+   
+    setErrMsg('');
+    setLoading(true);
     props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
@@ -58,22 +74,24 @@ function LoginRegister(props) {
             }
           })
         );
-        //feedback(data)
         request
-          .get('/insertFeedback', {
+          .post('/Login/login', null, {
             params: { ...data }
           })
           .then((res) => {
             if (res.data.result) {
               triggerCancel();
-              message.success('感谢您的反馈');
-              props.form.setFieldsValue({
-                level: null,
-                suggestion: '',
-                name: '',
-                email: ''
+              props.form.resetFields();
+              RestTools.setLocalStorage('userInfo', {
+                ...res.data.result,
+                UserName: res.data.result.Username,
+                ShowName: res.data.result.PersonUserName
               });
+              window.location.reload();
+            } else {
+              setErrMsg(res.data.msg);
             }
+            setLoading(false)
           })
           .catch((err) => {
             console.log(err);
@@ -82,7 +100,7 @@ function LoginRegister(props) {
     });
   }
 
-  const loginForm = (
+  const loginForm = showLogin ? (
     <div className={styles.login}>
       <Form {...formItemLayout} labelAlign="left">
         <div className={styles.title}>个人账户登录</div>
@@ -114,31 +132,49 @@ function LoginRegister(props) {
             />
           )}
         </Form.Item>
-        <Button type="primary" block size="large">
+        <Button
+          type="primary"
+          block
+          size="large"
+          loading={loading}
+          onClick={(e) => {
+            handleOk(e, 'login');
+          }}
+        >
           登录
         </Button>
+        {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
         <div className={`${styles.otherLoginWrapper} display_flex justify-content_flex-justify`}>
           <div
             className={styles.otherLoginBtn}
             onClick={() => {
-              const state = RestTools.createUid().replace(/-/g, '')
-              window.open(
-                'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=100243320&redirect_uri=http://my.cnki.net/ThirdLogin/login/callback&state=' +
-                  state,
-                'qqlogin',
-                'width=960,height=640,top=100,left=100;resizable,scrollbars=yes,status=1'
-              );
+              handleThirdLogin('qq');
             }}
           >
             <Icon component={QqSvg} className={`${styles.icon} ${styles.qq}`} />
           </div>
-          <div className={styles.otherLoginBtn}>
+          <div
+            className={styles.otherLoginBtn}
+            onClick={() => {
+              handleThirdLogin('weixin');
+            }}
+          >
             <Icon component={WechatSvg} className={`${styles.icon} ${styles.wechat}`} />
           </div>
-          <div className={styles.otherLoginBtn}>
+          <div
+            className={styles.otherLoginBtn}
+            onClick={() => {
+              handleThirdLogin('sina');
+            }}
+          >
             <Icon component={WeiboSvg} className={`${styles.icon} ${styles.weibo}`} />
           </div>
-          <div className={styles.otherLoginBtn}>
+          <div
+            className={styles.otherLoginBtn}
+            onClick={() => {
+              handleThirdLogin('163');
+            }}
+          >
             <Icon component={NeteaseSvg} className={`${styles.icon} ${styles.netease}`} />
           </div>
         </div>
@@ -156,10 +192,11 @@ function LoginRegister(props) {
         </div>
       </Form>
     </div>
-  );
+  ) : null;
 
-  const registerForm = (
-    <div>
+  const registerForm = showRegister ? (
+    <div className={styles.register}>
+      <div className={styles.title}>个人账户注册</div>
       <Tabs type="card">
         <TabPane tab="手机注册" key="1">
           <Form {...formItemLayout} labelAlign="left">
@@ -168,8 +205,25 @@ function LoginRegister(props) {
                 rules: [{ required: true, message: 'Please input your username!' }]
               })(
                 <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
+                  size="large"
+                  prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="请输入手机号"
+                />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('verifycode', {
+                rules: [{ required: true, message: 'Please input your Password!' }]
+              })(
+                <Input
+                  type="text"
+                  size="large"
+                  placeholder="请输入短信验证码"
+                  suffix={
+                    <a href="https://my.cnki.net/mycnki/RealName/FindPsd.aspx" target="blank">
+                      获取验证码
+                    </a>
+                  }
                 />
               )}
             </Form.Item>
@@ -180,16 +234,14 @@ function LoginRegister(props) {
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
-                  placeholder="Password"
-                  suffix={
-                    <a href="https://my.cnki.net/mycnki/RealName/FindPsd.aspx" target="blank">
-                      找回密码
-                    </a>
-                  }
+                  size="large"
+                  placeholder="请输入密码"
                 />
               )}
             </Form.Item>
-            <Button type="primary">注册</Button>
+            <Button type="primary" block size="large">
+              注册
+            </Button>
           </Form>
         </TabPane>
         <TabPane tab="邮箱注册" key="2">
@@ -199,8 +251,20 @@ function LoginRegister(props) {
                 rules: [{ required: true, message: 'Please input your username!' }]
               })(
                 <Input
+                  size="large"
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Username"
+                  placeholder="可使用常用邮箱作用户名"
+                />
+              )}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('mail', {
+                rules: [{ required: true, message: 'Please input your username!' }]
+              })(
+                <Input
+                  size="large"
+                  prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="请输入邮箱地址"
                 />
               )}
             </Form.Item>
@@ -209,22 +273,20 @@ function LoginRegister(props) {
                 rules: [{ required: true, message: 'Please input your Password!' }]
               })(
                 <Input
+                  size="large"
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
-                  placeholder="Password"
-                  suffix={
-                    <a href="https://my.cnki.net/mycnki/RealName/FindPsd.aspx" target="blank">
-                      找回密码
-                    </a>
-                  }
+                  placeholder="请输入密码"
                 />
               )}
             </Form.Item>
-            <Button type="primary">注册</Button>
+            <Button type="primary" block size="large">
+              注册
+            </Button>
           </Form>
         </TabPane>
       </Tabs>
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', marginTop: 20 }}>
         已有账号？
         <Button
           type="link"
@@ -237,7 +299,7 @@ function LoginRegister(props) {
         </Button>
       </div>
     </div>
-  );
+  ) : null;
 
   return (
     <Modal title="" visible={visible} footer={null} onCancel={handleCancel} onOk={handleOk}>

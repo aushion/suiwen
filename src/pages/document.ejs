@@ -4,6 +4,13 @@
   <meta charset="utf-8" />
   <title>知网随问</title>
   <link rel="icon" type="image/x-icon" href="<%= context.publicPath %>favicon.ico" />
+  <script type="text/javascript"  charset="utf-8">
+    window.addEventListener('message',function(e){
+        if(e.data.type === 'success') {
+          window.location.href = e.data.target;
+        }
+    },false);
+</script>
   <script>
   //  try {
   //       window.FlushLogin();
@@ -53,17 +60,11 @@ var domain = window.document.domain;
 if(loginStatus){
   window.localStorage.setItem('userInfo',loginStatus)
 }else{
-  if (domain.indexOf('cnki.net')>-1) {
-    window.localStorage.setItem('userInfo', null);
-  }
+  // if (domain.indexOf('cnki.net')>-1) {
+  //   window.localStorage.setItem('userInfo', window.localStorage.getItem('userInfo'));
+  // }
 }
-    // function LoginSucess(data) {
-    //   console.log('success',data)    
-    //   window.localStorage.setItem('userInfo',JSON.stringify(data))
-    //   if(data.UserName === 'bk' && !ecp_LoginStatus){
-    //     window.location.reload()
-    //   }
-    // }
+   
     function Ecp_LogoutOptr(data) {console.log('exit', data) }
   </script>
 </head>
