@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
-import { Modal, Tabs, Form, Input, Button, Icon } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Modal, Tabs, Form, Input, Button, Icon, message } from 'antd';
 import request from '../../utils/request';
 import RestTools from '../../utils/RestTools';
 import styles from './index.less';
 const { TabPane } = Tabs;
+let time = null;
 
 function LoginRegister(props) {
   const { visible, triggerCancel } = props;
   const { getFieldDecorator } = props.form;
-  const [showRegister, setShowRegister] = useState(false);
-  const [showLogin, setShowLogin] = useState(true);
-  const [errMsg, setErrMsg] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [showRegister, setShowRegister] = useState(false); //显示注册框标志
+  const [showLogin, setShowLogin] = useState(true); //显示登录框标志
+  const [errMsg, setErrMsg] = useState(''); //接口报错提示
+  const [loading, setLoading] = useState(false); //提交loading
+  const [activeKey, setActiveKey] = useState('1'); //注册tab切换控制dom显隐
+  const [countDown, setCountDown] = useState(60); //倒计时
 
   const formItemLayout = {
     wrapperCol: { span: 24 }
   };
+
+  useEffect(() => {
+    clearInterval(time);
+  }, []);
+
+  useEffect(() => {
+    if (countDown <= 0) {
+      clearInterval(time);
+      setCountDown(60);
+    }
+  }, [countDown]);
 
   const QqSvg = () => (
     <svg fill="currentColor" viewBox="0 0 1024 1024">
@@ -59,12 +73,11 @@ function LoginRegister(props) {
 
   function handleOk(e, type) {
     e.preventDefault();
-   
     setErrMsg('');
-    setLoading(true);
     props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        setLoading(true);
         const data = JSON.parse(
           JSON.stringify(values, function(key, value) {
             if (value) {
@@ -74,35 +87,126 @@ function LoginRegister(props) {
             }
           })
         );
+        if (type === 'login') {
+          login(data);
+        } else if (type === 'mobileRegister') {
+          mobileRegister(data);
+        } else if (type === 'emailRegister') {
+          emailRegister(data);
+        }
+      }
+    });
+  }
+
+  function getVerifyCode() {
+    setErrMsg('');
+    clearInterval(time);
+
+    props.form.validateFields(['mobile'], { first: true }, (errors, values) => {
+      if (!errors) {
         request
-          .post('/Login/login', null, {
-            params: { ...data }
+          .post('/Login/send_verify_code', null, {
+            params: {
+              mobile: props.form.getFieldValue('mobile')
+            }
           })
           .then((res) => {
             if (res.data.result) {
-              triggerCancel();
-              props.form.resetFields();
-              RestTools.setLocalStorage('userInfo', {
-                ...res.data.result,
-                UserName: res.data.result.Username,
-                ShowName: res.data.result.PersonUserName
-              });
-              window.location.reload();
+              time = setInterval(() => {
+                setCountDown((countDown) => countDown - 1);
+              }, 1000);
             } else {
               setErrMsg(res.data.msg);
             }
-            setLoading(false)
-          })
-          .catch((err) => {
-            console.log(err);
           });
       }
     });
   }
 
+  function login(data) {
+    request
+      .post('/Login/login', null, {
+        params: { ...data }
+      })
+      .then((res) => {
+        if (res.data.result) {
+          triggerCancel();
+          props.form.resetFields();
+          RestTools.setLocalStorage('userInfo', {
+            ...res.data.result,
+            UserName: res.data.result.Username,
+            ShowName: res.data.result.PersonUserName
+          });
+          window.location.reload();
+        } else {
+          setErrMsg(res.data.msg);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function mobileRegister(data) {
+    request
+      .post('/Login/mobileRegister', null, {
+        params: {
+          ...data
+        }
+      })
+      .then((res) => {
+        if (res.data.result) {
+          triggerCancel();
+          props.form.resetFields();
+          setShowLogin(true);
+          setShowRegister(false);
+          message.success('太棒啦，您已经注册成功了，去登录试试吧');
+        } else {
+          setErrMsg(res.data.msg);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }
+
+  function emailRegister(data) {
+    request
+      .post('/Login/emailRegister', null, {
+        params: {
+          ...data
+        }
+      })
+      .then((res) => {
+        if (res.data.result) {
+          triggerCancel();
+          props.form.resetFields();
+          setShowLogin(true);
+          setShowRegister(false);
+          message.success('太棒啦，您已经注册成功了，去登录试试吧');
+        } else {
+          setErrMsg(res.data.msg);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }
+
   const loginForm = showLogin ? (
     <div className={styles.login}>
-      <Form {...formItemLayout} labelAlign="left">
+      <Form
+        {...formItemLayout}
+        labelAlign="left"
+        onSubmit={(e) => {
+          handleOk(e, 'login');
+        }}
+      >
         <div className={styles.title}>个人账户登录</div>
         <Form.Item>
           {getFieldDecorator('username', {
@@ -132,15 +236,7 @@ function LoginRegister(props) {
             />
           )}
         </Form.Item>
-        <Button
-          type="primary"
-          block
-          size="large"
-          loading={loading}
-          onClick={(e) => {
-            handleOk(e, 'login');
-          }}
-        >
+        <Button type="primary" htmlType="submit" block size="large" loading={loading}>
           登录
         </Button>
         {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
@@ -185,6 +281,7 @@ function LoginRegister(props) {
             onClick={() => {
               setShowLogin(false);
               setShowRegister(true);
+              setActiveKey('1');
             }}
           >
             立即注册
@@ -197,93 +294,152 @@ function LoginRegister(props) {
   const registerForm = showRegister ? (
     <div className={styles.register}>
       <div className={styles.title}>个人账户注册</div>
-      <Tabs type="card">
-        <TabPane tab="手机注册" key="1">
-          <Form {...formItemLayout} labelAlign="left">
-            <Form.Item>
-              {getFieldDecorator('username', {
-                rules: [{ required: true, message: 'Please input your username!' }]
-              })(
-                <Input
-                  size="large"
-                  prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="请输入手机号"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('verifycode', {
-                rules: [{ required: true, message: 'Please input your Password!' }]
-              })(
-                <Input
-                  type="text"
-                  size="large"
-                  placeholder="请输入短信验证码"
-                  suffix={
-                    <a href="https://my.cnki.net/mycnki/RealName/FindPsd.aspx" target="blank">
-                      获取验证码
-                    </a>
-                  }
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }]
-              })(
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  size="large"
-                  placeholder="请输入密码"
-                />
-              )}
-            </Form.Item>
-            <Button type="primary" block size="large">
-              注册
-            </Button>
-          </Form>
+      <Tabs
+        type="card"
+        onChange={(activeKey) => {
+          setActiveKey(activeKey);
+        }}
+      >
+        <TabPane tab="手机注册" key="1" forceRender={false}>
+          {activeKey === '1' ? (
+            <Form
+              {...formItemLayout}
+              labelAlign="left"
+              onSubmit={(e) => {
+                handleOk(e, 'mobileRegister');
+              }}
+            >
+              <Form.Item>
+                {getFieldDecorator('mobile', {
+                  rules: [
+                    { required: true, message: '请输入正确手机号', pattern: /^1[3456789]\d{9}$/ }
+                  ]
+                  // validateTrigger: 'onBlur'
+                })(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="请输入手机号"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('verifyCode', {
+                  rules: [{ required: true, message: '请输入短信验证码' }]
+                })(
+                  <Input
+                    type="text"
+                    size="large"
+                    placeholder="请输入短信验证码"
+                    suffix={
+                      countDown === 0 || countDown === 60 ? (
+                        <Button type="link" onClick={getVerifyCode}>
+                          获取验证码
+                        </Button>
+                      ) : (
+                        <span style={{ color: 'orange' }}>{countDown}秒后再发</span>
+                      )
+                    }
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('password', {
+                  rules: [
+                    { required: true, message: '密码不能为空' },
+                    {
+                      validator: (rule, value, callback) => {
+                        const mobile = props.form.getFieldValue('mobile');
+                        if (value === mobile) {
+                          callback('密码不能和用户名相同');
+                        }
+                        callback();
+                      }
+                    }
+                  ]
+                })(
+                  <Input
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="password"
+                    size="large"
+                    placeholder="请输入密码"
+                  />
+                )}
+              </Form.Item>
+              <Button type="primary" block size="large" htmlType="submit">
+                注册
+              </Button>
+            </Form>
+          ) : null}
+          {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
         </TabPane>
-        <TabPane tab="邮箱注册" key="2">
-          <Form {...formItemLayout} labelAlign="left">
-            <Form.Item>
-              {getFieldDecorator('username', {
-                rules: [{ required: true, message: 'Please input your username!' }]
-              })(
-                <Input
-                  size="large"
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="可使用常用邮箱作用户名"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('mail', {
-                rules: [{ required: true, message: 'Please input your username!' }]
-              })(
-                <Input
-                  size="large"
-                  prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="请输入邮箱地址"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }]
-              })(
-                <Input
-                  size="large"
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="请输入密码"
-                />
-              )}
-            </Form.Item>
-            <Button type="primary" block size="large">
-              注册
-            </Button>
-          </Form>
+
+        <TabPane
+          tab="邮箱注册"
+          key="2"
+          forceRender={false}
+          onSubmit={(e) => {
+            handleOk(e, 'emailRegister');
+          }}
+        >
+          {activeKey === '2' ? (
+            <Form {...formItemLayout} labelAlign="left">
+              <Form.Item>
+                {getFieldDecorator('username', {
+                  rules: [
+                    { required: true, message: '请输入正确的用户名' },
+                    {
+                      validator: (rule, value, callback) => {
+                        if (
+                          (!/^[0-9_a-zA-Z]{1,64}$/.test(value) &&
+                            !/^([a-zA-Z0-9])+([a-zA-Z0-9.-])@[A-Za-z0-9]+([-.][A-Za-z0-9]+).[A-Za-z0-9]+([-.][A-Za-z0-9]+)$/.test(
+                              value
+                            )) ||
+                          /^\d$/.test(value)
+                        ) {
+                          callback('您输入的用户名不符合规范');
+                        }
+                        callback();
+                      }
+                    }
+                  ]
+                })(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="可使用常用邮箱作用户名"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('email', {
+                  rules: [{ required: true, message: 'Please input your username!' }]
+                })(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="请输入邮箱地址"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator('epassword', {
+                  rules: [{ required: true, message: 'Please input your Password!' }]
+                })(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="password"
+                    placeholder="请输入密码"
+                  />
+                )}
+              </Form.Item>
+              {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
+              <Button type="primary" block size="large">
+                注册
+              </Button>
+            </Form>
+          ) : null}
         </TabPane>
       </Tabs>
       <div style={{ textAlign: 'center', marginTop: 20 }}>
