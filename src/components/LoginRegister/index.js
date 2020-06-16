@@ -137,6 +137,7 @@ function LoginRegister(props) {
             UserName: res.data.result.Username,
             ShowName: res.data.result.PersonUserName
           });
+          window.Ecp_FlushLogin()
           window.location.reload();
         } else {
           setErrMsg(res.data.msg);
@@ -374,29 +375,22 @@ function LoginRegister(props) {
           {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
         </TabPane>
 
-        <TabPane
-          tab="邮箱注册"
-          key="2"
-          forceRender={false}
-          onSubmit={(e) => {
-            handleOk(e, 'emailRegister');
-          }}
-        >
+        <TabPane tab="邮箱注册" key="2" forceRender={false}>
           {activeKey === '2' ? (
-            <Form {...formItemLayout} labelAlign="left">
+            <Form
+              {...formItemLayout}
+              labelAlign="left"
+              onSubmit={(e) => {
+                handleOk(e, 'emailRegister');
+              }}
+            >
               <Form.Item>
                 {getFieldDecorator('username', {
                   rules: [
                     { required: true, message: '请输入正确的用户名' },
                     {
                       validator: (rule, value, callback) => {
-                        if (
-                          (!/^[0-9_a-zA-Z]{1,64}$/.test(value) &&
-                            !/^([a-zA-Z0-9])+([a-zA-Z0-9.-])@[A-Za-z0-9]+([-.][A-Za-z0-9]+).[A-Za-z0-9]+([-.][A-Za-z0-9]+)$/.test(
-                              value
-                            )) ||
-                          /^\d$/.test(value)
-                        ) {
+                        if (/^\d$/.test(value)) {
                           callback('您输入的用户名不符合规范');
                         }
                         callback();
@@ -407,13 +401,13 @@ function LoginRegister(props) {
                   <Input
                     size="large"
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="可使用常用邮箱作用户名"
+                    placeholder="可使用常用邮箱作用户名,支持数字，字母及“”组合"
                   />
                 )}
               </Form.Item>
               <Form.Item>
                 {getFieldDecorator('email', {
-                  rules: [{ required: true, message: 'Please input your username!' }]
+                  rules: [{ type: 'email', required: true, message: '请输入有效的邮箱地址' }]
                 })(
                   <Input
                     size="large"
@@ -423,8 +417,8 @@ function LoginRegister(props) {
                 )}
               </Form.Item>
               <Form.Item>
-                {getFieldDecorator('epassword', {
-                  rules: [{ required: true, message: 'Please input your Password!' }]
+                {getFieldDecorator('password', {
+                  rules: [{ required: true, message: '请输入密码' }]
                 })(
                   <Input
                     size="large"
@@ -435,7 +429,7 @@ function LoginRegister(props) {
                 )}
               </Form.Item>
               {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
-              <Button type="primary" block size="large">
+              <Button type="primary" block size="large" htmlType="submit">
                 注册
               </Button>
             </Form>

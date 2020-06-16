@@ -6,7 +6,7 @@ const userInfo = RestTools.getLocalStorage('userInfo');
 if(userInfo){
   request.post('/Login/refreshLogin',null,{
     params: {
-      isPerson: userInfo.UserType === 'jf',
+      isPerson: userInfo.UserType === 'jf' || userInfo.PersonUserName,
       username: userInfo.UserName
     }
   }).then(res => {

@@ -53,14 +53,14 @@
       }
     };
 
-    var loginStatus = docCookies.getItem('Ecp_LoginStuts');
-    var domain = window.document.domain;
+    var loginStatus = docCookies.getItem('Ecp_LoginStuts'); //单点登录用户信息
+    var domain = window.document.domain; //获取主域名
     if (loginStatus) {
       window.localStorage.setItem('userInfo', loginStatus)
     } else {
-      // if (domain.indexOf('cnki.net')>-1) {
-      //   window.localStorage.setItem('userInfo', window.localStorage.getItem('userInfo'));
-      // }
+      if (domain.indexOf('cnki.net')>-1) {
+        window.localStorage.setItem('userInfo', null); //单点退出
+      }
     }
 
     function Ecp_LogoutOptr(data) { console.log('exit', data) }
