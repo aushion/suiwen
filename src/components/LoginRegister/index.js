@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Tabs, Form, Input, Button, Icon, message } from 'antd';
+import Cookies from 'js-cookie';
 import request from '../../utils/request';
 import RestTools from '../../utils/RestTools';
 import styles from './index.less';
@@ -71,6 +72,11 @@ function LoginRegister(props) {
     );
   }
 
+  function updateCookie() {
+    const loginStatus = Cookies.get('Ecp_LoginStuts');
+    // console.log('loginStatus', JSON.parse(loginStatus));
+  }
+
   function handleOk(e, type) {
     e.preventDefault();
     setErrMsg('');
@@ -137,8 +143,8 @@ function LoginRegister(props) {
             UserName: res.data.result.Username,
             ShowName: res.data.result.PersonUserName
           });
-          window.Ecp_FlushLogin()
-          window.location.reload();
+          updateCookie();
+          // window.location.reload();
         } else {
           setErrMsg(res.data.msg);
         }
