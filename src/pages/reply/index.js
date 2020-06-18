@@ -302,7 +302,10 @@ function Reply(props) {
                         ? username.substring(0, 3) + '****' + username.substring(7, 11)
                         : username}
                     </Link>
-                    <span style={{ padding: '0 10px' }}>{RestTools.status[item.status]}</span>
+                    <span style={{ padding: '0 10px' }}>
+                      {RestTools.status[item.status]}
+                      {item.failReason ? <span style={{color: 'red'}}>原因：{item.failReason}</span> : null}
+                    </span>
                     <span style={{ color: '#c3c3c3' }}>{item.opTime}</span>
                     {RestTools.getLocalStorage('userInfo') &&
                     RestTools.getLocalStorage('userInfo').ShowName === username &&

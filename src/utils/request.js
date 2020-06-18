@@ -6,8 +6,9 @@ let xToken = ''; //全局变量临时存储x-token
 // 创建一个axios实例
 const request = axios.create({
   // baseURL: process.env.apiUrl, // url = base url + request url,
+  crossDomain: true,
   baseURL: process.env.apiUrl,
-  // withCredentials: true, // send cookies when cross-domain requests
+  withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000, // request timeout
 });
 
@@ -26,7 +27,6 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     const res = response.data;
-
     if (res.code === 401) {
       // 说明token过期了,刷新token
       return refreshToken()
@@ -35,6 +35,7 @@ request.interceptors.response.use(
           xToken = res.headers['x-token'];
           if (xToken) {
             sessionStorage.setItem('TokenKey', xToken);
+            
           }
           // 获取当前失败的请求
           const config = response.config;

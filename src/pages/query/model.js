@@ -239,13 +239,11 @@ export default {
     },
     *setQuestion({ payload }, { call, put }) {
       const res = yield call(setQuestion, payload);
-      if (res.data.success) {
+      if (res.data.result) {
         yield put({ type: 'save', payload: { visible: false } });
         router.push('/help/myHelp');
-      } else if (!res.data.message) {
-        message.error('提交失败');
-      } else if (res.data.message === '1') {
-        message.warn('请勿重复提交');
+      } else {
+        message.warn(res.data.msg);
       }
       return res;
     },
