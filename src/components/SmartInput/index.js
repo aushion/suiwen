@@ -9,7 +9,7 @@ const HISTORYKEY = RestTools.HISTORYKEY;
 let timer = null;
 message.config({
   maxCount: 1,
-  top: 100,
+  top: 100
 });
 const SmartInput = (props) => {
   const [value, setValue] = useState('');
@@ -28,7 +28,7 @@ const SmartInput = (props) => {
     const currentValue = e.target.value;
     setValue(e.target.value);
     setRecord(e.target.value ? false : true);
-    setTips([])
+    setTips([]);
     if (needTip) {
       clearTimeout(timer);
       timer = setTimeout(() => {
@@ -92,7 +92,7 @@ const SmartInput = (props) => {
       <Input
         placeholder="请输入问题"
         size="large"
-        autoComplete='off'
+        autoComplete="new-password"
         allowClear
         value={value}
         onChange={handleChange}
@@ -110,7 +110,7 @@ const SmartInput = (props) => {
                 });
             }
           } else {
-            setTips([])
+            setTips([]);
             setRecord(true);
           }
         }}
@@ -120,11 +120,18 @@ const SmartInput = (props) => {
         }}
         onPressEnter={handleEnter}
         addonAfter={
-          <Button type="primary" onClick={handleEnter} style={{background: props.themeColor || '#0086FA'}}>
+          <Button
+            type="primary"
+            onClick={handleEnter}
+            style={{ background: props.themeColor || '#0086FA' }}
+          >
             提问
           </Button>
         }
       />
+
+      <input type="text" style={{ height: 0, opacity: 0, border:'none',padding: 0 }}></input>
+
       {showRecord && inputRecords.length ? (
         <div className={'record-wrap'}>
           <InputRecord data={inputRecords} clickItem={hanldeClickItem} />
