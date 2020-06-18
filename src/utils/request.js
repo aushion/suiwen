@@ -6,6 +6,7 @@ let xToken = ''; //全局变量临时存储x-token
 // 创建一个axios实例
 const request = axios.create({
   // baseURL: process.env.apiUrl, // url = base url + request url,
+  crossDomain: true,
   baseURL: process.env.apiUrl,
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 10000, // request timeout

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Tabs, Form, Input, Button, Icon, message } from 'antd';
-import Cookies from 'js-cookie';
 import request from '../../utils/request';
 import RestTools from '../../utils/RestTools';
 import styles from './index.less';
@@ -72,11 +71,6 @@ function LoginRegister(props) {
     );
   }
 
-  function updateCookie() {
-    const loginStatus = Cookies.get('Ecp_LoginStuts');
-    // console.log('loginStatus', JSON.parse(loginStatus));
-  }
-
   function handleOk(e, type) {
     e.preventDefault();
     setErrMsg('');
@@ -124,6 +118,9 @@ function LoginRegister(props) {
             } else {
               setErrMsg(res.data.msg);
             }
+          })
+          .catch((err) => {
+            message.error('网络出了点小问题，请稍后再试');
           });
       }
     });
@@ -143,15 +140,14 @@ function LoginRegister(props) {
             UserName: res.data.result.Username,
             ShowName: res.data.result.PersonUserName
           });
-          updateCookie();
-          // window.location.reload();
+          window.location.reload();
         } else {
           setErrMsg(res.data.msg);
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        message.error('网络出了点小问题，请稍后再试');
       });
   }
 
@@ -175,7 +171,7 @@ function LoginRegister(props) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        message.error('网络出了点小问题，请稍后再试')
         setLoading(false);
       });
   }
@@ -200,7 +196,8 @@ function LoginRegister(props) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        message.error('网络出了点小问题，请稍后再试')
+        
         setLoading(false);
       });
   }
