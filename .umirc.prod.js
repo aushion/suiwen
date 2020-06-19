@@ -1,9 +1,9 @@
 export default {
   define: {
-    'process.env.apiUrl': 'http://qa2.cnki.net/sw.api',
-    'process.env.apiUrl_help': 'http://kc.cnki.net/fb/api',
-    'process.env.apiUrl_collect': 'http://qa2.cnki.net/SWcollect',
-    'process.env.returnUrl': 'http://qa.cnki.net/sw.web'
+    'process.env.apiUrl': 'https://qa2.cnki.net/sw.api',
+    'process.env.apiUrl_help': 'https://kc.cnki.net/fb/api',
+    'process.env.apiUrl_collect': 'https://qa2.cnki.net/SWcollect',
+    'process.env.returnUrl': 'https://qa.cnki.net/sw.web'
 
   }
 };
