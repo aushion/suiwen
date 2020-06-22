@@ -329,7 +329,7 @@ function Home(props) {
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
-                              to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${
+                              to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
                                 item.id
                               }&domain=${item.Domain}`}
                             >
