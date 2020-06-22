@@ -13,7 +13,7 @@ const { Header, Footer, Content } = Layout;
 
 function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
+  const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 

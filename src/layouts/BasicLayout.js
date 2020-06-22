@@ -19,7 +19,7 @@ function BasicLayout(props) {
   let { q = RestTools.getSession('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
-  const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
+  const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
