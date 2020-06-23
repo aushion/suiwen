@@ -6,9 +6,9 @@ export default function MyAnswerList(props) {
   const { data, from = true } = props;
   return (
     <div style={{ padding: '10px 0' }}>
-      <div>共{data && data.pageTotal}条</div>
+      <div>共{data && data.total}条</div>
       <Collapse>
-        {data.dataList.map((item, index) => {
+        {data?data.list.map((item, index) => {
           return (
             <Panel
               showArrow={false}
@@ -27,7 +27,7 @@ export default function MyAnswerList(props) {
               ) : null}
             </Panel>
           );
-        })}
+        }):null}
       </Collapse>
     </div>
   );

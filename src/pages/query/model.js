@@ -215,12 +215,14 @@ export default {
       yield call(setEvaluate, payload);
     },
     *getHotHelpList({ payload }, { call, put }) {
-      const { data } = yield call(getHotHelpList);
-      if (data.length) {
+      const res = yield call(getHotHelpList);
+      console.log('res', res)
+
+      if (res.data.code === 200) {
         yield put({
           type: 'save',
           payload: {
-            helpList: data
+            helpList: res.data.result.dataList
           }
         });
       }

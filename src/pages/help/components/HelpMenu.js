@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Menu } from 'antd';
 import router from 'umi/router';
 import querystring from 'querystring'
+import RestTools from '../../../utils/RestTools';
 
 export default function HelpMenu(props) {
   const [current, setCurrent] = useState(props.current);
@@ -11,6 +12,7 @@ export default function HelpMenu(props) {
   const {username = ''} = query;
   
   function handleClick(e) {
+    RestTools.setSession('page',null) //重置分页
     setCurrent(e.key);
     router.push(username ? `/help/${e.key}?username=${username}`: `/help/${e.key}`);
   }
