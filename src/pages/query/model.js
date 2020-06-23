@@ -216,13 +216,12 @@ export default {
     },
     *getHotHelpList({ payload }, { call, put }) {
       const res = yield call(getHotHelpList);
-      console.log('res', res)
 
       if (res.data.code === 200) {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.dataList
+            helpList: res.data.result.list
           }
         });
       }
