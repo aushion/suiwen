@@ -1,11 +1,12 @@
 import { List, Input, Popconfirm } from 'antd';
+import RestTools from '../../../utils/RestTools';
 
 const { Search } = Input;
 function HelpList(props) {
   const {
     data,
     size,
-    index,
+    // index,
     current,
     domain,
     handleSearchOrChangePage,
@@ -26,7 +27,7 @@ function HelpList(props) {
     <div style={{ padding: '10px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 16 }}>
-          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.pageTotal}</span>条
+          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
         </div>
         <div>
           <Search
@@ -41,14 +42,15 @@ function HelpList(props) {
       <List
         style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
         loading={loading}
-        dataSource={data.dataList}
+        dataSource={data.list}
         pagination={
-          data.pageTotal && data.pageTotal > size
+          data.total && data.total > size
             ? {
-                total: data.pageTotal,
-                pageSize: size,
-                current: index,
+                total: data.total,
+                pageSize: data.size,
+                current: data.pageNum,
                 onChange: function(page, pageSize) {
+                  RestTools.setSession('page', { size: pageSize, index: page });
                   const payload = { size: pageSize, index: page, domain: domain };
                   handleSearchOrChangePage(payload);
                 }
@@ -80,7 +82,7 @@ function HelpList(props) {
                 <div>查看回答</div>
               ) : (
                 <div>
-                  {current === 'myHelp' && item.checkSum === 0 ? (
+                  {current === 'myHelp' && item.checkCount === 0 ? (
                     <Popconfirm
                       title="是否删除此问题?"
                       onConfirm={confirm.bind(this, item.id)}

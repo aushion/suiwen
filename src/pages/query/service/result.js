@@ -1,13 +1,14 @@
 import request from '../../../utils/request';
 
 export function getAnswer(payload) {
-  const {topic} = payload
-  return topic ? request.get('/getAnswerByTopic', {
-    params: { ...payload }
-  })
-  : request.get('/getAnswer', {
-    params: { ...payload }
-  });
+  const { topic } = payload;
+  return topic
+    ? request.get('/getAnswerByTopic', {
+        params: { ...payload }
+      })
+    : request.get('/getAnswer', {
+        params: { ...payload }
+      });
 }
 
 // export function getAnswerByTopic(payload) {
@@ -46,8 +47,13 @@ export function setEvaluate(payload) {
   });
 }
 
-export function getHotHelpList(payload) {
-  return request.get(process.env.apiUrl_help + '/GetNewQuestion?size=12');
+export function getHotHelpList() {
+  return request.get('/getNewQuestion', {
+    params: {
+      pageSize: 5,
+      pageStart: 1
+    }
+  });
 }
 
 export function getCommunityAnswer(payload) {
@@ -73,15 +79,13 @@ export function setQuestion(payload) {
 }
 
 export function getSemanticData(payload) {
-  return request.get('/getSemanticData',{
+  return request.get('/getSemanticData', {
     timeout: 30000,
     params: {
       ...payload
     }
-  })
+  });
 }
-
-
 
 //获取问题收集，统计用
 export function collectQuestion(payload) {
