@@ -17,14 +17,19 @@ export default {
 
   effects: {
     *getNewQuestions({ payload }, { call, put }) {
-      const res = yield call(helpService.getNewQuestions, { ...payload });
+      const res = yield call(helpService.getNewQuestions, {
+        ...payload
+      });
       const resultData = res.data;
-
-      yield put({ type: 'saveList', payload: { newHelpData: resultData.result, ...payload } });
+      
+      yield put({
+        type: 'saveList',
+        payload: { newHelpData: resultData.result, ...payload, }
+      });
     },
 
     *getDomain({ payload }, { call, put }) {
-      const res = yield call(helpService.getDomain);
+      const res = yield call(helpService.getDomain, payload);
       const resultData = res.data;
       yield put({ type: 'saveDomainList', payload: { domainList: resultData.result } });
     },
@@ -37,7 +42,7 @@ export default {
 
     *getHotQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getHotQuestions, payload);
-      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload,} });
     },
 
     *getMyAnswerQuestions({ payload }, { call, put }) {
@@ -67,7 +72,7 @@ export default {
             ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid');
           const current = pathname;
-          dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1 } }); //重置状态
+          dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
           if (current === '/help/newHelp') {
             dispatch({
               type: 'getDomain'
@@ -88,7 +93,7 @@ export default {
             });
           } else if (current === '/help/myHelp') {
             dispatch({
-              type: 'getPersonDomain',
+              type: 'getDomain',
               payload: { uId: uid }
             });
             dispatch({
@@ -107,7 +112,7 @@ export default {
             });
           } else if (current === '/help/otherHelp') {
             dispatch({
-              type: 'getPersonDomain',
+              type: 'getDomain',
               payload: { uId: uid }
             });
             dispatch({
@@ -116,7 +121,7 @@ export default {
             });
           } else if (current === '/help/otherReply') {
             dispatch({
-              type: 'getPersonDomain',
+              type: 'getDomain',
               payload: { uId: uid }
             });
             dispatch({

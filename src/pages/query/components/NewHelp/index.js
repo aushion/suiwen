@@ -12,7 +12,7 @@ function NewHelp(props) {
       </div>
       <List
         itemLayout="vertical"
-        dataSource={data.slice(0, 2)}
+        dataSource={data}
         renderItem={(item) => (
           <List.Item>
             <div
@@ -22,7 +22,7 @@ function NewHelp(props) {
                 overflow: 'hidden'
               }}
               onClick={() => {
-                RestTools.setSession('q', item.Content);
+                RestTools.setSession('q', item.content);
               }}
             >
               <Link
@@ -35,11 +35,9 @@ function NewHelp(props) {
                   display: 'block'
                 }}
                 title={item.Content}
-                to={`/reply?q=${encodeURIComponent(item.Content)}&QID=${item.ID}&domain=${
-                  item.Domain
-                }`}
+                to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}`}
               >
-                {item.Content}
+                {item.content}
               </Link>
 
               <div
@@ -51,7 +49,7 @@ function NewHelp(props) {
                   lineHeight: '25px'
                 }}
               >
-                回答数：{item.CheckSum}
+                回答数：{item.checkSum}
               </div>
             </div>
           </List.Item>

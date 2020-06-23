@@ -287,7 +287,7 @@ function Reply(props) {
                     dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                   />
 
-                  {item.resource.includes('<a') ? (
+                  {item.resource && item.resource.includes('<a') ? (
                     <>
                       <div>引用文献：</div>
                       <div dangerouslySetInnerHTML={{ __html: item.resource }} />
@@ -453,9 +453,7 @@ function Reply(props) {
                       <div
                         className={replyStyle.wrapper}
                         key={item}
-                        onMouseUp={(e) =>
-                          handleMouseUp(e, { year, qikanName, title, source_id, author })
-                        }
+                       
                       >
                         <List
                           itemLayout="vertical"
@@ -479,9 +477,9 @@ function Reply(props) {
                                   style={{ color: '#999' }}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
+                                  href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}`}
                                 >
-                                  {groupByData[item][0].data.title}
+                                  {title}
                                 </a>
                               </div>
                             </div>
@@ -491,6 +489,9 @@ function Reply(props) {
                             return (
                               <List.Item style={{ overflow: 'hidden' }}>
                                 <div
+                                 onMouseUp={(e) =>
+                                  handleMouseUp(e, { year, qikanName, title, source_id, author })
+                                }
                                   className={replyStyle.fontStyle}
                                   key={index}
                                   dangerouslySetInnerHTML={{

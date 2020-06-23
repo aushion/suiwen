@@ -324,7 +324,7 @@ function Home(props) {
                             </Link>
 
                             <span style={{ display: 'inline-block', overflow: 'hidden' }}>
-                              回答数:{item.checkSum}
+                              回答数:{item.checkCount}
                             </span>
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
