@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Divider, Modal, Input, Result, Button, message, Badge } from 'antd';
+import {
+  Spin,
+  Row,
+  Col,
+  Icon,
+  Divider,
+  Modal,
+  Input,
+  Result,
+  Button,
+  message,
+  Badge,
+  Skeleton
+} from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -224,71 +237,65 @@ function ResultPage(props) {
 
   return (
     <div className={styles.result} id="result">
-      <Spin spinning={fetchSemanticData || (loading && fetchSg)} indicator={antIcon}>
-        <div style={{ minHeight: 'calc(45vh)' }}>
-          <div className={styles.result_tips}>
-            {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
+      <div style={{ minHeight: 'calc(45vh)' }}>
+        <div className={styles.result_tips}>
+          {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
 
-            <span
-              style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}
-              onClick={showModal}
-            >
-              问题求助
-            </span>
-            <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
-              我来回答
-            </span>
-          </div>
+          <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
+            问题求助
+          </span>
+          <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
+            我来回答
+          </span>
+        </div>
 
-          {answerData.length || sgData.length || communityAnswer || semanticData.length ? (
-            <Row gutter={24}>
-              <Col span={4} style={{ padding: 0 }}>
-                <div className={styles.topicList}>
-                  <div className={styles.title}>您也可以选择专题问答</div>
-                  <div>
-                    {topicData.length
-                      ? topicData.map((item, index) => (
-                          <div className={styles.item} key={item.name}>
-                            <Link
-                              to={`/special?topicId=${item.topicId}&q=${q}`}
-                              target="_blank"
-                              style={{
-                                color: index === topicIndex ? '#0097FF' : '#43474A',
-                                display: 'inline-block',
-                                width: '100%',
-                                padding: '8px 10px'
-                              }}
-                            >
-                              {item.name === '阅读理解' ? (
-                                <Badge
-                                  count={
-                                    <div
-                                      style={{
-                                        backgroundColor: '#f50',
-                                        color: '#fff',
-                                        fontSize: 10,
-                                        top: '-2px',
-                                        right: '-20px',
-                                        padding: '2px'
-                                      }}
-                                    >
-                                      Beta
-                                    </div>
-                                  }
+        <Row gutter={24}>
+          <Col span={4} style={{ padding: 0 }}>
+            <div className={styles.topicList}>
+              <div className={styles.title}>您也可以选择专题问答</div>
+              <div>
+                {topicData.length
+                  ? topicData.map((item, index) => (
+                      <div className={styles.item} key={item.name}>
+                        <Link
+                          to={`/special?topicId=${item.topicId}&q=${q}`}
+                          target="_blank"
+                          style={{
+                            color: index === topicIndex ? '#0097FF' : '#43474A',
+                            display: 'inline-block',
+                            width: '100%',
+                            padding: '8px 10px'
+                          }}
+                        >
+                          {item.name === '阅读理解' ? (
+                            <Badge
+                              count={
+                                <div
+                                  style={{
+                                    backgroundColor: '#f50',
+                                    color: '#fff',
+                                    fontSize: 10,
+                                    top: '-2px',
+                                    right: '-20px',
+                                    padding: '2px'
+                                  }}
                                 >
-                                  {item.name}专题
-                                </Badge>
-                              ) : (
-                                item.name + '专题'
-                              )}
-                              
-                            </Link>
-                          </div>
-                        ))
-                      : null}
-                  </div>
-                </div>
-                {/* <div style={{ height: 20 }}></div>
+                                  Beta
+                                </div>
+                              }
+                            >
+                              {item.name}专题
+                            </Badge>
+                          ) : (
+                            item.name + '专题'
+                          )}
+                        </Link>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </div>
+            {/* <div style={{ height: 20 }}></div>
                 <Card
                   title="历史搜索"
                   headStyle={{ height: 20, lineHeight: '20px', fontSize: 14 }}
@@ -309,222 +316,227 @@ function ResultPage(props) {
                     </div>
                   ))}
                 </Card> */}
-              </Col>
-              <Col span={15}>
-                {statisticsData.length
-                  ? statisticsData.map((item) => (
-                      <Statistics
-                        title={item.title}
-                        id={item.id}
-                        evaluate={item.evaluate}
-                        intentDomain={item.intentDomain}
-                        intentFocus={item.intentFocus}
-                        intentJson={item.intentJson}
-                        key={item.id}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
-                {medicalData.length
-                  ? medicalData.map((item) => (
-                      <Medical
-                        title={item.title}
-                        id={item.id}
-                        intentJson={item.intentJson}
-                        evaluate={item.evaluate}
-                        intentDomain={item.intentDomain}
-                        intentFocus={item.intentFocus}
-                        key={item.id}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
-                {literatureData.length &&
-                (literatureData.length === 1 || literatureData.length === 3) ? (
-                  <Literature
-                    literatureData={literatureData}
-                    dispatch={dispatch}
-                    loading={fetchLiterature}
-                  />
-                ) : null}
-                {patentData.length
-                  ? patentData.map((item) => <Patent key={item.id} data={item} />)
-                  : null}
-                {scholarData.length
-                  ? scholarData.map((item) => (
-                      <Scholar
-                        key={item.id}
-                        id={item.id}
-                        evaluate={item.evaluate}
-                        title={item.title}
-                        data={item.dataNode}
-                        intentJson={item.intentJson}
-                      />
-                    ))
-                  : null}
-
-                {JournalData.length
-                  ? JournalData.slice(0, 1).map((item) => (
-                      <Journal
-                        key={item.id}
-                        id={item.id}
-                        evaluate={item.evaluate}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
-                {referenceBookData.length
-                  ? referenceBookData.map((item) => (
-                      <ReferenceBook
-                        key={item.id}
-                        id={item.id}
-                        domain={item.domain}
-                        intentDomain={item.intentDomain}
-                        intentFocus={item.intentFocus}
-                        evaluate={item.evaluate}
-                        title={item.title}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
-                {referenceBook63.length
-                  ? referenceBook63.map((item) => (
-                      <ReferenceBook63
-                        key={item.id}
-                        id={item.id}
-                        domain={item.domain}
-                        intentDomain={item.intentDomain}
-                        intentFocus={item.intentFocus}
-                        evaluate={item.evaluate}
-                        title={item.title}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
-                {referenceBook69.length
-                  ? referenceBook69.map((item) => (
-                      <ReferenceBook69
-                        key={item.id}
-                        id={item.id}
-                        domain={item.domain}
-                        intentDomain={item.intentDomain}
-                        intentFocus={item.intentFocus}
-                        evaluate={item.evaluate}
-                        title={item.title}
-                        data={item.dataNode}
-                      />
-                    ))
-                  : null}
-                {sentenceData.length ? <Sentence data={sentenceData} /> : null}
-
-                {kaifangyuData.length
-                  ? kaifangyuData.map((item) => (
-                      <Graphic
-                        key={item.id}
-                        id={item.id}
-                        q={q}
-                        data={item.dataNode}
-                        intentJson={item.intentJson}
-                        intentDomain={item.intentDomain}
-                        domain={item.domain}
-                        pagination={item.pagination}
-                        title={item.title}
-                        evaluate={item.evaluate}
-                        intentFocus={item.intentFocus}
-                        dispatch={dispatch}
-                      />
-                    ))
-                  : null}
-                {poemData.length
-                  ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
-                  : null}
-                {faqData.length ? (
+          </Col>
+          <Col span={15}>
+            {answerData.length || communityAnswer || sgData || semanticData.length ? (
+              <div>
+                <Skeleton loading={fetchSemanticData || loading} active>
                   <div>
-                    {faqData.map((item) => (
-                      <FAQ key={item.id} data={item} />
-                    ))}
+                    {statisticsData.length
+                      ? statisticsData.map((item) => (
+                          <Statistics
+                            title={item.title}
+                            id={item.id}
+                            evaluate={item.evaluate}
+                            intentDomain={item.intentDomain}
+                            intentFocus={item.intentFocus}
+                            intentJson={item.intentJson}
+                            key={item.id}
+                            data={item.dataNode}
+                          />
+                        ))
+                      : null}
+                    {medicalData.length
+                      ? medicalData.map((item) => (
+                          <Medical
+                            title={item.title}
+                            id={item.id}
+                            intentJson={item.intentJson}
+                            evaluate={item.evaluate}
+                            intentDomain={item.intentDomain}
+                            intentFocus={item.intentFocus}
+                            key={item.id}
+                            data={item.dataNode}
+                          />
+                        ))
+                      : null}
+                    {literatureData.length &&
+                    (literatureData.length === 1 || literatureData.length === 3) ? (
+                      <Literature
+                        literatureData={literatureData}
+                        dispatch={dispatch}
+                        loading={fetchLiterature}
+                      />
+                    ) : null}
+                    {patentData.length
+                      ? patentData.map((item) => <Patent key={item.id} data={item} />)
+                      : null}
+                    {scholarData.length
+                      ? scholarData.map((item) => (
+                          <Scholar
+                            key={item.id}
+                            id={item.id}
+                            evaluate={item.evaluate}
+                            title={item.title}
+                            data={item.dataNode}
+                            intentJson={item.intentJson}
+                          />
+                        ))
+                      : null}
+
+                    {JournalData.length
+                      ? JournalData.slice(0, 1).map((item) => (
+                          <Journal
+                            key={item.id}
+                            id={item.id}
+                            evaluate={item.evaluate}
+                            data={item.dataNode}
+                          />
+                        ))
+                      : null}
+                    {referenceBookData.length
+                      ? referenceBookData.map((item) => (
+                          <ReferenceBook
+                            key={item.id}
+                            id={item.id}
+                            domain={item.domain}
+                            intentDomain={item.intentDomain}
+                            intentFocus={item.intentFocus}
+                            evaluate={item.evaluate}
+                            title={item.title}
+                            data={item.dataNode}
+                          />
+                        ))
+                      : null}
+                    {referenceBook63.length
+                      ? referenceBook63.map((item) => (
+                          <ReferenceBook63
+                            key={item.id}
+                            id={item.id}
+                            domain={item.domain}
+                            intentDomain={item.intentDomain}
+                            intentFocus={item.intentFocus}
+                            evaluate={item.evaluate}
+                            title={item.title}
+                            data={item.dataNode}
+                          />
+                        ))
+                      : null}
+                    {referenceBook69.length
+                      ? referenceBook69.map((item) => (
+                          <ReferenceBook69
+                            key={item.id}
+                            id={item.id}
+                            domain={item.domain}
+                            intentDomain={item.intentDomain}
+                            intentFocus={item.intentFocus}
+                            evaluate={item.evaluate}
+                            title={item.title}
+                            data={item.dataNode}
+                          />
+                        ))
+                      : null}
+                    {sentenceData.length ? <Sentence data={sentenceData} /> : null}
+
+                    {kaifangyuData.length
+                      ? kaifangyuData.map((item) => (
+                          <Graphic
+                            key={item.id}
+                            id={item.id}
+                            q={q}
+                            data={item.dataNode}
+                            intentJson={item.intentJson}
+                            intentDomain={item.intentDomain}
+                            domain={item.domain}
+                            pagination={item.pagination}
+                            title={item.title}
+                            evaluate={item.evaluate}
+                            intentFocus={item.intentFocus}
+                            dispatch={dispatch}
+                          />
+                        ))
+                      : null}
+                    {poemData.length
+                      ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
+                      : null}
+                    {faqData.length ? (
+                      <div>
+                        {faqData.map((item) => (
+                          <FAQ key={item.id} data={item} />
+                        ))}
+                      </div>
+                    ) : null}
+                    {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
+                    {weather.length ? <Weather weatherData={weather[0]} /> : null}
+
+                    {semanticData.length ? <ReadComp data={semanticData} /> : null}
                   </div>
-                ) : null}
-                {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
-                {weather.length ? <Weather weatherData={weather[0]} /> : null}
+                </Skeleton>
 
-                {semanticData.length ? <ReadComp data={semanticData} /> : null}
-
-                {sgData.length ? <SgList data={sgData} /> : null}
-              </Col>
-              <Col
-                span={5}
-                style={{ boxShadow: '#cecece 0 0 6px 0', background: '#fff', padding: 20 }}
-              >
-                {relatedLiterature.length ? (
-                  <RelatedList
-                    q={q}
-                    extra={{
-                      time: '出版日期',
-                      author: '作者',
-                      source: '来源'
+                <Skeleton loading={fetchSg} active>
+                  {sgData.length ? <SgList data={sgData} /> : null}
+                </Skeleton>
+              </div>
+            ) : !loading && !fetchLiterature && !fetchSg && !fetchSemanticData ? (
+              <Result
+                style={{ width: 600, margin: 'auto' }}
+                icon={<Icon type="frown" theme="twoTone" />}
+                subTitle={
+                  <div style={{ textAlign: 'center' }}>
+                    <p>抱歉，您输入的问题，我暂时还不能识别出它的意思。</p>
+                    <p>请变换一下说法再问问我^_^。</p>
+                    <p>（提问方式：自然语言 or 关键词）</p>
+                  </div>
+                }
+                extra={
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      router.push('/');
+                      dispatch({
+                        type: 'global/setQuestion',
+                        payload: {
+                          q: ''
+                        }
+                      });
                     }}
-                    title="相关文献"
-                    focus="题名"
-                    data={relatedLiterature[0].dataNode}
-                  />
-                ) : null}
-                {relatedPatent.length && helpList.length ? <Divider dashed /> : null}
-                {relatedPatent.length ? (
-                  <RelatedList
-                    q={q}
-                    extra={{ time: '发表时间', author: '发明人' }}
-                    title="相关专利"
-                    focus="专利名"
-                    data={relatedPatent[0].dataNode}
-                  />
-                ) : null}
+                  >
+                    回到首页
+                  </Button>
+                }
+              />
+            ) : null}
+          </Col>
+          <Col span={5} style={{ boxShadow: '#cecece 0 0 6px 0', background: '#fff', padding: 20 }}>
+            {relatedLiterature.length ? (
+              <RelatedList
+                q={q}
+                extra={{
+                  time: '出版日期',
+                  author: '作者',
+                  source: '来源'
+                }}
+                title="相关文献"
+                focus="题名"
+                data={relatedLiterature[0].dataNode}
+              />
+            ) : null}
+            {relatedPatent.length && helpList.length ? <Divider dashed /> : null}
+            {relatedPatent.length ? (
+              <RelatedList
+                q={q}
+                extra={{ time: '发表时间', author: '发明人' }}
+                title="相关专利"
+                focus="专利名"
+                data={relatedPatent[0].dataNode}
+              />
+            ) : null}
 
-                {relatedData.length && helpList.length ? <Divider dashed /> : null}
-                {relaventQuestions.length ? (
-                  <RelatedList
-                    q={q}
-                    title="相关问题"
-                    focus="问题"
-                    data={relaventQuestions}
-                    topic={topic}
-                  />
-                ) : null}
-                {relaventQuestions.length ? <Divider dashed /> : null}
-                {helpList.length ? <NewHelp data={helpList} /> : null}
-              </Col>
-            </Row>
-          ) : !loading && !fetchLiterature && !fetchSg && !fetchSemanticData ? (
-            <Result
-              style={{ width: 960, margin: 'auto' }}
-              icon={<Icon type="frown" theme="twoTone" />}
-              subTitle={
-                <div style={{ textAlign: 'center' }}>
-                  <p>抱歉，您输入的问题，我暂时还不能识别出它的意思。</p>
-                  <p>请变换一下说法再问问我^_^。</p>
-                  <p>（提问方式：自然语言 or 关键词）</p>
-                </div>
-              }
-              extra={
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    router.push('/');
-                    dispatch({
-                      type: 'global/setQuestion',
-                      payload: {
-                        q: ''
-                      }
-                    });
-                  }}
-                >
-                  回到首页
-                </Button>
-              }
-            />
-          ) : null}
-        </div>
-      </Spin>
+            {relatedData.length && helpList.length ? <Divider dashed /> : null}
+            {relaventQuestions.length ? (
+              <RelatedList
+                q={q}
+                title="相关问题"
+                focus="问题"
+                data={relaventQuestions}
+                topic={topic}
+              />
+            ) : null}
+            {relaventQuestions.length ? <Divider dashed /> : null}
+            {helpList.length ? <NewHelp data={helpList} /> : null}
+          </Col>
+        </Row>
+      </div>
       <Viewer
         visible={imgVisible}
         onClose={() => {
