@@ -3,9 +3,17 @@ import Cookies from 'js-cookie';
 
 
 if (!Cookies.get('cnki_qa_uuid')) {
-  Cookies.set('cnki_qa_uuid', RestTools.createUid(), {
-    expires: 3650
-  });
+  if(process.env.UMI_ENV === 'prod'){
+    Cookies.set('cnki_qa_uuid', RestTools.createUid(), {
+      expires: 3650,
+      secure: true
+    });
+  }else{
+    Cookies.set('cnki_qa_uuid', RestTools.createUid(), {
+      expires: 3650,
+    });
+  }
+  
 }
 
 // if (Cookies.get('Ecp_LoginStuts')) {
