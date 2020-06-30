@@ -317,7 +317,7 @@ function Home(props) {
                             <Link
                               to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
                                 item.id
-                              }&domain=${item.Domain}`}
+                              }&domain=${item.domain}`}
                               target='_blank'
                               className={homeStyles.help_item_content}
                             >
@@ -332,7 +332,7 @@ function Home(props) {
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
                                 item.id
-                              }&domain=${item.Domain}`}
+                              }&domain=${item.domain}`}
                             >
                               我来回答
                             </Link>
