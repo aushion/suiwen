@@ -113,7 +113,7 @@ export default {
           } else if (current === '/help/otherHelp') {
             dispatch({
               type: 'getDomain',
-              payload: { uId: uid }
+              payload: { uId: username }
             });
             dispatch({
               type: 'getNewQuestions',
@@ -122,7 +122,7 @@ export default {
           } else if (current === '/help/otherReply') {
             dispatch({
               type: 'getDomain',
-              payload: { uId: uid }
+              payload: { uId: username }
             });
             dispatch({
               type: 'getMyAnswerQuestions',

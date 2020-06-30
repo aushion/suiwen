@@ -318,7 +318,7 @@ function ResultPage(props) {
                 </Card> */}
           </Col>
           <Col span={15}>
-            {answerData.length || communityAnswer || sgData || semanticData.length ? (
+            {answerData.length || communityAnswer || sgData.length|| semanticData.length ? (
               <div>
                 <Skeleton loading={fetchSemanticData || loading} active>
                   <div>

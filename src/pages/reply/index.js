@@ -149,13 +149,13 @@ function Reply(props) {
     const resourceArray = [...new Set(quoteArrayList.map((item) => item.resourceStr))];
     //重新定义引文内容字符串，引用文献字符串，并处理格式
     let str = getFieldValue('contents') ? getFieldValue('contents').toHTML() : '';
-    let newText = (str += `${text}[${resourceArray.length}]`);
+    let newText = (str += `${text}[${resourceArray.length}]`).replace('<p></p>','');
     let newResourceStr = '';
 
     for (let i = 0; i < resourceArray.length; i++) {
       newResourceStr += resourceArray[i] + '<br>';
     }
-
+   
     if (newText) {
       setFieldsValue({
         contents: BraftEditor.createEditorState(newText),
@@ -430,9 +430,9 @@ function Reply(props) {
               <div
                 id="sg"
                 style={{
-                  padding: '2px 2px'
-                  // height: keys.length ? '80vh' : 'auto',
-                  // overflowY: keys.length ? 'scroll' : 'auto'
+                  padding: '2px 2px',
+                  height: keys.length ? '80vh' : 'auto',
+                  overflowY: keys.length ? 'scroll' : 'auto'
                 }}
               >
                 {keys.length ? (

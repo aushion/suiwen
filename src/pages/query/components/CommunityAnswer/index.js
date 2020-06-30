@@ -9,8 +9,8 @@ const CommunityAnswer = (props) => {
   const { question, prepared_ANSWER, user_NAME, answer_ID, time, qid, evaluate } = props.data;
   const { good, bad, isevalute } = evaluate;
   const answer = prepared_ANSWER
-    ? prepared_ANSWER.length > 300
-      ? prepared_ANSWER.substr(0, 300) + '<a class="showMore"> 更多>></a>'
+    ? prepared_ANSWER.length > 1000
+      ? prepared_ANSWER.substr(0, 1000) + '<a class="showMore"> 更多>></a>'
       : prepared_ANSWER
     : '';
   const [visible, setVisible] = useState(false);
@@ -22,7 +22,7 @@ const CommunityAnswer = (props) => {
 
   function handleShowMore(e, str) {
     if (e.target.className === 'showMore') {
-      showMore(str.substr(300, str.length));
+      showMore(str.substr(1000, str.length));
     }
   }
   return (

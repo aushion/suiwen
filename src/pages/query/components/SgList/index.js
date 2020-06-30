@@ -38,17 +38,19 @@ function SgList(props) {
               itemLayout="vertical"
               dataSource={groupByData[item]}
               footer={
-                <div style={{ float: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
+                <div style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
                   <div>
-                    <span
+                    <div
+                    style={{textAlign: 'right', display: 'inline-block', overflow: 'hidden', textOverflow:"ellipsis", whiteSpace:'nowrap'} }
                       dangerouslySetInnerHTML={{
                         __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
                       }}
-                    ></span>
+                    />
                     <a
-                      style={{ color: '#999' }}
+                      style={{ color: '#999' , maxWidth: '50%', display: 'inline-block', overflow: 'hidden', textOverflow:"ellipsis", whiteSpace:'nowrap'}}
                       target="_blank"
                       rel="noopener noreferrer"
+                      title={groupByData[item][0].data.caption}
                       href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
                     >
                       {groupByData[item][0].data.caption}

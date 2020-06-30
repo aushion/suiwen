@@ -67,7 +67,7 @@ const SmartInput = (props) => {
     let str = value;
     let newStr = str;
     if (newStr && newStr.trim()) {
-      if (value.length > maxLength) {
+      if (RestTools.getStrLength(value) > maxLength) {
         message.warning(
           <span>
             您输入的问题字数超过了限制，
@@ -96,7 +96,7 @@ const SmartInput = (props) => {
         allowClear
         value={value}
         onChange={handleChange}
-        maxLength={50}
+        // maxLength={50}
         onFocus={() => {
           if (value) {
             if (props.needTip) {

@@ -317,7 +317,8 @@ function Home(props) {
                             <Link
                               to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
                                 item.id
-                              }&domain=${item.Domain}`}
+                              }&domain=${item.domain}`}
+                              target='_blank'
                               className={homeStyles.help_item_content}
                             >
                               <span title={item.Content}>{item.content}</span>
@@ -331,7 +332,7 @@ function Home(props) {
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
                                 item.id
-                              }&domain=${item.Domain}`}
+                              }&domain=${item.domain}`}
                             >
                               我来回答
                             </Link>
@@ -343,15 +344,17 @@ function Home(props) {
                       )}
                     />
 
-                    <div
+                    <Link
                       className={homeStyles.help_more}
-                      onClick={() => {
-                        router.push('/help/newHelp');
-                      }}
+                      // onClick={() => {
+                      //   router.push('/help/newHelp');
+                      // }}
+                      to={'/help/newHelp'}
+                      target='_blank'
                     >
                       MORE
                       <Icon type="double-right" />
-                    </div>
+                    </Link>
                   </div>
                 </div>
               </TabPane>
