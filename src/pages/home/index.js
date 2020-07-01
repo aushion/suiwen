@@ -315,7 +315,7 @@ function Home(props) {
                             // onClick={handleClickItem.bind(this, item.Content)}
                           >
                             <Link
-                              to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
+                              to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
                                 item.id
                               }&domain=${item.domain}`}
                               target='_blank'
@@ -330,7 +330,7 @@ function Home(props) {
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
                               className={homeStyles.myReply}
-                              to={`/reply?q=${encodeURIComponent(item.content)}&QID=${
+                              to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
                                 item.id
                               }&domain=${item.domain}`}
                             >
