@@ -5,8 +5,16 @@ import RestTools from '../../../../utils/RestTools';
 function NewHelp(props) {
   const { data } = props;
   return (
-    <div>
-      <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
+    <div style={{ backgroundColor: '#fff', padding: 20, boxShadow: '#cecece 0 0 6px 0' }}>
+      <div
+        style={{
+          paddingBottom: 10,
+          borderBottom: '1px solid #e6e6e6',
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: '#333'
+        }}
+      >
         <Icon type="question-circle" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
         新求助
       </div>

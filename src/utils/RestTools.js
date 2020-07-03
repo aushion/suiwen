@@ -118,7 +118,7 @@ export default {
     });
   },
   removeTag(str) {
-    return str.replace(/<p>/g, '').replace(/<\/p>/g, '');
+    return str && str.replace(/<p>/g, '').replace(/<\/p>/g, '');
   },
   setStorageInput(key, value) {
     let inputRecords = JSON.parse(window.localStorage.getItem(key)) || [];
