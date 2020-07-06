@@ -497,7 +497,7 @@ function ResultPage(props) {
               />
             ) : null}
           </Col>
-          <Col span={5} style={{ boxShadow: '#cecece 0 0 6px 0', background: '#fff', padding: 20 }}>
+          <Col span={5} style={{padding: 0}}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
@@ -511,7 +511,6 @@ function ResultPage(props) {
                 data={relatedLiterature[0].dataNode}
               />
             ) : null}
-            {relatedPatent.length && helpList.length ? <Divider dashed /> : null}
             {relatedPatent.length ? (
               <RelatedList
                 q={q}
@@ -522,7 +521,6 @@ function ResultPage(props) {
               />
             ) : null}
 
-            {relatedData.length && helpList.length ? <Divider dashed /> : null}
             {relaventQuestions.length ? (
               <RelatedList
                 q={q}
@@ -532,7 +530,6 @@ function ResultPage(props) {
                 topic={topic}
               />
             ) : null}
-            {relaventQuestions.length ? <Divider dashed /> : null}
             {helpList.length ? <NewHelp data={helpList} /> : null}
           </Col>
         </Row>

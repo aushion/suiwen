@@ -18,8 +18,8 @@ function ReferenceBook(props) {
           '&db=crfd"' +
           'target="_blank"' +
           'rel="noopener noreferrer"' +
-          'style="white-space:nowrap"' +
-          '> 查看全文>>' +
+          'style="white-space:nowrap;border-radius:20px;background-color:#3A83EC;color:#fff;font-size:12px;padding:2px 4px;"' +
+          '> 查看全文' +
           '</a>'
         );
       } else {
@@ -66,7 +66,7 @@ function ReferenceBook(props) {
                   item.工具书编号
                 )}.html`}
                 dangerouslySetInnerHTML={{
-                  __html: `《${RestTools.removeFlag(item.工具书名称 || item.Title || item.TITLE)}》`
+                  __html: `来源:《${RestTools.removeFlag(item.工具书名称 || item.Title || item.TITLE)}》`
                 }}
               />
             </div>

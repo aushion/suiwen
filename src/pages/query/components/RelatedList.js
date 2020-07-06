@@ -2,7 +2,6 @@ import { List, Icon } from 'antd';
 import Link from 'umi/link';
 import RestTools from '../../../utils/RestTools';
 
-
 function RelatedLiteraure(props) {
   const { data, q, title, focus, extra, topic } = props;
   function outLink(type, filename, source) {
@@ -26,25 +25,36 @@ function RelatedLiteraure(props) {
   }
 
   const iconType = {
-    '相关文献': 'read',
-    '相关问题': 'question-circle',
-    '相关专利': 'file-protect'
-    
-  }
+    相关文献: 'read',
+    相关问题: 'question-circle',
+    相关专利: 'file-protect'
+  };
   return (
-    <div>
-      <div style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>
-        <Icon
-          type={iconType[title]}
-          style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }}
-        />
+    <div
+      style={{
+        backgroundColor: '#fff',
+        padding: 20,
+        boxShadow: '#cecece 0 0 6px 0',
+        marginBottom: 20
+      }}
+    >
+      <div
+        style={{
+          fontSize: 16,
+          paddingBottom: 10,
+          fontWeight: 'bold',
+          color: '#333',
+          borderBottom: '1px solid #e6e6e6'
+        }}
+      >
+        <Icon type={iconType[title]} style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
         {title}
       </div>
       <List
         itemLayout="vertical"
         dataSource={data.filter((item) => item !== q)}
         renderItem={(item) => (
-          <List.Item style={{ padding: '8px 0' }}>
+          <List.Item style={focus === '问题' ? { border: 'none', padding: 8, }: {border: 'none'}}>
             <div>
               {focus === '问题' ? (
                 <Link
@@ -93,9 +103,11 @@ function RelatedLiteraure(props) {
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span style={{ display: 'inline-block', marginRight: 10 }}>
-                  {item[extra.author]}
-                </span>
+                {item[extra.author] ? (
+                  <span style={{ display: 'inline-block', marginRight: 10 }}>
+                    {item[extra.author]}
+                  </span>
+                ) : null}
                 {item[extra.source] ? (
                   <span
                     style={{ display: 'inline-block', marginRight: 10 }}
@@ -117,7 +129,7 @@ function RelatedLiteraure(props) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          更多>>
+          {'更多>>'}
         </a>
       ) : null}
     </div>
