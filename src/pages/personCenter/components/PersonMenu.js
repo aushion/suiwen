@@ -1,23 +1,24 @@
 import React from 'react';
 import { Menu, Icon } from 'antd';
+import router from 'umi/router';
 
 function PersonMenu() {
   const menuItemStyle = {
     padding: '20px 0 20px 30px',
     height: '80px',
-    lineHeight: '26px',
-    fontSize: 20,
+    fontSize: 16,
     marginTop: 0,
     marginBottom: 0
   }
 
   function handleClick(item) {
-    console.log(item);
+    console.log('window.location.pathname', window.location.pathname)
+    router.push(`/personCenter/${item.key}`)
   }
 
   return (
     <div>
-      <Menu onClick={handleClick}>
+      <Menu onClick={handleClick} defaultSelectedKeys={window.location.pathname.replace('/web/personCenter/','')} >
         <Menu.Item key="personInfo" style={menuItemStyle}>
           <Icon type="user" /> 个人信息
         </Menu.Item>

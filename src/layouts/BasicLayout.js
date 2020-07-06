@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, BackTop, Affix, Button } from 'antd';
 import router from 'umi/router';
 import find from 'lodash/find';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
-// import Cookies from 'js-cookie';
+import Link from 'umi/link';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
@@ -24,10 +24,14 @@ function BasicLayout(props) {
   const [showLogin, setShowLogin] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
 
-  let { title, dispatch, theme } = props;
+  let { title, dispatch, theme, showLoginModal } = props;
   const { topicId, info, name } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
+
+  useEffect(() => {
+    setShowLogin(showLoginModal);
+  }, [showLoginModal]);
 
   function handleClickEnterOrItem(value) {
     const q = value.trim();
@@ -51,6 +55,9 @@ function BasicLayout(props) {
     window.Ecp_LogoutOptr_my(0);
     localStorage.setItem('userInfo', null);
     setUsername(null);
+    if (window.location.pathname.includes('personCenter')) {
+      router.push('/');
+    }
   }
 
   return (
@@ -77,11 +84,17 @@ function BasicLayout(props) {
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
             <span className={styles.tips}>
-              您好! {username ? RestTools.formatPhoneNumber(username) : '游客'}
+              您好!
+              {username ? (
+                <Link style={{ color: '#fff' }} to="/personCenter/personInfo">
+                  {RestTools.formatPhoneNumber(username)}
+                </Link>
+              ) : (
+                '游客'
+              )}
             </span>
             {username ? null : (
               <Button
-               
                 className={styles.login_btn}
                 ghost
                 onClick={() => {

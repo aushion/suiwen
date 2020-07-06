@@ -47,7 +47,16 @@ function HomeLayout(props) {
           {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
             回到旧版
           </a> */}
-          您好! {<Link style={{color: '#fff'}} to='/personCenter/personInfo'>{RestTools.formatPhoneNumber(username) || '游客'}</Link>}
+          <span className={styles.tips}>
+              您好!
+              {username ? (
+                <Link style={{ color: '#fff' }} to="/personCenter/personInfo">
+                  {RestTools.formatPhoneNumber(username)}
+                </Link>
+              ) : (
+                '游客'
+              )}
+            </span>
           {username ? null : (
             <Button
               ghost
