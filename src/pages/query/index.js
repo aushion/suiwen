@@ -5,7 +5,6 @@ import {
   Row,
   Col,
   Icon,
-  Divider,
   Modal,
   Input,
   Result,

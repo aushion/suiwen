@@ -4,7 +4,7 @@ import router from 'umi/router';
 import { connect } from 'dva';
 import SmartInput from '../components/SmartInput';
 import FeedBack from '../components/FeedBack';
-// import Cookies from 'js-cookie';
+import Link from 'umi/link';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 import LoginRegister from '../components/LoginRegister';
@@ -47,7 +47,7 @@ function HomeLayout(props) {
           {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
             回到旧版
           </a> */}
-          您好! {RestTools.formatPhoneNumber(username) || '游客'}
+          您好! {<Link style={{color: '#fff'}} to='/personCenter/personInfo'>{RestTools.formatPhoneNumber(username) || '游客'}</Link>}
           {username ? null : (
             <Button
               ghost

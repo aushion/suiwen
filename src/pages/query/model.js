@@ -69,13 +69,40 @@ export default {
           source: 'getAnswer'
         });
       }
-      yield call(submitQa, {
-        clientType: 'pc',
-        question: decodeURIComponent(q),
-        answerStatus: res.data.code === 200 ? 'yes' : 'no',
-        ip: '192.168.22.13',
-        user_id: userId
-      });
+      // yield call(submitQa, {
+      //   clientType: 'pc',
+      //   question: decodeURIComponent(q),
+      //   answerStatus: res.data.code === 200 ? 'yes' : 'no',
+      //   ip: '192.168.22.13',
+      //   user_id: userId
+      // });
+      if (res.data.code === 200) {
+        yield put({
+          type: 'submitQa',
+          payload: {
+            clientType: 'pc',
+            question: decodeURIComponent(q),
+            answerStatus: 'yes',
+            ip: '192.168.22.13',
+            user_id: userId
+          }
+        });
+      } else {
+        yield put({
+          type: 'submitQa',
+          payload: {
+            clientType: 'pc',
+            question: decodeURIComponent(q),
+            answerStatus: 'no',
+            ip: '192.168.22.13',
+            user_id: userId
+          }
+        });
+      }
+    },
+
+    *submitQa({ payload }, { call }) {
+      yield call(submitQa, payload);
     },
 
     *getTopicQuestions({ payload }, { call, put }) {
