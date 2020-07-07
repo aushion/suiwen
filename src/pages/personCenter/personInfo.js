@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, DatePicker, Radio, Button } from 'antd';
 import { connect } from 'dva';
 
-function personInfo(props) {
-  const { getFieldDecorator } = props.form;
+function PersonInfo(props) {
+  const { getFieldDecorator, setFieldsValue } = props.form;
+  const { userInfo } = props;
+  console.log('userInfo', userInfo);
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -14,25 +16,24 @@ function personInfo(props) {
       sm: { span: 16 }
     }
   };
+
   return (
     <div>
       <Form {...formItemLayout}>
         <Form.Item label="账号">
-          {getFieldDecorator('email', {
+          {getFieldDecorator('userName', {
+            initialValue: userInfo ? userInfo.userName : '',
             rules: [
-              {
-                type: 'email',
-                message: 'The input is not valid E-mail!'
-              },
               {
                 required: true,
                 message: 'Please input your E-mail!'
               }
             ]
-          })(<Input style={{ width: '60%' }} />)}
+          })(<Input style={{ width: '60%' }} disabled />)}
         </Form.Item>
         <Form.Item label="性别">
           {getFieldDecorator('sex', {
+            initialValue: '',
             rules: []
           })(
             <Radio.Group>
@@ -42,26 +43,27 @@ function personInfo(props) {
           )}
         </Form.Item>
         <Form.Item label="出生日期" hasFeedback>
-          {getFieldDecorator('confirm', {})(<DatePicker style={{ width: '60%' }} />)}
+          {getFieldDecorator('birthday', {
+            // initialValue: userInfo ? userInfo.birthday : ''
+          })(<DatePicker style={{ width: '60%' }} />)}
         </Form.Item>
-        <Form.Item label="年龄">
-          {getFieldDecorator('nickname', {
-            rules: []
-          })(<Input style={{ width: '60%' }} />)}
-        </Form.Item>
+        
         <Form.Item label="办公电话">
-          {getFieldDecorator('phone', {
+          {getFieldDecorator('telephone', {
+            initialValue: userInfo?userInfo.telephone:'',
             rules: []
           })(<Input style={{ width: '60%' }} />)}
         </Form.Item>
         <Form.Item label="手机号">
-          {getFieldDecorator('phone', {
+          {getFieldDecorator('mobile', {
+            initialValue: userInfo?userInfo.mobile:'',
             rules: []
           })(<Input style={{ width: '60%' }} />)}
         </Form.Item>
 
         <Form.Item label="邮箱">
           {getFieldDecorator('email', {
+            initialValue: userInfo?userInfo.email:'',
             rules: [
               {
                 type: 'email',
@@ -69,12 +71,12 @@ function personInfo(props) {
               }
             ]
           })(<Input style={{ width: '60%' }} />)}
-          </Form.Item>
+        </Form.Item>
 
-          <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
-            <Button type="primary" htmlType="submit">
-              保存
-            </Button>
+        <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
+          <Button type="primary" htmlType="submit">
+            保存
+          </Button>
         </Form.Item>
       </Form>
     </div>
@@ -83,9 +85,9 @@ function personInfo(props) {
 
 function mapStateToProps(state) {
   return {
-    ...state.personCenter
-    // loading: state.loading.effects['']
+    ...state.personCenter,
+    loading: state.loading.effects['personCenter/getUserInfo']
   };
 }
 
-export default connect(mapStateToProps)(Form.create()(personInfo));
+export default connect(mapStateToProps)(Form.create()(PersonInfo));

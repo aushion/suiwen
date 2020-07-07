@@ -50,7 +50,7 @@ function HomeLayout(props) {
           <span className={styles.tips}>
               您好!
               {username ? (
-                <Link style={{ color: '#fff' }} to="/personCenter/personInfo">
+                <Link style={{ color: '#fff' }} to={`/personCenter/personInfo?userName=${username}`}>
                   {RestTools.formatPhoneNumber(username)}
                 </Link>
               ) : (

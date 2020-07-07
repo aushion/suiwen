@@ -19,9 +19,8 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const Ecp_LoginStuts = Cookies.get('Ecp_LoginStuts');
-        const userInfo = RestTools.getLocalStorage('userInfo');
+        // const userInfo = RestTools.getLocalStorage('userInfo');
         if (pathname.includes('personCenter')) {
-        console.log('userInfo', userInfo);
 
           if (!Ecp_LoginStuts) {
             dispatch({

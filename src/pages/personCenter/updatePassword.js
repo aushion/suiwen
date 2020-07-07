@@ -19,7 +19,7 @@ function updatePassword(props) {
     <div>
       <Form {...formItemLayout}>
         <Form.Item label="账号">
-          {getFieldDecorator('email', {})(<Input style={{ width: '60%' }} />)}
+          {getFieldDecorator('username', {})(<Input style={{ width: '60%' }} />)}
         </Form.Item>
         <Form.Item label="原密码">
           {getFieldDecorator('email', {})(<Input.Password style={{ width: '60%' }} />)}
