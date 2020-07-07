@@ -11,7 +11,7 @@ export default {
     const {
       size = page ? page.size : 10,
       index = page ? page.index : 1,
-      searchKey = '',
+      searchKey = RestTools.getSession('searchKey')|| '',
       domain = '全部',
       uid = ''
     } = payload;

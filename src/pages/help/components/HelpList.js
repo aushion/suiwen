@@ -1,3 +1,4 @@
+import React from 'react';
 import { List, Input, Popconfirm } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
@@ -14,7 +15,6 @@ function HelpList(props) {
     dispatch,
     handleClickItem
   } = props;
-
   function confirm(id) {
     dispatch({
       type: 'help/deleteQuestion',
@@ -32,8 +32,11 @@ function HelpList(props) {
         <div>
           <Search
             style={{ width: 200 }}
+            defaultValue={RestTools.getSession('searchKey') || ''}
             onSearch={(value) => {
-              const payload = { domain, searchKey: value };
+              RestTools.setSession('searchKey',value);
+              const page = RestTools.getSession('page');
+              const payload = { domain, searchKey: value, ...page };
               handleSearchOrChangePage(payload);
             }}
           />
@@ -47,11 +50,12 @@ function HelpList(props) {
           data.total && data.total > size
             ? {
                 total: data.total,
-                pageSize: data.size,
+                pageSize: data.pageSize,
                 current: data.pageNum,
                 onChange: function(page, pageSize) {
                   RestTools.setSession('page', { size: pageSize, index: page });
-                  const payload = { size: pageSize, index: page, domain: domain };
+                  const searchKey = RestTools.getSession('searchKey');
+                  const payload = { size: pageSize, index: page, domain: domain , searchKey};
                   handleSearchOrChangePage(payload);
                 }
               }
