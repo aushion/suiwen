@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Spin,
-  Row,
-  Col,
-  Icon,
-  Divider,
-  Modal,
-  Input,
-  Result,
-  Button,
-  message,
-  Badge,
-  Skeleton
-} from 'antd';
+import { Spin, Row, Col, Icon, Modal, Input, Result, Button, message, Badge, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -191,12 +178,16 @@ function ResultPage(props) {
     kaifangyuData.length;
 
   function showModal() {
-    dispatch({
-      type: 'result/save',
-      payload: {
-        visible: true
-      }
-    });
+    if (Cookies.get('Ecp_LoginStuts')) {
+      dispatch({
+        type: 'result/save',
+        payload: {
+          visible: true
+        }
+      });
+    } else {
+      message.warn('请您登录后再操作');
+    }
   }
 
   function hideModal() {
@@ -318,7 +309,7 @@ function ResultPage(props) {
                 </Card> */}
           </Col>
           <Col span={15}>
-            {answerData.length || communityAnswer || sgData.length|| semanticData.length ? (
+            {answerData.length || communityAnswer || sgData.length || semanticData.length ? (
               <div>
                 <Skeleton loading={fetchSemanticData || loading} active>
                   <div>
@@ -497,7 +488,7 @@ function ResultPage(props) {
               />
             ) : null}
           </Col>
-          <Col span={5} style={{padding: 0}}>
+          <Col span={5} style={{ padding: 0 }}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
