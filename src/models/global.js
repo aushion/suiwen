@@ -1,6 +1,6 @@
 import logo from '../assets/随问logo.png';
 import Cookies from 'js-cookie';
-import RestTools from '../utils/RestTools';
+// import RestTools from '../utils/RestTools';
 
 export default {
   namespace: 'global',

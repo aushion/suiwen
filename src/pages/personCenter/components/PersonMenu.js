@@ -1,8 +1,9 @@
 import React from 'react';
 import { Menu, Icon } from 'antd';
 import router from 'umi/router';
+import RestTools from '../../../utils/RestTools';
 
-function PersonMenu() {
+function PersonMenu(props) {
   const menuItemStyle = {
     padding: '20px 0 20px 30px',
     height: '80px',
@@ -12,13 +13,13 @@ function PersonMenu() {
   }
 
   function handleClick(item) {
-    console.log('window.location.pathname', window.location.pathname)
-    router.push(`/personCenter/${item.key}`)
+    const userInfo = RestTools.getLocalStorage('userInfo');
+    router.push(`/personCenter/${item.key}?userName=${userInfo.UserName}`)
   }
 
   return (
     <div>
-      <Menu onClick={handleClick} defaultSelectedKeys={window.location.pathname.replace('/web/personCenter/','')} >
+      <Menu onClick={handleClick} selectedKeys={props.defaultKey}>
         <Menu.Item key="personInfo" style={menuItemStyle}>
           <Icon type="user" /> 个人信息
         </Menu.Item>

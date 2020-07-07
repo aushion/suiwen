@@ -6,7 +6,7 @@ export function getUserInfo(payload) {
 }
 
 export function editUserInfo(payload) {
-  return request.post(`/user/editUserInfo`, {
+  return request.post(`/user/editUserInfo`,null, {
     data: { ...payload }
   });
 }

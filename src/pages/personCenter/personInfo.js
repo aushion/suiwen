@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, Input, DatePicker, Radio, Button } from 'antd';
 import { connect } from 'dva';
+import moment from 'moment'
 
 function PersonInfo(props) {
-  const { getFieldDecorator, setFieldsValue } = props.form;
-  const { userInfo } = props;
-  console.log('userInfo', userInfo);
+  const { getFieldDecorator, validateFields } = props.form;
+  const { userInfo, dispatch } = props;
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -17,9 +17,34 @@ function PersonInfo(props) {
     }
   };
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    validateFields((err, values) => {
+      if (!err) {
+        const data = JSON.parse(
+          JSON.stringify(values, function(key, value) {
+            if (value) {
+              return value;
+            } else {
+              return undefined;
+            }
+          })
+        );
+        const { birthday, ...rest } = data;
+        dispatch({
+          type: 'personCenter/editUserInfo',
+          payload: {
+            birthday: values.birthday.format('YYYY-MM-DD'),
+            ...rest
+          }
+        });
+      }
+    });
+  }
+
   return (
     <div>
-      <Form {...formItemLayout}>
+      <Form {...formItemLayout} onSubmit={handleSubmit}>
         <Form.Item label="账号">
           {getFieldDecorator('userName', {
             initialValue: userInfo ? userInfo.userName : '',
@@ -33,37 +58,42 @@ function PersonInfo(props) {
         </Form.Item>
         <Form.Item label="性别">
           {getFieldDecorator('sex', {
-            initialValue: '',
+            initialValue: userInfo?userInfo.sex:'',
             rules: []
           })(
             <Radio.Group>
-              <Radio value="a">男</Radio>
-              <Radio value="b">女</Radio>
+              <Radio value="1">男</Radio>
+              <Radio value="0">女</Radio>
             </Radio.Group>
           )}
         </Form.Item>
         <Form.Item label="出生日期" hasFeedback>
           {getFieldDecorator('birthday', {
-            // initialValue: userInfo ? userInfo.birthday : ''
+            initialValue: userInfo ? moment(userInfo.birthday,'YYYY-MM-DD') : moment()
           })(<DatePicker style={{ width: '60%' }} />)}
         </Form.Item>
-        
+
         <Form.Item label="办公电话">
           {getFieldDecorator('telephone', {
-            initialValue: userInfo?userInfo.telephone:'',
-            rules: []
+            initialValue: userInfo ? userInfo.telephone : '',
+            rules: [
+              {
+                pattern: /^\d+[-]?\d+$/g,
+                message: '请您输入正确的电话号码'
+              }
+            ]
           })(<Input style={{ width: '60%' }} />)}
         </Form.Item>
         <Form.Item label="手机号">
           {getFieldDecorator('mobile', {
-            initialValue: userInfo?userInfo.mobile:'',
+            initialValue: userInfo ? userInfo.mobile : '',
             rules: []
           })(<Input style={{ width: '60%' }} />)}
         </Form.Item>
 
         <Form.Item label="邮箱">
           {getFieldDecorator('email', {
-            initialValue: userInfo?userInfo.email:'',
+            initialValue: userInfo ? userInfo.email : '',
             rules: [
               {
                 type: 'email',

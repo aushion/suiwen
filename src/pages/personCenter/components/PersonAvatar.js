@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
-function PersonAvatar() {
+function PersonAvatar(props) {
   const userInfo = RestTools.getLocalStorage('userInfo');
 
   function handleError() {}
@@ -14,6 +14,7 @@ function PersonAvatar() {
         size={100}
         shape="square"
         icon="user"
+        src={props.avatar}
         onError={handleError}
       />
       {userInfo ? (

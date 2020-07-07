@@ -22,7 +22,6 @@ function FeedBack(props) {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         const data = JSON.parse(
           JSON.stringify(values, function(key, value) {
             if (value) {

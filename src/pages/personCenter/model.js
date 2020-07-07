@@ -1,10 +1,15 @@
-import { getUserHeadPicture, editUserInfo, getUserInfo, uploadUserHeadPicture } from './service';
+import { editUserInfo, getUserInfo } from './service';
+import querystring from 'querystring';
+import RestTools from '../../utils/RestTools';
 
 export default {
   namespace: 'personCenter',
   state: {
     userInfo: null,
-    headerPicture: ''
+    avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+      RestTools.getLocalStorage('userInfo').UserName
+    }`,
+    defaultKey: window.location.pathname.replace('/web/personCenter/', '')
   },
   effects: {
     *getUserInfo({ payload }, { call, put }) {
@@ -18,20 +23,28 @@ export default {
         });
       }
     },
-    *editUserInfo({ payload }, { call }) {
+    *editUserInfo({ payload }, { call, put }) {
       const res = yield call(editUserInfo, payload);
-      console.log('res', res);
-    },
-
-    *uploadUserHeadPicture({ payload }, { call }) {
-      const res = yield call(uploadUserHeadPicture, payload);
-      console.log('res', res);
-    },
-
-    *getUserHeadPicture({ payload }, { call }) {
-      const res = yield call(getUserHeadPicture, payload);
-      console.log('res', res);
+      const { userName } = querystring.parse(window.location.search.split('?')[1]);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'getUserInfo',
+          payload: {
+            userName
+          }
+        });
+      }
     }
+
+    // *uploadUserHeadPicture({ payload }, { call }) {
+    //   const res = yield call(uploadUserHeadPicture, payload);
+    //   console.log('res', res);
+    // },
+
+    // *getUserHeadPicture({ payload }, { call }) {
+    //   const res = yield call(getUserHeadPicture, payload);
+    //   console.log('res',  window.URL.createObjectURL(res.data));
+    // }
   },
   reducers: {
     save(state, { payload }) {
@@ -50,6 +63,13 @@ export default {
         if (match) {
           if (current === '/personCenter/personInfo') {
             dispatch({ type: 'getUserInfo', payload: { userName } });
+            dispatch({ type: 'save', payload: { defaultKey: 'personInfo' } });
+          } else if (current === '/personCenter/avatar') {
+            dispatch({ type: 'getUserHeadPicture', payload: { userName } });
+            dispatch({ type: 'save', payload: { defaultKey: 'avatar' } });
+          } else if (current === '/personCenter/updatePassword') {
+            // dispatch({ type: 'getUserHeadPicture', payload: { userName } });
+            dispatch({ type: 'save', payload: { defaultKey: 'updatePassword' } });
           }
         }
       });

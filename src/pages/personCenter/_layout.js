@@ -3,14 +3,14 @@ import { Row, Col } from 'antd';
 import { connect } from 'dva';
 import PersonMenu from './components/PersonMenu';
 import PersonAvatar from './components/PersonAvatar';
-function _layout(props) {
+function UserLayout(props) {
   return (
     <div>
-      <PersonAvatar />
+      <PersonAvatar avatar={props.avatar} />
       <div style={{ marginTop: 40, margin: '2% 18.75% 0' }}>
         <Row gutter={24}>
           <Col span={5}>
-            <PersonMenu />
+            <PersonMenu defaultKey={props.defaultKey} />
           </Col>
 
           <Col span={19}>
@@ -28,4 +28,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(_layout);
+export default connect(mapStateToProps)(UserLayout);
