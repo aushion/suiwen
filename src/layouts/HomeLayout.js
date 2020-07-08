@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Affix, Button } from 'antd';
+import { Layout, Affix, Button, Avatar } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import SmartInput from '../components/SmartInput';
@@ -17,7 +17,7 @@ function HomeLayout(props) {
   const [visible, setVisible] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
-  const { dispatch } = props;
+  const { dispatch, avatar } = props;
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
@@ -50,8 +50,12 @@ function HomeLayout(props) {
           <span className={styles.tips}>
               您好!
               {username ? (
-                <Link style={{ color: '#fff' }} to={`/personCenter/personInfo?userName=${username}`}>
-                  {RestTools.formatPhoneNumber(username)}
+                <Link style={{ color: '#fff',marginLeft: 10 }} to={`/personCenter/personInfo?userName=${username}`}>
+                   <Avatar
+                    size="small"
+                    src={avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
+                  />
+                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link>
               ) : (
                 '游客'

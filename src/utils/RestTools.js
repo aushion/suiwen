@@ -308,16 +308,24 @@ export default {
     return JSON.parse(window.localStorage.getItem(key));
   },
   setLocalStorage(key, value) {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    if (typeof value === 'string') {
+      window.localStorage.setItem(key, value);
+    } else {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    }
   },
   setSession(key, value) {
-    window.sessionStorage.setItem(key, JSON.stringify(value));
+    if (typeof value === 'string') {
+      window.sessionStorage.setItem(key, value);
+    } else {
+      window.sessionStorage.setItem(key, JSON.stringify(value));
+    }
   },
-  getSession(key) {
-    return typeof window.sessionStorage.getItem(key) === 'string'
-      ? window.sessionStorage.getItem(key)
-      : JSON.parse(window.sessionStorage.getItem(key));
-  },
+  // getSession(key) {
+  //   return typeof window.sessionStorage.getItem(key) === 'string'
+  //     ? window.sessionStorage.getItem(key)
+  //     : JSON.parse(window.sessionStorage.getItem(key));
+  // },
   getStrLength(str) {
     var len = 0;
     for (var i = 0; i < str.length; i++) {

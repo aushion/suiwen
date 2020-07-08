@@ -34,7 +34,7 @@ import Medical from './components/Medical';
 import Patent from './components/Patent';
 import Statistics from './components/Statistics';
 import Poem from './components/Poem';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../utils/RestTools';
 import Sentence from './components/Sentence';
 import ReferenceBook63 from './components/ReferenceBook63';
 import ReferenceBook69 from './components/ReferenceBook69';
@@ -73,7 +73,7 @@ function ResultPage(props) {
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
-  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+  const topicData = JSON.parse(window.sessionStorage.getItem('topicData')) || RestTools.getLocalStorage('topicData');
   const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
   const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   const [imgVisible, setVisible] = useState(false); //图片状态

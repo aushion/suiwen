@@ -289,7 +289,7 @@ export default function Literature(props) {
   }
 
   function handleSearch(value) {
-    const keyword = RestTools.getSession('preSearchValue');
+    const keyword = sessionStorage.getItem('preSearchValue');
     if (!value.trim()) {
       message.warning('您还没有输入哟');
       return;

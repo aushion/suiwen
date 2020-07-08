@@ -6,7 +6,7 @@ import RestTools from '../../utils/RestTools';
 
 function Avatar(props) {
   const { userName } = querystring.parse(window.location.href.split('?')[1]);
-  const TokenKey = RestTools.getSession('TokenKey');
+  const TokenKey = sessionStorage.getItem('TokenKey');
   // const [imageUrl, setImageUrl] = useState('');
   const { dispatch } = props;
   const [loading, setLoading] = useState(false);
@@ -43,6 +43,14 @@ function Avatar(props) {
         setLoading(false);
         dispatch({
           type: 'personCenter/save',
+          payload: {
+            avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+              userInfo.UserName
+            }&_t=${new Date().getTime()}`
+          }
+        });
+        dispatch({
+          type: 'global/save',
           payload: {
             avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
               userInfo.UserName

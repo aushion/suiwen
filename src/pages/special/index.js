@@ -24,9 +24,8 @@ function Special(props) {
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
   const [visible, setVisible] = useState(false);
-  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+  const topicData = JSON.parse(sessionStorage.getItem('topicData'))|| RestTools.getLocalStorage('topicData');
   const topicInfo = find(topicData, { topicId: topicId });
-
   const {
     name,
     info: { topic, themeColor },

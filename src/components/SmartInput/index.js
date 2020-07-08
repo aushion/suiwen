@@ -15,7 +15,7 @@ const SmartInput = (props) => {
   const [value, setValue] = useState('');
   const [showRecord, setRecord] = useState(false);
   const [tipsData, setTips] = useState([]);
-  const inputRecords = RestTools.getLocalStorage(HISTORYKEY) || [];
+  const inputRecords = localStorage.getItem(HISTORYKEY) || [];
   const needTip = props.needTip;
   useEffect(() => {
     setValue(props.question);

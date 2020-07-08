@@ -21,7 +21,7 @@ const InputRecord = props => {
               type="close"
               onClick={e => {
                 e.stopPropagation();
-                let inputRecords = RestTools.getLocalStorage(HISTORYKEY);
+                let inputRecords = localStorage.getItem(HISTORYKEY);
                 inputRecords.splice(index, 1);
                 setData(inputRecords);
                 window.localStorage.setItem(HISTORYKEY, JSON.stringify(inputRecords));

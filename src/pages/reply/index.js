@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List, Empty } from 'antd';
+import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List, Empty, Avatar } from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
 import groupBy from 'lodash/groupBy';
@@ -297,7 +297,8 @@ function Reply(props) {
                   <div>
                     <span style={{ paddingRight: 20 }}>#{index + 1}</span>
                     <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
-                      <Icon type="user" />
+                      {/* <Icon type="user" /> */}
+                      <Avatar src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`} size='small' />
                       {/^1[3-9]\d{9}$/.test(username)
                         ? username.substring(0, 3) + '****' + username.substring(7, 11)
                         : username}

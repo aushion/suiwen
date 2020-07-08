@@ -2,7 +2,7 @@ import RestTools from './utils/RestTools';
 import Cookies from 'js-cookie';
 import request from './utils/request';
 
-const userInfo = RestTools.getLocalStorage('userInfo');
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 if(userInfo){
   request.post('/Login/refreshLogin',null,{
     params: {

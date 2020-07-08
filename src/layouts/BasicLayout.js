@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, BackTop, Affix, Button } from 'antd';
+import { Layout, BackTop, Affix, Button, Avatar } from 'antd';
 import router from 'umi/router';
 import find from 'lodash/find';
 import { connect } from 'dva';
@@ -16,15 +16,15 @@ const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
-  let { q = RestTools.getSession('q'), topic = '' } = query;
+  let { q = sessionStorage.getItem('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+  const topicData = JSON.parse(sessionStorage.getItem('topicData')) || JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
 
-  let { title, dispatch, theme, showLoginModal } = props;
+  let { title, dispatch, theme, showLoginModal, avatar } = props;
   const { topicId, info, name } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
@@ -44,7 +44,7 @@ function BasicLayout(props) {
   }
 
   function goHomeByDomain() {
-    if (topic) {
+    if (topicId) {
       router.push('/special?topicId=' + topicId);
     } else {
       router.push('/');
@@ -86,8 +86,17 @@ function BasicLayout(props) {
             <span className={styles.tips}>
               您好!
               {username ? (
-                <Link style={{ color: '#fff' }} to={`/personCenter/personInfo?userName=${username}`}>
-                  {RestTools.formatPhoneNumber(username)}
+                <Link
+                  style={{ color: '#fff', marginLeft: 10 }}
+                  to={`/personCenter/personInfo?userName=${username}`}
+                >
+                  <Avatar
+                    size="small"
+                    src={
+                      avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`
+                    }
+                  />
+                   <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link>
               ) : (
                 '游客'

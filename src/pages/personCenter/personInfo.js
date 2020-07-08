@@ -1,7 +1,7 @@
 import React from 'react';
-import { Form, Input, DatePicker, Radio, Button } from 'antd';
+import { Form, Input, DatePicker, Radio, Button, message } from 'antd';
 import { connect } from 'dva';
-import moment from 'moment'
+import moment from 'moment';
 
 function PersonInfo(props) {
   const { getFieldDecorator, validateFields } = props.form;
@@ -37,6 +37,12 @@ function PersonInfo(props) {
             birthday: values.birthday.format('YYYY-MM-DD'),
             ...rest
           }
+        }).then((res) => {
+          if (res.data.result) {
+            message.success('保存成功');
+          } else {
+            message.error(res.data.msg);
+          }
         });
       }
     });
@@ -58,7 +64,7 @@ function PersonInfo(props) {
         </Form.Item>
         <Form.Item label="性别">
           {getFieldDecorator('sex', {
-            initialValue: userInfo?userInfo.sex:'',
+            initialValue: userInfo ? userInfo.sex : '',
             rules: []
           })(
             <Radio.Group>
@@ -69,7 +75,7 @@ function PersonInfo(props) {
         </Form.Item>
         <Form.Item label="出生日期" hasFeedback>
           {getFieldDecorator('birthday', {
-            initialValue: userInfo ? moment(userInfo.birthday,'YYYY-MM-DD') : moment()
+            initialValue: userInfo && userInfo.birthday ? moment(userInfo.birthday, 'YYYY-MM-DD') : null
           })(<DatePicker style={{ width: '60%' }} />)}
         </Form.Item>
 

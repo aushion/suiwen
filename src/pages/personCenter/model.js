@@ -1,4 +1,4 @@
-import { editUserInfo, getUserInfo } from './service';
+import { editUserInfo, getUserInfo, updatePassword } from './service';
 import querystring from 'querystring';
 import RestTools from '../../utils/RestTools';
 
@@ -34,17 +34,13 @@ export default {
           }
         });
       }
+
+      return res;
+    },
+    *updatePassword({ payload }, { call }) {
+      const res = yield call(updatePassword, payload);
+      return res;
     }
-
-    // *uploadUserHeadPicture({ payload }, { call }) {
-    //   const res = yield call(uploadUserHeadPicture, payload);
-    //   console.log('res', res);
-    // },
-
-    // *getUserHeadPicture({ payload }, { call }) {
-    //   const res = yield call(getUserHeadPicture, payload);
-    //   console.log('res',  window.URL.createObjectURL(res.data));
-    // }
   },
   reducers: {
     save(state, { payload }) {

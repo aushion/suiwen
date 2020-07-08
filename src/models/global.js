@@ -13,15 +13,14 @@ export default {
     headerStyle: null,
     logo: logo,
     theme: '#0BB3FF',
-    showLoginModal: false
+    showLoginModal: false,
+    avatar:''
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const Ecp_LoginStuts = Cookies.get('Ecp_LoginStuts');
-        // const userInfo = RestTools.getLocalStorage('userInfo');
         if (pathname.includes('personCenter')) {
-
           if (!Ecp_LoginStuts) {
             dispatch({
               type: 'setShowLogin',
