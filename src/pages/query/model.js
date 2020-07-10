@@ -145,7 +145,7 @@ export default {
 
     *getCustomView({ payload }, { call, put }) {
       const res = yield call(getCustomView, payload);
-      const oldAnswer = RestTools.getSession('answer');
+      const oldAnswer = JSON.parse(window.sessionStorage.getItem('answer'));
       //  const answerSource = oldAnswer.source;
       const oldRepositoryData = oldAnswer.repositoryData.filter((item) => item.domain === '文献');
       let newRepositoryData = [];
@@ -302,7 +302,7 @@ export default {
           });
         }
         const topicData =
-          RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+         JSON.parse(window.sessionStorage.getItem('topicData')) || JSON.parse(window.localStorage.getItem('topicData'));
         if (!topicData) {
           dispatch({
             type: 'getTopicQuestions'

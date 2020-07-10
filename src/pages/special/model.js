@@ -45,12 +45,11 @@ export default {
       }
     },
     *getTopicPictures({ payload }, { call, put }) {
-      const { topicId } = payload;
       const { data } = yield call(getTopicPictures, payload);
-      const urlPrefix = process.env.apiUrl + '/getPictureInfo';
+      const urlPrefix = process.env.apiUrl + '/file/topic/topicHome';
       if (data.code === 200) {
         const imgData = data.result.map(
-          (item) => `${urlPrefix}?topicId=${topicId}&picId=${item.picId}`
+          (item) => `${urlPrefix}/${item.picId}.png`
         );
         yield put({
           type: 'save',

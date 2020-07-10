@@ -1,5 +1,4 @@
 import request from '../utils/request';
-import RestTools from '../utils/RestTools';
 const serverurl = process.env.apiUrl;
 
 export default {
@@ -7,11 +6,12 @@ export default {
     return request.get(serverurl + '/GetNewQuestion?size=6');
   },
   getNewQuestions(payload) {
-    const page = RestTools.getSession('page');
+    const page = JSON.parse(sessionStorage.getItem('page'));
+    
     const {
       size = page ? page.size : 10,
       index = page ? page.index : 1,
-      searchKey = RestTools.getSession('searchKey')|| '',
+      searchKey = sessionStorage.getItem('searchKey') || '',
       domain = '全部',
       uid = ''
     } = payload;
@@ -28,7 +28,7 @@ export default {
   },
 
   getHotQuestions(payload) {
-    const page = RestTools.getSession('page');
+    const page = sessionStorage.getItem('page');
     const {
       size = page ? page.size : 10,
       index = page ? page.index : 1,

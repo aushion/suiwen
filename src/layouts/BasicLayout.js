@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Layout, BackTop, Affix, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Layout, BackTop, Affix, Button, Avatar } from 'antd';
 import router from 'umi/router';
 import find from 'lodash/find';
 import { connect } from 'dva';
 import styles from './BasicLayout.less';
-// import Cookies from 'js-cookie';
+import Link from 'umi/link';
 import SmartInput from '../components/SmartInput';
 import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
@@ -16,18 +16,22 @@ const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
-  let { q = RestTools.getSession('q'), topic = '' } = query;
+  let { q = sessionStorage.getItem('q'), topic = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const topicData = RestTools.getSession('topicData') || RestTools.getLocalStorage('topicData');
+  const topicData = JSON.parse(sessionStorage.getItem('topicData')) || JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
 
-  let { title, dispatch, theme } = props;
+  let { title, dispatch, theme, showLoginModal, avatar } = props;
   const { topicId, info, name } = currentTopic || {};
 
   const themeColor = info ? info.themeColor : theme;
+
+  useEffect(() => {
+    setShowLogin(showLoginModal);
+  }, [showLoginModal]);
 
   function handleClickEnterOrItem(value) {
     const q = value.trim();
@@ -40,7 +44,7 @@ function BasicLayout(props) {
   }
 
   function goHomeByDomain() {
-    if (topic) {
+    if (topicId) {
       router.push('/special?topicId=' + topicId);
     } else {
       router.push('/');
@@ -51,6 +55,9 @@ function BasicLayout(props) {
     window.Ecp_LogoutOptr_my(0);
     localStorage.setItem('userInfo', null);
     setUsername(null);
+    if (window.location.pathname.includes('personCenter')) {
+      router.push('/');
+    }
   }
 
   return (
@@ -77,11 +84,26 @@ function BasicLayout(props) {
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
             <span className={styles.tips}>
-              您好! {username ? RestTools.formatPhoneNumber(username) : '游客'}
+              您好!
+              {username ? (
+                <Link
+                  style={{ color: '#fff', marginLeft: 10 }}
+                  to={`/personCenter/personInfo?userName=${userInfo?userInfo.UserName:''}`}
+                >
+                  <Avatar
+                    size="small"
+                    src={
+                      avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userInfo?userInfo.UserName:''}`
+                    }
+                  />
+                   <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                </Link>
+              ) : (
+                '游客'
+              )}
             </span>
             {username ? null : (
               <Button
-               
                 className={styles.login_btn}
                 ghost
                 onClick={() => {

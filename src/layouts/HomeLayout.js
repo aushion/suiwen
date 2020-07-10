@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Layout, Affix, Button } from 'antd';
+import { Layout, Affix, Button, Avatar } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import SmartInput from '../components/SmartInput';
 import FeedBack from '../components/FeedBack';
-// import Cookies from 'js-cookie';
+import Link from 'umi/link';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 import LoginRegister from '../components/LoginRegister';
@@ -17,14 +17,13 @@ function HomeLayout(props) {
   const [visible, setVisible] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
-  const { dispatch } = props;
+  const { dispatch, avatar } = props;
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
     value && router.push(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
-
 
   function logout() {
     // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
@@ -47,12 +46,35 @@ function HomeLayout(props) {
           {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
             回到旧版
           </a> */}
-          您好! {RestTools.formatPhoneNumber(username) || '游客'}
+          <span className={styles.tips}>
+            您好!
+            {username ? (
+              <Link
+                style={{ color: '#fff', marginLeft: 10 }}
+                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+              >
+                <Avatar
+                  size="small"
+                  src={
+                    avatar ||
+                    `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                      userInfo ? userInfo.UserName : ''
+                    }`
+                  }
+                />
+                <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+              </Link>
+            ) : (
+              '游客'
+            )}
+          </span>
           {username ? null : (
             <Button
               ghost
               className={styles.login_btn}
-              onClick={() => { setShowLogin(true) }}
+              onClick={() => {
+                setShowLogin(true);
+              }}
               // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
               // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
               //   window.location.href
@@ -139,7 +161,7 @@ function HomeLayout(props) {
 
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
       <LoginRegister
-        visible={showLogin}
+        visible={showLogin} //控制显隐
         triggerCancel={() => {
           setShowLogin(false);
         }}

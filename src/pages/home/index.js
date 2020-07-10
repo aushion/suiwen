@@ -29,7 +29,7 @@ function Home(props) {
     skillPicture,
     helpPicture
   } = props;
-  const [activeTag, setActive] = useState(RestTools.getSession('tagIndex') || 0);
+  const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
   // const [activeSpecial, setActiveSpecial] = useState('专题问答');
   // console.log('skillPicture', skillPicture)
   // useEffect(() => {
@@ -75,7 +75,7 @@ function Home(props) {
 
   const skillSettings = {
     infinite: true,
-    initialSlide: RestTools.getSession('tagIndex') || 0,
+    initialSlide: JSON.parse(window.sessionStorage.getItem('tagIndex')) || 0,
     swipe: false,
     arrows: false
   };

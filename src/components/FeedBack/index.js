@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal, Rate, Form, Input, message } from 'antd';
-// import { feedback } from '../../layouts/service';
 import request from '../../utils/request';
 
 const { TextArea } = Input;
@@ -22,7 +21,6 @@ function FeedBack(props) {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         const data = JSON.parse(
           JSON.stringify(values, function(key, value) {
             if (value) {
@@ -32,7 +30,6 @@ function FeedBack(props) {
             }
           })
         );
-        //feedback(data)
         request
           .get('/insertFeedback', {
             params: { ...data }

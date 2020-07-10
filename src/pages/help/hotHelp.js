@@ -5,13 +5,12 @@ import router from 'umi/router';
 import DomainTags from './components/DomainTags';
 import HelpList from './components/HelpList';
 import HelpMenu from './components/HelpMenu';
-import RestTools from '../../utils/RestTools';
 
 import helpStyle from './index.less';
 
 function HotHelp(props) {
   const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props;
-  const menus = RestTools.getLocalStorage('userInfo')
+  const menus = localStorage.getItem('userInfo')
   ? [
       {
         key: 'newHelp',

@@ -13,7 +13,7 @@ export default {
     if (!!window.ActiveXObject || 'ActiveXObject' in window) return true;
     else return false;
   },
-  maxLength: 38,
+  maxLength: 50,
   HISTORYKEY: 'SUIWEN_RECORD',
   subHtml(oHtml, nlen, isByte) {
     var rgx1 = /<[^<^>^\/]+>/; //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
@@ -308,25 +308,34 @@ export default {
     return JSON.parse(window.localStorage.getItem(key));
   },
   setLocalStorage(key, value) {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    if (typeof value === 'string') {
+      window.localStorage.setItem(key, value);
+    } else {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    }
   },
   setSession(key, value) {
-    window.sessionStorage.setItem(key, JSON.stringify(value));
+    if (typeof value === 'string') {
+      window.sessionStorage.setItem(key, value);
+    } else {
+      window.sessionStorage.setItem(key, JSON.stringify(value));
+    }
   },
-  getSession(key) {
-    return JSON.parse(window.sessionStorage.getItem(key));
-  },
+  // getSession(key) {
+  //   return typeof window.sessionStorage.getItem(key) === 'string'
+  //     ? window.sessionStorage.getItem(key)
+  //     : JSON.parse(window.sessionStorage.getItem(key));
+  // },
   getStrLength(str) {
     var len = 0;
-    for (var i=0; i<str.length; i++) {
-     var c = str.charCodeAt(i);
-    //单字节加1
-     if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
-       len++;
-     }
-     else {
-      len+=2;
-     }
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charCodeAt(i);
+      //单字节加1
+      if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+        len++;
+      } else {
+        len += 2;
+      }
     }
     return len;
   },
