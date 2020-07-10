@@ -25,7 +25,6 @@ function HomeLayout(props) {
     RestTools.setSession('q', q);
   }
 
-
   function logout() {
     // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
     // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
@@ -48,24 +47,34 @@ function HomeLayout(props) {
             回到旧版
           </a> */}
           <span className={styles.tips}>
-              您好!
-              {username ? (
-                <Link style={{ color: '#fff',marginLeft: 10 }} to={`/personCenter/personInfo?userName=${userInfo?userInfo.UserName:''}`}>
-                   <Avatar
-                    size="small"
-                    src={avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userInfo?userInfo.UserName:''}`}
-                  />
-                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
-              ) : (
-                '游客'
-              )}
-            </span>
+            您好!
+            {username ? (
+              <Link
+                style={{ color: '#fff', marginLeft: 10 }}
+                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+              >
+                <Avatar
+                  size="small"
+                  src={
+                    avatar ||
+                    `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                      userInfo ? userInfo.UserName : ''
+                    }`
+                  }
+                />
+                <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+              </Link>
+            ) : (
+              '游客'
+            )}
+          </span>
           {username ? null : (
             <Button
               ghost
               className={styles.login_btn}
-              onClick={() => { setShowLogin(true) }}
+              onClick={() => {
+                setShowLogin(true);
+              }}
               // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
               // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
               //   window.location.href
@@ -152,7 +161,7 @@ function HomeLayout(props) {
 
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
       <LoginRegister
-        visible={showLogin}
+        visible={showLogin} //控制显隐
         triggerCancel={() => {
           setShowLogin(false);
         }}

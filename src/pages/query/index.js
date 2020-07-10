@@ -1,18 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Spin,
-  Row,
-  Col,
-  Icon,
-  Modal,
-  Input,
-  Result,
-  Button,
-  message,
-  Badge,
-  Skeleton
-} from 'antd';
+import { Spin, Row, Col, Icon, Modal, Input, Result, Button, message, Badge, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -73,7 +61,9 @@ function ResultPage(props) {
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
-  const topicData = JSON.parse(window.sessionStorage.getItem('topicData')) || RestTools.getLocalStorage('topicData');
+  const topicData =
+    JSON.parse(window.sessionStorage.getItem('topicData')) ||
+    RestTools.getLocalStorage('topicData');
   const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
   const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   const [imgVisible, setVisible] = useState(false); //图片状态
@@ -294,209 +284,193 @@ function ResultPage(props) {
                   : null}
               </div>
             </div>
-            {/* <div style={{ height: 20 }}></div>
-                <Card
-                  title="历史搜索"
-                  headStyle={{ height: 20, lineHeight: '20px', fontSize: 14 }}
-                  style={{ boxShadow: 'rgb(165, 165, 165) 0px 0px 10.8px 0px' }}
-                >
-                  {historyQuestions.map((item) => (
-                    <div
-                      key={item}
-                      style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        padding: '4px 0'
-                      }}
-                      title={item}
-                    >
-                      <Link to={`/query?q=${item}`}>{item}</Link>
-                    </div>
-                  ))}
-                </Card> */}
           </Col>
           <Col span={15}>
-            {answerData.length || communityAnswer || sgData.length|| semanticData.length ? (
-              <div>
-                <Skeleton loading={fetchSemanticData || loading} active>
-                  <div>
-                    {statisticsData.length
-                      ? statisticsData.map((item) => (
-                          <Statistics
-                            title={item.title}
-                            id={item.id}
-                            evaluate={item.evaluate}
-                            intentDomain={item.intentDomain}
-                            intentFocus={item.intentFocus}
-                            intentJson={item.intentJson}
-                            key={item.id}
-                            data={item.dataNode}
-                          />
-                        ))
-                      : null}
-                    {medicalData.length
-                      ? medicalData.map((item) => (
-                          <Medical
-                            title={item.title}
-                            id={item.id}
-                            intentJson={item.intentJson}
-                            evaluate={item.evaluate}
-                            intentDomain={item.intentDomain}
-                            intentFocus={item.intentFocus}
-                            key={item.id}
-                            data={item.dataNode}
-                          />
-                        ))
-                      : null}
-                    {literatureData.length &&
-                    (literatureData.length === 1 || literatureData.length === 3) ? (
-                      <Literature
-                        literatureData={literatureData}
-                        dispatch={dispatch}
-                        loading={fetchLiterature}
-                      />
-                    ) : null}
-                    {patentData.length
-                      ? patentData.map((item) => <Patent key={item.id} data={item} />)
-                      : null}
-                    {scholarData.length
-                      ? scholarData.map((item) => (
-                          <Scholar
-                            key={item.id}
-                            id={item.id}
-                            evaluate={item.evaluate}
-                            title={item.title}
-                            data={item.dataNode}
-                            intentJson={item.intentJson}
-                          />
-                        ))
-                      : null}
+            <div>
+              <Skeleton loading={fetchSemanticData || loading} active>
+                <div>
+                  {statisticsData.length
+                    ? statisticsData.map((item) => (
+                        <Statistics
+                          title={item.title}
+                          id={item.id}
+                          evaluate={item.evaluate}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          intentJson={item.intentJson}
+                          key={item.id}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {medicalData.length
+                    ? medicalData.map((item) => (
+                        <Medical
+                          title={item.title}
+                          id={item.id}
+                          intentJson={item.intentJson}
+                          evaluate={item.evaluate}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          key={item.id}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {literatureData.length &&
+                  (literatureData.length === 1 || literatureData.length === 3) ? (
+                    <Literature
+                      literatureData={literatureData}
+                      dispatch={dispatch}
+                      loading={fetchLiterature}
+                    />
+                  ) : null}
+                  {patentData.length
+                    ? patentData.map((item) => <Patent key={item.id} data={item} />)
+                    : null}
+                  {scholarData.length
+                    ? scholarData.map((item) => (
+                        <Scholar
+                          key={item.id}
+                          id={item.id}
+                          evaluate={item.evaluate}
+                          title={item.title}
+                          data={item.dataNode}
+                          intentJson={item.intentJson}
+                        />
+                      ))
+                    : null}
 
-                    {JournalData.length
-                      ? JournalData.slice(0, 1).map((item) => (
-                          <Journal
-                            key={item.id}
-                            id={item.id}
-                            evaluate={item.evaluate}
-                            data={item.dataNode}
-                          />
-                        ))
-                      : null}
-                    {referenceBookData.length
-                      ? referenceBookData.map((item) => (
-                          <ReferenceBook
-                            key={item.id}
-                            id={item.id}
-                            domain={item.domain}
-                            intentDomain={item.intentDomain}
-                            intentFocus={item.intentFocus}
-                            evaluate={item.evaluate}
-                            title={item.title}
-                            data={item.dataNode}
-                          />
-                        ))
-                      : null}
-                    {referenceBook63.length
-                      ? referenceBook63.map((item) => (
-                          <ReferenceBook63
-                            key={item.id}
-                            id={item.id}
-                            domain={item.domain}
-                            intentDomain={item.intentDomain}
-                            intentFocus={item.intentFocus}
-                            evaluate={item.evaluate}
-                            title={item.title}
-                            data={item.dataNode}
-                          />
-                        ))
-                      : null}
-                    {referenceBook69.length
-                      ? referenceBook69.map((item) => (
-                          <ReferenceBook69
-                            key={item.id}
-                            id={item.id}
-                            domain={item.domain}
-                            intentDomain={item.intentDomain}
-                            intentFocus={item.intentFocus}
-                            evaluate={item.evaluate}
-                            title={item.title}
-                            data={item.dataNode}
-                          />
-                        ))
-                      : null}
-                    {sentenceData.length ? <Sentence data={sentenceData} /> : null}
+                  {JournalData.length
+                    ? JournalData.slice(0, 1).map((item) => (
+                        <Journal
+                          key={item.id}
+                          id={item.id}
+                          evaluate={item.evaluate}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {referenceBookData.length
+                    ? referenceBookData.map((item) => (
+                        <ReferenceBook
+                          key={item.id}
+                          id={item.id}
+                          domain={item.domain}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          evaluate={item.evaluate}
+                          title={item.title}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {referenceBook63.length
+                    ? referenceBook63.map((item) => (
+                        <ReferenceBook63
+                          key={item.id}
+                          id={item.id}
+                          domain={item.domain}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          evaluate={item.evaluate}
+                          title={item.title}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {referenceBook69.length
+                    ? referenceBook69.map((item) => (
+                        <ReferenceBook69
+                          key={item.id}
+                          id={item.id}
+                          domain={item.domain}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          evaluate={item.evaluate}
+                          title={item.title}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
-                    {kaifangyuData.length
-                      ? kaifangyuData.map((item) => (
-                          <Graphic
-                            key={item.id}
-                            id={item.id}
-                            q={q}
-                            data={item.dataNode}
-                            intentJson={item.intentJson}
-                            intentDomain={item.intentDomain}
-                            domain={item.domain}
-                            pagination={item.pagination}
-                            title={item.title}
-                            evaluate={item.evaluate}
-                            intentFocus={item.intentFocus}
-                            dispatch={dispatch}
-                          />
-                        ))
-                      : null}
-                    {poemData.length
-                      ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
-                      : null}
-                    {faqData.length ? (
-                      <div>
-                        {faqData.map((item) => (
-                          <FAQ key={item.id} data={item} />
-                        ))}
+                  {kaifangyuData.length
+                    ? kaifangyuData.map((item) => (
+                        <Graphic
+                          key={item.id}
+                          id={item.id}
+                          q={q}
+                          data={item.dataNode}
+                          intentJson={item.intentJson}
+                          intentDomain={item.intentDomain}
+                          domain={item.domain}
+                          pagination={item.pagination}
+                          title={item.title}
+                          evaluate={item.evaluate}
+                          intentFocus={item.intentFocus}
+                          dispatch={dispatch}
+                        />
+                      ))
+                    : null}
+                  {poemData.length
+                    ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
+                    : null}
+                  {faqData.length ? (
+                    <div>
+                      {faqData.map((item) => (
+                        <FAQ key={item.id} data={item} />
+                      ))}
+                    </div>
+                  ) : null}
+                  {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
+                  {weather.length ? <Weather weatherData={weather[0]} /> : null}
+
+                  {semanticData.length ? <ReadComp data={semanticData} /> : null}
+                </div>
+              </Skeleton>
+
+              <Skeleton loading={fetchSg} active>
+                {sgData.length ? <SgList data={sgData} /> : null}
+              </Skeleton>
+
+              <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData}>
+                {!answerData.length &&
+                !communityAnswer &&
+                !sgData.length &&
+                !semanticData.length ? (
+                  <Result
+                    style={{ width: 600, margin: 'auto' }}
+                    icon={<Icon type="frown" theme="twoTone" />}
+                    subTitle={
+                      <div style={{ textAlign: 'center' }}>
+                        <p>抱歉，您输入的问题，我暂时还不能识别出它的意思。</p>
+                        <p>请变换一下说法再问问我^_^。</p>
+                        <p>（提问方式：自然语言 or 关键词）</p>
                       </div>
-                    ) : null}
-                    {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
-                    {weather.length ? <Weather weatherData={weather[0]} /> : null}
-
-                    {semanticData.length ? <ReadComp data={semanticData} /> : null}
-                  </div>
-                </Skeleton>
-
-                <Skeleton loading={fetchSg} active>
-                  {sgData.length ? <SgList data={sgData} /> : null}
-                </Skeleton>
-              </div>
-            ) : !loading && !fetchLiterature && !fetchSg && !fetchSemanticData ? (
-              <Result
-                style={{ width: 600, margin: 'auto' }}
-                icon={<Icon type="frown" theme="twoTone" />}
-                subTitle={
-                  <div style={{ textAlign: 'center' }}>
-                    <p>抱歉，您输入的问题，我暂时还不能识别出它的意思。</p>
-                    <p>请变换一下说法再问问我^_^。</p>
-                    <p>（提问方式：自然语言 or 关键词）</p>
-                  </div>
-                }
-                extra={
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      router.push('/');
-                      dispatch({
-                        type: 'global/setQuestion',
-                        payload: {
-                          q: ''
-                        }
-                      });
-                    }}
-                  >
-                    回到首页
-                  </Button>
-                }
-              />
-            ) : null}
+                    }
+                    extra={
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          router.push('/');
+                          dispatch({
+                            type: 'global/setQuestion',
+                            payload: {
+                              q: ''
+                            }
+                          });
+                        }}
+                      >
+                        回到首页
+                      </Button>
+                    }
+                  />
+                ) : null}
+              </Skeleton>
+            </div>
           </Col>
-          <Col span={5} style={{padding: 0}}>
+          <Col span={5} style={{ padding: 0 }}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}

@@ -21,6 +21,7 @@ function LoginRegister(props) {
   };
 
   useEffect(() => {
+    
     clearInterval(time);
   }, []);
 
@@ -57,12 +58,16 @@ function LoginRegister(props) {
   );
 
   function handleCancel() {
+    setShowRegister(false);
+    setShowLogin(true);
+    setActiveKey('1');
+    setErrMsg('');
     triggerCancel();
   }
 
   function handleThirdLogin(type) {
     const handleRedirectUrl = encodeURIComponent(
-      window.location.origin + '/web/handleRedirect?Redirect=' + window.location.href
+      window.location.origin + process.env.basePath+ '/handleRedirect?Redirect=' + window.location.href
     );
     window.open(
       `https://my.cnki.net/ThirdLogin/ThirdLogin.aspx?to=${type}&RedirectUrl=${handleRedirectUrl}`,
@@ -362,10 +367,11 @@ function LoginRegister(props) {
                     }
                   ]
                 })(
-                  <Input
+                  <Input.Password
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
                     size="large"
+                    visibilityToggle
                     placeholder="请输入密码"
                   />
                 )}
@@ -423,10 +429,11 @@ function LoginRegister(props) {
                 {getFieldDecorator('password', {
                   rules: [{ required: true, message: '请输入密码' }]
                 })(
-                  <Input
+                  <Input.Password
                     size="large"
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
+                    visibilityToggle
                     placeholder="请输入密码"
                   />
                 )}

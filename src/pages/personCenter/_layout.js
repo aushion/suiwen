@@ -7,7 +7,7 @@ function UserLayout(props) {
   return (
     <div>
       <PersonAvatar avatar={props.avatar} />
-      <div style={{ marginTop: 40, margin: '2% 18.75% 0' }}>
+      <div style={{ marginTop: 40, margin: '1% 18.75% 0' }}>
         <Row gutter={24}>
           <Col span={5}>
             <PersonMenu defaultKey={props.defaultKey} />

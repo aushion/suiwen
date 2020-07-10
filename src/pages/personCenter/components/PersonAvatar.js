@@ -10,7 +10,7 @@ function PersonAvatar(props) {
   return (
     <div style={{ backgroundColor: '#fff', position: 'relative', height: 116 }}>
       <Avatar
-        style={{ marginTop: 25, marginLeft: '18.75%' }}
+        style={{ marginTop: 10, marginLeft: '18.75%' }}
         size={100}
         shape="square"
         icon="user"
