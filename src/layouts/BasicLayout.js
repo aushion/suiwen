@@ -88,12 +88,12 @@ function BasicLayout(props) {
               {username ? (
                 <Link
                   style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/personInfo?userName=${username}`}
+                  to={`/personCenter/personInfo?userName=${userInfo?userInfo.UserName:''}`}
                 >
                   <Avatar
                     size="small"
                     src={
-                      avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`
+                      avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userInfo?userInfo.UserName:''}`
                     }
                   />
                    <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>

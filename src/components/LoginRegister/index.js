@@ -76,7 +76,6 @@ function LoginRegister(props) {
     setErrMsg('');
     props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         setLoading(true);
         const data = JSON.parse(
           JSON.stringify(values, function(key, value) {
@@ -283,6 +282,7 @@ function LoginRegister(props) {
           <Button
             type="link"
             onClick={() => {
+              props.form.resetFields();
               setShowLogin(false);
               setShowRegister(true);
               setActiveKey('1');

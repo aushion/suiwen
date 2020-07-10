@@ -21,7 +21,7 @@ const InputRecord = props => {
               type="close"
               onClick={e => {
                 e.stopPropagation();
-                let inputRecords = localStorage.getItem(HISTORYKEY);
+                let inputRecords = JSON.parse(localStorage.getItem(HISTORYKEY));
                 inputRecords.splice(index, 1);
                 setData(inputRecords);
                 window.localStorage.setItem(HISTORYKEY, JSON.stringify(inputRecords));

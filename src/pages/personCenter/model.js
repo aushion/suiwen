@@ -58,7 +58,7 @@ export default {
         const current = pathname;
         if (match) {
           if (current === '/personCenter/personInfo') {
-            dispatch({ type: 'getUserInfo', payload: { userName } });
+            dispatch({ type: 'getUserInfo', payload: {  userName: encodeURIComponent(userName) } });
             dispatch({ type: 'save', payload: { defaultKey: 'personInfo' } });
           } else if (current === '/personCenter/avatar') {
             dispatch({ type: 'getUserHeadPicture', payload: { userName } });

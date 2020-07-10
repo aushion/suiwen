@@ -1,5 +1,4 @@
 import request from '../utils/request';
-import RestTools from '../utils/RestTools';
 const serverurl = process.env.apiUrl;
 
 export default {

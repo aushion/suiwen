@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal, Rate, Form, Input, message } from 'antd';
-// import { feedback } from '../../layouts/service';
 import request from '../../utils/request';
 
 const { TextArea } = Input;
@@ -31,7 +30,6 @@ function FeedBack(props) {
             }
           })
         );
-        //feedback(data)
         request
           .get('/insertFeedback', {
             params: { ...data }

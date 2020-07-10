@@ -3,10 +3,14 @@ import Cookies from 'js-cookie';
 import request from './utils/request';
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+const userTypeMap = {
+  'bk': 0,
+  'jf': 1
+}
 if(userInfo){
   request.post('/Login/refreshLogin',null,{
     params: {
-      isPerson: userInfo.UserType === 'jf' || userInfo.PersonUserName,
+      isPerson: userTypeMap[userInfo.UserType],
       username: userInfo.UserName
     }
   }).then(res => {

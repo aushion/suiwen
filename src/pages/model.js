@@ -45,8 +45,8 @@ export default {
         .map((item) => {
           return {
             ...item,
-            logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
-            thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
+            // logoUrl: `${urlPrefix}/file/topic/topicHome/${item.data[0].topicId}.png`,
+            thumbUrl: `${urlPrefix}/file/topic/home/${item.data[0].topicId}.png`,
             topicId: item.data[0].topicId
           };
         });
@@ -78,9 +78,9 @@ export default {
     *getHomePicture({ payload }, { call, put }) {
       const { data } = yield call(getHomePictureIds, payload);
       const { type } = payload;
-      const urlPrefix = `${process.env.apiUrl}/getHomePicture?picId=`;
+      const urlPrefix = `${process.env.apiUrl}/file/home/HomePicture_`;
       if (data.result) {
-        const imgData = data.result.map((item) => urlPrefix + item.picId);
+        const imgData = data.result.map((item) => `${urlPrefix}${item.picId}.png`);
         type === 0
           ? yield put({
               type: 'save',
