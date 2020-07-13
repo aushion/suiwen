@@ -8,6 +8,7 @@ import { connect } from 'dva';
 import styles from './index.less';
 import RestTools from 'Utils/RestTools';
 import FeedBack from '../../components/FeedBack';
+import LoginRegister from '../../components/LoginRegister';
 import logo from '../../assets/logo1.png';
 import topicLogo from '../../assets/topicLogo.png';
 import user from '../../assets/user.png';
@@ -24,6 +25,7 @@ function Special(props) {
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
   const [visible, setVisible] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const topicData = JSON.parse(sessionStorage.getItem('topicData'))|| RestTools.getLocalStorage('topicData');
   const topicInfo = find(topicData, { topicId: topicId });
   const {
@@ -73,10 +75,13 @@ function Special(props) {
   const btnGruop = (
     <div style={{ color: '#fff' }}>
       <div style={{ cursor: 'pointer', borderBottom: '1px solid #fff' }}>
-        <a
-          href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
-            window.location.href
-          )}`}
+        <span
+          // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
+          //   window.location.href
+          // )}`}
+          onClick={() => {
+            setShowLogin(true);
+          }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = themeColor;
           }}
@@ -90,12 +95,13 @@ function Special(props) {
             borderRadius: 4,
             margin: '10px 0'
           }}
+
         >
           <Icon type="login" style={{ marginRight: 6 }} />
-          登录
-        </a>
+          登录/注册
+        </span>
       </div>
-      <div style={{ borderBottom: '1px solid #fff' }}>
+      {/* <div style={{ borderBottom: '1px solid #fff' }}>
         <a
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = themeColor;
@@ -117,7 +123,7 @@ function Special(props) {
           <Icon type="form" style={{ marginRight: 6 }} />
           注册
         </a>
-      </div>
+      </div> */}
       <div
         style={{ padding: '10px 30px', cursor: 'pointer', borderRadius: 4, margin: '10px 0' }}
         onClick={() => {
@@ -392,6 +398,7 @@ function Special(props) {
           </ul>
         </Footer>
         <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
+        <LoginRegister visible={showLogin} triggerCancel={() => {setShowLogin(false)} } />
       </Layout>
     </Spin>
   );
