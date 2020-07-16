@@ -7,7 +7,7 @@ export default {
   state: {
     userInfo: null,
     avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-      RestTools.getLocalStorage('userInfo').UserName
+      RestTools.getLocalStorage('userInfo')?RestTools.getLocalStorage('userInfo').UserName: ''
     }`,
     defaultKey: window.location.pathname.replace('/web/personCenter/', '')
   },

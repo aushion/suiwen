@@ -13,7 +13,7 @@ export default function HelpMenu(props) {
   
   function handleClick(e) {
     RestTools.setSession('page',null) //重置分页
-    RestTools.setSession('searchKey',null)
+    RestTools.setSession('searchKey','') //重置搜索默认值
     setCurrent(e.key);
     router.push(username ? `/help/${e.key}?username=${username}`: `/help/${e.key}`);
   }

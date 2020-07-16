@@ -33,7 +33,7 @@ function HomeLayout(props) {
     // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     window.Ecp_LogoutOptr_my(0);
 
-    localStorage.setItem('userInfo', null);
+    localStorage.removeItem('userInfo');
     setUsername(null);
   }
 

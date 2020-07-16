@@ -59,7 +59,7 @@
       window.localStorage.setItem('userInfo', loginStatus)
     } else {
       if (domain.indexOf('cnki.net')>-1) {
-        window.localStorage.setItem('userInfo', null); //单点退出
+        window.localStorage.removeItem('userInfo'); //单点退出
       }
     }
 

@@ -68,7 +68,7 @@ function Special(props) {
 
   function logout() {
     window.Ecp_LogoutOptr_my(0);
-    localStorage.setItem('userInfo', null);
+    localStorage.removeItem('userInfo');
     setUsername(null);
   }
 

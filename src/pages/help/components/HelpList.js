@@ -32,10 +32,12 @@ function HelpList(props) {
         <div>
           <Search
             style={{ width: 200 }}
-            defaultValue={RestTools.getSession('searchKey') || ''}
+            defaultValue={sessionStorage.getItem('searchKey') || ''}
             onSearch={(value) => {
-              RestTools.setSession('searchKey',value);
-              const page = RestTools.getSession('page');
+              if (value) {
+                RestTools.setSession('searchKey', value);
+              }
+              const page = JSON.parse(sessionStorage.getItem('page'));
               const payload = { domain, searchKey: value, ...page };
               handleSearchOrChangePage(payload);
             }}
@@ -54,8 +56,8 @@ function HelpList(props) {
                 current: data.pageNum,
                 onChange: function(page, pageSize) {
                   RestTools.setSession('page', { size: pageSize, index: page });
-                  const searchKey = RestTools.getSession('searchKey');
-                  const payload = { size: pageSize, index: page, domain: domain , searchKey};
+                  const searchKey = sessionStorage.getItem('searchKey');
+                  const payload = { size: pageSize, index: page, domain: domain, searchKey };
                   handleSearchOrChangePage(payload);
                 }
               }

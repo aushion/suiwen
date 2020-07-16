@@ -20,7 +20,7 @@ function PersonMenu(props) {
 
   return (
     <div>
-      {userInfo.UserType === 'bk' ? (
+      {userInfo && userInfo.UserType === 'bk' ? (
         <Menu onClick={handleClick} selectedKeys={props.defaultKey}>
           <Menu.Item key="personInfo" style={menuItemStyle}>
             <Icon type="user" /> 机构信息

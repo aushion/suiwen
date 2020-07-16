@@ -10,7 +10,7 @@ import helpStyle from './index.less';
 
 function HotHelp(props) {
   const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props;
-  const menus = localStorage.getItem('userInfo')
+  const menus = JSON.parse(localStorage.getItem('userInfo'))
   ? [
       {
         key: 'newHelp',

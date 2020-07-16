@@ -10,7 +10,7 @@ export default {
     domain: '全部',
     size: 10,
     index: 1,
-    uid: localStorage.getItem('userInfo')
+    uid: JSON.parse(localStorage.getItem('userInfo'))
       ? JSON.parse(localStorage.getItem('userInfo')).UserName
       : Cookies.get('cnki_qa_uuid')
   },
