@@ -54,7 +54,7 @@ function ReferenceBook(props) {
               key={item.工具书编号 + index}
               className={styles.ReferenceBook_answer}
               dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer, intentDomain))
+                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer, intentDomain, domain))
               }}
             />
             <div className={styles.ReferenceBook_extra}>
