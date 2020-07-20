@@ -21,7 +21,9 @@ function BasicLayout(props) {
   const topicData = JSON.parse(sessionStorage.getItem('topicData')) || JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
+  const [isVisibleLogin, setShowLogin] = useState(false);
+  const [isVisibleRegister, setShowRegister] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme, showLoginModal, avatar } = props;
@@ -105,24 +107,30 @@ function BasicLayout(props) {
             {username ? null : (
               <Button
                 className={styles.login_btn}
-                ghost
                 onClick={() => {
+                  setShowLoginAndRegister(true);
                   setShowLogin(true);
+                  setShowRegister(false);
                 }}
                 // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
                 // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
               >
-                登录/注册
+                登录
               </Button>
             )}
-            {/* {username ? null : (
-              <a
+            {username ? null : (
+              <Button
                 className={styles.register_btn}
-                href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
+                onClick={() => {
+                  setShowLoginAndRegister(true);
+                  setShowLogin(false);
+                  setShowRegister(true);
+                }}
+                // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
               >
                 注册
-              </a>
-            )} */}
+              </Button>
+            )}
             {username ? (
               <button onClick={logout} className={styles.login_btn}>
                 退出
@@ -181,9 +189,11 @@ function BasicLayout(props) {
       </Footer>
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
       <LoginRegister
-        visible={showLogin}
+        visible={showLoginAndRegister}
+        showLogin={isVisibleLogin}
+        showRegister={isVisibleRegister}
         triggerCancel={() => {
-          setShowLogin(false);
+          setShowLoginAndRegister(false);
         }}
       />
       <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>

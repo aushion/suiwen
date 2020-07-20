@@ -32,7 +32,8 @@ export default {
         library: 'react',
         dva: true,
         dynamicImport: {
-          webpackChunkName: true
+          webpackChunkName: true,
+          loadingComponent: './components/Loading/index'
         },
         title: '知网随问',
         scripts: [

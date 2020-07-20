@@ -22,11 +22,15 @@ function Special(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [menuKey, setMenuKey] = useState(initialKey);
+  const [openKey, setOpenKey] = useState(topics.length ? [topics[0].name] : []);
   const [menuDataIndex, setMenuDataIndex] = useState(-1);
   const [hotDataIndex, setHotDataIndex] = useState(-1);
   const [visible, setVisible] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const topicData = JSON.parse(sessionStorage.getItem('topicData'))|| RestTools.getLocalStorage('topicData');
+  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
+  const [isVisibleLogin, setShowLogin] = useState(false);
+  const [isVisibleRegister, setShowRegister] = useState(false);
+  const topicData =
+    JSON.parse(sessionStorage.getItem('topicData')) || RestTools.getLocalStorage('topicData');
   const topicInfo = find(topicData, { topicId: topicId });
   const {
     name,
@@ -40,8 +44,10 @@ function Special(props) {
 
   useEffect(() => {
     setMenuKey(initialKey);
+    setOpenKey(topics.length?[topics[0].name]: [])
     return () => {};
-  }, [initialKey]);
+  }, [initialKey, topics]);
+
   function handleClick(e) {
     setMenuKey(e.key);
   }
@@ -72,6 +78,18 @@ function Special(props) {
     setUsername(null);
   }
 
+  function handleOpenChange(openKeys) {
+    const initialOpenKeys = topics.map((item) => item.name);
+    const latestOpenKey = openKeys.find((key) => openKey.indexOf(key) === -1);
+    if (initialOpenKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKey(openKeys);
+    } else {
+      setOpenKey(latestOpenKey ? [latestOpenKey] : [initialOpenKeys[0]]);
+    }
+
+  }
+
+
   const btnGruop = (
     <div style={{ color: '#fff' }}>
       <div style={{ cursor: 'pointer', borderBottom: '1px solid #fff' }}>
@@ -80,7 +98,9 @@ function Special(props) {
           //   window.location.href
           // )}`}
           onClick={() => {
+            setShowLoginAndRegister(true);
             setShowLogin(true);
+            setShowRegister(false);
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = themeColor;
@@ -95,23 +115,24 @@ function Special(props) {
             borderRadius: 4,
             margin: '10px 0'
           }}
-
         >
           <Icon type="login" style={{ marginRight: 6 }} />
-          登录/注册
+          登录
         </span>
       </div>
-      {/* <div style={{ borderBottom: '1px solid #fff' }}>
-        <a
+      <div style={{ borderBottom: '1px solid #fff' }}>
+        <span
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = themeColor;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = '';
           }}
-          href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
-            window.location.href
-          )}`}
+          onClick={() => {
+            setShowLoginAndRegister(true);
+            setShowLogin(false);
+            setShowRegister(true);
+          }}
           style={{
             display: 'block',
             padding: '10px 30px',
@@ -122,8 +143,8 @@ function Special(props) {
         >
           <Icon type="form" style={{ marginRight: 6 }} />
           注册
-        </a>
-      </div> */}
+        </span>
+      </div>
       <div
         style={{ padding: '10px 30px', cursor: 'pointer', borderRadius: 4, margin: '10px 0' }}
         onClick={() => {
@@ -170,7 +191,11 @@ function Special(props) {
             {name === '阅读理解' ? (
               <>
                 {name + '专题'}
-                <Badge count={<div style={{background:'#f50',right:'-30px',top:'-10px',}}>Beta</div>}></Badge>
+                <Badge
+                  count={
+                    <div style={{ background: '#f50', right: '-30px', top: '-10px' }}>Beta</div>
+                  }
+                ></Badge>
               </>
             ) : (
               `${name}专题`
@@ -227,8 +252,10 @@ function Special(props) {
                   mode="inline"
                   style={{ color: '#606164', fontWeight: 'bold' }}
                   onClick={handleClick}
-                  defaultOpenKeys={[topics[0].name]}
-                  defaultSelectedKeys={[initialKey]}
+                  // defaultOpenKeys={[topics[0].name]}
+                  openKeys={openKey}
+                  selectedKeys={[menuKey]}
+                  onOpenChange={handleOpenChange}
                 >
                   {topics.map((item) => {
                     return item.children ? (
@@ -398,7 +425,14 @@ function Special(props) {
           </ul>
         </Footer>
         <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
-        <LoginRegister visible={showLogin} triggerCancel={() => {setShowLogin(false)} } />
+        <LoginRegister
+          visible={showLoginAndRegister}
+          showLogin={isVisibleLogin}
+          showRegister={isVisibleRegister}
+          triggerCancel={() => {
+            setShowLoginAndRegister(false);
+          }}
+        />
       </Layout>
     </Spin>
   );

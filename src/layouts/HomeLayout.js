@@ -15,7 +15,9 @@ function HomeLayout(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
+  const [isVisibleLogin, setShowLogin] = useState(false);
+  const [isVisibleRegister, setShowRegister] = useState(false);
 
   const { dispatch, avatar } = props;
   function handleClickEnterOrItem(value) {
@@ -47,7 +49,7 @@ function HomeLayout(props) {
             回到旧版
           </a> */}
           <span className={styles.tips}>
-            您好!
+            您好，
             {username ? (
               <Link
                 style={{ color: '#fff', marginLeft: 10 }}
@@ -70,29 +72,35 @@ function HomeLayout(props) {
           </span>
           {username ? null : (
             <Button
-              ghost
               className={styles.login_btn}
               onClick={() => {
+                setShowLoginAndRegister(true);
                 setShowLogin(true);
+                setShowRegister(false);
               }}
               // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
               // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
               //   window.location.href
               // )}`}
             >
-              登录/注册
+              登录
             </Button>
           )}
-          {/* {username ? null : (
-            <a
+          {username ? null : (
+            <Button
               className={styles.register_btn}
-              href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
-                window.location.href
-              )}`}
+              onClick={() => {
+                setShowLoginAndRegister(true);
+                setShowLogin(false);
+                setShowRegister(true);
+              }}
+              // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
+              //   window.location.href
+              // )}`}
             >
               注册
-            </a>
-          )} */}
+            </Button>
+          )}
           {username ? (
             <button onClick={logout} className={styles.login_btn}>
               退出
@@ -161,9 +169,11 @@ function HomeLayout(props) {
 
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
       <LoginRegister
-        visible={showLogin} //控制显隐
+        visible={showLoginAndRegister} //控制显隐
+        showLogin={isVisibleLogin}
+        showRegister={isVisibleRegister}
         triggerCancel={() => {
-          setShowLogin(false);
+          setShowLoginAndRegister(false);
         }}
       />
       <Affix offsetBottom={50} style={{ position: 'absolute', right: 10 }}>

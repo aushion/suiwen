@@ -7,7 +7,7 @@ const { TabPane } = Tabs;
 let time = null;
 
 function LoginRegister(props) {
-  const { visible, triggerCancel } = props;
+  const { visible, triggerCancel,  } = props;
   const { getFieldDecorator } = props.form;
   const [showRegister, setShowRegister] = useState(false); //显示注册框标志
   const [showLogin, setShowLogin] = useState(true); //显示登录框标志
@@ -31,6 +31,13 @@ function LoginRegister(props) {
       setCountDown(60);
     }
   }, [countDown]);
+
+  //判断是打开登录还是注册窗口
+  useEffect(()=> {
+    setShowLogin(props.showLogin);
+    setShowRegister(props.showRegister);
+  },[props.showLogin, props.showRegister])
+
 
   const QqSvg = () => (
     <svg fill="currentColor" viewBox="0 0 1024 1024">

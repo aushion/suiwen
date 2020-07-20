@@ -28,6 +28,7 @@ function ReferenceBook69(props) {
   }
 
   function handleAnswer(str) {
+    console.log('item.answer', str.toString().split(/【(.*?)】/));
     let answerArray = str.toString().split(/【(.*?)】/);
     let answerObj = {};
     const answerProp = ['生态习性', '生长习性', '习性'];
@@ -41,6 +42,7 @@ function ReferenceBook69(props) {
       return answerKey.length ? `【###${answerKey}$$$】：${answerObj[answerKey]}` : str;
     }
 
+    return str;
   }
 
   return (

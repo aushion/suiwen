@@ -45,6 +45,7 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(getAnswer, payload);
+      const { topic} = payload;
       const { q, userId } = payload;
       const { data } = res;
 
@@ -84,7 +85,8 @@ export default {
             question: decodeURIComponent(q),
             answerStatus: 'yes',
             ip: '192.168.22.13',
-            user_id: userId
+            user_id: userId,
+            topic: topic || ''
           }
         });
       } else {
@@ -95,7 +97,8 @@ export default {
             question: decodeURIComponent(q),
             answerStatus: 'no',
             ip: '192.168.22.13',
-            user_id: userId
+            user_id: userId,
+            topic: topic || ''
           }
         });
       }
