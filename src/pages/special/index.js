@@ -238,7 +238,7 @@ function Special(props) {
         <Layout className={styles.main}>
           <Content className={styles.hotQuestions}>
             <div className={styles.title}>
-              <div>概念</div>
+              <div>问题分类</div>
             </div>
           </Content>
         </Layout>

@@ -30,26 +30,26 @@ function ReferenceBook69(props) {
   }
 
   function handleAnswer(str) {
-    // console.log('item.answer', str.toString().split(/【(.*?)】/));
-    // let answerArray = str.toString().split(/【(.*?)】/);
-    // let answerObj = {};
-    // const answerProp = ['生态习性', '生长习性', '习性'];
+    let answerArray = str.toString().split(/【(.*?)】/);
+    let answerObj = {};
+    const answerProp = ['生态习性', '生长习性', '习性'];
 
-    // if (answerArray.length) {
-    //   answerObj['front'] = answerArray[0];
-    //   for (let i = 1; i < answerArray.length - 1; i++) {
-    //     answerObj[answerArray[i]] = answerArray[i + 1];
-    //   }
-    //   const answerKey = answerProp.filter((item) => answerObj[item]);
-    //   return answerKey.length ? `【###${answerKey}$$$】：${answerObj[answerKey]}` : str;
-    // }
-    const re = /<span class="answerPart">(.*)<br><\/span>/gims;
-    return str.toString().match(re)
-      ? str
-          .toString()
-          .match(re)[0]
-          .replace('<span class="answerPart">', '')
-      : null;
+    if (answerArray.length) {
+      answerObj['front'] = answerArray[0];
+      for (let i = 1; i < answerArray.length - 1; i++) {
+        answerObj[answerArray[i]] = answerArray[i + 1];
+      }
+      const answerKey = answerProp.filter((item) => answerObj[item]);
+      return answerKey.length ? `【###${answerKey}$$$】：${answerObj[answerKey]}` : str;
+    }
+    // const re = /<span class="answerPart">(.*)<br><\/span>/gims;
+    // return str.toString().match(re)
+    //   ? str
+    //       .toString()
+    //       .match(re)[0]
+    //       .replace('<span class="answerPart">', '')
+    //   : null;
+    // return str;
   }
 
   function handleClick(e) {
