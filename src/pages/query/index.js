@@ -294,6 +294,20 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
+                {referenceBookData.length
+                    ? referenceBookData.map((item) => (
+                        <ReferenceBook
+                          key={item.id}
+                          id={item.id}
+                          domain={item.domain}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          evaluate={item.evaluate}
+                          title={item.title}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
@@ -356,20 +370,7 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                  {referenceBookData.length
-                    ? referenceBookData.map((item) => (
-                        <ReferenceBook
-                          key={item.id}
-                          id={item.id}
-                          domain={item.domain}
-                          intentDomain={item.intentDomain}
-                          intentFocus={item.intentFocus}
-                          evaluate={item.evaluate}
-                          title={item.title}
-                          data={item.dataNode}
-                        />
-                      ))
-                    : null}
+                 
                   {/* {referenceBookData.length ? (
                     <ToolsBook data={referenceBookData}></ToolsBook>
                   ) : null} */}
