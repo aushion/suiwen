@@ -1,6 +1,8 @@
+import { Collapse } from 'antd';
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
+const { Panel } = Collapse;
 
 function ReferenceBook69(props) {
   const { data, id, evaluate, title, intentDomain } = props;
@@ -8,41 +10,52 @@ function ReferenceBook69(props) {
 
   function cutAnswer(str, code) {
     if (str) {
-      // if (str.length > 300) {
-      return (
-        RestTools.subHtml(str, 300, false) +
-        '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
-        code +
-        '&db=crfd"' +
-        'target="_blank"' +
-        'rel="noopener noreferrer"' +
-        'style="white-space:nowrap"' +
-        '> 查看全文>>' +
-        '</a>'
-      );
-      // } else {
-      //   return str;
-      // }
+      if (str.length > 300) {
+        return (
+          RestTools.subHtml(str, 300, false) +
+          '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
+          code +
+          '&db=crfd"' +
+          'target="_blank"' +
+          'rel="noopener noreferrer"' +
+          'style="white-space:nowrap"' +
+          '> 查看全文>>' +
+          '</a>'
+        );
+      } else {
+        return str;
+      }
     }
     return '-';
   }
 
   function handleAnswer(str) {
-    console.log('item.answer', str.toString().split(/【(.*?)】/));
-    let answerArray = str.toString().split(/【(.*?)】/);
-    let answerObj = {};
-    const answerProp = ['生态习性', '生长习性', '习性'];
+    // console.log('item.answer', str.toString().split(/【(.*?)】/));
+    // let answerArray = str.toString().split(/【(.*?)】/);
+    // let answerObj = {};
+    // const answerProp = ['生态习性', '生长习性', '习性'];
 
-    if (answerArray.length) {
-      answerObj['front'] = answerArray[0];
-      for (let i = 1; i < answerArray.length - 1; i++) {
-        answerObj[answerArray[i]] = answerArray[i + 1];
-      }
-      const answerKey = answerProp.filter((item) => answerObj[item]);
-      return answerKey.length ? `【###${answerKey}$$$】：${answerObj[answerKey]}` : str;
+    // if (answerArray.length) {
+    //   answerObj['front'] = answerArray[0];
+    //   for (let i = 1; i < answerArray.length - 1; i++) {
+    //     answerObj[answerArray[i]] = answerArray[i + 1];
+    //   }
+    //   const answerKey = answerProp.filter((item) => answerObj[item]);
+    //   return answerKey.length ? `【###${answerKey}$$$】：${answerObj[answerKey]}` : str;
+    // }
+    const re = /<span class="answerPart">(.*)<br><\/span>/gims;
+    return str.toString().match(re)
+      ? str
+          .toString()
+          .match(re)[0]
+          .replace('<span class="answerPart">', '')
+      : null;
+  }
+
+  function handleClick(e) {
+    console.log('e', e.target.className);
+    if (e.target.className === 'open') {
     }
-
-    return str;
   }
 
   return (
@@ -59,15 +72,27 @@ function ReferenceBook69(props) {
                 __html: RestTools.translateToRed(title)
               }}
             />
-            <div
-              key={item.工具书编号 + index}
-              className={styles.ReferenceBook_answer}
-              dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(
-                  RestTools.completeToolsBook(cutAnswer(answer), intentDomain)
-                )
-              }}
-            />
+            <div className={styles.ReferenceBook_answer}>
+              {answer ? (
+                <Collapse expandIconPosition="right">
+                  <Panel header={RestTools.removeHtmlTag(answer)}>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: RestTools.completeToolsBook(item.Answer) }}
+                    />
+                  </Panel>
+                </Collapse>
+              ) : (
+                <div
+                  key={item.工具书编号 + index}
+                  onClick={handleClick}
+                  dangerouslySetInnerHTML={{
+                    __html: RestTools.translateToRed(
+                      RestTools.completeToolsBook(cutAnswer(item.Answer), intentDomain)
+                    )
+                  }}
+                />
+              )}
+            </div>
             <div className={styles.ReferenceBook_extra}>
               <a
                 className={styles.ReferenceBook_name}

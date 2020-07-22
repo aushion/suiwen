@@ -26,6 +26,7 @@ import RestTools from '../../utils/RestTools';
 import Sentence from './components/Sentence';
 import ReferenceBook63 from './components/ReferenceBook63';
 import ReferenceBook69 from './components/ReferenceBook69';
+// import ToolsBook from './components/ToolsBook';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 
@@ -369,6 +370,10 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
+                  {/* {referenceBookData.length ? (
+                    <ToolsBook data={referenceBookData}></ToolsBook>
+                  ) : null} */}
+
                   {referenceBook63.length
                     ? referenceBook63.map((item) => (
                         <ReferenceBook63
