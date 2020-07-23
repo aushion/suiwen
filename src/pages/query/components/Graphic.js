@@ -181,10 +181,10 @@ function Graphic(props) {
           const originAnswer = item[answerMap[domain][intentDomain].answer];
           const isFocus = answerMap[domain][intentDomain].focus.includes(intentFocus)
           const answer = originAnswer
-            ? originAnswer.length > 300
-              ? originAnswer.substr(0, 300) + '<a class="showMore"> 更多>></a>'
-              : originAnswer
-            : '';
+            // ? originAnswer.length > 300
+            //   ? originAnswer.substr(0, 300) + '<a class="showMore"> 更多>></a>'
+            //   : originAnswer
+            // : '';
           return (
             <div className={styles.answer_item} key={index} style={{ padding: '10px' }}>
               {/* {intentFocus === '省份' ? <div>地点：{item[intentFocus]}</div> : null} */}
@@ -213,16 +213,16 @@ function Graphic(props) {
 
   const Default = function(props) {
     return (
-      <div style={{ textIndent: '2em' }}>
+      <div >
         {data.map((item, index) => {
           let oldAnswer = RestTools.UnicodeToAscii(
             item.hasOwnProperty('Answer') ? item.Answer : item[intentFocus]
           );
           let answer = oldAnswer
-            ? oldAnswer.length > 300
-              ? oldAnswer.substring(0, 300) + '<a class="showMore"> 更多>></a>'
-              : oldAnswer
-            : '';
+            // ? oldAnswer.length > 300
+            //   ? oldAnswer.substring(0, 300) + '<a class="showMore"> 更多>></a>'
+            //   : oldAnswer
+            // : '';
           return (
             <div key={index} className={styles.answer_item}>
               <div
@@ -244,7 +244,10 @@ function Graphic(props) {
      {data ? <div style={{ color: '#2f8bd6', fontSize: 20 }}>{title}</div> : null}
 
       <div className={styles.wrapper}>
-        {domain === '翻译' ? <Translate /> : answerMap[domain] && answerMap[domain][intentDomain] ? <SpecialCom /> : <Default />}
+        {domain === '翻译' ? <Translate /> : 
+        answerMap[domain] && answerMap[domain][intentDomain] ? 
+        <SpecialCom /> :
+         <Default />}
       </div>
       <div>
         {pagination && total > pageCount ? (

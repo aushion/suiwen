@@ -65,6 +65,7 @@ function LoginRegister(props) {
   );
 
   function handleCancel() {
+    props.form.resetFields();
     setShowRegister(false);
     setShowLogin(true);
     setActiveKey('1');
@@ -458,6 +459,7 @@ function LoginRegister(props) {
         <Button
           type="link"
           onClick={() => {
+            props.form.resetFields();
             setShowRegister(false);
             setShowLogin(true);
           }}

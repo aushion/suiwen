@@ -44,9 +44,8 @@ export default {
   },
   effects: {
     *getAnswer({ payload }, { call, put }) {
+      const { q, userId, topic } = payload;
       const res = yield call(getAnswer, payload);
-      const { topic} = payload;
-      const { q, userId } = payload;
       const { data } = res;
 
       if (data.result) {
@@ -294,7 +293,7 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        let { q, topic = '' } = query;
+        let { q, topic = '',topicName } = query;
         let userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
@@ -364,7 +363,7 @@ export default {
               } else {
                 dispatch({
                   type: 'getAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic: topicName }
                 });
                 dispatch({
                   type: 'getSG',
@@ -386,7 +385,7 @@ export default {
                 });
                 dispatch({
                   type: 'getRelevantByAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic: topicName }
                 });
               }
             } else {
