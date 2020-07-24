@@ -2,17 +2,33 @@ import { connect } from 'dva';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
+import { useState } from 'react';
 
 function FAQ(props) {
-  const { question, answer, id, evaluate,domain } = props.data;
-  const {good, bad, isevalute} = evaluate
+  const { question, answer, id, evaluate, domain } = props.data;
+  const { good, bad, isevalute } = evaluate;
+  const [showAnswer, updateAnswer] = useState(
+    answer.length > 500
+      ? RestTools.removeHtmlTag(answer).substr(0, 500) + '<a class="showMore">查看更多</a>'
+      : answer
+  );
+
+  function handleClick(e, str) {
+    if (e.target.className === 'showMore') {
+      updateAnswer(answer + '<a class="up">收起</a>');
+    } else if (e.target.className === 'up') {
+      updateAnswer(
+        RestTools.removeHtmlTag(answer).substr(0, 500) + '<a class="showMore">查看更多</a>'
+      );
+    }
+  }
   return (
     <div className={styles.FAQ}>
       <div className={styles.wrapper}>
         <div className={styles.icon}>Q</div>
         <div
           className={styles.text}
-          style={{ color: '#0079FF',fontSize: 16 }}
+          style={{ color: '#0079FF', fontSize: 16 }}
           dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(question) }}
         />
       </div>
@@ -27,17 +43,14 @@ function FAQ(props) {
         </div>
         <div
           className={styles.text}
-          // style={{ color: '#5C5D5E' }}
-          dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(RestTools.completeToolsBook(answer)) }}
+          onClick={(e) => handleClick(e, answer)}
+          dangerouslySetInnerHTML={{
+            __html: RestTools.translateToRed(RestTools.completeToolsBook(showAnswer))
+          }}
         />
         <div className={styles.source}>{domain} 常见问题集</div>
         <div className={styles.faq_evaluate}>
-          <Evaluate
-            id={id}
-            goodCount={good}
-            badCount={bad}
-            isevalute={isevalute}
-          />
+          <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
         </div>
       </div>
     </div>

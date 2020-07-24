@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tabs, Modal } from 'antd';
+import { Tabs } from 'antd';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
@@ -11,47 +11,72 @@ function Sentence(props) {
   const { good, bad, isevaluate } = evaluate;
   const sentenceData = data.map((item) => {
     return {
-      tabkey: RestTools.removeFlag(item.dataNode[0].区别左词项 || item.dataNode[0].区别右词项),
+      tabkey: RestTools.removeFlag(
+        item.dataNode[0].人名左 ||
+          item.dataNode[0].人名右 ||
+          item.dataNode[0].区别左词项 ||
+          item.dataNode[0].区别右词项
+      ),
       data: item.dataNode
     };
   });
 
-  const [visible, setVisible] = useState(false);
-  const [initialText, setText] = useState('');
-  function showMore(text) {
-    setVisible(true);
-    setText(text);
-  }
+  const [sData, updateData] = useState(sentenceData);
 
-  function callback(key) {
-    // console.log(key);
-  }
+  // const [visible, setVisible] = useState(false);
+  // const [initialText, setText] = useState('');
+  // function showMore(text) {
+  //   setVisible(true);
+  //   setText(text);
+  // }
 
-  function handleShowMore(e, str) {
+
+  function handleShowMore(e, item, index) {
     if (e.target.className === 'showMore') {
-      showMore(str.substr(300, str.length));
+      const [m, n] = index;
+      const newItem = { ...item, fullAnswer: item.Answer };
+      const newSdata = [...sData];
+      newSdata[m].data[n] = newItem;
+      updateData(newSdata);
+    } else if (e.target.className === 'up') {
+      const [m, n] = index;
+      const newItem = { ...item, fullAnswer: '' };
+      const newSdata = [...sData];
+      newSdata[m].data[n] = newItem;
+      updateData(newSdata);
     }
   }
+
+  function handleAnswer(item) {
+    let answer = '';
+    if (item.Answer.length <= 300) {
+      answer = item.Answer;
+    } else if (item.Answer.length > 300 && item.fullAnswer) {
+      answer = item.fullAnswer + '<a class="up">收起</a>';
+    } else {
+      answer =
+        RestTools.removeHtmlTag(item.Answer).substr(0, 300) + '<a class="showMore">查看更多</a>';
+    }
+
+    return answer;
+  }
+
   return (
     <div className={styles.Sentence}>
       <div className={styles.Sentence_title}>{data[0].title || ''}</div>
       <div className={styles.Sentence_answer}>
-        <Tabs defaultActiveKey="0" onChange={callback}>
-          {sentenceData.length
-            ? sentenceData.map((item, index) => {
+        <Tabs defaultActiveKey="0" >
+          {sData.length
+            ? sData.map((item, index) => {
                 return (
                   <TabPane tab={item.tabkey} key={`${index}`}>
                     {item.data.length
-                      ? item.data.map((current) => {
-                          const answer = current.Answer
-                            ? current.Answer.length > 300
-                              ? current.Answer.substr(0, 300) + '<a class="showMore"> 更多>></a>'
-                              : current.Answer
-                            : '';
+                      ? item.data.map((current, currentIndex) => {
+                          const answer = handleAnswer(current);
                           return (
                             <div key={current.工具书编号} className={styles.Sentence_item}>
                               <div
-                                onClick={(e) => handleShowMore(e, current.Answer)}
+                                onClick={(e) => handleShowMore(e, current, [index, currentIndex])}
                                 dangerouslySetInnerHTML={{
                                   __html: RestTools.removeFlag(answer)
                                 }}
@@ -76,10 +101,10 @@ function Sentence(props) {
             : null}
         </Tabs>
       </div>
-      <div>
+      <div style={{paddingTop: 5}}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevaluate={isevaluate}></Evaluate>
       </div>
-      <Modal
+      {/* <Modal
         visible={visible}
         footer={null}
         style={{ top: 40, left: '29%' }}
@@ -99,7 +124,7 @@ function Sentence(props) {
             __html: RestTools.translateToRed(RestTools.formatText(initialText))
           }}
         />
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

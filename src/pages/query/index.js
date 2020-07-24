@@ -120,7 +120,8 @@ function ResultPage(props) {
       item.dataNode[0].工具书编号 &&
       item.intentDomain !== '句型覆盖' &&
       item.intentDomain !== '工具书书目' &&
-      item.intentId !== '69'
+      item.intentId !== '69' && 
+      item.intentDomain !== '帝王对比'
   ); //工具书数据
   const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
   const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
@@ -139,7 +140,7 @@ function ResultPage(props) {
   const patentData = repositoryData.filter((item) => item.domain === '专利'); //专利数据
   const poemData = repositoryData.filter((item) => item.domain === '诗词'); //诗词
   const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
-  const sentenceData = repositoryData.filter((item) => item.intentDomain === '句型覆盖');
+  const sentenceData = repositoryData.filter((item) => item.intentDomain === '句型覆盖' || item.intentDomain === '帝王对比');
   const referenceBook63 = repositoryData.filter(
     (item) => item.intentDomain === '工具书书目' && item.intentId === '63'
   );

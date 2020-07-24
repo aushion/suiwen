@@ -56,37 +56,8 @@ function SgList(props) {
                 <div
                   style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}
                 >
-                  <div>
-                    <div
-                      style={{
-                        textAlign: 'right',
-                        display: 'inline-block',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}
-                      dangerouslySetInnerHTML={{
-                        __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                      }}
-                    />
-                    <a
-                      style={{
-                        color: '#999',
-                        maxWidth: '50%',
-                        display: 'inline-block',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={sgData[item][0].data.caption}
-                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${sgData[item][0].data.source_id}`}
-                    >
-                      {sgData[item][0].data.caption}
-                    </a>
-                  </div>
-                  {/* 点赞模块预留 */}
+                  <div className={"display_flex justify-content_flex-justify"}>
+                     {/* 点赞模块预留 */}
                   <div className={styles.sg_evaluate}>
                     {needEvaluate ? (
                       <Evaluate
@@ -96,6 +67,39 @@ function SgList(props) {
                         isevalute={sgData[item][0].evaluate.isevalute}
                       />
                     ) : null}
+                  </div>
+                  <div style={{width: '50%', overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'}}>
+                    <div
+                      style={{
+                        textAlign: 'right',
+                        display: 'inline-block',
+                        // overflow: 'hidden',
+                        // textOverflow: 'ellipsis',
+                        // whiteSpace: 'nowrap'
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                      }}
+                    />
+                    <a
+                      style={{
+                        color: '#999',
+                        // maxWidth: '50%',
+                        // display: 'inline-block',
+                        // overflow: 'hidden',
+                        // textOverflow: 'ellipsis',
+                        // whiteSpace: 'nowrap'
+                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={sgData[item][0].data.caption}
+                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${sgData[item][0].data.source_id}`}
+                    >
+                      {sgData[item][0].data.caption}
+                    </a>
+                  </div>
                   </div>
                 </div>
               }
