@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
 import Link from 'umi/link';
-import { Modal } from 'antd';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
+import arrow_down from '../../../../assets/arrow_down.png';
+import arrow_up from '../../../../assets/arrow_up.png';
 
 const CommunityAnswer = (props) => {
   const { question, prepared_ANSWER, user_NAME, answer_ID, time, qid, evaluate } = props.data;
   const { good, bad, isevalute } = evaluate;
-  const answer = prepared_ANSWER
-    ? prepared_ANSWER.length > 1000
-      ? prepared_ANSWER.substr(0, 1000) + '<a class="showMore"> 更多>></a>'
-      : prepared_ANSWER
-    : '';
-  const [visible, setVisible] = useState(false);
-  const [initialText, setText] = useState('');
-  function showMore(text) {
-    setVisible(true);
-    setText(text);
-  }
 
-  function handleShowMore(e, str) {
+  const [answer, updateAnswer] = useState(
+    prepared_ANSWER.length > 500
+      ? RestTools.removeHtmlTag(prepared_ANSWER).substr(0, 500) +
+          `<a class="showMore">更多<img style="width:16px;height:10px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+      : prepared_ANSWER
+  );
+
+  function handleClick(e) {
     if (e.target.className === 'showMore') {
-      showMore(str.substr(1000, str.length));
+      updateAnswer(
+        prepared_ANSWER +
+          `<a class="up">收起<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
+      );
+    } else if (e.target.className === 'up') {
+      updateAnswer(
+        RestTools.removeHtmlTag(prepared_ANSWER).substr(0, 500) +
+          `<a class="showMore">更多<img style="width:16px;height:10px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+      );
     }
   }
+
   return (
     <div className={styles.CommunityAnswer}>
       <Link
@@ -35,7 +41,7 @@ const CommunityAnswer = (props) => {
         {question + '_网友回答'}
       </Link>
       <div
-        onClick={(e) => handleShowMore(e, prepared_ANSWER)}
+        onClick={(e) => handleClick(e, prepared_ANSWER)}
         className={styles.CommunityAnswer_answer}
         dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(answer) }}
       />
@@ -50,27 +56,6 @@ const CommunityAnswer = (props) => {
       <div>
         <Evaluate id={answer_ID} goodCount={good} badCount={bad} isevalute={isevalute} />
       </div>
-      <Modal
-        visible={visible}
-        footer={null}
-        style={{ top: 40, left: '29%' }}
-        onCancel={() => {
-          setVisible(false);
-        }}
-      >
-        <div
-          style={{
-            paddingTop: 10,
-            color: '#333',
-            letterSpacing: '2px',
-            lineHeight: '27.2px',
-            textIndent: '2em'
-          }}
-          dangerouslySetInnerHTML={{
-            __html: RestTools.translateToRed(RestTools.formatText(initialText))
-          }}
-        />
-      </Modal>
     </div>
   );
 };

@@ -4,6 +4,8 @@ import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
+import arrow_up from '../../../../assets/arrow_up.png';
+import arrow_down from '../../../../assets/arrow_down.png';
 
 function SgList(props) {
   const { data, needEvaluate = true } = props;
@@ -56,50 +58,55 @@ function SgList(props) {
                 <div
                   style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}
                 >
-                  <div className={"display_flex justify-content_flex-justify"}>
-                     {/* 点赞模块预留 */}
-                  <div className={styles.sg_evaluate}>
-                    {needEvaluate ? (
-                      <Evaluate
-                        id={sgData[item][0].id}
-                        goodCount={sgData[item][0].evaluate.good}
-                        badCount={sgData[item][0].evaluate.bad}
-                        isevalute={sgData[item][0].evaluate.isevalute}
-                      />
-                    ) : null}
-                  </div>
-                  <div style={{width: '50%', overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'}}>
+                  <div className={'display_flex justify-content_flex-justify'}>
+                    {/* 点赞模块预留 */}
+                    <div className={styles.sg_evaluate}>
+                      {needEvaluate ? (
+                        <Evaluate
+                          id={sgData[item][0].id}
+                          goodCount={sgData[item][0].evaluate.good}
+                          badCount={sgData[item][0].evaluate.bad}
+                          isevalute={sgData[item][0].evaluate.isevalute}
+                        />
+                      ) : null}
+                    </div>
                     <div
                       style={{
-                        textAlign: 'right',
-                        display: 'inline-block',
-                        // overflow: 'hidden',
-                        // textOverflow: 'ellipsis',
-                        // whiteSpace: 'nowrap'
+                        width: '50%',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
                       }}
-                      dangerouslySetInnerHTML={{
-                        __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                      }}
-                    />
-                    <a
-                      style={{
-                        color: '#999',
-                        // maxWidth: '50%',
-                        // display: 'inline-block',
-                        // overflow: 'hidden',
-                        // textOverflow: 'ellipsis',
-                        // whiteSpace: 'nowrap'
-                      }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={sgData[item][0].data.caption}
-                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${sgData[item][0].data.source_id}`}
                     >
-                      {sgData[item][0].data.caption}
-                    </a>
-                  </div>
+                      <div
+                        style={{
+                          textAlign: 'right',
+                          display: 'inline-block'
+                          // overflow: 'hidden',
+                          // textOverflow: 'ellipsis',
+                          // whiteSpace: 'nowrap'
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                        }}
+                      />
+                      <a
+                        style={{
+                          color: '#999'
+                          // maxWidth: '50%',
+                          // display: 'inline-block',
+                          // overflow: 'hidden',
+                          // textOverflow: 'ellipsis',
+                          // whiteSpace: 'nowrap'
+                        }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={sgData[item][0].data.caption}
+                        href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${sgData[item][0].data.source_id}`}
+                      >
+                        {sgData[item][0].data.caption}
+                      </a>
+                    </div>
                   </div>
                 </div>
               }
@@ -109,8 +116,10 @@ function SgList(props) {
                 // const answer = item.data.context + '<a class="showMore">查看更多</a>';
                 // const showText = anserIndex === keyIndex + itemIndex ? orginAnswer : answer;
                 const answer = item.originContext
-                  ? item.originContext + '<a class="up">收起</a>'
-                  : item.data.context + '<a class="showMore">查看更多</a>';
+                  ? item.originContext +
+                    `<a class="up">收起<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_up}"></a>`
+                  : item.data.context +
+                    `<a class="showMore">查看更多<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div

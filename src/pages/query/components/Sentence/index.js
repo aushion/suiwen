@@ -3,6 +3,8 @@ import { Tabs } from 'antd';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
+import arrow_up from '../../../../assets/arrow_up.png';
+import arrow_down from '../../../../assets/arrow_down.png';
 
 const { TabPane } = Tabs;
 function Sentence(props) {
@@ -30,15 +32,16 @@ function Sentence(props) {
   //   setText(text);
   // }
 
-
   function handleShowMore(e, item, index) {
     if (e.target.className === 'showMore') {
+      // console.log(e.target.offsetTop,e.target.scrollTop)
       const [m, n] = index;
       const newItem = { ...item, fullAnswer: item.Answer };
       const newSdata = [...sData];
       newSdata[m].data[n] = newItem;
       updateData(newSdata);
     } else if (e.target.className === 'up') {
+      window.scrollTo({ top: 0})
       const [m, n] = index;
       const newItem = { ...item, fullAnswer: '' };
       const newSdata = [...sData];
@@ -52,10 +55,12 @@ function Sentence(props) {
     if (item.Answer.length <= 300) {
       answer = item.Answer;
     } else if (item.Answer.length > 300 && item.fullAnswer) {
-      answer = item.fullAnswer + '<a class="up">收起</a>';
+      answer = item.fullAnswer + `<a class="up">收起 <img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
     } else {
-      answer =
-        RestTools.removeHtmlTag(item.Answer).substr(0, 300) + '<a class="showMore">查看更多</a>';
+      answer = `${RestTools.removeHtmlTag(item.Answer).substr(
+        0,
+        300
+      )} <a class="showMore">查看更多<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_down}" alt=""/> </a>`;
     }
 
     return answer;
@@ -65,7 +70,7 @@ function Sentence(props) {
     <div className={styles.Sentence}>
       <div className={styles.Sentence_title}>{data[0].title || ''}</div>
       <div className={styles.Sentence_answer}>
-        <Tabs defaultActiveKey="0" >
+        <Tabs defaultActiveKey="0">
           {sData.length
             ? sData.map((item, index) => {
                 return (
@@ -101,7 +106,7 @@ function Sentence(props) {
             : null}
         </Tabs>
       </div>
-      <div style={{paddingTop: 5}}>
+      <div style={{ paddingTop: 5 }}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevaluate={isevaluate}></Evaluate>
       </div>
       {/* <Modal

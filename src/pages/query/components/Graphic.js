@@ -175,35 +175,44 @@ function Graphic(props) {
     return (
       <div style={{ padding: '10px' }}>
         {data.map((item, index) => {
-          const tagTitle = answerMap[domain][intentDomain].title === 'Title' ? '': `【${answerMap[domain][intentDomain].title}】`;
-          const tagAnswer = answerMap[domain][intentDomain].answer === 'Answer'?'': `【${answerMap[domain][intentDomain].answer}】`
+          const tagTitle =
+            answerMap[domain][intentDomain].title === 'Title'
+              ? ''
+              : `【${answerMap[domain][intentDomain].title}】`;
+          const tagAnswer =
+            answerMap[domain][intentDomain].answer === 'Answer'
+              ? ''
+              : `【${answerMap[domain][intentDomain].answer}】`;
           const title = item[answerMap[domain][intentDomain].title] || '';
           const originAnswer = item[answerMap[domain][intentDomain].answer];
-          const isFocus = answerMap[domain][intentDomain].focus.includes(intentFocus)
-          const answer = originAnswer
-            // ? originAnswer.length > 300
-            //   ? originAnswer.substr(0, 300) + '<a class="showMore"> 更多>></a>'
-            //   : originAnswer
-            // : '';
+          const isFocus = answerMap[domain][intentDomain].focus.includes(intentFocus);
+          const answer = originAnswer;
+
           return (
             <div className={styles.answer_item} key={index} style={{ padding: '10px' }}>
               {/* {intentFocus === '省份' ? <div>地点：{item[intentFocus]}</div> : null} */}
               {
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: `${tagTitle} <span style="font-weight: bold">${RestTools.translateToRed(title)}</span> `
+                    __html: `${tagTitle} <span style="font-weight: bold">${RestTools.translateToRed(
+                      title
+                    )}</span> `
                   }}
                 />
               }
-              {isFocus === false ? <div 
-                dangerouslySetInnerHTML={{__html: `【${intentFocus}】 ${item[intentFocus]}`}}
-              ></div> :null}
-            {originAnswer ?   <div
-                onClick={(e) => handleShowMore(e, originAnswer)}
-                dangerouslySetInnerHTML={{
-                  __html: `${tagAnswer} ${answer}`
-                }}
-              />:null}
+              {isFocus === false ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: `【${intentFocus}】 ${item[intentFocus]}` }}
+                />
+              ) : null}
+              {originAnswer ? (
+                <div
+                  onClick={(e) => handleShowMore(e, originAnswer)}
+                  dangerouslySetInnerHTML={{
+                    __html: `${tagAnswer} ${answer}`
+                  }}
+                />
+              ) : null}
             </div>
           );
         })}
@@ -213,16 +222,13 @@ function Graphic(props) {
 
   const Default = function(props) {
     return (
-      <div >
+      <div>
         {data.map((item, index) => {
           let oldAnswer = RestTools.UnicodeToAscii(
             item.hasOwnProperty('Answer') ? item.Answer : item[intentFocus]
           );
-          let answer = oldAnswer
-            // ? oldAnswer.length > 300
-            //   ? oldAnswer.substring(0, 300) + '<a class="showMore"> 更多>></a>'
-            //   : oldAnswer
-            // : '';
+          let answer = oldAnswer;
+
           return (
             <div key={index} className={styles.answer_item}>
               <div
@@ -241,13 +247,16 @@ function Graphic(props) {
 
   return (
     <div className={styles.Graphic}>
-     {data ? <div style={{ color: '#2f8bd6', fontSize: 20 }}>{title}</div> : null}
+      {data ? <div style={{ color: '#2f8bd6', fontSize: 20 }}>{title}</div> : null}
 
       <div className={styles.wrapper}>
-        {domain === '翻译' ? <Translate /> : 
-        answerMap[domain] && answerMap[domain][intentDomain] ? 
-        <SpecialCom /> :
-         <Default />}
+        {domain === '翻译' ? (
+          <Translate />
+        ) : answerMap[domain] && answerMap[domain][intentDomain] ? (
+          <SpecialCom />
+        ) : (
+          <Default />
+        )}
       </div>
       <div>
         {pagination && total > pageCount ? (

@@ -13,7 +13,7 @@ export default {
     if (!!window.ActiveXObject || 'ActiveXObject' in window) return true;
     else return false;
   },
-  maxLength: 50,
+  maxLength: 128,
   HISTORYKEY: 'SUIWEN_RECORD',
   subHtml(oHtml, nlen, isByte) {
     var rgx1 = /<[^<^>^\/]+>/; //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
