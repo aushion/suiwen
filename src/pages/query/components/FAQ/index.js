@@ -20,12 +20,12 @@ function FAQ(props) {
     if (e.target.className === 'showMore') {
       updateAnswer(
         answer +
-          `<a class="up">收起<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
+          `<a class="up" style="color:#2090E3">  收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
       );
     } else if (e.target.className === 'up') {
       updateAnswer(
         RestTools.removeHtmlTag(answer).substr(0, 500) +
-          `<a class="showMore">查看更多<img style="width:16px;height:10px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+          `<a class="showMore" style="color:#2090E3">  更多<img style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
       );
     }
   }

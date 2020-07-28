@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Tag } from 'antd';
+import { Tag, Collapse, Divider } from 'antd';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
+const { Panel } = Collapse;
 function ToolsBook(props) {
   const { data } = props;
   const checkedStyle = {
@@ -16,7 +17,7 @@ function ToolsBook(props) {
 
   const [checkedIndex, setCheckIndex] = useState(0);
 
-  function handleAnswer(str, code) {
+  function cutAnswer(str, code) {
     if (str) {
       if (str.length > 300) {
         return (
@@ -37,47 +38,70 @@ function ToolsBook(props) {
     return '-';
   }
 
-  function handleClickTag(index,item){
-    setCheckIndex(index)
+  function handleAnswer(str) {
+    const re = /<span class="answerPart">(.*)<br><\/span>/gims;
+    return str.toString().match(re)
+      ? str
+          .toString()
+          .match(re)[0]
+          .replace('<span class="answerPart">', '')
+      : null;
+  }
+
+  function showOthers(str) {
+    const re = /<span class="others">(.*)<\/span>/gims;
+    return str.toString().match(re)
+      ? str
+          .toString()
+          .match(re)[0]
+          .replace('<span class="others>"', '')
+      : str;
+  }
+
+  function handleClickTag(index, item) {
+    setCheckIndex(index);
   }
 
   return (
     <div className={styles.ToolsBook}>
       <div className={styles.tags}>
-        {data.map((item, index) => {
-          return (
-            <Tag
-              style={
-                index === checkedIndex ? { ...checkedStyle, ...normalStyle } : { ...normalStyle }
-              }
-              key={item.intentDomain}
-              onClick={handleClickTag.bind(this,index, item)}
-            >
-              {item.intentDomain}
-            </Tag>
-          );
-        })}
+        {data.length > 1 &&
+          data.map((item, index) => {
+            return (
+              <Tag
+                style={
+                  index === checkedIndex ? { ...checkedStyle, ...normalStyle } : { ...normalStyle }
+                }
+                key={item.id}
+                onClick={handleClickTag.bind(this, index, item)}
+              >
+                {item.tagName}
+              </Tag>
+            );
+          })}
       </div>
+      {data.length > 1 ? <Divider /> : null}
       <div className={styles.content}>
-        {data.map((item,index) => {
+        {data.map((item, index) => {
           const intentFocus = item.intentFocus;
           const domain = item.domain;
           const title = item.title;
-          const intentDomain = item.intentDomain;
+          // const intentDomain = item.intentDomain;
+          const tagName = item.tagName;
           return (
-            <div key={item.intentDomain} hidden={index!==checkedIndex}>
+            <div key={item.tagName + index} hidden={index !== checkedIndex}>
               {item.dataNode.map((item, index) => {
                 const answer =
                   intentFocus === '谜语'
-                    ? `谜底：${handleAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
-                    : handleAnswer(item.Answer || item.介绍 || '-', item.条目编码);
+                    ? `谜底：${cutAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
+                    : cutAnswer(item.Answer || item.介绍 || '-', item.条目编码);
                 const title =
                   intentFocus === '谜语'
                     ? `谜面: ${item.TITLE || item.Title || '-'}`
                     : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
-
+                const blockAnswer = handleAnswer(answer);
                 return (
-                  <div key={item.工具书编号 + index}>
+                  <div key={item.条目编码 + index}>
                     <div
                       className={styles.ReferenceBook_title}
                       dangerouslySetInnerHTML={{
@@ -85,14 +109,37 @@ function ToolsBook(props) {
                       }}
                     />
                     <div
-                      key={item.工具书编号 + index}
                       className={styles.ReferenceBook_answer}
-                      dangerouslySetInnerHTML={{
-                        __html: RestTools.translateToRed(
-                          RestTools.completeToolsBook(answer, intentDomain, domain)
-                        )
-                      }}
-                    />
+                      // dangerouslySetInnerHTML={{
+                      //   __html: RestTools.translateToRed(
+                      //     RestTools.completeToolsBook(answer, intentDomain, domain)
+                      //   )
+                      // }}
+                    >
+                      {blockAnswer ? (
+                        <Collapse expandIconPosition="right">
+                          <Panel header={RestTools.removeHtmlTag(blockAnswer)}>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: RestTools.completeToolsBook(
+                                  showOthers(item.Answer),
+                                  tagName
+                                )
+                              }}
+                            />
+                          </Panel>
+                        </Collapse>
+                      ) : (
+                        <div
+                          key={item.工具书编号 + index}
+                          dangerouslySetInnerHTML={{
+                            __html: RestTools.translateToRed(
+                              RestTools.completeToolsBook(cutAnswer(item.Answer), tagName)
+                            )
+                          }}
+                        />
+                      )}
+                    </div>
                     <div className={styles.ReferenceBook_extra}>
                       <a
                         className={styles.ReferenceBook_name}

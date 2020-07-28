@@ -11,7 +11,6 @@ import styles from './index.less';
 import SgList from './components/SgList';
 import FAQ from './components/FAQ';
 import RelatedList from './components/RelatedList';
-import ReferenceBook from './components/ReferenceBook';
 import Journal from './components/Journal';
 import Literature from './components/Literature';
 import Scholar from './components/Scholar';
@@ -24,9 +23,8 @@ import Statistics from './components/Statistics';
 import Poem from './components/Poem';
 import RestTools from '../../utils/RestTools';
 import Sentence from './components/Sentence';
-import ReferenceBook63 from './components/ReferenceBook63';
-import ReferenceBook69 from './components/ReferenceBook69';
-// import ToolsBook from './components/ToolsBook';
+
+import ToolsBook from './components/ToolsBook';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 
@@ -114,19 +112,18 @@ function ResultPage(props) {
     };
   }, []);
 
-  const referenceBookData = repositoryData.filter(
-    (item) =>
-      Array.isArray(item.dataNode) &&
-      item.dataNode[0].工具书编号 &&
-      item.intentDomain !== '句型覆盖' &&
-      item.intentDomain !== '工具书书目' &&
-      item.intentId !== '69' && 
-      item.intentDomain !== '帝王对比'
-  ); //工具书数据
-  const cnkizhishi = repositoryData.filter((item) => item.domain === 'CNKI知识'); //CNKI知识数据
-  const JournalData = repositoryData.filter((item) => item.domain === '期刊'); //期刊数据
-  const literatureData = repositoryData.filter((item) => item.domain === '文献'); //文献数据
-  const scholarData = repositoryData.filter((item) => item.domain === '学者'); //学者数据
+  const referenceBookData = repositoryData.filter((item) => item.template === 'referencebook'); //工具书数据
+  const JournalData = repositoryData.filter((item) => item.template === 'journal'); //期刊数据
+  const literatureData = repositoryData.filter((item) => item.template === 'literature'); //文献数据
+  const scholarData = repositoryData.filter((item) => item.template === 'scholar'); //学者数据
+  const medicalData = repositoryData.filter((item) => item.template === 'medical'); //医学数据
+  const patentData = repositoryData.filter((item) => item.template === 'patent'); //专利数据
+  const poemData = repositoryData.filter((item) => item.template === 'poem'); //诗词
+  const statisticsData = repositoryData.filter((item) => item.template === 'statistic'); //统计
+  const sentenceData = repositoryData.filter((item) => item.template === 'sentence'); //句型覆盖
+  const weather = repositoryData.filter((item) => item.template === 'weather');
+  const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域
+
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
@@ -134,38 +131,10 @@ function ResultPage(props) {
     ? relatedData.filter((item) => /专利/g.test(item.domain))
     : []; //相关专利
 
-  const medicalData = repositoryData.filter(
-    (item) => item.domain === '医学' && !item.dataNode[0].工具书编号
-  );
-  const patentData = repositoryData.filter((item) => item.domain === '专利'); //专利数据
-  const poemData = repositoryData.filter((item) => item.domain === '诗词'); //诗词
-  const statisticsData = repositoryData.filter((item) => item.domain === '统计数据');
-  const sentenceData = repositoryData.filter((item) => item.intentDomain === '句型覆盖' || item.intentDomain === '帝王对比');
-  const referenceBook63 = repositoryData.filter(
-    (item) => item.intentDomain === '工具书书目' && item.intentId === '63'
-  );
-  const referenceBook69 = repositoryData.filter(
-    (item) => item.intentDomain === '植物篇' && item.intentId === '69'
-  );
-  const weather = repositoryData.filter((item) => item.domain === '天气');
-
   const communityAnswerLength = communityAnswer ? 1 : 0;
-  const kaifangyuData = repositoryData.filter(
-    (item) =>
-      item.domain !== '天气' &&
-      item.domain !== '诗词' &&
-      item.domain !== '期刊' &&
-      item.domain !== '学者' &&
-      item.domain !== '文献' &&
-      item.domain !== '专利' &&
-      item.domain !== '医学' &&
-      item.domain !== '统计数据' &&
-      !(item.dataNode && item.dataNode[0].题名) &&
-      !(item.dataNode && item.dataNode[0].工具书编号)
-  );
 
   const resultLength =
-    cnkizhishi.length +
+    // cnkizhishi.length +
     sgData.length +
     semanticData.length +
     faqData.length +
@@ -295,7 +264,7 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
-                {referenceBookData.length
+                  {/* {referenceBookData.length
                     ? referenceBookData.map((item) => (
                         <ReferenceBook
                           key={item.id}
@@ -308,7 +277,9 @@ function ResultPage(props) {
                           data={item.dataNode}
                         />
                       ))
-                    : null}
+                    : null} */}
+                  {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
+
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
@@ -346,7 +317,7 @@ function ResultPage(props) {
                     />
                   ) : null}
                   {patentData.length
-                    ? patentData.map((item) => <Patent key={item.id} data={item} />)
+                    ? patentData.map((item) => <Patent key={item.id} data={item} title={item.title} />)
                     : null}
                   {scholarData.length
                     ? scholarData.map((item) => (
@@ -371,12 +342,8 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                 
-                  {/* {referenceBookData.length ? (
-                    <ToolsBook data={referenceBookData}></ToolsBook>
-                  ) : null} */}
 
-                  {referenceBook63.length
+                  {/* {referenceBook63.length
                     ? referenceBook63.map((item) => (
                         <ReferenceBook63
                           key={item.id}
@@ -403,7 +370,7 @@ function ResultPage(props) {
                           data={item.dataNode}
                         />
                       ))
-                    : null}
+                    : null} */}
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
                   {kaifangyuData.length

@@ -58,33 +58,25 @@ function SgList(props) {
                 <div
                   style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}
                 >
-                  <div className={'display_flex justify-content_flex-justify'}>
+                  <div >
                     {/* 点赞模块预留 */}
-                    <div className={styles.sg_evaluate}>
-                      {needEvaluate ? (
-                        <Evaluate
-                          id={sgData[item][0].id}
-                          goodCount={sgData[item][0].evaluate.good}
-                          badCount={sgData[item][0].evaluate.bad}
-                          isevalute={sgData[item][0].evaluate.isevalute}
-                        />
-                      ) : null}
+             
                     </div>
                     <div
-                      style={{
-                        width: '50%',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}
+                      // style={{
+                      //   width: '50%',
+                      //   overflow: 'hidden',
+                      //   textOverflow: 'ellipsis',
+                      //   whiteSpace: 'nowrap'
+                      // }}
                     >
                       <div
                         style={{
                           textAlign: 'right',
-                          display: 'inline-block'
-                          // overflow: 'hidden',
-                          // textOverflow: 'ellipsis',
-                          // whiteSpace: 'nowrap'
+                          display: 'inline-block',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
                         }}
                         dangerouslySetInnerHTML={{
                           __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
@@ -92,12 +84,12 @@ function SgList(props) {
                       />
                       <a
                         style={{
-                          color: '#999'
-                          // maxWidth: '50%',
-                          // display: 'inline-block',
-                          // overflow: 'hidden',
-                          // textOverflow: 'ellipsis',
-                          // whiteSpace: 'nowrap'
+                          color: '#999',
+                          maxWidth: '50%',
+                          display: 'inline-block',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
                         }}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -107,6 +99,15 @@ function SgList(props) {
                         {sgData[item][0].data.caption}
                       </a>
                     </div>
+                    <div className={styles.sg_evaluate}>
+                      {needEvaluate ? (
+                        <Evaluate
+                          id={sgData[item][0].id}
+                          goodCount={sgData[item][0].evaluate.good}
+                          badCount={sgData[item][0].evaluate.bad}
+                          isevalute={sgData[item][0].evaluate.isevalute}
+                        />
+                      ) : null}
                   </div>
                 </div>
               }
@@ -117,9 +118,9 @@ function SgList(props) {
                 // const showText = anserIndex === keyIndex + itemIndex ? orginAnswer : answer;
                 const answer = item.originContext
                   ? item.originContext +
-                    `<a class="up">收起<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_up}"></a>`
+                    `<a class="up" style="color:#2090E3">  收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}"></a>`
                   : item.data.context +
-                    `<a class="showMore">查看更多<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
+                    `<a class="showMore" style="color:#2090E3">  更多<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div

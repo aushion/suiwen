@@ -235,7 +235,7 @@ function Graphic(props) {
                 key={index}
                 onClick={(e) => handleShowMore(e, oldAnswer)}
                 dangerouslySetInnerHTML={{
-                  __html: RestTools.translateToRed(answer)
+                  __html: RestTools.translateToRed(RestTools.completeToolsBook(answer))
                 }}
               />
             </div>

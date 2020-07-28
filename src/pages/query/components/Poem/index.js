@@ -15,39 +15,46 @@ function Poem(props) {
     <div className={styles.poem}>
       {dataNode.length
         ? dataNode.map((item, index) => {
-            const { 诗词名称='', 诗文='', 作者='', 年代='' } = item;
+            const { 诗词名称 = '', 作者 = '', 年代 = '', 诗词名 = '', 原文 = '' } = item;
             return (
               <div key={index} className={styles.poem_item}>
                 <div
                   className={styles.poem_title}
-                  dangerouslySetInnerHTML={{ __html: `《${RestTools.translateToRed(诗词名称)}》` }}
+                  dangerouslySetInnerHTML={{
+                    __html: `《${RestTools.translateToRed(诗词名称 || 诗词名)}》`
+                  }}
                 />
+                {作者 && 年代 ?
                 <div
                   className={styles.poem_author}
                   dangerouslySetInnerHTML={{
                     __html: `${RestTools.translateToRed(作者)} ● ${RestTools.translateToRed(年代)}`
                   }}
-                />
+                />:null}
                 <div
                   className={styles.poem_content}
-                  dangerouslySetInnerHTML={{ __html: `${RestTools.completeToolsBook(RestTools.translateToRed(诗文))}` }}
+                  dangerouslySetInnerHTML={{
+                    __html: `${RestTools.completeToolsBook(RestTools.translateToRed(原文))}`
+                  }}
                 />
               </div>
             );
           })
         : null}
-      <div className={styles.more}>
-        <a
-        style={{ color: '#999',  }}
-          target="_blank"
-          rel="noopener noreferrer"
-          href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
-            more
-          )}`}
-        >
-          {`更多关于${more}`}的诗词
-        </a>
-      </div>
+      {more ? (
+        <div className={styles.more}>
+          <a
+            style={{ color: '#999' }}
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
+              more
+            )}`}
+          >
+            {`更多关于${more}`}的诗词
+          </a>
+        </div>
+      ) : null}
       <div>
         <Evaluate id={id} goodCount={good} badCount={bad} isevaluate={isevaluate} />
       </div>

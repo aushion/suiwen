@@ -44,7 +44,7 @@ export default {
   },
   effects: {
     *getAnswer({ payload }, { call, put }) {
-      const { q, userId, topic } = payload;
+      const { q, userId, topicName } = payload;
       const res = yield call(getAnswer, payload);
       const { data } = res;
 
@@ -85,7 +85,7 @@ export default {
             answerStatus: 'yes',
             ip: '192.168.22.13',
             user_id: userId,
-            topic: topic || ''
+            topic: topicName || ''
           }
         });
       } else {
@@ -97,7 +97,7 @@ export default {
             answerStatus: 'no',
             ip: '192.168.22.13',
             user_id: userId,
-            topic: topic || ''
+            topic: topicName || ''
           }
         });
       }
@@ -363,7 +363,7 @@ export default {
               } else {
                 dispatch({
                   type: 'getAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic: topicName }
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic, topicName }
                 });
                 dispatch({
                   type: 'getSG',
@@ -385,7 +385,7 @@ export default {
                 });
                 dispatch({
                   type: 'getRelevantByAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic: topicName }
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic, topicName }
                 });
               }
             } else {

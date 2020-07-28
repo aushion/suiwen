@@ -5,13 +5,19 @@ import Evaluate from '../Evaluate';
 import styles from './index.less';
 const { Column } = Table;
 function Patent(props) {
-  const { dataNode, evaluate, intentJson, id } = props.data;
+  const { dataNode, evaluate, intentJson, id, title } = props.data;
   const { good, bad, isevalute } = evaluate;
-  const title = intentJson && intentJson.results[0].fields['专利名'];
+  const name = intentJson && intentJson.results[0].fields['专利名'];
   return (
     <div className={styles.Patent}>
-      <div className={styles.Patent_title}>{`${title}_相关专利`}</div>
-      <Table rowKey={"文件名"} dataSource={dataNode} pagination={false} size="middle" bordered={false}>
+      <div className={styles.Patent_title}>{name ? `${name}_相关专利` : title}</div>
+      <Table
+        rowKey={'文件名'}
+        dataSource={dataNode}
+        pagination={false}
+        size="middle"
+        bordered={false}
+      >
         <Column
           title="专利名"
           dataIndex="TITLE"
@@ -38,20 +44,30 @@ function Patent(props) {
           render={(text, record) => <span>{record.发明机构 ? record.发明机构 : '-'}</span>}
         />
         <Column title="发表时间" dataIndex="发表时间" key="发表时间" width={100} ellipsis />
-        <Column title="发明人" dataIndex="发明人" key="发明人" ellipsis style={{overflow: 'hidden'}} />
+        <Column
+          title="发明人"
+          dataIndex="发明人"
+          key="发明人"
+          ellipsis
+          style={{ overflow: 'hidden' }}
+        />
       </Table>
 
       <div>
-        <div style={{textAlign:'right'}}>
-          <a
-            className={styles.more}
-            target="_blank"
-            rel="noopener noreferrer"
-            href={`http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCPD&kw=${encodeURIComponent(intentJson.results[0].fields['专利名'])}&korder=0&sel=1`}
-          >
-            更多相关专利
-          </a>
-        </div>
+        {name ? (
+          <div style={{ textAlign: 'right' }}>
+            <a
+              className={styles.more}
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`http://kns.cnki.net/kns/brief/Default_Result.aspx?code=SCPD&kw=${encodeURIComponent(
+                intentJson.results[0].fields['专利名']
+              )}&korder=0&sel=1`}
+            >
+              更多相关专利
+            </a>
+          </div>
+        ) : null}
         <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
       </div>
     </div>

@@ -55,12 +55,12 @@ function Sentence(props) {
     if (item.Answer.length <= 300) {
       answer = item.Answer;
     } else if (item.Answer.length > 300 && item.fullAnswer) {
-      answer = item.fullAnswer + `<a class="up">收起 <img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
+      answer = item.fullAnswer + `<a class="up" style="color:#2090E3">  收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
     } else {
       answer = `${RestTools.removeHtmlTag(item.Answer).substr(
         0,
         300
-      )} <a class="showMore">查看更多<img style="width:16px;height:10px;margin-bottom:3px;" src="${arrow_down}" alt=""/> </a>`;
+      )} <a class="showMore" style="color:#2090E3"> 更多<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/> </a>`;
     }
 
     return answer;
