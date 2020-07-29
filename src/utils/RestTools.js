@@ -255,7 +255,7 @@ export default {
   },
 
   completeToolsBook(str, intentDomain, domain) {
-    return intentDomain === '生物百科'
+    return intentDomain === '植物栽培'
       ? str
           .replace(/<img/g, '<img class="imgpreview" style="width:70%"')
           .replace(/src="/g, 'src="http://refbook.img.cnki.net')

@@ -12,7 +12,7 @@ function FAQ(props) {
   const [showAnswer, updateAnswer] = useState(
     answer.length > 500
       ? RestTools.removeHtmlTag(answer).substr(0, 500) +
-          `<a class="showMore">查看更多<img style="width:16px;height:10px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+          `<a class="showMore"> 更多<img style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
       : answer
   );
 

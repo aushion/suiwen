@@ -1,6 +1,5 @@
 import React from 'react';
 import { Table } from 'antd';
-// import { Chart, Geom, Axis, Tooltip, Coord, Legend } from 'bizcharts';
 import Chart from 'bizcharts/lib/components/Chart';
 import Axis from 'bizcharts/lib/components/Axis';
 import Interval from 'bizcharts/lib/components/TypedGeom/Interval';

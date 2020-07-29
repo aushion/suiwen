@@ -24,24 +24,18 @@ function Sentence(props) {
   });
 
   const [sData, updateData] = useState(sentenceData);
-
-  // const [visible, setVisible] = useState(false);
-  // const [initialText, setText] = useState('');
-  // function showMore(text) {
-  //   setVisible(true);
-  //   setText(text);
-  // }
+  const [pageYoffset, setPageYoffeset] = useState(0);
 
   function handleShowMore(e, item, index) {
     if (e.target.className === 'showMore') {
-      // console.log(e.target.offsetTop,e.target.scrollTop)
+      setPageYoffeset(window.pageYOffset); //记录滚动位置
       const [m, n] = index;
       const newItem = { ...item, fullAnswer: item.Answer };
       const newSdata = [...sData];
       newSdata[m].data[n] = newItem;
       updateData(newSdata);
     } else if (e.target.className === 'up') {
-      window.scrollTo({ top: 0})
+      window.scrollTo({ top: pageYoffset }); //滚动到原始位置
       const [m, n] = index;
       const newItem = { ...item, fullAnswer: '' };
       const newSdata = [...sData];
@@ -55,7 +49,9 @@ function Sentence(props) {
     if (item.Answer.length <= 300) {
       answer = item.Answer;
     } else if (item.Answer.length > 300 && item.fullAnswer) {
-      answer = item.fullAnswer + `<a class="up" style="color:#2090E3">  收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
+      answer =
+        item.fullAnswer +
+        `<a class="up" style="color:#2090E3">  收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
     } else {
       answer = `${RestTools.removeHtmlTag(item.Answer).substr(
         0,

@@ -120,6 +120,7 @@ function ResultPage(props) {
   const patentData = repositoryData.filter((item) => item.template === 'patent'); //专利数据
   const poemData = repositoryData.filter((item) => item.template === 'poem'); //诗词
   const statisticsData = repositoryData.filter((item) => item.template === 'statistic'); //统计
+  
   const sentenceData = repositoryData.filter((item) => item.template === 'sentence'); //句型覆盖
   const weather = repositoryData.filter((item) => item.template === 'weather');
   const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域

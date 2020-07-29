@@ -17,12 +17,31 @@
     text-indent: 2em;
     margin-bottom: 20px;
     text-align: left;
+   
+  }
+  .tabs{
+    :global(.up) {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      z-index: 2;
+      width: 743px;
+      margin-left: -397px;
+      left: 50%;
+      border: 1px solid rgba(170, 220, 255, 1);
+      height: 40px;
+      padding: 10px;
+      background: #fff;
+      text-align: center;
+      line-height: 20px;
+      color: #0097ff;
+    }
   }
   .more {
     float: right;
     cursor: pointer;
-    &:hover{
-        color: #2f8bd6;
+    &:hover {
+      color: #2f8bd6;
     }
   }
 }
