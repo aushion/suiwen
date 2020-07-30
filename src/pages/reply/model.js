@@ -26,7 +26,6 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnwser, payload);
-
       yield put({
         type: 'saveAnswers',
         payload: { answerList: res.data.result, total: res.data.result.length }

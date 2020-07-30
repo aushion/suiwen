@@ -45,12 +45,12 @@ export default function Medical(props) {
     if (e.target.className === 'showMore') {
       const newTxt =
         txt +
-        `<a class="up"> 收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
+        `<a class="up"> 收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`;
       updateMainstr(newTxt);
     } else if (e.target.className === 'up') {
       const uptext =
         RestTools.subHtml(removeHtmlTagMainStr, 300, false) +
-        `<a class="showMore"> 更多<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`;
+        `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`;
       updateMainstr(uptext);
     }
   }
@@ -61,12 +61,12 @@ export default function Medical(props) {
       const newMedicalData = {
         ...medicalData,
         [item + 'new']:
-          medicalData[item] +
-          ` <a class="up"> 收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
+          RestTools.removeHtmlTag(medicalData[item]) +
+          ` <a class="up"> 收起<img  style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
       };
       updateMedicalData(newMedicalData);
     } else if (e.target.className === 'up') {
-      window.scrollTo({top:pageYOffset})
+      window.scrollTo({ top: pageYOffset });
       const newMedicalData = { ...medicalData, [item + 'new']: '' };
       updateMedicalData(newMedicalData);
     }
@@ -75,7 +75,7 @@ export default function Medical(props) {
   function generateStr(str) {
     return str && str.length > 400
       ? RestTools.subHtml(str, 400, false) +
-          `<a class="showMore"> 更多<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
+          `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
       : str;
   }
 
@@ -87,7 +87,7 @@ export default function Medical(props) {
   const [mainStr, updateMainstr] = useState(
     removeHtmlTagMainStr && removeHtmlTagMainStr.length > 300
       ? RestTools.subHtml(removeHtmlTagMainStr, 300, false) +
-          `<a class="showMore"> 更多<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
+          `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
       : removeHtmlTagMainStr
   );
 

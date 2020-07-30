@@ -20,13 +20,15 @@ import Graphic from './components/Graphic';
 import Medical from './components/Medical';
 import Patent from './components/Patent';
 import Statistics from './components/Statistics';
+import Publication from './components/Statistics/publication';
+import Yearbook from './components/Statistics/yearbook';
 import Poem from './components/Poem';
 import RestTools from '../../utils/RestTools';
 import Sentence from './components/Sentence';
-
 import ToolsBook from './components/ToolsBook';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
+import Translate from './components/Translate';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -120,10 +122,12 @@ function ResultPage(props) {
   const patentData = repositoryData.filter((item) => item.template === 'patent'); //专利数据
   const poemData = repositoryData.filter((item) => item.template === 'poem'); //诗词
   const statisticsData = repositoryData.filter((item) => item.template === 'statistic'); //统计
-  
+  const publicationData = repositoryData.filter((item) => item.template === 'publication'); //统计刊物
+  const yearbookData = repositoryData.filter((item) => item.template === 'yearbook'); //年鉴名录
   const sentenceData = repositoryData.filter((item) => item.template === 'sentence'); //句型覆盖
   const weather = repositoryData.filter((item) => item.template === 'weather');
   const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域
+  const translateData = repositoryData.filter((item) => item.template === 'translate'); //翻译
 
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
@@ -265,25 +269,39 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
-                  {/* {referenceBookData.length
-                    ? referenceBookData.map((item) => (
-                        <ReferenceBook
-                          key={item.id}
-                          id={item.id}
-                          domain={item.domain}
-                          intentDomain={item.intentDomain}
-                          intentFocus={item.intentFocus}
-                          evaluate={item.evaluate}
-                          title={item.title}
-                          data={item.dataNode}
-                        />
-                      ))
-                    : null} */}
                   {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
-
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
+                          title={item.title}
+                          id={item.id}
+                          evaluate={item.evaluate}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          intentJson={item.intentJson}
+                          key={item.id}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+                  {publicationData.length
+                    ? publicationData.map((item) => (
+                        <Publication
+                          title={item.title}
+                          id={item.id}
+                          evaluate={item.evaluate}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          intentJson={item.intentJson}
+                          key={item.id}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
+
+                  {yearbookData.length
+                    ? yearbookData.map((item) => (
+                        <Yearbook
                           title={item.title}
                           id={item.id}
                           evaluate={item.evaluate}
@@ -318,7 +336,9 @@ function ResultPage(props) {
                     />
                   ) : null}
                   {patentData.length
-                    ? patentData.map((item) => <Patent key={item.id} data={item} title={item.title} />)
+                    ? patentData.map((item) => (
+                        <Patent key={item.id} data={item} title={item.title} />
+                      ))
                     : null}
                   {scholarData.length
                     ? scholarData.map((item) => (
@@ -344,34 +364,6 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  {/* {referenceBook63.length
-                    ? referenceBook63.map((item) => (
-                        <ReferenceBook63
-                          key={item.id}
-                          id={item.id}
-                          domain={item.domain}
-                          intentDomain={item.intentDomain}
-                          intentFocus={item.intentFocus}
-                          evaluate={item.evaluate}
-                          title={item.title}
-                          data={item.dataNode}
-                        />
-                      ))
-                    : null}
-                  {referenceBook69.length
-                    ? referenceBook69.map((item) => (
-                        <ReferenceBook69
-                          key={item.id}
-                          id={item.id}
-                          domain={item.domain}
-                          intentDomain={item.intentDomain}
-                          intentFocus={item.intentFocus}
-                          evaluate={item.evaluate}
-                          title={item.title}
-                          data={item.dataNode}
-                        />
-                      ))
-                    : null} */}
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
                   {kaifangyuData.length
@@ -404,8 +396,23 @@ function ResultPage(props) {
                   ) : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} /> : null}
-
                   {semanticData.length ? <ReadComp data={semanticData} /> : null}
+                  {translateData.length
+                    ? translateData.map((item) => (
+                        <Translate
+                          key={item.id}
+                          id={item.id}
+                          q={q}
+                          data={item.dataNode}
+                          intentJson={item.intentJson}
+                          intentDomain={item.intentDomain}
+                          domain={item.domain}
+                          title={item.title}
+                          evaluate={item.evaluate}
+                          intentFocus={item.intentFocus}
+                        />
+                      ))
+                    : null}
                 </div>
               </Skeleton>
 

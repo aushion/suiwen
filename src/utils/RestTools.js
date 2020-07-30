@@ -138,10 +138,10 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return str
+    return str ? str
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
-      .replace(/&nbsp;/g, '');
+      .replace(/&nbsp;/g, ''):'';
   },
 
   superMarkRed(str) {

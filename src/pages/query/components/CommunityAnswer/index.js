@@ -13,7 +13,7 @@ const CommunityAnswer = (props) => {
   const [answer, updateAnswer] = useState(
     prepared_ANSWER.length > 500
       ? RestTools.removeHtmlTag(prepared_ANSWER).substr(0, 500) +
-          `<a class="showMore" style="color:#2090E3"> 更多<img style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+          `<a class="showMore" style="color:#2090E3"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
       : prepared_ANSWER
   );
 
@@ -21,12 +21,12 @@ const CommunityAnswer = (props) => {
     if (e.target.className === 'showMore') {
       updateAnswer(
         prepared_ANSWER +
-          `<a class="up" style="color:#2090E3"> 收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
+          `<a class="up" style="color:#2090E3;float:right;display:block;"> 收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
       );
     } else if (e.target.className === 'up') {
       updateAnswer(
         RestTools.removeHtmlTag(prepared_ANSWER).substr(0, 500) +
-          `<a class="showMore" style="color:#2090E3"> 更多<img style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+          `<a class="showMore" style="color:#2090E3"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
       );
     }
   }

@@ -11,8 +11,8 @@ function FAQ(props) {
   const { good, bad, isevalute } = evaluate;
   const [showAnswer, updateAnswer] = useState(
     answer.length > 500
-      ? RestTools.removeHtmlTag(answer).substr(0, 500) +
-          `<a class="showMore"> 更多<img style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+      ? RestTools.subHtml(answer, 500, false) +
+          `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
       : answer
   );
 
@@ -20,12 +20,12 @@ function FAQ(props) {
     if (e.target.className === 'showMore') {
       updateAnswer(
         answer +
-          `<a class="up" style="color:#2090E3">  收起<img style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
+          `<a class="up" style="color:#2090E3;float:right;margin-top:20px">  收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}" alt=""/></a>`
       );
     } else if (e.target.className === 'up') {
       updateAnswer(
-        RestTools.removeHtmlTag(answer).substr(0, 500) +
-          `<a class="showMore" style="color:#2090E3">  更多<img style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
+        RestTools.subHtml(answer, 500, false) +
+          `<a class="showMore" style="color:#2090E3">  更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px" src="${arrow_down}" alt=""/></a>`
       );
     }
   }

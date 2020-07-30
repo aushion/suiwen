@@ -50,12 +50,11 @@ function ToolsBook(props) {
     })
     .filter((item) => item);
 
-
   function cutAnswer(str, code) {
     if (str) {
-      if (str.length > 300) {
+      if (str.length > 400) {
         return (
-          RestTools.subHtml(str, 300, false) +
+          RestTools.subHtml(str, 400, false) +
           '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
           code +
           '&db=crfd"' +
@@ -140,10 +139,19 @@ function ToolsBook(props) {
                       <div key={item.条目编码 + index}>
                         <div
                           className={styles.ReferenceBook_title}
-                          dangerouslySetInnerHTML={{
-                            __html: RestTools.translateToRed(title)
-                          }}
-                        />
+                          // dangerouslySetInnerHTML={{
+                          //   __html: RestTools.translateToRed(title)
+                          // }}
+                        >
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={`https://gongjushu.cnki.net/RBook/Detail?entryId=${item.条目编码}`}
+                            dangerouslySetInnerHTML={{
+                              __html: RestTools.translateToRed(title)
+                            }}
+                          />
+                        </div>
                         <div className={styles.ReferenceBook_answer}>
                           {blockAnswer ? (
                             <Collapse expandIconPosition="right">
@@ -163,7 +171,10 @@ function ToolsBook(props) {
                               key={item.工具书编号 + index}
                               dangerouslySetInnerHTML={{
                                 __html: RestTools.translateToRed(
-                                  RestTools.completeToolsBook(cutAnswer(item.Answer), tagName)
+                                  RestTools.completeToolsBook(
+                                    cutAnswer(item.Answer, item.条目编码),
+                                    tagName
+                                  )
                                 )
                               }}
                             />

@@ -86,7 +86,7 @@ function BasicLayout(props) {
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
             <span className={styles.tips}>
-              您好!
+              您好，
               {username ? (
                 <Link
                   style={{ color: '#fff', marginLeft: 10 }}
