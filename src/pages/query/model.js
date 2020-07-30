@@ -44,14 +44,14 @@ export default {
   },
   effects: {
     *getAnswer({ payload }, { call, put }) {
+      const { q, userId, topicName } = payload;
       const res = yield call(getAnswer, payload);
-      const { q, userId } = payload;
       const { data } = res;
 
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
-
+    
         yield put({
           type: 'save',
           payload: {
@@ -84,7 +84,8 @@ export default {
             question: decodeURIComponent(q),
             answerStatus: 'yes',
             ip: '192.168.22.13',
-            user_id: userId
+            user_id: userId,
+            topic: topicName || ''
           }
         });
       } else {
@@ -95,7 +96,8 @@ export default {
             question: decodeURIComponent(q),
             answerStatus: 'no',
             ip: '192.168.22.13',
-            user_id: userId
+            user_id: userId,
+            topic: topicName || ''
           }
         });
       }
@@ -291,7 +293,7 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        let { q, topic = '' } = query;
+        let { q, topic = '',topicName } = query;
         let userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
@@ -361,7 +363,7 @@ export default {
               } else {
                 dispatch({
                   type: 'getAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic }
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic, topicName }
                 });
                 dispatch({
                   type: 'getSG',
@@ -383,7 +385,7 @@ export default {
                 });
                 dispatch({
                   type: 'getRelevantByAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic }
+                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic, topicName }
                 });
               }
             } else {

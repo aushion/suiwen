@@ -8,7 +8,10 @@
     background:linear-gradient(0deg,rgba(0,138,255,1),rgba(0,205,255,1));
     height: 84px;
     line-height: 0;
-    position: relative;
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 0 5px #888;
     // padding-left: calc(50% - 620px);
     .inputGroup {
       height: 100%;
@@ -136,15 +139,11 @@
           border-radius: 4px;
           margin-left: 20px;
           cursor: pointer;
-          a{
-            color: #fff;
-          }
+          
           &:hover {
             background: #fff;
-            color: #333;
-            a{
-              color: #333;
-            }
+            color: #29a7f3;
+           
           }
         }
       }
@@ -152,7 +151,9 @@
   }
   .content{
     background-color: #f6f6f6;
-    min-height: calc(100vh - 134px);
+    min-height: calc(100vh - 50px);
+    padding-top: 84px;
+
   }
 
   @media screen and (max-width: 1200px) {

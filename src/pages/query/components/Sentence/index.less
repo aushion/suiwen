@@ -1,7 +1,7 @@
 .Sentence {
   box-shadow: #cecece 0 0 6px 0;
   margin-bottom: 20px;
-  padding: 20px;
+  padding: 10px 20px;
   background: #fff;
   .Sentence_title {
     font-size: 16px;
@@ -14,7 +14,7 @@
     letter-spacing: 2px;
     line-height: 27.2px;
     // text-indent: 2em;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     text-align: left;
     img {
       width: 50%;
@@ -22,6 +22,23 @@
     .Sentence_item {
       border-bottom: 1px dotted lightsalmon;
       padding: 10px;
+      :global(.up) {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        z-index: 2;
+        width: 743px;
+        // transform: translateX(-50%);
+        margin-left: -397px;
+        left: 50%;
+        border: 1px solid rgba(170,220,255,1);
+        height: 40px;
+        padding: 10px;
+        background: #fff;
+        text-align: center;
+        line-height: 20px;
+        color: #0097FF;
+      }
     }
     .Sentence_extra {
       text-align: right;

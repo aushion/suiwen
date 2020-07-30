@@ -16,12 +16,14 @@ const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
-  let { q = sessionStorage.getItem('q'), topic = '' } = query;
+  let { q = sessionStorage.getItem('q'), topic = '', topicName='' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData = JSON.parse(sessionStorage.getItem('topicData')) || JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
+  const [isVisibleLogin, setShowLogin] = useState(false);
+  const [isVisibleRegister, setShowRegister] = useState(false);
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme, showLoginModal, avatar } = props;
@@ -38,7 +40,7 @@ function BasicLayout(props) {
 
     dispatch({ type: 'global/setQuestion', payload: { q } });
     value && topic
-      ? router.replace(`/query?q=${encodeURIComponent(q)}&topic=${topic}`)
+      ? router.replace(`/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(topicName)}`)
       : router.replace(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
@@ -84,7 +86,7 @@ function BasicLayout(props) {
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
             <span className={styles.tips}>
-              您好!
+              您好，
               {username ? (
                 <Link
                   style={{ color: '#fff', marginLeft: 10 }}
@@ -105,24 +107,30 @@ function BasicLayout(props) {
             {username ? null : (
               <Button
                 className={styles.login_btn}
-                ghost
                 onClick={() => {
+                  setShowLoginAndRegister(true);
                   setShowLogin(true);
+                  setShowRegister(false);
                 }}
                 // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
                 // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
               >
-                登录/注册
+                登录
               </Button>
             )}
-            {/* {username ? null : (
-              <a
+            {username ? null : (
+              <Button
                 className={styles.register_btn}
-                href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
+                onClick={() => {
+                  setShowLoginAndRegister(true);
+                  setShowLogin(false);
+                  setShowRegister(true);
+                }}
+                // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
               >
                 注册
-              </a>
-            )} */}
+              </Button>
+            )}
             {username ? (
               <button onClick={logout} className={styles.login_btn}>
                 退出
@@ -181,9 +189,11 @@ function BasicLayout(props) {
       </Footer>
       <FeedBack visible={visible} triggerCancel={() => setVisible(false)} />
       <LoginRegister
-        visible={showLogin}
+        visible={showLoginAndRegister}
+        showLogin={isVisibleLogin}
+        showRegister={isVisibleRegister}
         triggerCancel={() => {
-          setShowLogin(false);
+          setShowLoginAndRegister(false);
         }}
       />
       <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>

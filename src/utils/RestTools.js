@@ -13,7 +13,7 @@ export default {
     if (!!window.ActiveXObject || 'ActiveXObject' in window) return true;
     else return false;
   },
-  maxLength: 50,
+  maxLength: 128,
   HISTORYKEY: 'SUIWEN_RECORD',
   subHtml(oHtml, nlen, isByte) {
     var rgx1 = /<[^<^>^\/]+>/; //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
@@ -138,10 +138,10 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return str
+    return str ? str
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
-      .replace(/&nbsp;/g, '');
+      .replace(/&nbsp;/g, ''):'';
   },
 
   superMarkRed(str) {
@@ -255,7 +255,7 @@ export default {
   },
 
   completeToolsBook(str, intentDomain, domain) {
-    return intentDomain === '植物篇' || intentDomain === '病虫害' || domain === '农业_工具书'
+    return intentDomain === '植物栽培'
       ? str
           .replace(/<img/g, '<img class="imgpreview" style="width:70%"')
           .replace(/src="/g, 'src="http://refbook.img.cnki.net')

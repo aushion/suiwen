@@ -1,82 +1,107 @@
 import React, { useState } from 'react';
-import { List, Modal } from 'antd';
+import { List } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
+import arrow_up from '../../../../assets/arrow_up.png';
+import arrow_down from '../../../../assets/arrow_down.png';
 
 function SgList(props) {
   const { data, needEvaluate = true } = props;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
-  const [visible, setVisible] = useState(false);
-  const [initialText, setText] = useState('');
+  const [sgData, updateData] = useState(groupByData);
 
-  function showMore(text) {
-    setVisible(true);
-    setText(text);
-  }
-
-  function handleShowMore(e, str) {
+  function handleShowMore(e, item, index) {
     if (e.target.className === 'showMore') {
-      showMore(str);
+      let newItem = { ...item, originContext: item.data.context + item.data.sub_context };
+      let newSgData = {
+        ...sgData
+      };
+      newSgData[item.id][index] = newItem; //更新相应位置数据
+      updateData(newSgData);
+    }
+    if (e.target.className === 'up') {
+      let newItem = { ...item, originContext: '' };
+      let newSgData = {
+        ...sgData
+      };
+      newSgData[item.id][index] = newItem;
+      updateData(newSgData);
     }
   }
 
   return (
     <div className={`${styles.SgList} copy`} id="sg">
-      {keys.map((item) => {
-        const year =
-          (groupByData[item][0].sgAdditionInfo && groupByData[item][0].sgAdditionInfo.年) || '';
-        // const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
+      {keys.map((item, keyIndex) => {
+        const year = (sgData[item][0].sgAdditionInfo && sgData[item][0].sgAdditionInfo.年) || '';
+        // const qikan = sgData[item][0].Data.additional_info && sgData[item][0].Data.additional_info.来源数据库 || '';
         const qikanName =
-          (groupByData[item][0].sgAdditionInfo && groupByData[item][0].sgAdditionInfo.中文刊名) ||
-          '';
+          (sgData[item][0].sgAdditionInfo && sgData[item][0].sgAdditionInfo.中文刊名) || '';
         return (
           <div key={item} className={styles.wrapper}>
             <List
               itemLayout="vertical"
-              dataSource={groupByData[item]}
+              dataSource={sgData[item]}
               footer={
-                <div style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
+                <div
+                  style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}
+                >
+                  <div>{/* 点赞模块预留 */}</div>
                   <div>
                     <div
-                    style={{textAlign: 'right', display: 'inline-block', overflow: 'hidden', textOverflow:"ellipsis", whiteSpace:'nowrap'} }
+                      style={{
+                        textAlign: 'right',
+                        display: 'inline-block',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}
                       dangerouslySetInnerHTML={{
                         __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
                       }}
                     />
                     <a
-                      style={{ color: '#999' , maxWidth: '50%', display: 'inline-block', overflow: 'hidden', textOverflow:"ellipsis", whiteSpace:'nowrap'}}
+                      style={{
+                        color: '#999',
+                        maxWidth: '50%',
+                        display: 'inline-block',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title={groupByData[item][0].data.caption}
-                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
+                      title={sgData[item][0].data.caption}
+                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${sgData[item][0].data.source_id}`}
                     >
-                      {groupByData[item][0].data.caption}
+                      {sgData[item][0].data.caption}
                     </a>
                   </div>
-                  {/* 点赞模块预留 */}
                   <div className={styles.sg_evaluate}>
                     {needEvaluate ? (
                       <Evaluate
-                        id={groupByData[item][0].id}
-                        goodCount={groupByData[item][0].evaluate.good}
-                        badCount={groupByData[item][0].evaluate.bad}
-                        isevalute={groupByData[item][0].evaluate.isevalute}
+                        id={sgData[item][0].id}
+                        goodCount={sgData[item][0].evaluate.good}
+                        badCount={sgData[item][0].evaluate.bad}
+                        isevalute={sgData[item][0].evaluate.isevalute}
                       />
                     ) : null}
                   </div>
                 </div>
               }
-              renderItem={(item, index) => {
-                const orginAnswer = item.data.sub_context;
-                const answer = item.data.context + '<a class="showMore"> 更多>></a>';
+              renderItem={(item, itemIndex) => {
+                const answer = item.originContext
+                  ? item.originContext +
+                    `<a class="up" style="color:#2090E3">  收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}"></a>`
+                  : item.data.context +
+                    `<a class="showMore" style="color:#2090E3;white-space:nowrap;float:right;">  更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div
-                      onClick={(e) => handleShowMore(e, orginAnswer)}
-                      key={index}
+                      onClick={(e) => handleShowMore(e, item, itemIndex)}
+                      key={itemIndex}
                       className={styles.fontStyle}
                       dangerouslySetInnerHTML={{
                         __html: RestTools.formatText(RestTools.translateToRed(answer))
@@ -89,29 +114,6 @@ function SgList(props) {
           </div>
         );
       })}
-      <Modal
-        visible={visible}
-        footer={null}
-        style={{ top: 40, left: '29%' }}
-        onCancel={() => {
-          setVisible(false);
-        }}
-      >
-        <div
-          style={{
-            // width: 400,
-            paddingTop: 10,
-            color: '#333',
-            letterSpacing: '2px',
-            lineHeight: '27.2px',
-            textIndent: '2em'
-          }}
-          className={`${styles.fontStyle} copy`}
-          dangerouslySetInnerHTML={{
-            __html: RestTools.translateToRed(RestTools.formatText(initialText))
-          }}
-        />
-      </Modal>
     </div>
   );
 }

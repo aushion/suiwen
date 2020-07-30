@@ -158,9 +158,15 @@ function Home(props) {
 
         <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
           {item.name === '阅读理解' ? (
-            <Badge count={<div style={{backgroundColor: '#f50',color:'#fff',padding: '2px 4px'}}>Beta</div>}>
+            <Badge
+              count={
+                <div style={{ backgroundColor: '#f50', color: '#fff', padding: '2px 4px' }}>
+                  Beta
+                </div>
+              }
+            >
               <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name} </span>
-             </Badge>
+            </Badge>
           ) : (
             <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
           )}
@@ -170,7 +176,9 @@ function Home(props) {
             return (
               <Link
                 className={homeStyles.questions_item}
-                to={`/query?topic=${item.info.topic}&q=${child.question}`}
+                to={`/query?topic=${item.info.topic}&topicName=${encodeURIComponent(
+                  item.name
+                )}&q=${encodeURIComponent(child.question)}`}
                 key={child.qId}
                 target="_blank"
               >
@@ -318,7 +326,7 @@ function Home(props) {
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
                                 item.id
                               }&domain=${item.domain}`}
-                              target='_blank'
+                              target="_blank"
                               className={homeStyles.help_item_content}
                             >
                               <span title={item.Content}>{item.content}</span>
@@ -350,7 +358,7 @@ function Home(props) {
                       //   router.push('/help/newHelp');
                       // }}
                       to={'/help/newHelp'}
-                      target='_blank'
+                      target="_blank"
                     >
                       MORE
                       <Icon type="double-right" />
