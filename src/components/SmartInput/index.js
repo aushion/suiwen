@@ -67,17 +67,17 @@ const SmartInput = (props) => {
     let str = value;
     let newStr = str;
     if (newStr && newStr.trim()) {
-      if (RestTools.getStrLength(value) > maxLength) {
+      if (RestTools.getStrLength(str) > maxLength) {
         message.warning(
           <span>
             您输入的问题字数超过了限制，
             <em>
-              <strong style={{ color: 'red' }}>{value.substring(maxLength - 3, maxLength)}</strong>
+              <strong style={{ color: 'red' }}>{str.substring(maxLength - 3, maxLength)}</strong>
             </em>
             之后的字数将不会计入问题中
           </span>
         );
-        newStr = value.substring(0, maxLength);
+        newStr = newStr.substring(0, maxLength);
       }
       RestTools.setStorageInput(HISTORYKEY, newStr.trim()); //存储输入
       props.onClickEnter(newStr);
