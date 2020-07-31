@@ -96,7 +96,7 @@ function SgList(props) {
                   ? item.originContext +
                     `<a class="up" style="color:#2090E3">  收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}"></a>`
                   : item.data.context +
-                    `<a class="showMore" style="color:#2090E3;white-space:nowrap;float:right;">  更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
+                    `<a class="showMore" style="color:#2090E3;white-space:nowrap;">  更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div
