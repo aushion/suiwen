@@ -41,6 +41,18 @@ export default function Medical(props) {
     用药副作用: data[0][intentFocus] ? intentFocus : '适应症'
   };
 
+  const removeHtmlTagMainStr =
+    data[0][focus[intentDomain]] &&
+    RestTools.removeHtmlTag(
+      data[0][focus[intentDomain]] ? data[0][focus[intentDomain]] : data[0]['概述']
+    );
+  const [mainStr, updateMainstr] = useState(
+    removeHtmlTagMainStr && removeHtmlTagMainStr.length > 300
+      ? RestTools.subHtml(removeHtmlTagMainStr, 300, false) +
+          `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
+      : removeHtmlTagMainStr
+  );
+
   function handleShowMore(e, txt) {
     if (e.target.className === 'showMore') {
       const newTxt =
@@ -78,18 +90,6 @@ export default function Medical(props) {
           `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
       : str;
   }
-
-  const removeHtmlTagMainStr =
-    data[0][focus[intentDomain]] &&
-    RestTools.removeHtmlTag(
-      data[0][focus[intentDomain]] ? data[0][focus[intentDomain]] : data[0]['概述']
-    );
-  const [mainStr, updateMainstr] = useState(
-    removeHtmlTagMainStr && removeHtmlTagMainStr.length > 300
-      ? RestTools.subHtml(removeHtmlTagMainStr, 300, false) +
-          `<a class="showMore"> 更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}" alt=""/></a>`
-      : removeHtmlTagMainStr
-  );
 
   const tableId = data[0].ID || data[0].文件名;
   return (

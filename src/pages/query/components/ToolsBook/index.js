@@ -72,7 +72,7 @@ function ToolsBook(props) {
   }
 
   function handleAnswer(str) {
-    const re = /<span class="answerPart">(.*)<br><\/span>/gims;
+    const re = /<span class="answerPart">(.*)<\/span>/gims;
     return str.toString().match(re)
       ? str
           .toString()
