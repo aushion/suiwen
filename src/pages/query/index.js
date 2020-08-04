@@ -269,6 +269,20 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
+                {medicalData.length
+                    ? medicalData.map((item) => (
+                        <Medical
+                          title={item.title}
+                          id={item.id}
+                          intentJson={item.intentJson}
+                          evaluate={item.evaluate}
+                          intentDomain={item.intentDomain}
+                          intentFocus={item.intentFocus}
+                          key={item.id}
+                          data={item.dataNode}
+                        />
+                      ))
+                    : null}
                   {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
@@ -313,20 +327,7 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                  {medicalData.length
-                    ? medicalData.map((item) => (
-                        <Medical
-                          title={item.title}
-                          id={item.id}
-                          intentJson={item.intentJson}
-                          evaluate={item.evaluate}
-                          intentDomain={item.intentDomain}
-                          intentFocus={item.intentFocus}
-                          key={item.id}
-                          data={item.dataNode}
-                        />
-                      ))
-                    : null}
+                 
                   {literatureData.length &&
                   (literatureData.length === 1 || literatureData.length === 3) ? (
                     <Literature
