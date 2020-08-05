@@ -14,17 +14,21 @@ function SgList(props) {
   const [sgData, updateData] = useState(groupByData);
 
   function handleShowMore(e, item, index) {
-    let newSgData = { ...sgData }; //拷贝一份元数据
-    let newItem; //初始化一个变量存储新数据
     if (e.target.className === 'showMore') {
+      let newSgData = { ...sgData }; //拷贝一份元数据
+      let newItem; //初始化一个变量存储新数据
       newItem = { ...item, originContext: item.data.context + item.data.sub_context };
+      newSgData[item.id][index] = newItem; //更新相应位置数据
+      updateData(newSgData); //更新状态
     }
     if (e.target.className === 'up') {
+      let newSgData = { ...sgData }; //拷贝一份元数据
+      let newItem; //初始化一个变量存储新数据
       newItem = { ...item, originContext: '' };
       newSgData[item.id][index] = newItem;
+      newSgData[item.id][index] = newItem; //更新相应位置数据
+      updateData(newSgData); //更新状态
     }
-    newSgData[item.id][index] = newItem; //更新相应位置数据
-    updateData(newSgData); //更新状态
   }
 
   return (
