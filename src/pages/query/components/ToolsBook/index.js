@@ -82,7 +82,7 @@ function ToolsBook(props) {
   }
 
   function showOthers(str) {
-    const re = /<span class="others">(.*)<\/span>/gims;
+    const re = /<p class="others">(.*)<\/p>/gims;
     return str.toString().match(re)
       ? str
           .toString()
