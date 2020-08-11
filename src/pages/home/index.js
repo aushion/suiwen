@@ -9,6 +9,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import RestTools from '../../utils/RestTools';
 import 医学 from '../../assets/医学.png';
+import rd from '../../assets/rd.png';
 import Link from 'umi/link';
 
 let skillSlider = null;
@@ -21,15 +22,12 @@ message.config({
   top: 50
 });
 function Home(props) {
-  const {
-    skillExamples,
-    specialQuestions,
-    newHelpList,
-    loading,
-    skillPicture,
-    helpPicture
-  } = props;
+  let { skillExamples, specialQuestions, newHelpList, loading, skillPicture, helpPicture } = props;
   const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
+  const special_questions = specialQuestions.filter((item) => item.name !== '阅读理解');
+  const experience_questions = specialQuestions.filter((item) => item.name === '阅读理解');
+  console.log(specialQuestions);
+  console.log('experience_questions', experience_questions);
   // const [activeSpecial, setActiveSpecial] = useState('专题问答');
   // console.log('skillPicture', skillPicture)
   // useEffect(() => {
@@ -141,55 +139,65 @@ function Home(props) {
       })
     : null;
 
-  const specialItem = specialQuestions.map((item, index) => {
-    return (
-      <div
-        className={homeStyles.specialWrapper}
-        key={item.name}
-        style={{ width: '90% !important' }}
-      >
-        <Link
-          className={homeStyles.picture}
-          to={`/special?topicId=${item.topicId}`}
-          target="_blank"
-        >
-          <img src={item.thumbUrl || 医学} alt={item.name} />
-        </Link>
-
-        <Link className={homeStyles.title} to={`/special?topicId=${item.topicId}`} target="_blank">
-          {item.name === '阅读理解' ? (
-            <Badge
-              count={
-                <div style={{ backgroundColor: '#f50', color: '#fff', padding: '2px 4px' }}>
-                  Beta
-                </div>
-              }
+  const specialItem = special_questions.length
+    ? special_questions.map((item, index) => {
+        return (
+          <div
+            className={homeStyles.specialWrapper}
+            key={item.name}
+            style={{ width: '90% !important' }}
+          >
+            <Link
+              className={homeStyles.picture}
+              to={`/special?topicId=${item.topicId}`}
+              target="_blank"
             >
-              <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name} </span>
-            </Badge>
-          ) : (
-            <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>{item.name}</span>
-          )}
-        </Link>
-        <div className={homeStyles.questions}>
-          {item.data.slice(0, 5).map((child) => {
-            return (
-              <Link
-                className={homeStyles.questions_item}
-                to={`/query?topic=${item.info.topic}&topicName=${encodeURIComponent(
-                  item.name
-                )}&q=${encodeURIComponent(child.question)}`}
-                key={child.qId}
-                target="_blank"
-              >
-                {child.question}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    );
-  });
+              <img src={item.thumbUrl || 医学} alt={item.name} />
+            </Link>
+
+            <Link
+              className={homeStyles.title}
+              to={`/special?topicId=${item.topicId}`}
+              target="_blank"
+            >
+              {item.name === '阅读理解' ? (
+                <Badge
+                  count={
+                    <div style={{ backgroundColor: '#f50', color: '#fff', padding: '2px 4px' }}>
+                      Beta
+                    </div>
+                  }
+                >
+                  <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>
+                    {item.name}{' '}
+                  </span>
+                </Badge>
+              ) : (
+                <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>
+                  {item.name}
+                </span>
+              )}
+            </Link>
+            <div className={homeStyles.questions}>
+              {item.data.slice(0, 5).map((child) => {
+                return (
+                  <Link
+                    className={homeStyles.questions_item}
+                    to={`/query?topic=${item.info.topic}&topicName=${encodeURIComponent(
+                      item.name
+                    )}&q=${encodeURIComponent(child.question)}`}
+                    key={child.qId}
+                    target="_blank"
+                  >
+                    {child.question}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })
+    : null;
 
   const tagList = skillExamples.length
     ? skillExamples.map((item, index) => (
@@ -244,34 +252,11 @@ function Home(props) {
           </div>
         </div>
         <div className={homeStyles.special}>
-          {/* <div className={homeStyles.special_top}>
+          <div className={homeStyles.special_top}>
             <div className={homeStyles.title}>
               <BlockTitle enTitle="Topics" cnTitle="专题" />
             </div>
-            <div className={homeStyles.modular}>
-              <span
-                onClick={() => {
-                  setActiveSpecial('专题问答');
-                  specialSlider.slickGoTo(0);
-                }}
-                style={activeSpecial === '专题问答' ? specialActiveStyle : null}
-                className={homeStyles.tag}
-              >
-                专题问答
-              </span>
-              <span
-                onClick={() => {
-                  setActiveSpecial('热门求助');
-                  specialSlider.slickGoTo(1);
-                }}
-                style={activeSpecial === '热门求助' ? specialActiveStyle : null}
-                className={homeStyles.tag}
-              >
-                热门求助
-              </span>
-            </div>
-          </div> */}
-
+          </div>
           <div className={homeStyles.special_bottom}>
             {/* <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}> */}
             <Tabs defaultActiveKey="1" type="card" tabBarGutter={0}>
@@ -324,8 +309,8 @@ function Home(props) {
                           >
                             <Link
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
-                                item.id
-                              }&domain=${item.domain}`}
+                                item.qid
+                              }`}
                               target="_blank"
                               className={homeStyles.help_item_content}
                             >
@@ -339,14 +324,14 @@ function Home(props) {
                             <Link
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
-                                item.id
-                              }&domain=${item.domain}`}
+                                item.qid
+                              }`}
                             >
                               我来回答
                             </Link>
 
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
-                            <span style={{ float: 'right' }}>{item.time}</span>
+                            <span style={{ float: 'right' }}>{item.commitTime}</span>
                           </div>
                         </List.Item>
                       )}
@@ -369,6 +354,41 @@ function Home(props) {
             </Tabs>
 
             {/* </Slider> */}
+          </div>
+        </div>
+
+        <div className={homeStyles.experience}>
+          <div className={homeStyles.title}>
+            <BlockTitle enTitle="Experience" cnTitle="体验" />
+          </div>
+          <div className={homeStyles.content}>
+            <div className={homeStyles.left}>
+              <img src={rd} alt="阅读" />
+            </div>
+            <div className={homeStyles.right}>
+              <div className={homeStyles.cnTitle}>阅读理解</div>
+              <div className={homeStyles.enTitle}>Reading comprehension</div>
+              <div className={homeStyles.questions}>
+                {experience_questions.length
+                  ? experience_questions[0].data.map((item) => {
+                      const topic = experience_questions[0].info.topic;
+                      const topicName = experience_questions[0].name;
+                      return (
+                        <Link
+                          className={homeStyles.questions_item}
+                          to={`/query?topic=${topic}&topicName=${encodeURIComponent(
+                            topicName
+                          )}&q=${encodeURIComponent(item.question)}`}
+                          key={item.qId}
+                          target="_blank"
+                        >
+                          {item.question}
+                        </Link>
+                      );
+                    })
+                  : null}
+              </div>
+            </div>
           </div>
         </div>
       </Spin>

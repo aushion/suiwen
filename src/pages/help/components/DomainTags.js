@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tag } from 'antd';
+import { Tag, Popover } from 'antd';
 
 function DomainTags(props) {
   const checkedStyle = {
@@ -21,6 +21,17 @@ function DomainTags(props) {
     setChecked(index);
     onClickTag(payload);
   }
+
+  function tagChildren(data) {
+    return (
+      <div>
+        {data.map((item) => (
+          <div key={item.cId}>{item.cName}</div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div>
       <Tag
@@ -30,13 +41,26 @@ function DomainTags(props) {
         全部
       </Tag>
       {data.map((item, index) => {
+        if (item.communityClassList.length) {
+          return (
+            <Popover content={tagChildren(item.communityClassList)} key={index}>
+              <Tag
+                style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
+                key={item.cId}
+                onClick={handleClick.bind(this, index, item)}
+              >
+                {item.cName}
+              </Tag>
+            </Popover>
+          );
+        }
         return (
           <Tag
             style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
-            key={item}
+            key={item.cId}
             onClick={handleClick.bind(this, index, item)}
           >
-            {item}
+            {item.cName}
           </Tag>
         );
       })}

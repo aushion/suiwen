@@ -50,7 +50,7 @@ function NewHelp(props) {
   }
   function handleClickItem(item) {
     dispatch({ type: 'global/setQuestion', payload: { q: item.content } });
-    router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}&domain=${item.domain}`);
+    router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}&domain=${item.domain}`);
   }
 
   function handleSearchOrChangePage(payload) {

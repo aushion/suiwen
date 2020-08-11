@@ -1,5 +1,5 @@
 import request from '../utils/request';
-const serverurl = process.env.apiUrl;
+const serverurl = process.env.apiUrl+'/community';
 
 export default {
   getNewHelpList() {
@@ -15,7 +15,7 @@ export default {
       domain = '全部',
       uid = ''
     } = payload;
-    return request.get(serverurl + `/getNewQuestion`, {
+    return request.post(serverurl + `/getNewQuestion`,null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -35,7 +35,7 @@ export default {
       searchKey = '',
       domain = '全部'
     } = payload;
-    return request.get(serverurl + `/getNewQuestion`, {
+    return request.post(serverurl + `/getNewQuestion`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -48,7 +48,7 @@ export default {
 
   getMyAnswerQuestions(payload) {
     const { size = 10, index = 1, searchKey = '', domain = '全部', uid } = payload;
-    return request.get(serverurl + `/getMyCommiuntyAnswer`, {
+    return request.post(serverurl + `/getMyCommiuntyAnswer`,null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -60,10 +60,10 @@ export default {
   },
   getAnwser(payload) {
     const { QID, uid = '' } = payload;
-    return request.get(serverurl + `/getCommunityAnswerByQuestion`, {
+    return request.post(serverurl + `/getDetailByQuestion`, null, {
       params: {
         qId: QID,
-        uId: uid
+        userId: uid
       }
     });
   },
@@ -86,12 +86,12 @@ export default {
   },
   getDomain(payload) {
     return payload
-      ? request.get(serverurl + '/getCommiuntyDomain', {
+      ? request.post(serverurl + '/getCommunityClass',null, {
           params: {
             uId: payload.uId
           }
         })
-      : request.get(serverurl + '/getCommiuntyDomain');
+      : request.post(serverurl + '/getCommunityClass');
   },
 
   getPersonDomain(payload) {

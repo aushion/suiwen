@@ -9,11 +9,11 @@ function Poem(props) {
   const { id, dataNode, evaluate, intentJson } = props.data;
   const { good, bad, isevaluate } = evaluate;
   const more =
-    intentJson.results[0].fields['诗词名称'] ||
+    intentJson.results[0].fields['诗词名999999999999999999999999999'] ||
     intentJson.results[0].fields['作者'] ||
     intentJson.results[0].fields['年代'];
   const [pageYoffset, setPageYOffest] = useState(0);
-  const [data, setData] = useState(dataNode);
+  const [data, setData] = useState(dataNode)
 
   function handleShowMore(e, item, index) {
     if (e.target.className === 'showMore') {

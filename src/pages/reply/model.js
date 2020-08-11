@@ -28,7 +28,7 @@ export default {
       const res = yield call(helpServer.getAnwser, payload);
       yield put({
         type: 'saveAnswers',
-        payload: { answerList: res.data.result, total: res.data.result.length }
+        payload: { answerList: res.data.result.answerList, total: res.data.result.total }
       });
     },
     *getUserFAQ({ payload }, { call, put }) {

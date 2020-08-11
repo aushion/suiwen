@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Input, Popconfirm } from 'antd';
+import { List, Input, Popconfirm, Tag } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
 const { Search } = Input;
@@ -82,6 +82,9 @@ function HelpList(props) {
                 onClick={() => handleClickItem(item)}
               >
                 {current === 'myReply' ? item.question : item.content}
+                {item.tag? item.tag.split(';').map((item, index) => (
+                  <Tag key={index}>{item}</Tag>
+                )):null}
               </div>
 
               {current === 'myReply' ? (
@@ -110,7 +113,7 @@ function HelpList(props) {
                   已有回答:{item.checkCount}
                   <span>
                     <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
-                    {item.time}
+                    {item.commitTime}
                   </span>
                 </div>
               )}
