@@ -9,7 +9,7 @@ import helpStyle from './index.less';
 import RestTools from '../../utils/RestTools';
 
 function MyHelp(props) {
-  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props;
+  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading, communityNode } = props;
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
@@ -80,6 +80,7 @@ function MyHelp(props) {
               loading={loading}
               current={'myHelp'}
               uid={uid}
+              communityNode={communityNode}
               dispatch={dispatch}
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
               handleClickItem={handleClickItem}

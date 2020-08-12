@@ -11,7 +11,7 @@ import helpStyle from './index.less';
 
 function NewHelp(props) {
 
-  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props; 
+  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading, communityNode } = props; 
   const menus = RestTools.getLocalStorage('userInfo')
   ? [
       {
@@ -80,11 +80,11 @@ function NewHelp(props) {
               index={index}
               loading={loading}
               uid={uid}
+              communityNode={communityNode}
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
               handleClickItem={handleClickItem}
             />
-            {/* </Spin> */}
-          {/* ) : <Empty />} */}
+        
         </div>
       </div>
     </div>

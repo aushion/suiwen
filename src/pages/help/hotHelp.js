@@ -9,7 +9,7 @@ import HelpMenu from './components/HelpMenu';
 import helpStyle from './index.less';
 
 function HotHelp(props) {
-  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading } = props;
+  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading, communityNode } = props;
   const menus = JSON.parse(localStorage.getItem('userInfo'))
   ? [
       {
@@ -78,6 +78,7 @@ function HotHelp(props) {
               index={index}
               loading={loading}
               uid={uid}
+              communityNode={communityNode}
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
               handleClickItem={handleClickItem}
             />

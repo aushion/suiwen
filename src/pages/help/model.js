@@ -8,6 +8,7 @@ export default {
     newHelpData: null,
     domainList: [],
     domain: '全部',
+    communityNode: null,
     size: 10,
     index: 1,
     uid: JSON.parse(localStorage.getItem('userInfo'))

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Tag, Popover } from 'antd';
+import { Tag, Popover, Row, Col } from 'antd';
+import { connect } from 'dva';
 
 function DomainTags(props) {
   const checkedStyle = {
@@ -10,24 +11,48 @@ function DomainTags(props) {
     cursor: 'pointer',
     marginBottom: 10
   };
-  const { data, onClickTag, localDomain } = props;
+  const { data, onClickTag, localDomain, dispatch } = props;
   const localChecked = data.map((item) => item).indexOf(localDomain);
   const [checked, setChecked] = useState(localChecked || -1);
   useEffect(() => {
     setChecked(localChecked);
   }, [localChecked]);
+
   function handleClick(index, item) {
-    const payload = { domain: encodeURIComponent(item), size: 10, index: 1 };
+    const payload = { domain: encodeURIComponent(item.cName || ''), size: 10, index: 1 };
     setChecked(index);
     onClickTag(payload);
+    const firstNode = index >=0 ? data[index].cName : '全部';
+    const secondNode = index >= 0 ? item.cName : '';
+
+    sessionStorage.setItem(
+      'communityNode',
+      JSON.stringify({
+        firstNode,
+        secondNode
+      })
+    );
+    dispatch({
+      type: 'help/changeDomain',
+      payload: {
+        communityNode: {
+          firstNode,
+          secondNode
+        }
+      }
+    });
   }
 
-  function tagChildren(data) {
+  function tagChildren(data, index) {
     return (
-      <div>
-        {data.map((item) => (
-          <div key={item.cId}>{item.cName}</div>
-        ))}
+      <div style={{ width: 160 }}>
+        <Row>
+          {data.map((item) => (
+            <Col span={12} key={item.cId} style={{ margin: '10px 0', cursor: 'pointer' }}>
+              <div onClick={handleClick.bind(this, index, item)}>{item.cName}</div>
+            </Col>
+          ))}
+        </Row>
       </div>
     );
   }
@@ -43,7 +68,7 @@ function DomainTags(props) {
       {data.map((item, index) => {
         if (item.communityClassList.length) {
           return (
-            <Popover content={tagChildren(item.communityClassList)} key={index}>
+            <Popover content={tagChildren(item.communityClassList, index)} key={index}>
               <Tag
                 style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
                 key={item.cId}
@@ -68,4 +93,11 @@ function DomainTags(props) {
   );
 }
 
-export default DomainTags;
+function mapStateToProps(state) {
+  return {
+    ...state.help,
+    loading: state.loading.models.help
+  };
+}
+
+export default connect(mapStateToProps)(DomainTags);

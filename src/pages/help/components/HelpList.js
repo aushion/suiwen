@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Input, Popconfirm, Tag } from 'antd';
+import { List, Input, Popconfirm, Tag, Breadcrumb } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
 const { Search } = Input;
@@ -7,7 +7,7 @@ function HelpList(props) {
   const {
     data,
     size,
-    // index,
+    communityNode,
     current,
     domain,
     handleSearchOrChangePage,
@@ -15,6 +15,7 @@ function HelpList(props) {
     dispatch,
     handleClickItem
   } = props;
+  console.log('communityNode', communityNode);
   function confirm(id) {
     dispatch({
       type: 'help/deleteQuestion',
@@ -29,6 +30,7 @@ function HelpList(props) {
         <div style={{ fontSize: 16 }}>
           共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
         </div>
+
         <div>
           <Search
             style={{ width: 200 }}
@@ -43,6 +45,17 @@ function HelpList(props) {
             }}
           />
         </div>
+      </div>
+
+      <div>
+        {communityNode ? (
+          <Breadcrumb separator=">">
+            <Breadcrumb.Item>{communityNode.firstNode}</Breadcrumb.Item>
+            {communityNode.secondNode ? (
+              <Breadcrumb.Item href="">{communityNode.secondNode}</Breadcrumb.Item>
+            ) : null}
+          </Breadcrumb>
+        ) : null}
       </div>
       <List
         style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
@@ -82,9 +95,9 @@ function HelpList(props) {
                 onClick={() => handleClickItem(item)}
               >
                 {current === 'myReply' ? item.question : item.content}
-                {item.tag? item.tag.split(';').map((item, index) => (
-                  <Tag key={index}>{item}</Tag>
-                )):null}
+                {item.tag
+                  ? item.tag.split(';').map((item, index) => <Tag key={index}>{item}</Tag>)
+                  : null}
               </div>
 
               {current === 'myReply' ? (
