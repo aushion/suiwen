@@ -15,7 +15,7 @@ function HelpList(props) {
     dispatch,
     handleClickItem
   } = props;
-  console.log('communityNode', communityNode);
+  const { firstNode = null, secondNode = null } = communityNode;
   function confirm(id) {
     dispatch({
       type: 'help/deleteQuestion',
@@ -48,10 +48,10 @@ function HelpList(props) {
       </div>
 
       <div>
-        {communityNode && communityNode.secondNode ? (
+        {communityNode && secondNode ? (
           <Breadcrumb separator=">">
-            <Breadcrumb.Item>{communityNode.firstNode}</Breadcrumb.Item>
-            <Breadcrumb.Item href="">{communityNode.secondNode}</Breadcrumb.Item>
+            <Breadcrumb.Item>{firstNode.cName}</Breadcrumb.Item>
+            <Breadcrumb.Item href="">{secondNode.cName}</Breadcrumb.Item>
           </Breadcrumb>
         ) : null}
       </div>
@@ -88,14 +88,18 @@ function HelpList(props) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap'
                 }}
-                // onMouseOver={() => { console.log('up'); setDelete(true)}}
-                // onMouseLeave={() =>{setDelete(false)}}
                 onClick={() => handleClickItem(item)}
               >
                 {current === 'myReply' ? item.question : item.content}
-                {item.tag
-                  ? item.tag.split(';').map((item, index) => <Tag key={index}>{item}</Tag>)
-                  : null}
+                <span style={{ marginLeft: 10 }}>
+                  {item.tag
+                    ? item.tag.split(';').map((item, index) => (
+                        <Tag color="volcano" key={index}>
+                          {item}
+                        </Tag>
+                      ))
+                    : null}
+                </span>
               </div>
 
               {current === 'myReply' ? (

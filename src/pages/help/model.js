@@ -75,9 +75,12 @@ export default {
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : Cookies.get('cnki_qa_uuid');
+          const communityNode = sessionStorage.getItem('communityNode')
+            ? JSON.parse(sessionStorage.getItem('communityNode'))
+            : null;
           const current = pathname;
           dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
-          
+
           dispatch({
             type: 'getHotQuestions',
             payload: { domain: encodeURIComponent('') }
@@ -89,7 +92,13 @@ export default {
 
             dispatch({
               type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent('') }
+              payload: {
+                domain: communityNode
+                  ? communityNode.secondNode
+                    ? communityNode.secondNode.cId
+                    : communityNode.firstNode.cId
+                  : ''
+              }
             });
           } else if (current === '/help/hotHelp') {
             dispatch({

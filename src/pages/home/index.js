@@ -27,7 +27,6 @@ function Home(props) {
   const special_questions = specialQuestions.filter((item) => item.name !== '阅读理解');
   const experience_questions = specialQuestions.filter((item) => item.name === '阅读理解');
 
-
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
     return (
@@ -45,8 +44,6 @@ function Home(props) {
       </div>
     );
   };
-
-
 
   const tagSettings = {
     infinite: false,
@@ -352,8 +349,12 @@ function Home(props) {
               <img src={rd} alt="阅读" />
             </div>
             <div className={homeStyles.right}>
-              <div className={homeStyles.cnTitle}>阅读理解</div>
-              <div className={homeStyles.enTitle}>Reading comprehension</div>
+              {experience_questions.length ? (
+                <Link to={`/special?topicId=${experience_questions[0].topicId}`} target="_blank">
+                  <div className={homeStyles.cnTitle}>阅读理解</div>
+                  <div className={homeStyles.enTitle}>Reading comprehension</div>
+                </Link>
+              ) : null}
               <div className={homeStyles.questions}>
                 {experience_questions.length
                   ? experience_questions[0].data.map((item) => {

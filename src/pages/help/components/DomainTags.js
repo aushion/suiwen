@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Tag, Popover, Row, Col } from 'antd';
 import { connect } from 'dva';
+import styles from './DomainTag.less'
 
 function DomainTags(props) {
   const checkedStyle = {
@@ -12,18 +13,18 @@ function DomainTags(props) {
     marginBottom: 10
   };
   const { data, onClickTag, dispatch, communityNode } = props;
-  const localChecked = data.map((item) => item.cName).indexOf(communityNode?.firstNode);
+  const localChecked = data.map((item) => item.cName).indexOf(communityNode?.firstNode.cName);
   const [checked, setChecked] = useState(localChecked || -1);
   useEffect(() => {
     setChecked(localChecked);
   }, [localChecked]);
 
   function handleClick(index, item, isChild) {
-    const payload = { domain: encodeURIComponent(item.cName || ''), size: 10, index: 1 };
+    const payload = { domain: encodeURIComponent(item.cId || ''), size: 10, index: 1 };
     setChecked(index);
     onClickTag(payload);
-    const firstNode = index >= 0 ? data[index].cName : '全部';
-    const secondNode = isChild && index >= 0 ? item.cName : '';
+    const firstNode = index >= 0 ? {...data[index]} : '';
+    const secondNode = isChild && index >= 0 ? item : '';
 
     sessionStorage.setItem(
       'communityNode',
@@ -49,7 +50,7 @@ function DomainTags(props) {
         <Row>
           {data.map((item) => (
             <Col span={12} key={item.cId} style={{ margin: '10px 0', cursor: 'pointer' }}>
-              <div onClick={handleClick.bind(this, index, item, true)}>{item.cName}</div>
+              <div className={styles.tag} onClick={handleClick.bind(this, index, item, true)}>{item.cName}</div>
             </Col>
           ))}
         </Row>

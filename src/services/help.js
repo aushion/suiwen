@@ -12,7 +12,7 @@ export default {
       size = page ? page.size : 10,
       index = page ? page.index : 1,
       searchKey = sessionStorage.getItem('searchKey') || '',
-      domain = '全部',
+      domain = '',
       uid = ''
     } = payload;
     return request.post(serverurl + `/getNewQuestion`,null, {
