@@ -3,7 +3,7 @@ import Link from 'umi/link';
 import RestTools from '../../../../utils/RestTools';
 
 function NewHelp(props) {
-  const { data } = props;
+  const { data, title } = props;
   return (
     <div style={{ backgroundColor: '#fff', padding: 20, boxShadow: '#cecece 0 0 6px 0' }}>
       <div
@@ -16,7 +16,7 @@ function NewHelp(props) {
         }}
       >
         <Icon type="question-circle" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
-        新求助
+        {title || '新求助'}
       </div>
       <List
         itemLayout="vertical"
@@ -43,7 +43,7 @@ function NewHelp(props) {
                   display: 'block'
                 }}
                 title={item.Content}
-                to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}`}
+                to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
               >
                 {item.content}
               </Link>
@@ -57,7 +57,7 @@ function NewHelp(props) {
                   lineHeight: '25px'
                 }}
               >
-                回答数：{item.checkSum}
+                回答数：{item.checkCount}
               </div>
             </div>
           </List.Item>

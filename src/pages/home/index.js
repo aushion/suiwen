@@ -26,16 +26,7 @@ function Home(props) {
   const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
   const special_questions = specialQuestions.filter((item) => item.name !== '阅读理解');
   const experience_questions = specialQuestions.filter((item) => item.name === '阅读理解');
-  console.log(specialQuestions);
-  console.log('experience_questions', experience_questions);
-  // const [activeSpecial, setActiveSpecial] = useState('专题问答');
-  // console.log('skillPicture', skillPicture)
-  // useEffect(() => {
-  //   RestTools.setSession('tagIndex', activeTag); //存储索引，解决页面回退，索引丢失的问题
-  //   tagSlider.slickGoTo(activeTag, true);
-  //   skillSlider.slickGoTo(activeTag, true);
-  //   return () => {};
-  // }, [activeTag]);
+
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -55,12 +46,7 @@ function Home(props) {
     );
   };
 
-  // const specialActiveStyle = {
-  //   backgroundColor: '#29A7F3',
-  //   padding: '8px 14px',
-  //   color: '#fff',
-  //   borderRadius: 4
-  // };
+
 
   const tagSettings = {
     infinite: false,

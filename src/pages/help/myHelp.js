@@ -9,7 +9,17 @@ import helpStyle from './index.less';
 import RestTools from '../../utils/RestTools';
 
 function MyHelp(props) {
-  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading, communityNode } = props;
+  const {
+    domainList,
+    newHelpData,
+    dispatch,
+    domain,
+    size,
+    index,
+    uid,
+    loading,
+    communityNode
+  } = props;
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
@@ -17,10 +27,7 @@ function MyHelp(props) {
           key: 'newHelp',
           text: '新求助'
         },
-        {
-          key: 'hotHelp',
-          text: '热门求助'
-        },
+
         {
           key: 'myHelp',
           text: '我的求助'
@@ -34,10 +41,6 @@ function MyHelp(props) {
         {
           key: 'newHelp',
           text: '新求助'
-        },
-        {
-          key: 'hotHelp',
-          text: '热门求助'
         }
       ];
   //点击tag响应事件

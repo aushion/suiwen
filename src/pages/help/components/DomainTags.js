@@ -11,19 +11,19 @@ function DomainTags(props) {
     cursor: 'pointer',
     marginBottom: 10
   };
-  const { data, onClickTag, localDomain, dispatch } = props;
-  const localChecked = data.map((item) => item).indexOf(localDomain);
+  const { data, onClickTag, dispatch, communityNode } = props;
+  const localChecked = data.map((item) => item.cName).indexOf(communityNode?.firstNode);
   const [checked, setChecked] = useState(localChecked || -1);
   useEffect(() => {
     setChecked(localChecked);
   }, [localChecked]);
 
-  function handleClick(index, item) {
+  function handleClick(index, item, isChild) {
     const payload = { domain: encodeURIComponent(item.cName || ''), size: 10, index: 1 };
     setChecked(index);
     onClickTag(payload);
-    const firstNode = index >=0 ? data[index].cName : '全部';
-    const secondNode = index >= 0 ? item.cName : '';
+    const firstNode = index >= 0 ? data[index].cName : '全部';
+    const secondNode = isChild && index >= 0 ? item.cName : '';
 
     sessionStorage.setItem(
       'communityNode',
@@ -49,7 +49,7 @@ function DomainTags(props) {
         <Row>
           {data.map((item) => (
             <Col span={12} key={item.cId} style={{ margin: '10px 0', cursor: 'pointer' }}>
-              <div onClick={handleClick.bind(this, index, item)}>{item.cName}</div>
+              <div onClick={handleClick.bind(this, index, item, true)}>{item.cName}</div>
             </Col>
           ))}
         </Row>
@@ -72,7 +72,7 @@ function DomainTags(props) {
               <Tag
                 style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
                 key={item.cId}
-                onClick={handleClick.bind(this, index, item)}
+                onClick={handleClick.bind(this, index, item, false)}
               >
                 {item.cName}
               </Tag>
@@ -83,7 +83,7 @@ function DomainTags(props) {
           <Tag
             style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
             key={item.cId}
-            onClick={handleClick.bind(this, index, item)}
+            onClick={handleClick.bind(this, index, item, false)}
           >
             {item.cName}
           </Tag>

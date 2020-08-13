@@ -48,24 +48,22 @@ function HelpList(props) {
       </div>
 
       <div>
-        {communityNode ? (
+        {communityNode && communityNode.secondNode ? (
           <Breadcrumb separator=">">
             <Breadcrumb.Item>{communityNode.firstNode}</Breadcrumb.Item>
-            {communityNode.secondNode ? (
-              <Breadcrumb.Item href="">{communityNode.secondNode}</Breadcrumb.Item>
-            ) : null}
+            <Breadcrumb.Item href="">{communityNode.secondNode}</Breadcrumb.Item>
           </Breadcrumb>
         ) : null}
       </div>
       <List
         style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
         loading={loading}
-        dataSource={data.list}
+        dataSource={data.dataList}
         pagination={
           data.total && data.total > size
             ? {
                 total: data.total,
-                pageSize: data.pageSize,
+                pageSize: data.pageCount,
                 current: data.pageNum,
                 onChange: function(page, pageSize) {
                   RestTools.setSession('page', { size: pageSize, index: page });

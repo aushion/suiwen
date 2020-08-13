@@ -16,10 +16,6 @@ function MyReply(props) {
           text: '新求助'
         },
         {
-          key: 'hotHelp',
-          text: '热门求助'
-        },
-        {
           key: 'myHelp',
           text: '我的求助'
         },
@@ -33,10 +29,7 @@ function MyReply(props) {
           key: 'newHelp',
           text: '新求助'
         },
-        {
-          key: 'hotHelp',
-          text: '热门求助'
-        }
+       
       ];
   //点击tag响应事件
   function handleClickTag(payload) {
