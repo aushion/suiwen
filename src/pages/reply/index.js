@@ -414,6 +414,7 @@ function Reply(props) {
             <span>参考回答助手：</span>
             <Search
               style={{ width: '50%', marginBottom: 10 }}
+              autoComplete="new-password"
               onSearch={(value) => {
                 dispatch({
                   type: 'reply/getSG',
@@ -427,6 +428,8 @@ function Reply(props) {
               }}
               placeholder={q}
             />
+            <input type="text" style={{ width: 0, height: 0, opacity: 0, border:'none',padding: 0 }}></input>
+
             <Spin spinning={loading}>
               <div
                 id="sg"

@@ -32,6 +32,7 @@ function HelpList(props) {
         <div>
           <Search
             style={{ width: 200 }}
+            autoComplete="new-password"
             defaultValue={sessionStorage.getItem('searchKey') || ''}
             onSearch={(value) => {
               if (value) {
@@ -42,7 +43,10 @@ function HelpList(props) {
               handleSearchOrChangePage(payload);
             }}
           />
+            <input type="text" style={{ width: 0, height: 0, opacity: 0, border:'none',padding: 0 }}></input>
+         
         </div>
+      
       </div>
       <List
         style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
