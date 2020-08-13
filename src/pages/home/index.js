@@ -336,14 +336,7 @@ function Home(props) {
                       )}
                     />
 
-                    <Link
-                      className={homeStyles.help_more}
-                      // onClick={() => {
-                      //   router.push('/help/newHelp');
-                      // }}
-                      to={'/help/newHelp'}
-                      target="_blank"
-                    >
+                    <Link className={homeStyles.help_more} to={'/help/newHelp'} target="_blank">
                       MORE
                       <Icon type="double-right" />
                     </Link>
@@ -365,8 +358,12 @@ function Home(props) {
               <img src={rd} alt="阅读" />
             </div>
             <div className={homeStyles.right}>
-              <div className={homeStyles.cnTitle}>阅读理解</div>
-              <div className={homeStyles.enTitle}>Reading comprehension</div>
+              {experience_questions.length ? (
+                <Link to={`/special?topicId=${experience_questions[0].topicId}`} target="_blank">
+                  <div className={homeStyles.cnTitle}>阅读理解</div>
+                  <div className={homeStyles.enTitle}>Reading comprehension</div>
+                </Link>
+              ) : null}
               <div className={homeStyles.questions}>
                 {experience_questions.length
                   ? experience_questions[0].data.map((item) => {
