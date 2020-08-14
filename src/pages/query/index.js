@@ -60,7 +60,7 @@ function ResultPage(props) {
 
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
-  let { topic = '' } = query;
+  let { topic = '', topicName = '' } = query;
   const [submitQ, setSubmitQ] = useState(q);
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
@@ -100,7 +100,8 @@ function ResultPage(props) {
 
   useEffect(() => {
     setSubmitQ(q);
-  }, [q]);
+    document.title =  topicName ? `${topicName}专题-${q}`: q;
+  }, [topicName, q]);
 
   useEffect(() => {
     setTopicIndex(topicindex);
@@ -269,7 +270,7 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
-                {medicalData.length
+                  {medicalData.length
                     ? medicalData.map((item) => (
                         <Medical
                           title={item.title}
@@ -327,7 +328,7 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                 
+
                   {literatureData.length &&
                   (literatureData.length === 1 || literatureData.length === 3) ? (
                     <Literature

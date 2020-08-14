@@ -142,6 +142,9 @@ function Home(props) {
               className={homeStyles.title}
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
+              onClick={() => {
+                console.log('document.title', document.title)
+              }}
             >
               {item.name === '阅读理解' ? (
                 <Badge
@@ -170,6 +173,7 @@ function Home(props) {
                       item.name
                     )}&q=${encodeURIComponent(child.question)}`}
                     key={child.qId}
+                   
                     target="_blank"
                   >
                     {child.question}
