@@ -69,7 +69,7 @@ function ReadComp(props) {
               }
               renderItem={(item, index) => {
                 const orginAnswer = item.data.sub_context;
-                const answer = item.data.semantic_text + '<a class="showMore"> 更多>></a>';
+                const answer = orginAnswer ? item.data.semantic_text + '<a class="showMore"> 更多>></a>': item.data.semantic_text;
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
                     <div

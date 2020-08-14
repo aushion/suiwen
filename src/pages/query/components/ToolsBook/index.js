@@ -23,7 +23,7 @@ function ToolsBook(props) {
 
   const [checkedIndex, setCheckIndex] = useState(0);
   const sortData = [
-    '问答百科',
+    '百科问答',
     '文学百科',
     '地理百科',
     '人物传记',
@@ -118,9 +118,12 @@ function ToolsBook(props) {
       <div className={styles.content}>
         {initData && initData.length
           ? initData.map((item, index) => {
+            const redReg = /###(.*)\$\$\$/;
               const intentFocus = item.intentFocus;
               const domain = item.domain;
-              const title = item.dataNode[0].Title || item.dataNode[0].TITLE;
+              let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
+              
+              const finalTitle = redReg.test(title) ? title.matchAll(redReg)[1] : item.title;
               const tagName = item.tagName;
               return (
                 <div key={item.tagName + index} hidden={index !== checkedIndex}>
@@ -208,7 +211,7 @@ function ToolsBook(props) {
                           : intentFocus === '成语'
                           ? `http://gongjushu.cnki.net/rbook/`
                           : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
-                              RestTools.removeFlag(title || '')
+                              finalTitle
                             )}&c=crfdsearch`
                       }
                       target="_blank"
@@ -217,7 +220,7 @@ function ToolsBook(props) {
                         __html:
                           domain === '翻译'
                             ? 'CNKI翻译助手'
-                            : `更多“${RestTools.removeFlag(title || '-')}”的工具书`
+                            : `更多“${finalTitle}”的工具书`
                       }}
                     />
                   </div>
