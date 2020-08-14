@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Tabs, Form, Input, Button, Icon, message } from 'antd';
+import { Modal, Form, Input, Button, Icon, message } from 'antd';
 import request from '../../utils/request';
 import RestTools from '../../utils/RestTools';
 import styles from './index.less';
-const { TabPane } = Tabs;
+// const { TabPane } = Tabs;
 let time = null;
 
 function LoginRegister(props) {
-  const { visible, triggerCancel,  } = props;
+  const { visible, triggerCancel } = props;
   const { getFieldDecorator } = props.form;
   const [showRegister, setShowRegister] = useState(false); //显示注册框标志
   const [showLogin, setShowLogin] = useState(true); //显示登录框标志
   const [errMsg, setErrMsg] = useState(''); //接口报错提示
   const [loading, setLoading] = useState(false); //提交loading
-  const [activeKey, setActiveKey] = useState('1'); //注册tab切换控制dom显隐
+  // const [activeKey, setActiveKey] = useState('1'); //注册tab切换控制dom显隐
   const [countDown, setCountDown] = useState(60); //倒计时
 
   const formItemLayout = {
@@ -21,7 +21,6 @@ function LoginRegister(props) {
   };
 
   useEffect(() => {
-    
     clearInterval(time);
   }, []);
 
@@ -33,11 +32,10 @@ function LoginRegister(props) {
   }, [countDown]);
 
   //判断是打开登录还是注册窗口
-  useEffect(()=> {
+  useEffect(() => {
     setShowLogin(props.showLogin);
     setShowRegister(props.showRegister);
-  },[props.showLogin, props.showRegister])
-
+  }, [props.showLogin, props.showRegister]);
 
   const QqSvg = () => (
     <svg fill="currentColor" viewBox="0 0 1024 1024">
@@ -68,14 +66,17 @@ function LoginRegister(props) {
     props.form.resetFields();
     setShowRegister(false);
     setShowLogin(true);
-    setActiveKey('1');
+    // setActiveKey('1');
     setErrMsg('');
     triggerCancel();
   }
 
   function handleThirdLogin(type) {
     const handleRedirectUrl = encodeURIComponent(
-      window.location.origin + process.env.basePath+ '/handleRedirect?Redirect=' + window.location.href
+      window.location.origin +
+        process.env.basePath +
+        '/handleRedirect?Redirect=' +
+        window.location.href
     );
     window.open(
       `https://my.cnki.net/ThirdLogin/ThirdLogin.aspx?to=${type}&RedirectUrl=${handleRedirectUrl}`,
@@ -183,7 +184,7 @@ function LoginRegister(props) {
         setLoading(false);
       })
       .catch((err) => {
-        message.error('网络出了点小问题，请稍后再试')
+        message.error('网络出了点小问题，请稍后再试');
         setLoading(false);
       });
   }
@@ -208,8 +209,8 @@ function LoginRegister(props) {
         setLoading(false);
       })
       .catch((err) => {
-        message.error('网络出了点小问题，请稍后再试')
-        
+        message.error('网络出了点小问题，请稍后再试');
+
         setLoading(false);
       });
   }
@@ -298,7 +299,7 @@ function LoginRegister(props) {
               props.form.resetFields();
               setShowLogin(false);
               setShowRegister(true);
-              setActiveKey('1');
+              // setActiveKey('1');
             }}
           >
             立即注册
@@ -311,7 +312,74 @@ function LoginRegister(props) {
   const registerForm = showRegister ? (
     <div className={styles.register}>
       <div className={styles.title}>个人账户注册</div>
-      <Tabs
+      <Form
+        {...formItemLayout}
+        labelAlign="left"
+        onSubmit={(e) => {
+          handleOk(e, 'mobileRegister');
+        }}
+      >
+        <Form.Item>
+          {getFieldDecorator('mobile', {
+            rules: [{ required: true, message: '请输入正确手机号', pattern: /^1[3456789]\d{9}$/ }]
+            // validateTrigger: 'onBlur'
+          })(
+            <Input
+              size="large"
+              prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="请输入手机号"
+            />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator('verifyCode', {
+            rules: [{ required: true, message: '请输入短信验证码' }]
+          })(
+            <Input
+              type="text"
+              size="large"
+              placeholder="请输入短信验证码"
+              suffix={
+                countDown === 0 || countDown === 60 ? (
+                  <Button type="link" onClick={getVerifyCode}>
+                    获取验证码
+                  </Button>
+                ) : (
+                  <span style={{ color: 'orange' }}>{countDown}秒后再发</span>
+                )
+              }
+            />
+          )}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator('password', {
+            rules: [
+              { required: true, message: '密码不能为空' },
+              {
+                validator: (rule, value, callback) => {
+                  const mobile = props.form.getFieldValue('mobile');
+                  if (value === mobile) {
+                    callback('密码不能和用户名相同');
+                  }
+                  callback();
+                }
+              }
+            ]
+          })(
+            <Input.Password
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type="password"
+              size="large"
+              visibilityToggle
+              placeholder="请输入密码"
+            />
+          )}
+        </Form.Item>
+        <Button type="primary" block size="large" htmlType="submit">
+          注册
+        </Button>
+      </Form>
+      {/* <Tabs
         type="card"
         onChange={(activeKey) => {
           setActiveKey(activeKey);
@@ -453,7 +521,7 @@ function LoginRegister(props) {
             </Form>
           ) : null}
         </TabPane>
-      </Tabs>
+      </Tabs> */}
       <div style={{ textAlign: 'center', marginTop: 20 }}>
         已有账号？
         <Button

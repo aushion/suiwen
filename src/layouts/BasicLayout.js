@@ -201,6 +201,8 @@ function BasicLayout(props) {
         showRegister={isVisibleRegister}
         triggerCancel={() => {
           setShowLoginAndRegister(false);
+          setShowRegister(false);
+          setShowRegister(false);
         }}
       />
       <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>
