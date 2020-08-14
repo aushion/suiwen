@@ -158,6 +158,7 @@ function Home(props) {
               className={homeStyles.title}
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
+            
             >
               {item.name === '阅读理解' ? (
                 <Badge
@@ -308,7 +309,7 @@ function Home(props) {
                           >
                             <Link
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
-                                item.qid
+                                item.id
                               }`}
                               target="_blank"
                               className={homeStyles.help_item_content}
@@ -323,14 +324,14 @@ function Home(props) {
                             <Link
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
-                                item.qid
+                                item.id
                               }`}
                             >
                               我来回答
                             </Link>
 
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
-                            <span style={{ float: 'right' }}>{item.commitTime}</span>
+                            <span style={{ float: 'right' }}>{item.time}</span>
                           </div>
                         </List.Item>
                       )}
@@ -366,7 +367,7 @@ function Home(props) {
               ) : null}
               <div className={homeStyles.questions}>
                 {experience_questions.length
-                  ? experience_questions[0].data.slice(0,5).map((item) => {
+                  ? experience_questions[0].data.slice(0, 5).map((item) => {
                       const topic = experience_questions[0].info.topic;
                       const topicName = experience_questions[0].name;
                       return (

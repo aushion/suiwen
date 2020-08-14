@@ -73,7 +73,9 @@ function Reply(props) {
 
   const groupByData = groupBy(sgData, 'id');
   const keys = Object.keys(groupByData);
-
+  useEffect(() => {
+    document.title = `求助-${q}`;
+  },[q])
   useEffect(() => {
     function hideAddQuote(e) {
       const addQuote = document.getElementById('addQuote');
