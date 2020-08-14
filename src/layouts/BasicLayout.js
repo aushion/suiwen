@@ -16,9 +16,11 @@ const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
-  let { q = sessionStorage.getItem('q'), topic = '', topicName='' } = query;
+  let { q = sessionStorage.getItem('q'), topic = '', topicName = '' } = query;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const topicData = JSON.parse(sessionStorage.getItem('topicData')) || JSON.parse(localStorage.getItem('topicData'));
+  const topicData =
+    JSON.parse(sessionStorage.getItem('topicData')) ||
+    JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
   const [visible, setVisible] = useState(false);
   const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
@@ -37,10 +39,13 @@ function BasicLayout(props) {
 
   function handleClickEnterOrItem(value) {
     const q = value.trim();
-
     dispatch({ type: 'global/setQuestion', payload: { q } });
     value && topic
-      ? router.replace(`/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(topicName)}`)
+      ? router.replace(
+          `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
+            topicName
+          )}`
+        )
       : router.replace(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
@@ -50,6 +55,7 @@ function BasicLayout(props) {
       router.push('/special?topicId=' + topicId);
     } else {
       router.push('/');
+      document.title = '知网随问';
     }
   }
 
@@ -66,9 +72,7 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-          {/* <div className={styles.slogan}>
-            <img src={slogan} alt="slogan"/>
-          </div> */}
+        
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logo} alt="logo" />
             {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
@@ -90,15 +94,18 @@ function BasicLayout(props) {
               {username ? (
                 <Link
                   style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/personInfo?userName=${userInfo?userInfo.UserName:''}`}
+                  to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
                 >
                   <Avatar
                     size="small"
                     src={
-                      avatar || `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userInfo?userInfo.UserName:''}`
+                      avatar ||
+                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                        userInfo ? userInfo.UserName : ''
+                      }`
                     }
                   />
-                   <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link>
               ) : (
                 '游客'
@@ -194,6 +201,8 @@ function BasicLayout(props) {
         showRegister={isVisibleRegister}
         triggerCancel={() => {
           setShowLoginAndRegister(false);
+          setShowRegister(false);
+          setShowRegister(false);
         }}
       />
       <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>

@@ -120,8 +120,7 @@ function ToolsBook(props) {
           ? initData.map((item, index) => {
               const intentFocus = item.intentFocus;
               const domain = item.domain;
-              const title = item.title;
-              // const intentDomain = item.intentDomain;
+              const title = item.dataNode[0].Title || item.dataNode[0].TITLE;
               const tagName = item.tagName;
               return (
                 <div key={item.tagName + index} hidden={index !== checkedIndex}>
@@ -209,7 +208,7 @@ function ToolsBook(props) {
                           : intentFocus === '成语'
                           ? `http://gongjushu.cnki.net/rbook/`
                           : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
-                              RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
+                              RestTools.removeFlag(title || '')
                             )}&c=crfdsearch`
                       }
                       target="_blank"

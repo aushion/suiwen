@@ -44,9 +44,13 @@ function Special(props) {
 
   useEffect(() => {
     setMenuKey(initialKey);
-    setOpenKey(topics.length?[topics[0].name]: [])
+    setOpenKey(topics.length ? [topics[0].name] : []);
     return () => {};
   }, [initialKey, topics]);
+
+  useEffect(() => {
+    document.title = '知网随问-' + name + '专题';
+  }, [name]);
 
   function handleClick(e) {
     setMenuKey(e.key);
@@ -60,7 +64,11 @@ function Special(props) {
         logo: logoUrl
       }
     });
-    router.push(`/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(question)}`);
+    router.push(
+      `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
+        question
+      )}`
+    );
     RestTools.setSession('q', question);
     RestTools.setStorageInput(RestTools.HISTORYKEY, question);
   }
@@ -68,7 +76,10 @@ function Special(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    q && router.push(`/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`);
+    q &&
+      router.push(
+        `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
+      );
     RestTools.setSession('q', q);
   }
 
@@ -86,9 +97,7 @@ function Special(props) {
     } else {
       setOpenKey(latestOpenKey ? [latestOpenKey] : [initialOpenKeys[0]]);
     }
-
   }
-
 
   const btnGruop = (
     <div style={{ color: '#fff' }}>
@@ -171,6 +180,7 @@ function Special(props) {
             className={styles.logo}
             onClick={() => {
               router.push('/');
+              document.title = '知网随问'
             }}
           >
             <img src={logo} alt="logo" />
