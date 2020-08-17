@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Tag, Popover, Row, Col } from 'antd';
 import { connect } from 'dva';
-import styles from './DomainTag.less'
+import styles from './DomainTag.less';
 
 function DomainTags(props) {
   const checkedStyle = {
-    backgroundColor: '#1890ff',
-    color: '#fff'
+    background: 'rgba(235,247,255,1)',
+    color: '#0084FF'
   };
   const normalStyle = {
     cursor: 'pointer',
-    marginBottom: 10
+    marginBottom: 10,
+    background: 'transparent',
+    border: 'none',
+    color: '#585A5D',
+    padding: '4px 15px',
+    fontSize: 14
   };
   const { data, onClickTag, dispatch, communityNode } = props;
   const localChecked = data.map((item) => item.cName).indexOf(communityNode?.firstNode.cName);
@@ -23,7 +28,7 @@ function DomainTags(props) {
     const payload = { domain: encodeURIComponent(item.cId || ''), size: 10, index: 1 };
     setChecked(index);
     onClickTag(payload);
-    const firstNode = index >= 0 ? {...data[index]} : '';
+    const firstNode = index >= 0 ? { ...data[index] } : '';
     const secondNode = isChild && index >= 0 ? item : '';
 
     sessionStorage.setItem(
@@ -50,7 +55,9 @@ function DomainTags(props) {
         <Row>
           {data.map((item) => (
             <Col span={12} key={item.cId} style={{ margin: '10px 0', cursor: 'pointer' }}>
-              <div className={styles.tag} onClick={handleClick.bind(this, index, item, true)}>{item.cName}</div>
+              <div className={styles.tag} onClick={handleClick.bind(this, index, item, true)}>
+                {item.cName}
+              </div>
             </Col>
           ))}
         </Row>
@@ -60,8 +67,11 @@ function DomainTags(props) {
 
   return (
     <div>
+      <div style={{ fontSize: 16, paddingBottom: '20px', paddingLeft: '10px', color: '#2B2C2E' }}>
+        求助分类
+      </div>
       <Tag
-        style={checked === -1 ? { ...checkedStyle, ...normalStyle } : normalStyle}
+        style={checked === -1 ? { ...normalStyle, ...checkedStyle } : normalStyle}
         onClick={handleClick.bind(this, -1, '')}
       >
         全部
@@ -71,7 +81,7 @@ function DomainTags(props) {
           return (
             <Popover content={tagChildren(item.communityClassList, index)} key={index}>
               <Tag
-                style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
+                style={checked === index ? { ...normalStyle, ...checkedStyle } : normalStyle}
                 key={item.cId}
                 onClick={handleClick.bind(this, index, item, false)}
               >
@@ -82,7 +92,7 @@ function DomainTags(props) {
         }
         return (
           <Tag
-            style={checked === index ? { ...checkedStyle, ...normalStyle } : normalStyle}
+            style={checked === index ? { ...normalStyle, ...checkedStyle } : normalStyle}
             key={item.cId}
             onClick={handleClick.bind(this, index, item, false)}
           >

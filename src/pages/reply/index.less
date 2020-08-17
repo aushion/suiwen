@@ -1,28 +1,37 @@
-.reply{
-  .content{
-    width: 62.5%;
+.reply {
+  margin-top: 30px;
+  .content {
+    width: 1200px;
     margin: auto;
-    .title{
+    .content_left {
+      background: #fff;
+      border-radius: 4px;
+    }
+    .title {
       font-size: 24px;
-      color: #666;
+      font-weight: 600;
+      color: #1a1a1a;
       padding: 10px 10px 20px;
-      margin-bottom: 20px;
     }
-    .replyCount{
+    .replyCount {
       color: #999;
+     
     }
-    .answerItem{
+    .answerItem {
       background-color: #fff;
       border-bottom: 1px solid #ccc;
-      padding: 20px;
+      // padding: 20px;
       border-radius: 4px;
-      .itemTitle{
-        font-size: 14px;
+      .itemTitle {
+        font-size: 15px;
         color: #333;
+        letter-spacing: 2px;
+        line-height: 27.2px;
+        text-indent: 2em;
       }
     }
 
-    .draft{
+    .draft {
       margin: 20px 0;
       font-size: 14px;
     }
@@ -40,27 +49,25 @@
       letter-spacing: 2px;
       line-height: 27.2px;
       text-indent: 2em;
-      p{
+      p {
         margin: 0;
       }
     }
-   
   }
-  :global(.bf-container .public-DraftEditorPlaceholder-root){
+  :global(.bf-container .public-DraftEditorPlaceholder-root) {
     font-size: 13px;
   }
-  :global(.bf-dropdown .dropdown-content .dropdown-arrow){
+  :global(.bf-dropdown .dropdown-content .dropdown-arrow) {
     background-color: #fff;
   }
-  :global(.bf-dropdown .dropdown-content-inner){
+  :global(.bf-dropdown .dropdown-content-inner) {
     background-color: #fff;
     color: #666;
-   
   }
-  :global(.bf-font-sizes){
-    background-color:rgba(0, 0, 0, .5);
+  :global(.bf-font-sizes) {
+    background-color: rgba(0, 0, 0, 0.5);
   }
-  :global(.bf-link-editor .input-group input){
+  :global(.bf-link-editor .input-group input) {
     border: 1px solid #cecece;
     color: #666;
   }

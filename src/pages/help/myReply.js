@@ -1,10 +1,11 @@
 import React from 'react';
-import { Divider, Spin } from 'antd';
+import { Divider, Spin, Row, Col } from 'antd';
 import { connect } from 'dva';
 import DomainTags from './components/DomainTags';
 import HelpMenu from './components/HelpMenu';
 import MyAnswerList from './components/MyAnswerList';
 import RestTools from '../../utils/RestTools';
+import UserInfo from './components/UserInfo';
 import helpStyle from './index.less';
 
 function MyReply(props) {
@@ -28,8 +29,7 @@ function MyReply(props) {
         {
           key: 'newHelp',
           text: '新求助'
-        },
-       
+        }
       ];
   //点击tag响应事件
   function handleClickTag(payload) {
@@ -41,20 +41,27 @@ function MyReply(props) {
 
   return (
     <div className={helpStyle.help}>
-      <HelpMenu current="myReply" data={menus}></HelpMenu>
-
       <div className={helpStyle.content}>
-        {domainList.length ? (
-          <div className={helpStyle.domainTags}>
-            <DomainTags localDomain={domain} data={domainList} onClickTag={handleClickTag} />
-          </div>
-        ) : null}
-        <div>
-          <Divider style={{ margin: 0 }} />
-          <Spin spinning={loading}>
-            {newHelpData ? <MyAnswerList from={false} data={newHelpData} /> : null}
-          </Spin>
-        </div>
+        <Row gutter={24}>
+          <Col span={18} className={helpStyle.content_left}>
+            <HelpMenu current="myReply" data={menus} />
+
+            {domainList.length ? (
+              <div className={helpStyle.domainTags}>
+                <DomainTags localDomain={domain} data={domainList} onClickTag={handleClickTag} />
+              </div>
+            ) : null}
+            <div>
+              <Divider style={{ margin: 0 }} />
+              <Spin spinning={loading}>
+                {newHelpData ? <MyAnswerList from={false} data={newHelpData} /> : null}
+              </Spin>
+            </div>
+          </Col>
+          <Col span={6}>
+            <UserInfo />
+          </Col>
+        </Row>
       </div>
     </div>
   );

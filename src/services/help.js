@@ -54,7 +54,7 @@ export default {
         pageStart: index,
         searchKey,
         domain,
-        uId: uid
+        userName: uid
       }
     });
   },
@@ -95,7 +95,7 @@ export default {
   },
 
   getPersonDomain(payload) {
-    return request.get(serverurl + '/getPersonCommiuntyDomain', {
+    return request.post(serverurl + '/getCommunityClass', null, {
       params: { ...payload }
     });
   },

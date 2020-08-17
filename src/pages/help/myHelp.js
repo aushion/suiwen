@@ -1,10 +1,11 @@
 import React from 'react';
-import { Divider } from 'antd';
+import { Divider, Row, Col } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import DomainTags from './components/DomainTags';
 import HelpList from './components/HelpList';
 import HelpMenu from './components/HelpMenu';
+import UserInfo from './components/UserInfo';
 import helpStyle from './index.less';
 import RestTools from '../../utils/RestTools';
 
@@ -64,32 +65,39 @@ function MyHelp(props) {
 
   return (
     <div className={helpStyle.help}>
-      <HelpMenu current="myHelp" data={menus} />
-
       <div className={helpStyle.content}>
-        {domainList.length ? (
-          <div className={helpStyle.domainTags}>
-            <DomainTags localDomain={domain} data={domainList} onClickTag={handleClickTag} />
-          </div>
-        ) : null}
-        <div>
-          <Divider style={{ margin: 0 }} />
-          {newHelpData ? (
-            <HelpList
-              data={newHelpData}
-              domain={domain}
-              size={size}
-              index={index}
-              loading={loading}
-              current={'myHelp'}
-              uid={uid}
-              communityNode={communityNode}
-              dispatch={dispatch}
-              handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
-              handleClickItem={handleClickItem}
-            />
-          ) : null}
-        </div>
+        <Row gutter={24} >
+          <Col span={18} className={helpStyle.content_left}>
+            <HelpMenu current="myHelp" data={menus} />
+
+            {domainList.length ? (
+              <div className={helpStyle.domainTags}>
+                <DomainTags localDomain={domain} data={domainList} onClickTag={handleClickTag} />
+              </div>
+            ) : null}
+            <div>
+              <Divider style={{ margin: 0 }} />
+              {newHelpData ? (
+                <HelpList
+                  data={newHelpData}
+                  domain={domain}
+                  size={size}
+                  index={index}
+                  loading={loading}
+                  current={'myHelp'}
+                  uid={uid}
+                  communityNode={communityNode}
+                  dispatch={dispatch}
+                  handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
+                  handleClickItem={handleClickItem}
+                />
+              ) : null}
+            </div>
+          </Col>
+          <Col span={6}>
+            <UserInfo />
+          </Col>
+        </Row>
       </div>
     </div>
   );

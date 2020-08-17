@@ -19,7 +19,7 @@ export default function HelpMenu(props) {
   }
   return (
     <Menu
-      style={{ paddingLeft: '18.75%' }}
+      // style={{  width: 850,margin:'0 auto' }}
       theme="light"
       onClick={handleClick}
       selectedKeys={[current]}

@@ -1,17 +1,26 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List, Empty, Avatar } from 'antd';
+import {
+  Divider,
+  Icon,
+  Button,
+  Form,
+  Spin,
+  message,
+  Row,
+  Col,
+  Input,
+  List,
+  Empty,
+  Avatar
+} from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
 import groupBy from 'lodash/groupBy';
-
 import Link from 'umi/link';
-// import { useTextSelection } from '@umijs/hooks';
 import RestTools from '../../utils/RestTools';
-
 import HelpMenu from '../help/components/HelpMenu';
-
 import replyStyle from './index.less';
 import 'braft-editor/dist/index.css';
 
@@ -43,33 +52,11 @@ function Reply(props) {
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
-        {
-          key: 'newHelp',
-          text: '新求助'
-        },
-        {
-          key: 'hotHelp',
-          text: '热门求助'
-        },
-        {
-          key: 'myHelp',
-          text: '我的求助'
-        },
-        {
-          key: 'myReply',
-          text: '我的回答'
-        }
+        { key: 'newHelp', text: '新求助' },
+        { key: 'myHelp', text: '我的求助' },
+        { key: 'myReply', text: '我的回答' }
       ]
-    : [
-        {
-          key: 'newHelp',
-          text: '新求助'
-        },
-        {
-          key: 'hotHelp',
-          text: '热门求助'
-        }
-      ];
+    : [{ key: 'newHelp', text: '新求助' }];
 
   const groupByData = groupBy(sgData, 'id');
   const keys = Object.keys(groupByData);
@@ -149,13 +136,13 @@ function Reply(props) {
     const resourceArray = [...new Set(quoteArrayList.map((item) => item.resourceStr))];
     //重新定义引文内容字符串，引用文献字符串，并处理格式
     let str = getFieldValue('contents') ? getFieldValue('contents').toHTML() : '';
-    let newText = (str += `${text}[${resourceArray.length}]`).replace('<p></p>','');
+    let newText = (str += `${text}[${resourceArray.length}]`).replace('<p></p>', '');
     let newResourceStr = '';
 
     for (let i = 0; i < resourceArray.length; i++) {
       newResourceStr += resourceArray[i] + '<br>';
     }
-   
+
     if (newText) {
       setFieldsValue({
         contents: BraftEditor.createEditorState(newText),
@@ -261,18 +248,26 @@ function Reply(props) {
 
   return (
     <div className={replyStyle.reply}>
-      <div>
-        <HelpMenu data={menus} />
-      </div>
-
       <div className={replyStyle.content}>
-        <div className={replyStyle.title}>
-          <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
-          {params.q}
-        </div>
-
         <Row gutter={40}>
-          <Col span={12}>
+          <Col span={16} className={replyStyle.content_left}>
+            <div>
+              <HelpMenu data={menus} />
+            </div>
+            <div className={replyStyle.title}>
+              <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
+              {params.q}
+            </div>
+            <div className="display_flex">
+              <div style={{marginRight: 10}}>
+                <Button type="primary">关注问题</Button>
+              </div>
+              <div>
+                <Button type="primary" icon="edit" ghost>
+                  写回答
+                </Button>
+              </div>
+            </div>
             <div className={replyStyle.replyCount}>
               <span style={{ paddingRight: 10 }}>回答数:</span>
               {total}
@@ -298,14 +293,19 @@ function Reply(props) {
                     <span style={{ paddingRight: 20 }}>#{index + 1}</span>
                     <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
                       {/* <Icon type="user" /> */}
-                      <Avatar src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`} size='small' />
+                      <Avatar
+                        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
+                        size="small"
+                      />
                       {/^1[3-9]\d{9}$/.test(username)
                         ? username.substring(0, 3) + '****' + username.substring(7, 11)
                         : username}
                     </Link>
                     <span style={{ padding: '0 10px' }}>
                       {RestTools.status[item.status]}
-                      {item.failReason ? <span style={{color: 'red'}}>原因：{item.failReason}</span> : null}
+                      {item.failReason ? (
+                        <span style={{ color: 'red' }}>原因：{item.failReason}</span>
+                      ) : null}
                     </span>
                     <span style={{ color: '#c3c3c3' }}>{item.opTime}</span>
                     {RestTools.getLocalStorage('userInfo') &&
@@ -410,8 +410,8 @@ function Reply(props) {
               </Form>
             </div>
           </Col>
-          <Col span={12} style={{ marginTop: '-20px' }}>
-            <span>参考回答助手：</span>
+          <Col span={8}>
+            {/* <span>参考回答助手：</span>
             <Search
               style={{ width: '50%', marginBottom: 10 }}
               onSearch={(value) => {
@@ -426,7 +426,7 @@ function Reply(props) {
                 });
               }}
               placeholder={q}
-            />
+            /> */}
             <Spin spinning={loading}>
               <div
                 id="sg"
@@ -454,52 +454,22 @@ function Reply(props) {
                     const title = groupByData[item][0].data.caption || '';
                     const source_id = groupByData[item][0].data.source_id || '';
                     return (
-                      <div
-                        className={replyStyle.wrapper}
-                        key={item}
-                       
-                      >
+                      <div className={replyStyle.wrapper} key={item}>
                         <List
                           itemLayout="vertical"
                           dataSource={groupByData[item]}
-                          footer={
-                            <div
-                              style={{
-                                float: 'right',
-                                fontSize: 11,
-                                color: '#999',
-                                overflow: 'hidden'
-                              }}
-                            >
-                              <div>
-                                <span
-                                  dangerouslySetInnerHTML={{
-                                    __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                                  }}
-                                />
-                                <a
-                                  style={{ color: '#999' }}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}`}
-                                >
-                                  {title}
-                                </a>
-                              </div>
-                            </div>
-                          }
                           renderItem={(item, index) => {
                             const answer = item.data.context + item.data.sub_context;
                             return (
                               <List.Item style={{ overflow: 'hidden' }}>
                                 <div
-                                 onMouseUp={(e) =>
-                                  handleMouseUp(e, { year, qikanName, title, source_id, author })
-                                }
+                                  onMouseUp={(e) =>
+                                    handleMouseUp(e, { year, qikanName, title, source_id, author })
+                                  }
                                   className={replyStyle.fontStyle}
                                   key={index}
                                   dangerouslySetInnerHTML={{
-                                    __html: RestTools.formatText(RestTools.translateToRed(answer))
+                                    __html: RestTools.formatText(RestTools.translateToRed(answer.substring(0,10)))
                                   }}
                                 />
                               </List.Item>

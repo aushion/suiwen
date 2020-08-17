@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Input, Popconfirm, Tag, Breadcrumb } from 'antd';
+import { List, Input, Popconfirm, Tag, Breadcrumb, Avatar, Button } from 'antd';
 import RestTools from '../../../utils/RestTools';
 
 const { Search } = Input;
@@ -15,7 +15,7 @@ function HelpList(props) {
     dispatch,
     handleClickItem
   } = props;
-  const { firstNode = null, secondNode = null } = communityNode;
+  const { firstNode = null, secondNode = null } = communityNode || {};
   function confirm(id) {
     dispatch({
       type: 'help/deleteQuestion',
@@ -26,14 +26,29 @@ function HelpList(props) {
   }
   return data ? (
     <div style={{ padding: '10px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 16 }}>
-          共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
-        </div>
-
+      <div style={{ fontSize: 16, marginBottom: 10, paddingLeft: 10, color: '#8590A6' }}>
+        共<span style={{ fontWeight: 'bold', color: '#333' }}>{data && data.total}</span>条
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid #eee',
+          padding: '10px'
+        }}
+      >
+        {communityNode ? (
+          <div style={{ background: '#EBF7FF', padding: '4px 10px', borderRadius: 4 }}>
+            <Breadcrumb>
+              <Breadcrumb.Item>{firstNode.cName || '全部'}</Breadcrumb.Item>
+              {secondNode ? <Breadcrumb.Item href="">{secondNode.cName}</Breadcrumb.Item> : null}
+            </Breadcrumb>
+          </div>
+        ) : null}
         <div>
           <Search
             style={{ width: 200 }}
+            size="small"
             defaultValue={sessionStorage.getItem('searchKey') || ''}
             onSearch={(value) => {
               if (value) {
@@ -47,18 +62,11 @@ function HelpList(props) {
         </div>
       </div>
 
-      <div>
-        {communityNode && secondNode ? (
-          <Breadcrumb separator=">">
-            <Breadcrumb.Item>{firstNode.cName}</Breadcrumb.Item>
-            <Breadcrumb.Item href="">{secondNode.cName}</Breadcrumb.Item>
-          </Breadcrumb>
-        ) : null}
-      </div>
       <List
-        style={{ backgroundColor: '#fff', padding: '0 20px 10px 20px', borderRadius: '4px' }}
+        style={{ backgroundColor: '#fff', padding: '0 10px 10px 10px', borderRadius: '4px' }}
         loading={loading}
         dataSource={data.dataList}
+        itemLayout="vertical"
         pagination={
           data.total && data.total > size
             ? {
@@ -76,13 +84,19 @@ function HelpList(props) {
         }
         renderItem={(item) => {
           return (
-            <List.Item
-              style={{ display: 'flex', justifyContent: 'space-between', padding: '16px 0' }}
-            >
+            <List.Item style={{ padding: '16px 0' }}>
+              <div>
+                <Avatar icon="user" />
+                <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
+              </div>
               <div
                 style={{
                   width: '60%',
-                  color: '#3192e1',
+                  color: '#454749',
+                  fontWeight: 800,
+                  lineHeight: '28px',
+                  fontSize: 15,
+                  padding: '10px 0',
                   cursor: 'pointer',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -101,37 +115,42 @@ function HelpList(props) {
                     : null}
                 </span>
               </div>
-
-              {current === 'myReply' ? (
-                <div>查看回答</div>
-              ) : (
-                <div>
-                  {current === 'myHelp' && item.checkCount === 0 ? (
-                    <Popconfirm
-                      title="是否删除此问题?"
-                      onConfirm={confirm.bind(this, item.id)}
-                      okText="是"
-                      cancelText="否"
-                    >
-                      <span
-                        style={{
-                          paddingRight: 10,
-                          fontSize: 12,
-                          cursor: 'pointer',
-                          color: '#1890ff'
-                        }}
+              <div className="display_flex justify-content_flex-justify">
+                <Button icon="edit" size="default" ghost type="primary">
+                  写回答
+                </Button>
+                {current === 'myReply' ? (
+                  <div>查看回答</div>
+                ) : (
+                  <div style={{ color: '#8590A6', lineHeight: '40px' }}>
+                    {current === 'myHelp' && item.checkCount === 0 ? (
+                      <Popconfirm
+                        title="是否删除此问题?"
+                        onConfirm={confirm.bind(this, item.id)}
+                        okText="是"
+                        cancelText="否"
                       >
-                        删除
-                      </span>
-                    </Popconfirm>
-                  ) : null}
-                  已有回答:{item.checkCount}
-                  <span>
-                    <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
-                    {item.commitTime}
-                  </span>
-                </div>
-              )}
+                        <span
+                          style={{
+                            paddingRight: 10,
+                            fontSize: 12,
+
+                            cursor: 'pointer',
+                            color: '#1890ff'
+                          }}
+                        >
+                          删除
+                        </span>
+                      </Popconfirm>
+                    ) : null}
+                    已有回答:{item.checkCount}
+                    <span>
+                      <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
+                      {item.commitTime}
+                    </span>
+                  </div>
+                )}
+              </div>
             </List.Item>
           );
         }}

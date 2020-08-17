@@ -100,7 +100,7 @@ function ResultPage(props) {
 
   useEffect(() => {
     setSubmitQ(q);
-    document.title =  topicName ? `${topicName}专题-${q}`: q;
+    document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 
   useEffect(() => {
@@ -198,7 +198,7 @@ function ResultPage(props) {
   }
 
   function myReply() {
-    if (RestTools.getLocalStorage('userInfo')) {
+    if (localStorage.getItem('userInfo')) {
       router.push(`reply?q=${encodeURIComponent(q)}`);
     } else {
       message.warn('请您登录后再操作');

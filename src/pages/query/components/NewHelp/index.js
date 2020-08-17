@@ -46,19 +46,18 @@ function NewHelp(props) {
                 to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
               >
                 {item.content}
+                <div
+                  style={{
+                    float: 'right',
+                    color: '#999',
+                    fontSize: 12,
+                    width: 60,
+                    lineHeight: '25px'
+                  }}
+                >
+                  回答数：{item.checkCount}
+                </div>
               </Link>
-
-              <div
-                style={{
-                  float: 'right',
-                  color: '#999',
-                  fontSize: 12,
-                  width: 60,
-                  lineHeight: '25px'
-                }}
-              >
-                回答数：{item.checkCount}
-              </div>
             </div>
           </List.Item>
         )}
