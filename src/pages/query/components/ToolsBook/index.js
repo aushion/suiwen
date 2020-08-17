@@ -123,7 +123,7 @@ function ToolsBook(props) {
               const domain = item.domain;
               let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
               
-              const finalTitle = redReg.test(title) ? title.matchAll(redReg)[1] : item.title;
+              const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;
               const tagName = item.tagName;
               return (
                 <div key={item.tagName + index} hidden={index !== checkedIndex}>
