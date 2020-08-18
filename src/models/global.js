@@ -14,7 +14,8 @@ export default {
     logo: logo,
     theme: '#0BB3FF',
     showLoginModal: false,
-    avatar:''
+    avatar:'',
+    userInfo: {}
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {

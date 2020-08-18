@@ -26,11 +26,27 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnwser, payload);
-      yield put({
-        type: 'saveAnswers',
-        payload: { answerList: res.data.result.answerList, total: res.data.result.total }
-      });
+      if(res.data && res.data.code === 200) {
+        yield put({
+          type: 'saveAnswers',
+          payload: { answerList: res.data.result.answerList, total: res.data.result.total }
+        });
+      }
+     
     },
+    *getComment({ payload }, { call, select }) {
+  const res = yield call(helpServer.getComment, payload);
+  const replyData = yield select(state => state.reply);
+  console.log('replyData', replyData);
+  if (res.data && res.data.code === 200) {
+    console.log(res.data);
+    // yield put({
+    //   type: 'saveAnswers',
+    //   payload: { answerList: res.data.result.answerList, total: res.data.result.total }
+    // });
+  }
+
+},
     *getUserFAQ({ payload }, { call, put }) {
       const res = yield call(helpServer.getUserFAQ, payload);
       if (!res.data.result) return;
@@ -43,7 +59,7 @@ export default {
     },
     *setAnswer({ payload }, { call }) {
       const res = yield call(helpServer.setAnswer, payload);
-      if (res.data && res.data.code===200) {
+      if (res.data && res.data.code === 200) {
         message.success('回答成功，感谢您的参与');
         router.push('/help/myReply');
       } else {
@@ -53,7 +69,7 @@ export default {
 
     *editAnswer({ payload }, { call }) {
       const res = yield call(helpServer.editAnswer, payload);
-      if (res.data && res.data.code===200) {
+      if (res.data && res.data.code === 200) {
         message.success('修改成功，感谢您的参与');
         router.push('/help/myReply');
       } else {
@@ -63,7 +79,7 @@ export default {
 
     *setQanswer({ payload }, { call }) {
       const res = yield call(helpServer.setQanswer, payload);
-      if (res.data && res.data.code===200) {
+      if (res.data && res.data.code === 200) {
         message.success('回答成功，感谢您的参与');
         router.push('/help/myReply');
       } else {

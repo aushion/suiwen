@@ -21,11 +21,12 @@ import groupBy from 'lodash/groupBy';
 import Link from 'umi/link';
 import RestTools from '../../utils/RestTools';
 import HelpMenu from '../help/components/HelpMenu';
+import UserInfo from '../help/components/UserInfo';
 import replyStyle from './index.less';
 import 'braft-editor/dist/index.css';
 
 const FormItem = Form.Item;
-const { Search } = Input;
+// const { Search } = Input;
 
 let quoteArray = [];
 
@@ -49,6 +50,8 @@ function Reply(props) {
   const [editStatus, setEditorStatus] = useState(null);
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
+  const [showEditor, switchEditor] = useState(false);
+  const [showComment, switchComment] = useState(false);
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
@@ -62,18 +65,18 @@ function Reply(props) {
   const keys = Object.keys(groupByData);
 
   useEffect(() => {
-    function hideAddQuote(e) {
-      const addQuote = document.getElementById('addQuote');
-      if (e.target !== addQuote) {
-        addQuote.style.display = 'none';
-      }
-    }
-    document.addEventListener('click', hideAddQuote);
-    return () => {
-      document.removeEventListener('click', hideAddQuote);
-      resetFields(); //重置表单值
-      quoteArray = []; //重置缓存数组
-    };
+    // function hideAddQuote(e) {
+    //   const addQuote = document.getElementById('addQuote');
+    //   if (e.target !== addQuote) {
+    //     addQuote.style.display = 'none';
+    //   }
+    // }
+    // document.addEventListener('click', hideAddQuote);
+    // return () => {
+    //   document.removeEventListener('click', hideAddQuote);
+    //   resetFields(); //重置表单值
+    //   quoteArray = []; //重置缓存数组
+    // };
   }, [resetFields]);
 
   useEffect(() => {
@@ -86,22 +89,22 @@ function Reply(props) {
       }));
 
       quoteArray = tempArray;
-      setFieldsValue({
-        contents: BraftEditor.createEditorState(editStatus.answer),
-        resource: BraftEditor.createEditorState(editStatus.resource)
-      });
-    } else if (editStatus && editStatus.answer) {
-      quoteArray = [];
-      setFieldsValue({
-        contents: BraftEditor.createEditorState(editStatus.answer),
-        resource: BraftEditor.createEditorState(null)
-      });
-    } else {
-      quoteArray = [];
-      setFieldsValue({
-        contents: BraftEditor.createEditorState(null),
-        resource: BraftEditor.createEditorState(null)
-      });
+      //   setFieldsValue({
+      //     contents: BraftEditor.createEditorState(editStatus.answer),
+      //     resource: BraftEditor.createEditorState(editStatus.resource)
+      //   });
+      // } else if (editStatus && editStatus.answer) {
+      //   quoteArray = [];
+      //   setFieldsValue({
+      //     contents: BraftEditor.createEditorState(editStatus.answer),
+      //     resource: BraftEditor.createEditorState(null)
+      //   });
+      // } else {
+      //   quoteArray = [];
+      //   setFieldsValue({
+      //     contents: BraftEditor.createEditorState(null),
+      //      resource: BraftEditor.createEditorState(null)
+      //   });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editStatus]);
@@ -145,8 +148,8 @@ function Reply(props) {
 
     if (newText) {
       setFieldsValue({
-        contents: BraftEditor.createEditorState(newText),
-        resource: BraftEditor.createEditorState(newResourceStr)
+        contents: BraftEditor.createEditorState(newText)
+        // resource: BraftEditor.createEditorState(newResourceStr)
       });
     }
     const addQuote = document.getElementById('addQuote');
@@ -246,124 +249,92 @@ function Reply(props) {
     });
   }
 
+  function handleComment(item) {
+    switchComment(!showComment)
+    props.dispatch({
+      type: 'reply/getComment',
+      payload: {
+        aId: item.aid,
+        pageSize: 10,
+        pageStart: 1
+      }
+    });
+  }
+
   return (
     <div className={replyStyle.reply}>
       <div className={replyStyle.content}>
         <Row gutter={40}>
-          <Col span={16} className={replyStyle.content_left}>
+          <Col span={18} className={replyStyle.content_left}>
             <div>
               <HelpMenu data={menus} />
             </div>
             <div className={replyStyle.title}>
               <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
-              {params.q}
-            </div>
-            <div className="display_flex">
-              <div style={{marginRight: 10}}>
-                <Button type="primary">关注问题</Button>
-              </div>
-              <div>
-                <Button type="primary" icon="edit" ghost>
-                  写回答
-                </Button>
-              </div>
-            </div>
-            <div className={replyStyle.replyCount}>
-              <span style={{ paddingRight: 10 }}>回答数:</span>
-              {total}
-            </div>
-            <Divider style={{ margin: '0' }}></Divider>
-            {answerList.map((item, index) => {
-              const username = item.UserName || item.userName;
-              return (
-                <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
-                  <div
-                    className={replyStyle.itemTitle}
-                    dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
-                  />
-
-                  {item.resource && item.resource.includes('<a') ? (
-                    <>
-                      <div>引用文献：</div>
-                      <div dangerouslySetInnerHTML={{ __html: item.resource }} />
-                    </>
-                  ) : null}
-
-                  <div>
-                    <span style={{ paddingRight: 20 }}>#{index + 1}</span>
-                    <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
-                      {/* <Icon type="user" /> */}
-                      <Avatar
-                        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
-                        size="small"
-                      />
-                      {/^1[3-9]\d{9}$/.test(username)
-                        ? username.substring(0, 3) + '****' + username.substring(7, 11)
-                        : username}
-                    </Link>
-                    <span style={{ padding: '0 10px' }}>
-                      {RestTools.status[item.status]}
-                      {item.failReason ? (
-                        <span style={{ color: 'red' }}>原因：{item.failReason}</span>
-                      ) : null}
-                    </span>
-                    <span style={{ color: '#c3c3c3' }}>{item.opTime}</span>
-                    {RestTools.getLocalStorage('userInfo') &&
-                    RestTools.getLocalStorage('userInfo').UserName === username &&
-                    item.status === 0 ? (
-                      <span
-                        style={{ paddingLeft: 10 }}
-                        onClick={() => setEditorStatus(editStatus ? null : item)}
-                      >
-                        <a>{editStatus ? '取消编辑' : '编辑答案'}</a>
-                      </span>
-                    ) : null}
-                  </div>
+              <span>{params.q}</span>
+              <div className="display_flex" style={{ marginTop: 20 }}>
+                <div style={{ marginRight: 10 }}>
+                  <Button type="primary">关注问题</Button>
                 </div>
-              );
-            })}
+                <div>
+                  <Button
+                    type="primary"
+                    icon="edit"
+                    ghost
+                    onClick={() => {
+                      switchEditor(!showEditor);
+                    }}
+                  >
+                    写回答
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Divider style={{ margin: 0 }}></Divider>
 
             <div className={replyStyle.draft}>
-              <Form>
-                <FormItem>
-                  {getFieldDecorator('contents', {
-                    // initialValue: contentState,
-                    validateTrigger: 'onBlur',
-                    rules: [
-                      {
-                        required: true,
-                        validator: (_, value, callback) => {
-                          if (value.isEmpty()) {
-                            callback('请输入正文内容');
-                          } else {
-                            callback();
+              {showEditor ? (
+                <Form>
+                  <FormItem>
+                    {getFieldDecorator('contents', {
+                      // initialValue: contentState,
+                      validateTrigger: 'onBlur',
+                      rules: [
+                        {
+                          required: true,
+                          validator: (_, value, callback) => {
+                            if (value.isEmpty()) {
+                              callback('请输入正文内容');
+                            } else {
+                              callback();
+                            }
                           }
                         }
-                      }
-                    ]
-                  })(
-                    <BraftEditor
-                      style={{
-                        border: '1px solid #eee',
-                        height: 300,
-                        backgroundColor: '#fff',
-                        borderRadius: 4
-                      }}
-                      contentStyle={{ height: 240, fontSize: 14 }}
-                      controls={controls}
-                      // readOnly
-                      placeholder={`   
+                      ]
+                    })(
+                      <BraftEditor
+                        style={{
+                          border: '1px solid #eee',
+                          height: 300,
+                          backgroundColor: '#fff',
+                          borderRadius: 4
+                        }}
+                        contentStyle={{ height: 240, fontSize: 14 }}
+                        controls={controls}
+                        // readOnly
+                        placeholder={`   
                       标准格式更容易被采纳 
                       文献内容                                                  
                          XXXXXXXXXXXXX
                       XXXXXXXXXXXXX[1]
                         XXXXXXXXXXXXXX
                       XXXXXXXXXXXXX[2]`}
-                    />
-                  )}
-                </FormItem>
+                      />
+                    )}
+                  </FormItem>
 
-                <FormItem label="引用文献">
+                  {/* <FormItem label="引用文献">
                   {getFieldDecorator('resource', {
                     // initialValue: contentState,
                     validateTrigger: 'onBlur',
@@ -396,21 +367,126 @@ function Reply(props) {
                       2.篇名  作者 机构 年份`}
                     />
                   )}
-                </FormItem>
-                <FormItem style={{ float: 'right' }}>
-                  <Button
-                    loading={props.loading}
-                    type="primary"
-                    htmlType="submit"
-                    onClick={submitContent}
-                  >
-                    {editStatus ? '提交修改' : '提交回答'}
-                  </Button>
-                </FormItem>
-              </Form>
+                </FormItem> */}
+                  <FormItem style={{ float: 'right' }}>
+                    <Button
+                      loading={props.loading}
+                      type="primary"
+                      htmlType="submit"
+                      onClick={submitContent}
+                    >
+                      {editStatus ? '提交修改' : '提交回答'}
+                    </Button>
+                  </FormItem>
+                </Form>
+              ) : null}
             </div>
+            <div className={replyStyle.replyCount}>
+              共 <strong style={{ color: '#333' }}>{total}</strong>个回答
+            </div>
+            {answerList.map((item, index) => {
+              const username = item.UserName || item.userName;
+              return (
+                <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
+                  <div className={replyStyle.answerAvatar}>
+                    <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+                      <Avatar
+                        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
+                        shape="square"
+                      />
+                      <span style={{ marginLeft: 10 }}>
+                        {/^1[3-9]\d{9}$/.test(username)
+                          ? username.substring(0, 3) + '****' + username.substring(7, 11)
+                          : username}
+                      </span>
+                    </Link>
+                  </div>
+                  <div
+                    className={replyStyle.itemTitle}
+                    dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
+                  />
+
+                  {item.resource && item.resource.includes('<a') ? (
+                    <>
+                      <div>引用文献：</div>
+                      <div dangerouslySetInnerHTML={{ __html: item.resource }} />
+                    </>
+                  ) : null}
+
+                  <div className={replyStyle.operation}>
+                    <button className={replyStyle.likeBtn}>
+                      <Icon type="caret-up" />
+                      赞同
+                    </button>
+                    <button className={replyStyle.likeBtn} style={{ marginLeft: 10 }}>
+                      <Icon type="caret-down" />
+                    </button>
+
+                    <span className={replyStyle.action} onClick={handleComment.bind(this, item)}>
+                      <Icon type="message" />
+                      <span style={{ paddingLeft: 4 }}>
+                        {item.commentNum > 0 ? `${item.commentNum}条评论` : '添加评论'}
+                      </span>
+                    </span>
+
+                    <span className={replyStyle.action}>
+                      <Icon type="share-alt" />
+                      <span style={{ paddingLeft: 4 }}>分享</span>
+                    </span>
+
+                    <span className={replyStyle.action}>
+                      <Icon type="warning" />
+                      <span style={{ paddingLeft: 4 }}>举报</span>
+                    </span>
+
+                   
+
+                    {/* <span style={{ paddingRight: 20 }}>#{index + 1}</span>
+                    <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+
+                      <Avatar
+                        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
+                        size="small"
+                      />
+                      {/^1[3-9]\d{9}$/.test(username)
+                        ? username.substring(0, 3) + '****' + username.substring(7, 11)
+                        : username}
+                    </Link>
+                    <span style={{ padding: '0 10px' }}>
+                      {RestTools.status[item.status]}
+                      {item.failReason ? (
+                        <span style={{ color: 'red' }}>原因：{item.failReason}</span>
+                      ) : null}
+                    </span>
+                    <span style={{ color: '#c3c3c3' }}>{item.opTime}</span>
+                    {RestTools.getLocalStorage('userInfo') &&
+                    RestTools.getLocalStorage('userInfo').UserName === username &&
+                    item.status === 0 ? (
+                      <span
+                        style={{ paddingLeft: 10 }}
+                        onClick={() => setEditorStatus(editStatus ? null : item)}
+                      >
+                        <a>{editStatus ? '取消编辑' : '编辑答案'}</a>
+                      </span>
+                    ) : null} */}
+                  </div>
+                  
+                  <div className={replyStyle.commentList}>
+                    {showComment ? <Form>
+                      <Form.Item>
+                        <Input.TextArea />
+                      </Form.Item>
+                    </Form>
+                    : null}
+                  </div>
+                </div>
+              );
+            })}
           </Col>
-          <Col span={8}>
+          <Col span={6}>
+            <div>
+              <UserInfo> </UserInfo>
+            </div>
             {/* <span>参考回答助手：</span>
             <Search
               style={{ width: '50%', marginBottom: 10 }}
@@ -427,7 +503,7 @@ function Reply(props) {
               }}
               placeholder={q}
             /> */}
-            <Spin spinning={loading}>
+            {/* <Spin spinning={loading}>
               <div
                 id="sg"
                 style={{
@@ -499,7 +575,7 @@ function Reply(props) {
             >
               <Icon type="copy" theme="twoTone" />
               添加引用
-            </div>
+            </div> */}
           </Col>
         </Row>
       </div>

@@ -32,6 +32,24 @@ export default {
       });
     },
 
+    *getUserCommunityInfo({ payload }, { call, put }) {
+      const res = yield call(helpService.getUserCommunityInfo, {
+        ...payload
+      });
+      const resultData = res.data;
+      yield put({
+        type: 'saveList',
+        payload: {
+          ...payload,
+          userInfo: resultData.result
+        }
+      });
+      yield put({
+        type: 'global/save',
+        payload: { userInfo: resultData.result }
+      });
+    },
+
     *getDomain({ payload }, { call, put }) {
       const res = yield call(helpService.getDomain, payload);
       const resultData = res.data;
@@ -80,7 +98,7 @@ export default {
             : null;
           const current = pathname;
           dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
-
+          dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } });
           dispatch({
             type: 'getHotQuestions',
             payload: { domain: encodeURIComponent('') }

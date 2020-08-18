@@ -1,5 +1,5 @@
 import request from '../utils/request';
-const serverurl = process.env.apiUrl+'/community';
+const serverurl = process.env.apiUrl + '/community';
 
 export default {
   getNewHelpList() {
@@ -7,7 +7,7 @@ export default {
   },
   getNewQuestions(payload) {
     const page = JSON.parse(sessionStorage.getItem('page'));
-    
+
     const {
       size = page ? page.size : 10,
       index = page ? page.index : 1,
@@ -15,7 +15,7 @@ export default {
       domain = '',
       uid = ''
     } = payload;
-    return request.post(serverurl + `/getNewQuestion`,null, {
+    return request.post(serverurl + `/getNewQuestion`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -48,7 +48,7 @@ export default {
 
   getMyAnswerQuestions(payload) {
     const { size = 10, index = 1, searchKey = '', domain = '全部', uid } = payload;
-    return request.post(serverurl + `/getMyCommiuntyAnswer`,null, {
+    return request.post(serverurl + `/getMyCommiuntyAnswer`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -86,7 +86,7 @@ export default {
   },
   getDomain(payload) {
     return payload
-      ? request.post(serverurl + '/getCommunityClass',null, {
+      ? request.post(serverurl + '/getCommunityClass', null, {
           params: {
             uId: payload.uId
           }
@@ -102,5 +102,15 @@ export default {
   deleteQuestion(payload) {
     const { qId } = payload;
     return request.get(serverurl + `/delQuestion?qId=${qId}`);
+  },
+  getUserCommunityInfo(payload) {
+    return request.post(process.env.apiUrl + `/user/getUserCommunityInfo`, null, {
+      params: { ...payload }
+    });
+  },
+  getComment(payload) {
+    return request.post(serverurl + `/getCommentByAnswer`, null, {
+      params: { ...payload }
+    });
   }
 };
