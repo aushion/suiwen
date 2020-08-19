@@ -24,10 +24,14 @@ import HelpMenu from '../help/components/HelpMenu';
 import UserInfo from '../help/components/UserInfo';
 import replyStyle from './index.less';
 import 'braft-editor/dist/index.css';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/zh-cn';
 
 const FormItem = Form.Item;
 // const { Search } = Input;
-
+dayjs.extend(relativeTime);
+dayjs.locale('zh-cn');
 let quoteArray = [];
 
 function Reply(props) {
@@ -51,7 +55,8 @@ function Reply(props) {
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
   const [showEditor, switchEditor] = useState(false);
-  const [showComment, switchComment] = useState(false);
+  const [showComment, switchComment] = useState(-1);
+  const [newComment, addComment] = useState('');
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
@@ -249,16 +254,62 @@ function Reply(props) {
     });
   }
 
-  function handleComment(item) {
-    switchComment(!showComment)
-    props.dispatch({
-      type: 'reply/getComment',
-      payload: {
-        aId: item.aid,
-        pageSize: 10,
-        pageStart: 1
-      }
-    });
+  function handleComment(data) {
+    if (data.commentList) {
+      let tempdata = answerList.map((item) => {
+        if (item.aid === data.aid) {
+          item.showComment = !item.showComment;
+        }
+        return item;
+      });
+      dispatch({
+        type: 'reply/saveAnswers',
+        payload: { answerList: tempdata }
+      });
+    } else {
+      props
+        .dispatch({
+          type: 'reply/getComment',
+          payload: {
+            aId: data.aid,
+            pageSize: 10,
+            pageStart: 1
+          }
+        })
+        .then((res) => {
+          res = res.map((item) => {
+            if (item.aid === data.aid) {
+              return {
+                ...item,
+                showComment: !item.showComment
+              };
+            }
+            return item;
+          });
+          dispatch({
+            type: 'reply/saveAnswers',
+            payload: { answerList: res }
+          });
+        });
+    }
+  }
+
+  function editComment(e) {
+    addComment(e.target.value);
+  }
+
+  function sendComment(item) {
+    const userCommunityInfo = sessionStorage.getItem('userCommunityInfo') ? JSON.parse(sessionStorage.getItem('userCommunityInfo')) : null; 
+    if(newComment && userCommunityInfo){
+      dispatch({
+        type: 'reply/addComment',
+        payload: {
+          entityId: item.aid,
+          content: newComment,
+          userName: userCommunityInfo.userName
+        }
+      })
+    }
   }
 
   return (
@@ -422,7 +473,10 @@ function Reply(props) {
                       <Icon type="caret-down" />
                     </button>
 
-                    <span className={replyStyle.action} onClick={handleComment.bind(this, item)}>
+                    <span
+                      className={replyStyle.action}
+                      onClick={handleComment.bind(this, item, index)}
+                    >
                       <Icon type="message" />
                       <span style={{ paddingLeft: 4 }}>
                         {item.commentNum > 0 ? `${item.commentNum}条评论` : '添加评论'}
@@ -439,8 +493,9 @@ function Reply(props) {
                       <span style={{ paddingLeft: 4 }}>举报</span>
                     </span>
 
-                   
-
+                    <span className={replyStyle.action}>
+                      发布于{dayjs().from(dayjs(item.replyTime))}
+                    </span>
                     {/* <span style={{ paddingRight: 20 }}>#{index + 1}</span>
                     <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
 
@@ -470,14 +525,44 @@ function Reply(props) {
                       </span>
                     ) : null} */}
                   </div>
-                  
+
                   <div className={replyStyle.commentList}>
-                    {showComment ? <Form>
-                      <Form.Item>
-                        <Input.TextArea />
-                      </Form.Item>
-                    </Form>
-                    : null}
+                    {item.showComment ? (
+                      <div>
+                        {item.commentList.length ? (
+                          <List
+                            dataSource={item.commentList || []}
+                            header={false}
+                            footer={false}
+                            renderItem={(item) => {
+                              return (
+                                <List.Item>
+                                  <List.Item.Meta
+                                    avatar={
+                                      <Avatar
+                                        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}}`}
+                                      />
+                                    }
+                                    title={item.userName}
+                                    description={item.content}
+                                  />
+                                </List.Item>
+                              );
+                            }}
+                          />
+                        ) : null}
+
+                        <Input
+                          value={newComment}
+                          onChange={editComment}
+                          placeholder="请输入您的评论"
+                          style={{ width: '80%', marginRight: 10 }}
+                        />
+                        <Button type="primary" disabled={!newComment} onClick={sendComment.bind(this,item)}>
+                          发布
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               );
@@ -485,7 +570,7 @@ function Reply(props) {
           </Col>
           <Col span={6}>
             <div>
-              <UserInfo> </UserInfo>
+              <UserInfo />
             </div>
             {/* <span>参考回答助手：</span>
             <Search

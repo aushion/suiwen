@@ -26,27 +26,43 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnwser, payload);
-      if(res.data && res.data.code === 200) {
+      if (res.data && res.data.code === 200) {
+        let answerList = res.data.result.answerList.map((item) => {
+          return {
+            ...item,
+            showComment: false
+          };
+        });
         yield put({
           type: 'saveAnswers',
-          payload: { answerList: res.data.result.answerList, total: res.data.result.total }
+          payload: { answerList: answerList, total: res.data.result.total }
         });
       }
-     
     },
     *getComment({ payload }, { call, select }) {
-  const res = yield call(helpServer.getComment, payload);
-  const replyData = yield select(state => state.reply);
-  console.log('replyData', replyData);
-  if (res.data && res.data.code === 200) {
-    console.log(res.data);
-    // yield put({
-    //   type: 'saveAnswers',
-    //   payload: { answerList: res.data.result.answerList, total: res.data.result.total }
-    // });
-  }
+      const { aId } = payload;
+      let { answerList } = yield select((state) => state.reply);
 
-},
+      const res = yield call(helpServer.getComment, payload);
+      if (res.data && res.data.code === 200) {
+        answerList = answerList.map((item) => {
+          if (item.aid === aId) {
+            return {
+              ...item,
+              commentList: res.data.result
+            };
+          }
+          return { ...item };
+        });
+      }
+      return answerList;
+    },
+
+    *addComment({ payload }, { call }) {
+      const res = yield call(helpServer.addComment, payload);
+      return res.data;
+    },
+
     *getUserFAQ({ payload }, { call, put }) {
       const res = yield call(helpServer.getUserFAQ, payload);
       if (!res.data.result) return;

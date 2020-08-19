@@ -112,5 +112,8 @@ export default {
     return request.post(serverurl + `/getCommentByAnswer`, null, {
       params: { ...payload }
     });
+  },
+  addComment(payload) {
+    return request.post(process.env.apiUrl + '/comment/addComment', { ...payload });
   }
 };

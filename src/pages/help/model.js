@@ -44,10 +44,9 @@ export default {
           userInfo: resultData.result
         }
       });
-      yield put({
-        type: 'global/save',
-        payload: { userInfo: resultData.result }
-      });
+      if(!sessionStorage.getItem('userCommuityInfo')){
+        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result))
+      }
     },
 
     *getDomain({ payload }, { call, put }) {

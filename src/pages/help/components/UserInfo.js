@@ -4,7 +4,9 @@ import { connect } from 'dva';
 import RestTools from '../../../utils/RestTools';
 
 function UserInfo(props) {
-  const { userInfo } = props;
+  const userInfo = sessionStorage.getItem('userCommunityInfo')
+    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
+    : props.userInfo;
   return (
     <div
       style={{
