@@ -55,7 +55,7 @@ export default {
           return { ...item };
         });
       }
-      return answerList;
+      return answerList; //返回拼装好的answerList共页面调用
     },
 
     *addComment({ payload }, { call }) {
