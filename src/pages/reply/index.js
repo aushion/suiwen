@@ -1,23 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import {
-  Divider,
-  Icon,
-  Button,
-  Form,
-  Spin,
-  message,
-  Row,
-  Col,
-  Input,
-  List,
-  Empty,
-  Avatar
-} from 'antd';
+import { Divider, Icon, Button, Form, Spin, message, Row, Col, Input, List, Avatar } from 'antd';
 import queryString from 'querystring';
 import BraftEditor from 'braft-editor';
-import groupBy from 'lodash/groupBy';
 import Link from 'umi/link';
 import RestTools from '../../utils/RestTools';
 import HelpMenu from '../help/components/HelpMenu';
@@ -40,7 +26,7 @@ function Reply(props) {
     ? RestTools.getLocalStorage('userInfo')
     : null;
 
-  const { total, answerList, loading, sgData, dispatch } = props;
+  const { total, answerList, loading, dispatch } = props;
   const {
     getFieldDecorator,
     resetFields,
@@ -51,14 +37,10 @@ function Reply(props) {
   const { q } = params;
   const controls = ['font-size', 'bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
-  const answerIds = answerList.map(item => item.aid);
-  let obj = {};
-  answerIds.forEach(item => {obj[item]=''}) //根据id设置对象存放输入框数据
+
   const [editStatus, setEditorStatus] = useState(null);
   const [showEditor, switchEditor] = useState(false);
-  const [newComment, addComment] = useState(obj);
-
-
+  const [newComment, addComment] = useState('');
 
   const menus = RestTools.getLocalStorage('userInfo')
     ? [
@@ -125,10 +107,12 @@ function Reply(props) {
   }
 
   function handleComment(data) {
+    //如果已经获取过评论列表，关闭loading
     if (data.commentList) {
       let tempdata = answerList.map((item) => {
         if (item.aid === data.aid) {
           item.showComment = !item.showComment;
+          item.loading = false;
         }
         return item;
       });
@@ -137,40 +121,52 @@ function Reply(props) {
         payload: { answerList: tempdata }
       });
     } else {
-      props
-        .dispatch({
-          type: 'reply/getComment',
-          payload: {
-            aId: data.aid,
-            pageSize: 10,
-            pageStart: 1
-          }
-        })
-        .then((res) => {
-          //这个res就是answerList由model中传过来的
-          res = res.map((item) => {
+      // 显示loading
+      dispatch({
+        type: 'reply/saveAnswers',
+        payload: {
+          answerList: answerList.map((item) => {
             if (item.aid === data.aid) {
               return {
                 ...item,
-                showComment: !item.showComment
+                loading: true
               };
             }
             return item;
-          });
-          dispatch({
-            type: 'reply/saveAnswers',
-            payload: { answerList: res }
-          });
+          })
+        }
+      });
+      dispatch({
+        type: 'reply/getComment',
+        payload: {
+          aId: data.aid,
+          pageSize: 10,
+          pageStart: 1
+        }
+      }).then((res) => {
+        //这个res就是answerList由model中传过来的
+        res = res.map((item) => {
+          if (item.aid === data.aid) {
+            return {
+              ...item,
+              showComment: !item.showComment,
+              loading: false
+            };
+          }
+          return item;
         });
+        dispatch({
+          type: 'reply/saveAnswers',
+          payload: { answerList: res }
+        });
+      });
     }
   }
 
-  function editComment(e,id) {
-    console.log(id)
-    let comment = newComment;
-    comment[id] = e.target.value
-    console.log('comment', comment)
-    addComment(comment);
+  function editComment(e, id) {
+    const element = document.getElementById(id); //获取相应id输入框dom对象
+    const value = element.value; //获取输入框的值
+    addComment(value);
   }
 
   function sendComment(item) {
@@ -306,6 +302,7 @@ function Reply(props) {
             </div>
             {answerList.map((item, index) => {
               const username = item.UserName || item.userName;
+              console.log('item.loading', item.loading);
               return (
                 <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
                   <div className={replyStyle.answerAvatar}>
@@ -366,78 +363,83 @@ function Reply(props) {
                       发布于{dayjs(item.replyTime).fromNow()}
                     </span>
                   </div>
-                  {item.showComment ? (
-                    <div className={replyStyle.commentList}>
-                      <div>
+                  <Spin spinning={Boolean(item.loading)}>
+                    {item.showComment ? (
+                      <div className={replyStyle.commentList}>
                         <div>
-                          共<strong>{item.commentNum}</strong>条评论
-                        </div>
-                        {item.commentList.length ? (
-                          <List
-                            itemLayout="vertical"
-                            dataSource={item.commentList || []}
-                            header={false}
-                            footer={false}
-                            renderItem={(item) => {
-                              return (
-                                <List.Item
-                                  extra={
-                                    <div style={{ color: '#8590a6' }}>
-                                      {dayjs(item.createTime).fromNow()}
-                                    </div>
-                                  }
-                                >
-                                  <List.Item.Meta
-                                    avatar={
-                                      <Avatar
-                                        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}`}
-                                      />
-                                    }
-                                    title={RestTools.formatPhoneNumber(item.userName)}
-                                    description={item.content}
-                                  />
-                                  {item.replyList.map((k) => {
-                                    return (
-                                      <div style={{ marginLeft: 40 }} key={k.replyId}>
-                                        <div>
-                                          <Avatar
-                                            size="small"
-                                            src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${k.userName}`}
-                                          />
-                                          <span>
-                                            {RestTools.formatPhoneNumber(k.userName)}回复
-                                            {RestTools.formatPhoneNumber(k.replyUserName)}
-                                          </span>
-                                          <span style={{ float: 'right' }}>
-                                            {dayjs(k.createTime).fromNow()}
-                                          </span>
-                                        </div>
-                                        <div style={{ paddingLeft: 20 }}>{k.content}</div>
+                          <div>
+                            共<strong>{item.commentNum}</strong>条评论
+                          </div>
+                          {item.commentList.length ? (
+                            <List
+                              itemLayout="vertical"
+                              dataSource={item.commentList || []}
+                              header={false}
+                              footer={false}
+                              renderItem={(item) => {
+                                return (
+                                  <List.Item
+                                    extra={
+                                      <div style={{ color: '#8590a6' }}>
+                                        {dayjs(item.createTime).fromNow()}
                                       </div>
-                                    );
-                                  })}
-                                </List.Item>
-                              );
-                            }}
-                          />
-                        ) : null}
+                                    }
+                                  >
+                                    <List.Item.Meta
+                                      avatar={
+                                        <Avatar
+                                          src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}`}
+                                        />
+                                      }
+                                      title={RestTools.formatPhoneNumber(item.userName)}
+                                      description={item.content}
+                                    />
+                                    {item.replyList.map((k) => {
+                                      return (
+                                        <div style={{ marginLeft: 40 }} key={k.replyId}>
+                                          <div>
+                                            <Avatar
+                                              size="small"
+                                              src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${k.userName}`}
+                                            />
+                                            <span>
+                                              {RestTools.formatPhoneNumber(k.userName)}回复
+                                              {RestTools.formatPhoneNumber(k.replyUserName)}
+                                            </span>
+                                            <span style={{ float: 'right' }}>
+                                              {dayjs(k.createTime).fromNow()}
+                                            </span>
+                                          </div>
+                                          <div style={{ paddingLeft: 20 }}>{k.content}</div>
+                                        </div>
+                                      );
+                                    })}
+                                  </List.Item>
+                                );
+                              }}
+                            />
+                          ) : null}
 
-                        <Input
-                          value={newComment[item.aid]}
-                          onChange={(e) => {editComment(e,item.aid)}}                        
-                          placeholder="请输入您的评论"
-                          style={{ width: '80%', marginRight: 10 }}
-                        />
-                        <Button
-                          type="primary"
-                          disabled={!newComment}
-                          onClick={sendComment.bind(this, item)}
-                        >
-                          发布
-                        </Button>
+                          <Input
+                            id={item.aid}
+                            // value={newComment[item.aid]}
+                            onChange={(e) => {
+                              editComment(e, item.aid);
+                            }}
+                            placeholder="请输入您的评论"
+                            style={{ width: '80%', marginRight: 10 }}
+                          />
+                          <Button
+                            type="primary"
+                            disabled={!newComment}
+                            onClick={sendComment.bind(this, item)}
+                          >
+                            发布
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
+                    ) : null}
+                  </Spin>
                 </div>
               );
             })}
