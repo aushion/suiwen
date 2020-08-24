@@ -48,12 +48,13 @@ export default {
 
   getMyAnswerQuestions(payload) {
     const { size = 10, index = 1, searchKey = '', domain = '全部', uid } = payload;
-    return request.post(serverurl + `/getMyCommiuntyAnswer`, null, {
+    return request.post(serverurl + `/getMyCommunityAnswer`, null, {
       params: {
         pageSize: size,
         pageStart: index,
         searchKey,
         domain,
+        operatorName:uid,
         userName: uid
       }
     });
@@ -74,7 +75,7 @@ export default {
   },
 
   setAnswer(payload) {
-    return request.post(serverurl + `/replyCommunityAnswer`, { ...payload });
+    return request.post(serverurl + `/replyAnswer`, { ...payload });
   },
 
   editAnswer(payload) {

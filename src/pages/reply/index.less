@@ -20,9 +20,12 @@
       background-color: #fff;
       border-bottom: 1px solid #eee;
       padding: 16px;
-      :last-child {
-        border-bottom: none;
+      overflow: hidden;
+
+      :global(.ant-list-vertical .ant-list-item-meta){
+        margin-bottom: 0;
       }
+    
       .answerAvatar {
         padding: 10px 0;
       }
@@ -47,9 +50,11 @@
           cursor: pointer;
         }
       }
+
       .commentList {
-        width: 80%;
+        // width: 80%;
         padding: 20px;
+        background: #fafafa;
         box-shadow: rgba(216, 216, 216, 0.76) 0px 0px 5px 0px;
       }
     }

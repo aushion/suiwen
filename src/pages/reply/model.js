@@ -49,7 +49,8 @@ export default {
           if (item.aid === aId) {
             return {
               ...item,
-              commentList: res.data.result
+              commentList: res.data.result.dataList,
+              commentNum: res.data.result.total
             };
           }
           return { ...item };

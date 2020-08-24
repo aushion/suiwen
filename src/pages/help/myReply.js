@@ -4,33 +4,17 @@ import { connect } from 'dva';
 import DomainTags from './components/DomainTags';
 import HelpMenu from './components/HelpMenu';
 import MyAnswerList from './components/MyAnswerList';
-import RestTools from '../../utils/RestTools';
 import UserInfo from './components/UserInfo';
 import helpStyle from './index.less';
 
 function MyReply(props) {
   const { domainList, newHelpData, dispatch, domain, uid, loading } = props;
-  const menus = RestTools.getLocalStorage('userInfo')
-    ? [
-        {
-          key: 'newHelp',
-          text: '新求助'
-        },
-        {
-          key: 'myHelp',
-          text: '我的求助'
-        },
-        {
-          key: 'myReply',
-          text: '我的回答'
-        }
-      ]
-    : [
-        {
-          key: 'newHelp',
-          text: '新求助'
-        }
-      ];
+  const menus = [
+    {
+      key: 'newHelp',
+      text: '新求助'
+    }
+  ];
   //点击tag响应事件
   function handleClickTag(payload) {
     dispatch({

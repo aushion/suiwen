@@ -3,13 +3,14 @@ import Link from 'umi/link';
 const { Panel } = Collapse;
 
 export default function MyAnswerList(props) {
-  const { data, from = true } = props;
+  const { data = null, from = true } = props;
+
   return (
     <div style={{ padding: '10px 0' }}>
       <div>共{data && data.total}条</div>
       <Collapse>
         {data
-          ? data.data.map((item, index) => {
+          ? data.dataList.map((item, index) => {
               return (
                 <Panel
                   showArrow={false}
@@ -19,7 +20,7 @@ export default function MyAnswerList(props) {
                 >
                   {item.answerList.map((child) => {
                     return (
-                      <div>
+                      <div key={child.aid}>
                         <p dangerouslySetInnerHTML={{ __html: child.answer }} />
                         {from ? <div>来自：{child.domain}</div> : null}
 
