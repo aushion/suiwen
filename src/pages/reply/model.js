@@ -17,6 +17,7 @@ export default {
     total: 0,
     domains: [],
     sgData: [],
+    inputId: null,
     username: RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
       : '',
@@ -61,6 +62,38 @@ export default {
 
     *addComment({ payload }, { call }) {
       const res = yield call(helpServer.addComment, payload);
+      return res.data;
+    },
+
+    *replyComment({ payload }, { call }) {
+      const res = yield call(helpServer.replyComment, payload);
+      return res.data;
+    },
+
+    *delComment({ payload }, { call }) {
+      const res = yield call(helpServer.delComment, payload);
+      return res.data;
+    },
+    *delReply({ payload }, { call }) {
+      const res = yield call(helpServer.delReply, payload);
+      return res.data;
+    },
+    *likeAnswer({ payload }, { call }) {
+      const res = yield call(helpServer.likeAnswer, payload);
+      return res.data;
+    },
+
+    *disLikeAnswer({ payload }, { call }) {
+      const res = yield call(helpServer.disLikeAnswer, payload);
+      return res.data;
+    },
+
+    *likeComment({ payload }, { call }) {
+      const res = yield call(helpServer.likeComment, payload);
+      return res.data;
+    },
+    *likeReply({ payload }, { call }) {
+      const res = yield call(helpServer.likeReply, payload);
       return res.data;
     },
 

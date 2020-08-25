@@ -102,7 +102,7 @@ function AnswerForm(props) {
     });
   }
   return (
-    <div>
+    <div style={{overflow: 'hidden'}}>
       <Form>
         <FormItem>
           {getFieldDecorator('contents', {
@@ -141,7 +141,7 @@ function AnswerForm(props) {
           )}
         </FormItem>
 
-        <FormItem style={{ float: 'right' }}>
+        <FormItem style={{ float: 'right', overflow: 'hidden' }}>
           <Button loading={props.loading} type="primary" htmlType="submit" onClick={submitContent}>
             {editStatus ? '提交修改' : '提交回答'}
           </Button>

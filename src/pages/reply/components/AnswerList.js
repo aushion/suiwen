@@ -8,14 +8,13 @@ import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
 import RestTools from 'Utils/RestTools';
 
+let timerCount = null;
 function AnswerList(props) {
   const { total, answerList, dispatch } = props;
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
   //编辑框的状态
-  const [editStatus, setEditStatus] = useState(null);
-  console.log(total);
   function handleComment(data) {
     //如果当前评论列表是展开的就修改其状态，让其关闭
     if (data.showComment) {
@@ -55,7 +54,8 @@ function AnswerList(props) {
         payload: {
           aId: data.aid,
           pageSize: 10,
-          pageStart: 1
+          pageStart: 1,
+          userName: userInfo.UserName
         }
       }).then((res) => {
         //这个res就是answerList由model中传过来的
@@ -111,6 +111,105 @@ function AnswerList(props) {
     }
   }
 
+  function handleLike(current, type) {
+    clearTimeout(timerCount);
+    timerCount = setTimeout(() => {
+      sendEvaluate(current, type);
+    }, 300);
+  }
+
+  function sendEvaluate(current, type) {
+    let localAction = null; //本地action
+    let effectAction = null; //异步action
+
+    switch (type) {
+      case 'up':
+        localAction = {
+          type: 'reply/saveAnswers',
+          payload: {
+            answerList: answerList.map((item) => {
+              if (item.aid === current.aid) {
+                return {
+                  ...item,
+                  isLiked: 1,
+                  likeCount: item.likeCount + 1
+                };
+              }
+              return item;
+            })
+          }
+        };
+        effectAction = {
+          type: 'reply/likeAnswer',
+          payload: {
+            answerId: current.aid,
+            type,
+            userId: userInfo.UserName
+          }
+        };
+        dispatch(localAction); //本地页面先修改点赞信息
+        dispatch(effectAction); //发起点赞请求
+        break;
+
+      case 'down':
+        dispatch({
+          type: 'reply/saveAnswers',
+          payload: {
+            answerList: answerList.map((item) => {
+              if (item.aid === current.aid) {
+                return {
+                  ...item,
+                  isLiked: -1,
+                  likeCount: item.likeCount - 1 < 0 ? 0 : item.likeCount - 1,
+                  disLikeCount: item.disLikeCount + 1
+                };
+              }
+              return item;
+            })
+          }
+        });
+        dispatch({
+          type: 'reply/disLikeAnswer',
+          payload: {
+            answerId: current.aid,
+            type,
+            userId: userInfo.UserName
+          }
+        });
+        break;
+
+      case 'neutral':
+        dispatch({
+          type: 'reply/saveAnswers',
+          payload: {
+            answerList: answerList.map((item) => {
+              if (item.aid === current.aid) {
+                return {
+                  ...item,
+                  isLiked: 0,
+                  likeCount: item.isLiked === 1 ? item.likeCount - 1 : item.likeCount,
+                  disLikeCount: item.isLiked === -1 ? item.disLikeCount - 1 : item.disLikeCount
+                };
+              }
+              return item;
+            })
+          }
+        });
+        effectAction = {
+          type: current.isLiked === 1 ? 'reply/likeAnswer' : 'reply/disLikeAnswer',
+          payload: {
+            answerId: current.aid,
+            type,
+            userId: userInfo.UserName
+          }
+        };
+        dispatch(effectAction);
+        break;
+
+      default:
+    }
+  }
+
   return (
     <div>
       <div className={replyStyle.replyCount}>
@@ -138,7 +237,6 @@ function AnswerList(props) {
 
             {item.showEditForm ? (
               <>
-                <AnswerForm editStatus={item} />
                 {userInfo && userInfo.UserName === username ? (
                   <span
                     className={replyStyle.action}
@@ -148,6 +246,7 @@ function AnswerList(props) {
                     <span style={{ paddingLeft: 4 }}>取消编辑</span>
                   </span>
                 ) : null}
+                <AnswerForm editStatus={item} />
               </>
             ) : (
               <>
@@ -164,11 +263,24 @@ function AnswerList(props) {
                 ) : null}
 
                 <div className={replyStyle.operation}>
-                  <button className={replyStyle.likeBtn}>
+                  <button
+                    className={replyStyle.likeBtn}
+                    style={item.isLiked > 0 ? { background: '#1890ff', color: '#fff' } : null}
+                    onClick={handleLike.bind(this, item, item.isLiked === 1 ? 'neutral' : 'up')}
+                  >
                     <Icon type="caret-up" />
                     赞同
+                    {item.likeCount ? item.likeCount : null}
                   </button>
-                  <button className={replyStyle.likeBtn} style={{ marginLeft: 10 }}>
+                  <button
+                    className={replyStyle.likeBtn}
+                    style={
+                      item.isLiked < 0
+                        ? { background: '#1890ff', color: '#fff', marginLeft: 10 }
+                        : { marginLeft: 10 }
+                    }
+                    onClick={handleLike.bind(this, item, item.isLiked === -1 ? 'neutral' : 'down')}
+                  >
                     <Icon type="caret-down" />
                   </button>
                   {userInfo && userInfo.UserName === username ? (
@@ -208,7 +320,7 @@ function AnswerList(props) {
             )}
             <Spin spinning={!!item.loading} style={{ textAlign: 'center' }}>
               <div className={replyStyle.commentWrapper}>
-                {item.showComment ? <CommentList data={item} /> : null}
+                {item.showComment ? <CommentList entityId={item.aid} data={item} /> : null}
               </div>
             </Spin>
           </div>

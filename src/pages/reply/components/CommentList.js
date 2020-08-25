@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
 import dayjs from 'dayjs';
-import { List, Avatar, Input, Button, Icon, Divider } from 'antd';
+import { List, Avatar, Input, Button, Popconfirm, message } from 'antd';
 import ReplyList from './ReplyList';
 import RestTools from 'Utils/RestTools';
 import IconText from './IconText';
 import replyStyle from '../index.less';
 
 function CommentList(props) {
-  const { data = null, dispatch } = props;
-  const [newComment, addComment] = useState('');
+  const { data = null, inputId, dispatch, entityId } = props;
+  const [newComment, addComment] = useState(''); //评论
+  const [newReply, addReply] = useState(''); //回复
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
-  const [commentId, setCommentId] = useState('');
 
-  function editComment(e, id) {
+  function editComment(e) {
     addComment(e.target.value);
+  }
+
+  function editReply(e) {
+    addReply(e.target.value);
   }
 
   function sendComment(item) {
@@ -49,10 +53,65 @@ function CommentList(props) {
     }
   }
 
-  function showInput(commentId) {
-    setCommentId(commentId);
+  function sendReply(commentId) {
+    if (newReply && userCommunityInfo) {
+      dispatch({
+        type: 'reply/replyComment',
+        payload: {
+          commentId,
+          content: newReply,
+          entityId: entityId,
+          replyUserName: '',
+          userName: userCommunityInfo.userName
+        }
+      }).then((res) => {
+        if (res.code === 200) {
+          getComment();
+        }
+      });
+    }
   }
 
+  function showInput(commentId) {
+    dispatch({
+      type: 'reply/saveAnswers',
+      payload: {
+        inputId: commentId
+      }
+    });
+  }
+
+  function getComment() {
+    dispatch({
+      type: 'reply/getComment',
+      payload: {
+        aId: entityId,
+        pageSize: 10,
+        pageStart: 1,
+        userName: userCommunityInfo.userName
+      }
+    }).then((res) => {
+      dispatch({
+        type: 'reply/saveAnswers',
+        payload: { answerList: res, inputId: null }
+      });
+    });
+  }
+
+  function confirm(commentId) {
+    dispatch({
+      type: 'reply/delComment',
+      payload: {
+        answerId: entityId,
+        commentId
+      }
+    }).then((res) => {
+      if (res.code === 200) {
+        message.success('删除成功');
+        getComment();
+      }
+    });
+  }
 
   return (
     <>
@@ -117,27 +176,48 @@ function CommentList(props) {
                             <div>{item.content}</div>
                             <div style={{ padding: '10px 0' }}>
                               <IconText type="like-o" text={`赞`} key="list-vertical-like-o" />
-                              <Divider type="vertical" style={{ margin: '0 18px' }} />
                               <IconText
                                 type="message"
                                 text="回复"
                                 key="list-vertical-message"
                                 onClick={showInput.bind(this, item.commentId)}
                               />
+                              {item.userName === userCommunityInfo.userName ? (
+                                <span>
+                                  <Popconfirm
+                                    title="确定删除这条评论吗"
+                                    onConfirm={confirm.bind(this, item.commentId)}
+                                    okText="确定"
+                                    cancelText="取消"
+                                  >
+                                    <IconText type="delete" text="删除" key="list-vertical-trash" />
+                                  </Popconfirm>
+                                </span>
+                              ) : null}
                             </div>
-                            {commentId === item.commentId ? (
+                            {inputId === item.commentId ? (
                               <div>
                                 <Input
+                                  value={newReply}
                                   placeholder="输入回复"
                                   style={{ width: 550, marginRight: 20 }}
+                                  onChange={editReply}
                                 />
-                                <Button type="primary" disabled={!newComment}>
+                                <Button
+                                  type="primary"
+                                  disabled={!newReply}
+                                  onClick={sendReply.bind(this, item.commentId)}
+                                >
                                   发表
                                 </Button>
                               </div>
                             ) : null}
                             {item.replyList.length ? (
-                              <ReplyList replyData={item.replyList} />
+                              <ReplyList
+                                commentId={item.commentId}
+                                entityId={entityId}
+                                replyData={item.replyList}
+                              />
                             ) : null}
                           </div>
                         }

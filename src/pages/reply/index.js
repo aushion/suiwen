@@ -21,13 +21,11 @@ function Reply(props) {
   const [editStatus, setEditorStatus] = useState(null);
   const [showEditor, switchEditor] = useState(false);
 
-
   return (
     <div className={replyStyle.reply}>
       <div className={replyStyle.content}>
         <Row gutter={40}>
           <Col span={18} className={replyStyle.content_left}>
-           
             <div className={replyStyle.title}>
               <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
               <span>{params.q}</span>

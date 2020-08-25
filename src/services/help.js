@@ -54,7 +54,7 @@ export default {
         pageStart: index,
         searchKey,
         domain,
-        operatorName:uid,
+        operatorName: uid,
         userName: uid
       }
     });
@@ -116,5 +116,26 @@ export default {
   },
   addComment(payload) {
     return request.post(process.env.apiUrl + '/comment/addComment', { ...payload });
+  },
+  replyComment(payload) {
+    return request.post(process.env.apiUrl + '/comment/replyComment', { ...payload });
+  },
+  delComment(payload) {
+    return request.post(process.env.apiUrl + '/comment/delComment', null, { params: payload });
+  },
+  delReply(payload) {
+    return request.post(process.env.apiUrl + '/comment/delReply', null, { params: payload });
+  },
+  likeComment(payload) {
+    return request.post(process.env.apiUrl + '/like/likeComment', null, { params: payload });
+  },
+  likeReply(payload) {
+    return request.post(process.env.apiUrl + '/like/likeReply', null, { params: payload });
+  },
+  likeAnswer(payload) {
+    return request.post(process.env.apiUrl + '/like/likeAnswer', null, { params: payload });
+  },
+  disLikeAnswer(payload) {
+    return request.post(process.env.apiUrl + '/like/disLikeAnswer', null, { params: payload });
   }
 };
