@@ -6,7 +6,8 @@ import IconText from './IconText';
 import RestTools from 'Utils/RestTools';
 import styles from './ReplyList.less';
 
-function ReplyList({ replyData, inputId, dispatch, entityId, commentId }) {
+let timer = null;
+function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerList }) {
   const [newComment, setNewComment] = useState('');
 
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
@@ -77,6 +78,57 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId }) {
     });
   }
 
+  function handleLike(current) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      sendLike(current);
+    }, 300);
+  }
+
+  function sendLike(current) {
+    let newList = answerList.map((item) => {
+      if (item.commentList) {
+        item.commentList = item.commentList.map((k) => {
+          if (k.replyList.length) {
+            k.replyList = k.replyList.map((m) => {
+              if (m.replyId === current.replyId) {
+                let newItem = {
+                  ...current,
+                  isLiked: current.isLiked === 0 ? 1 : 0,
+                  likedCount: current.isLiked
+                    ? current.likedCount - 1 < 0
+                      ? 0
+                      : current.likedCount - 1
+                    : current.likedCount + 1
+                };
+                return newItem;
+              }
+              return m;
+            });
+          }
+          return k;
+        });
+      }
+      return item;
+    });
+
+    dispatch({
+      type: 'reply/saveAnswers',
+      payload: {
+        answerList: newList
+      }
+    });
+
+    dispatch({
+      type: 'reply/likeReply',
+      payload: {
+        replyId: current.replyId,
+        type: current.isLiked ? 'neutral' : 'up',
+        userId: userCommunityInfo.userName
+      }
+    });
+  }
+
   return (
     <div className={styles.replylist}>
       <List
@@ -115,13 +167,21 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId }) {
               <div style={{ color: '#333' }} className={styles.iconList}>
                 <div>{k.content}</div>
                 <div style={{ padding: '10px 0' }}>
-                  <IconText type="like-o" text={`赞`} key="list-vertical-like-o" />
                   <IconText
-                    type="message"
-                    text="回复"
-                    key="list-vertical-message"
-                    onClick={handleReply.bind(this, k.replyId)}
+                    type="like"
+                    onClick={handleLike.bind(this, k)}
+                    style={k.isLiked ? { color: 'green' } : null}
+                    text={`赞${k.likedCount ? k.likedCount : ''}`}
+                    key="list-vertical-like-o"
                   />
+                  {k.userName !== userCommunityInfo.userName ? (
+                    <IconText
+                      type="message"
+                      text="回复"
+                      key="list-vertical-message"
+                      onClick={handleReply.bind(this, k.replyId)}
+                    />
+                  ) : null}
                   {k.userName === userCommunityInfo.userName ? (
                     <span className={styles.delete}>
                       <Popconfirm

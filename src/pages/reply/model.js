@@ -27,8 +27,9 @@ export default {
   effects: {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnwser, payload);
-      if (res.data && res.data.code === 200) {
-        let answerList = res.data.result.answerList.map((item) => {
+      const response = res.data;
+      if (response && response.code === 200) {
+        let answerList = response.result.answer.dataList.map((item) => {
           return {
             ...item,
             showComment: false
@@ -36,7 +37,7 @@ export default {
         });
         yield put({
           type: 'saveAnswers',
-          payload: { answerList: answerList, total: res.data.result.total }
+          payload: { answerList: answerList, total: response.result.answer.total }
         });
       }
     },
@@ -183,15 +184,15 @@ export default {
           } else {
             dispatch({ type: 'getUserFAQ', payload: params });
           }
-          dispatch({
-            type: 'getSG',
-            payload: {
-              q: encodeURIComponent(q),
-              pageStart: 1,
-              pageCount: 10,
-              userId
-            }
-          });
+          // dispatch({
+          //   type: 'getSG',
+          //   payload: {
+          //     q: encodeURIComponent(q),
+          //     pageStart: 1,
+          //     pageCount: 10,
+          //     userId
+          //   }
+          // });
         }
       });
     }

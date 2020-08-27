@@ -7,8 +7,10 @@ import RestTools from 'Utils/RestTools';
 import IconText from './IconText';
 import replyStyle from '../index.less';
 
+let timer = null;
+
 function CommentList(props) {
-  const { data = null, inputId, dispatch, entityId } = props;
+  const { data = null, inputId, dispatch, entityId, answerList, qId } = props;
   const [newComment, addComment] = useState(''); //评论
   const [newReply, addReply] = useState(''); //回复
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
@@ -39,7 +41,8 @@ function CommentList(props) {
             payload: {
               aId: item.aid,
               pageSize: 10,
-              pageStart: 1
+              pageStart: 1,
+              userName: userCommunityInfo.userName
             }
           }).then((res) => {
             addComment('');
@@ -103,12 +106,59 @@ function CommentList(props) {
       type: 'reply/delComment',
       payload: {
         answerId: entityId,
+        qId,
         commentId
       }
     }).then((res) => {
       if (res.code === 200) {
         message.success('删除成功');
         getComment();
+      }
+    });
+  }
+
+  function handleLike(current) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      sendLike(current);
+    }, 300);
+  }
+
+  function sendLike(current) {
+    let newList = answerList.map((item) => {
+      if (item.commentList) {
+        item.commentList = item.commentList.map((child) => {
+          if (child.commentId === current.commentId) {
+            let newItem = {
+              ...current,
+              isLiked: current.isLiked === 0 ? 1 : 0,
+              likedCount: current.isLiked
+                ? current.likedCount - 1 < 0
+                  ? 0
+                  : current.likedCount - 1
+                : current.likedCount + 1
+            };
+            return newItem;
+          }
+          return child;
+        });
+      }
+      return item;
+    });
+
+    dispatch({
+      type: 'reply/saveAnswers',
+      payload: {
+        answerList: newList
+      }
+    });
+
+    dispatch({
+      type: 'reply/likeComment',
+      payload: {
+        commentId: current.commentId,
+        type: current.isLiked ? 'neutral' : 'up',
+        userId: userCommunityInfo.userName
       }
     });
   }
@@ -146,7 +196,7 @@ function CommentList(props) {
               </Button>
             </div>
 
-            {data.commentList.length ? (
+            {data.commentList && data.commentList.length ? (
               <List
                 itemLayout="vertical"
                 dataSource={data.commentList || []}
@@ -175,13 +225,21 @@ function CommentList(props) {
                           <div style={{ color: '#333' }}>
                             <div>{item.content}</div>
                             <div style={{ padding: '10px 0' }}>
-                              <IconText type="like-o" text={`赞`} key="list-vertical-like-o" />
                               <IconText
-                                type="message"
-                                text="回复"
-                                key="list-vertical-message"
-                                onClick={showInput.bind(this, item.commentId)}
+                                style={item.isLiked ? { color: 'green' } : null}
+                                type="like"
+                                text={`赞${item.likedCount ? item.likedCount : ''}`}
+                                key="list-vertical-like-o"
+                                onClick={handleLike.bind(this, item)}
                               />
+                              {item.userName !== userCommunityInfo.userName ? (
+                                <IconText
+                                  type="message"
+                                  text="回复"
+                                  key="list-vertical-message"
+                                  onClick={showInput.bind(this, item.commentId)}
+                                />
+                              ) : null}
                               {item.userName === userCommunityInfo.userName ? (
                                 <span>
                                   <Popconfirm

@@ -18,6 +18,7 @@ dayjs.locale('zh-cn');
 
 function Reply(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
+  const {QID} = params
   const [editStatus, setEditorStatus] = useState(null);
   const [showEditor, switchEditor] = useState(false);
 
@@ -51,7 +52,7 @@ function Reply(props) {
             <div className={replyStyle.draft}>
               {showEditor ? <AnswerForm editStatus={editStatus} /> : null}
             </div>
-            <AnswerList />
+            <AnswerList qId={QID}  />
           </Col>
           <Col span={6}>
             <div>

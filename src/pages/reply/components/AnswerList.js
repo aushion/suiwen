@@ -10,7 +10,7 @@ import RestTools from 'Utils/RestTools';
 
 let timerCount = null;
 function AnswerList(props) {
-  const { total, answerList, dispatch } = props;
+  const { total, answerList, dispatch, qId } = props;
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
@@ -55,6 +55,7 @@ function AnswerList(props) {
           aId: data.aid,
           pageSize: 10,
           pageStart: 1,
+          sort: 'time',
           userName: userInfo.UserName
         }
       }).then((res) => {
@@ -320,7 +321,7 @@ function AnswerList(props) {
             )}
             <Spin spinning={!!item.loading} style={{ textAlign: 'center' }}>
               <div className={replyStyle.commentWrapper}>
-                {item.showComment ? <CommentList entityId={item.aid} data={item} /> : null}
+                {item.showComment ? <CommentList qId={qId} entityId={item.aid} data={item} answerIndex={index} /> : null}
               </div>
             </Spin>
           </div>
