@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Divider, Icon, Button, Form, Row, Col } from 'antd';
-import queryString from 'querystring';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -16,11 +15,43 @@ import AnswerForm from './components/AnswerForm';
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
+let timerCount = null;
 function Reply(props) {
-  const params = queryString.parse(window.location.href.split('?')[1]);
-  const {QID} = params
-  const [editStatus, setEditorStatus] = useState(null);
-  const [showEditor, switchEditor] = useState(false);
+  const { dispatch, followed, location } = props;
+  const params = location.query;
+  const { QID } = params;
+  const [showEditor, switchEditor] = useState(false); //是否显示回答框
+  const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
+  const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
+    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
+    : null;
+
+  useEffect(() => {
+    switchFollowQ(followed);
+  }, [followed]);
+
+  function followQuestion() {
+    clearTimeout(timerCount);
+    setTimeout(() => {
+      switchFollowQ(!isFollowQ);
+      dispatch({
+        type: isFollowQ ? 'reply/unFollowQuestion' : 'reply/followQuestion',
+        payload: {
+          qId: QID,
+          userId: userCommunityInfo.userName
+        }
+      }).then((res) => {
+        if (res.code === 200) {
+          dispatch({
+            type: 'help/getUserCommunityInfo',
+            payload: {
+              userName: userCommunityInfo.userName
+            }
+          });
+        }
+      });
+    }, 300);
+  }
 
   return (
     <div className={replyStyle.reply}>
@@ -32,7 +63,13 @@ function Reply(props) {
               <span>{params.q}</span>
               <div className="display_flex" style={{ marginTop: 20 }}>
                 <div style={{ marginRight: 10 }}>
-                  <Button type="primary">关注问题</Button>
+                  <Button
+                    type="primary"
+                    style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
+                    onClick={followQuestion}
+                  >
+                    {isFollowQ ? '取消关注' : '关注问题'}
+                  </Button>
                 </div>
                 <div>
                   <Button
@@ -43,16 +80,14 @@ function Reply(props) {
                       switchEditor(!showEditor);
                     }}
                   >
-                    写回答
+                    {showEditor ? '取消回答' : '写回答'}
                   </Button>
                 </div>
               </div>
             </div>
             <Divider style={{ margin: 0 }} />
-            <div className={replyStyle.draft}>
-              {showEditor ? <AnswerForm editStatus={editStatus} /> : null}
-            </div>
-            <AnswerList qId={QID}  />
+            <div className={replyStyle.draft}>{showEditor ? <AnswerForm /> : null}</div>
+            <AnswerList qId={QID} />
           </Col>
           <Col span={6}>
             <div>

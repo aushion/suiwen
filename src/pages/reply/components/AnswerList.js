@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
 import { Link } from 'umi';
-import { Icon, Avatar, Spin } from 'antd';
+import { Icon, Avatar, Button, Spin } from 'antd';
 import dayjs from 'dayjs';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
@@ -9,6 +9,7 @@ import replyStyle from '../index.less';
 import RestTools from 'Utils/RestTools';
 
 let timerCount = null;
+let userCount = null;
 function AnswerList(props) {
   const { total, answerList, dispatch, qId } = props;
   const userInfo = localStorage.getItem('userInfo')
@@ -211,6 +212,35 @@ function AnswerList(props) {
     }
   }
 
+  function followUser(current) {
+    clearTimeout(userCount);
+    setTimeout(() => {
+      let data = answerList.map((item) => {
+        if (item.aid === current.aid) {
+          return {
+            ...current,
+            followedUser: !current.followedUser
+          };
+        }
+        return item;
+      });
+      dispatch({
+        type: 'reply/saveAnswers',
+        payload: {
+          answerList: data
+        }
+      });
+
+      dispatch({
+        type: current.followedUser ? 'reply/unFollowUser' : 'reply/followUser',
+        payload: {
+          followUser: current.userName,
+          userId: userInfo.UserName
+        }
+      });
+    }, 300);
+  }
+
   return (
     <div>
       <div className={replyStyle.replyCount}>
@@ -226,14 +256,31 @@ function AnswerList(props) {
         const username = item.UserName || item.userName;
         return (
           <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
-            <div className={replyStyle.answerAvatar}>
-              <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
-                <Avatar
-                  src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
-                  shape="square"
-                />
-                <span style={{ marginLeft: 10 }}>{RestTools.formatPhoneNumber(username)}</span>
-              </Link>
+            <div className="display_flex justify-content_flex-justify">
+              <div className={replyStyle.answerAvatar}>
+                <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+                  <Avatar
+                    src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
+                    shape="square"
+                  />
+                  <span style={{ marginLeft: 10 }}>{RestTools.formatPhoneNumber(username)}</span>
+                </Link>
+              </div>
+              {item.userName !== userInfo.UserName ? (
+                <div className={replyStyle.followBtn}>
+                  <Button
+                    onClick={followUser.bind(this, item)}
+                    size="small"
+                    style={
+                      item.followedUser
+                        ? { background: '#a0d911', borderColor: '#a0d911', color: '#fff' }
+                        : null
+                    }
+                  >
+                    {item.followedUser ? '已关注' : '关注'}
+                  </Button>
+                </div>
+              ) : null}
             </div>
 
             {item.showEditForm ? (
@@ -321,7 +368,9 @@ function AnswerList(props) {
             )}
             <Spin spinning={!!item.loading} style={{ textAlign: 'center' }}>
               <div className={replyStyle.commentWrapper}>
-                {item.showComment ? <CommentList qId={qId} entityId={item.aid} data={item} answerIndex={index} /> : null}
+                {item.showComment ? (
+                  <CommentList qId={qId} entityId={item.aid} data={item} answerIndex={index} />
+                ) : null}
               </div>
             </Spin>
           </div>

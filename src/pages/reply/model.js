@@ -13,8 +13,12 @@ message.config({
 export default {
   namespace: 'reply',
   state: {
-    answerList: [],
+    answerList: sessionStorage.getItem('answerList')
+      ? JSON.parse(sessionStorage.getItem('answerList'))
+      : [],
     total: 0,
+    followers: 0,
+    followed: false,
     domains: [],
     sgData: [],
     inputId: null,
@@ -25,6 +29,22 @@ export default {
   },
 
   effects: {
+    *followQuestion({ payload }, { call }) {
+      const res = yield call(helpServer.followQuestion, payload);
+      return res.data;
+    },
+    *unFollowQuestion({ payload }, { call }) {
+      const res = yield call(helpServer.unFollowQuestion, payload);
+      return res.data;
+    },
+    *followUser({ payload }, { call }) {
+      const res = yield call(helpServer.followUser, payload);
+      return res.data;
+    },
+    *unFollowUser({ payload }, { call }) {
+      const res = yield call(helpServer.unFollowUser, payload);
+      return res.data;
+    },
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnwser, payload);
       const response = res.data;
@@ -37,7 +57,12 @@ export default {
         });
         yield put({
           type: 'saveAnswers',
-          payload: { answerList: answerList, total: response.result.answer.total }
+          payload: {
+            answerList: answerList,
+            followers: response.result.followers,
+            followed: response.result.followed,
+            total: response.result.answer.total
+          }
         });
       }
     },
@@ -52,7 +77,12 @@ export default {
             return {
               ...item,
               commentList: res.data.result.dataList,
-              commentNum: res.data.result.total
+              commentNum: res.data.result.total,
+              commentPageInfo: {
+                pageSize: res.data.result.pageCount,
+                current: res.data.result.pageNum,
+                total: res.data.result.total
+              }
             };
           }
           return { ...item };
@@ -162,6 +192,13 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/reply') {
           const params = query;
+          const { QID, q } = params;
+          const uid = RestTools.getLocalStorage('userInfo')
+            ? RestTools.getLocalStorage('userInfo').UserName
+            : '';
+          const userId = RestTools.getLocalStorage('userInfo')
+            ? RestTools.getLocalStorage('userInfo').UserName
+            : Cookies.get('cnki_qa_uuid');
 
           dispatch({
             type: 'saveAnswers',
@@ -172,13 +209,7 @@ export default {
               domains: []
             }
           });
-          const uid = RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : '';
-          const userId = RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : Cookies.get('cnki_qa_uuid');
-          const { QID, q } = params;
+
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
           } else {
