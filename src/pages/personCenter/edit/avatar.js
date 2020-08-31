@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Upload, Icon, message } from 'antd';
 import querystring from 'querystring';
 import { connect } from 'dva';
-import RestTools from '../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
 function Avatar(props) {
   const { userName } = querystring.parse(window.location.href.split('?')[1]);

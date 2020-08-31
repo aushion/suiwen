@@ -38,14 +38,14 @@ export default {
       });
       const resultData = res.data;
       yield put({
-        type: 'saveList',
+        type: 'global/save',
         payload: {
           ...payload,
           userInfo: resultData.result
         }
       });
-      if(!sessionStorage.getItem('userCommuityInfo')){
-        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result))
+      if (!sessionStorage.getItem('userCommuityInfo')) {
+        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
       }
     },
 

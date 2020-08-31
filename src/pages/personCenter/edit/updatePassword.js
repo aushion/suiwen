@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button, Input, message } from 'antd';
 import { connect } from 'dva';
-import RestTools from '../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
 function UpdatePassword(props) {
   const userInfo = RestTools.getLocalStorage('userInfo');

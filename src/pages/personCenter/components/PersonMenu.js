@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, Icon } from 'antd';
 import router from 'umi/router';
-import RestTools from '../../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
 function PersonMenu(props) {
   const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));

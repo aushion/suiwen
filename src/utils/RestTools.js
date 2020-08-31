@@ -344,5 +344,11 @@ export default {
     法律: { enText: 'Law', topic: 'FL' },
     医学: { enText: 'Medical', topic: 'YX' },
     农业: { enText: 'Argriculture', topic: 'NY' }
+  },
+  followStatus: {
+    '0': 'self',
+    '1': '关注',
+    '2': '已关注',
+    '3': '互相关注'
   }
 };

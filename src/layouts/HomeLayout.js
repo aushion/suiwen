@@ -53,7 +53,7 @@ function HomeLayout(props) {
             {username ? (
               <Link
                 style={{ color: '#fff', marginLeft: 10 }}
-                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+                to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
               >
                 <Avatar
                   size="small"
