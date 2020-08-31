@@ -183,7 +183,7 @@ export default {
                 userName: userName
               }
             });
-          }else if (current === '/personCenter/people/fans') {
+          } else if (current === '/personCenter/people/fans') {
             dispatch({
               type: 'getUserFollowerInfo',
               payload: {

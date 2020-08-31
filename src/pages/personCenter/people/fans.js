@@ -36,9 +36,7 @@ function Fans(props) {
     }
   }
 
-  function handleClick(item) {
-    throttle(handleFollow.bind(this, item), 200);
-  }
+
 
   function handleFollow({ hasFollowed, userName }) {
     if (hasFollowed === 2 || hasFollowed === 3) {
@@ -52,10 +50,11 @@ function Fans(props) {
         }
         return item;
       });
-      console.log('data', data);
       dispatch({
         type: 'personCenter/save',
-        fans: data
+        payload: {
+          fans: data
+        }
       });
       // dispatch({
       //   type: 'personCenter/unFollowUser',
@@ -93,9 +92,9 @@ function Fans(props) {
                   <div>
                     <Button
                       onMouseOver={handleMouseHover.bind(this, item, index)}
-                      // onMouseLeave={() => {
-                      //   setButrtonIndex(-1);
-                      // }}
+                      onMouseLeave={() => {
+                        setButrtonIndex(-1);
+                      }}
                       onClick={throttle(() => {
                         handleFollow(item);
                       }, 2020)}
