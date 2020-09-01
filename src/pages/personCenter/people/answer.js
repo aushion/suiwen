@@ -1,19 +1,21 @@
 import React from 'react';
 import { Divider, List, Avatar } from 'antd';
 import { connect } from 'dva';
-import PeopleMenu from '../components/PeopleMenu';
+import { Link } from 'umi';
 import RestTools from 'Utils/RestTools';
 import styles from './people.less';
 
 function Answer(props) {
-  const { myCommunityAnswer, avatar, loading } = props;
+  const { myCommunityAnswer, avatar, loading,location } = props;
+  const {query} = location;
+  const { userName } = query;
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
   return (
     <div className={styles.people}>
-      <div className={styles.menu}>
-        <PeopleMenu />
-      </div>
       <div className={styles.main}>
-        <div className={styles.title}>我的回答</div>
+        <div className={styles.title}>{userInfo.UserName === userName ? `我的回答`:`他的回答`}</div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
           <List
@@ -33,7 +35,12 @@ function Answer(props) {
             renderItem={(item) => {
               return (
                 <List.Item>
-                  <div style={{ fontSize: 16, fontWeight: 'bold' }}>{item.question}</div>
+                  <Link
+                    to={`/reply?q=${item.question}&QID=${item.qid}`}
+                    style={{ fontSize: 16, fontWeight: 'bold', color: '#38393C' }}
+                  >
+                    {item.question}
+                  </Link>
                   <div style={{ padding: '10px 0' }}>
                     <Avatar src={avatar} />
                     <span>{RestTools.formatPhoneNumber(item.answer[0].userName)}</span>

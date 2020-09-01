@@ -1,6 +1,7 @@
 import helpServer from '../../services/help';
 import RestTools from '../../utils/RestTools';
 import Cookies from 'js-cookie';
+import querystring from 'querystring';
 import { message } from 'antd';
 import router from 'umi/router';
 import { getSG } from '../query/service/result';
@@ -139,30 +140,38 @@ export default {
       }
     },
     *setAnswer({ payload }, { call }) {
+      const query = querystring.parse(window.location.search.split('?')[1]);
+      const { q, QID } = query;
+
       const res = yield call(helpServer.setAnswer, payload);
       if (res.data && res.data.code === 200) {
         message.success('回答成功，感谢您的参与');
-        router.push('/help/myReply');
+        router.push(`reply?q=${q}&QID=${QID}`)
       } else {
         message.warning(res.data.msg);
       }
     },
 
     *editAnswer({ payload }, { call }) {
+      const query = querystring.parse(window.location.search.split('?')[1]);
+      const { q, QID } = query;
       const res = yield call(helpServer.editAnswer, payload);
       if (res.data && res.data.code === 200) {
         message.success('修改成功，感谢您的参与');
-        router.push('/help/myReply');
+        router.push(`reply?q=${q}&QID=${QID}`);
       } else {
         message.warning(res.data.msg);
       }
     },
 
     *setQanswer({ payload }, { call }) {
+      const query = querystring.parse(window.location.search.split('?')[1]);
+      const { q, QID } = query;
+
       const res = yield call(helpServer.setQanswer, payload);
       if (res.data && res.data.code === 200) {
         message.success('回答成功，感谢您的参与');
-        router.push('/help/myReply');
+        router.push(`reply?q=${q}&QID=${QID}`);
       } else {
         message.warning(res.data.msg);
       }
@@ -196,9 +205,10 @@ export default {
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : '';
-          const userId = RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : Cookies.get('cnki_qa_uuid');
+          window.document.title = `社区-${q}`;
+          // const userId = RestTools.getLocalStorage('userInfo')
+          //   ? RestTools.getLocalStorage('userInfo').UserName
+          //   : Cookies.get('cnki_qa_uuid');
 
           dispatch({
             type: 'saveAnswers',
@@ -209,7 +219,6 @@ export default {
               domains: []
             }
           });
-
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
           } else {

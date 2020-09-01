@@ -258,7 +258,10 @@ function AnswerList(props) {
           <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
             <div className="display_flex justify-content_flex-justify">
               <div className={replyStyle.answerAvatar}>
-                <Link to={`help/otherHelp?username=${username}`} style={{ paddingRight: 20 }}>
+                <Link
+                  to={`personCenter/people/ask?userName=${username}`}
+                  style={{ paddingRight: 20 }}
+                >
                   <Avatar
                     src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
                     shape="square"

@@ -1,6 +1,7 @@
 import React from 'react';
 import { List, Input, Popconfirm, Tag, Breadcrumb, Avatar, Button } from 'antd';
 import RestTools from '../../../utils/RestTools';
+import { router } from 'umi';
 
 const { Search } = Input;
 function HelpList(props) {
@@ -116,8 +117,10 @@ function HelpList(props) {
                 </span>
               </div>
               <div className="display_flex justify-content_flex-justify">
-                <Button icon="edit" size="default" ghost type="primary">
-                  写回答
+                <Button icon="edit" size="small" ghost type="primary" onClick={() => {
+                  router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}&editStatus=true`)
+                }}>
+                    写回答
                 </Button>
                 {current === 'myReply' ? (
                   <div>查看回答</div>

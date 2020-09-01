@@ -69,7 +69,7 @@ function Avatar(props) {
   );
 
   return (
-    <div>
+    <div style={{ padding: '10px 0 10px 50%', marginLeft: '-100px'}}>
       <div>
         <Upload
           name="file"
@@ -83,14 +83,12 @@ function Avatar(props) {
           }}
           onChange={handleChange}
         >
-          {/* {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
           {uploadButton}
         </Upload>
       </div>
-
       <div>
         <label htmlFor="照片预览">照片预览:</label>
-        <div style={{ width: 280, height: 280 }}>
+        <div style={{ width: 200, height: 200 }}>
           <img
             style={{ width: '100%', height: '100%', borderRadius: 6 }}
             src={props.avatar}

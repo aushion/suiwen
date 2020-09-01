@@ -41,4 +41,9 @@ export function getUserFollowerInfo(payload) {
   })
 }
 
+export function getUserFollowedQuestion(payload) {
+  return request.post(`/user/getUserFollowedQuestion`, null, {
+    params: payload
+  })
+}
 

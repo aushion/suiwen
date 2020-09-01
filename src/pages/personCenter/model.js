@@ -5,7 +5,8 @@ import {
   getMyCommunityQuestion,
   getMyCommunityAnswer,
   getUserFolloweeInfo,
-  getUserFollowerInfo
+  getUserFollowerInfo,
+  getUserFollowedQuestion
 } from './service';
 import helpServer from '../../services/help';
 import helpService from '../../services/help';
@@ -25,7 +26,8 @@ export default {
     myCommunityQuestion: null,
     myCommunityAnswer: null,
     userFolloweeInfo: [],
-    fans: []
+    fans: [],
+    userFollowQuestion: []
   },
   effects: {
     *getUserCommunityInfo({ payload }, { call, put }) {
@@ -40,9 +42,7 @@ export default {
           userCommunityInfo: resultData.result
         }
       });
-      if (!sessionStorage.getItem('userCommuityInfo')) {
-        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
-      }
+    
     },
 
     *getMyCommunityQuestion({ payload }, { call, put }) {
@@ -52,6 +52,18 @@ export default {
           type: 'save',
           payload: {
             myCommunityQuestion: res.data.result
+          }
+        });
+      }
+    },
+
+    *getUserFollowedQuestion({ payload }, { call, put }) {
+      const res = yield call(getUserFollowedQuestion, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            userFollowQuestion: res.data.result
           }
         });
       }
@@ -94,6 +106,10 @@ export default {
     },
     *unFollowUser({ payload }, { call }) {
       const res = yield call(helpServer.unFollowUser, payload);
+      return res.data;
+    },
+    *followUser({ payload }, { call }) {
+      const res = yield call(helpServer.followUser, payload);
       return res.data;
     },
     *getUserInfo({ payload }, { call, put }) {
@@ -143,10 +159,28 @@ export default {
           ? JSON.parse(localStorage.getItem('userInfo'))
           : null;
         const current = pathname;
+        const pathnameArray = current.split('/'); //获取路由信息为了渲染默认菜单选中
         if (match) {
+          if (pathnameArray[2] === 'edit') {
+            dispatch({
+              type: 'save',
+              payload: {
+                defaultKey: pathnameArray[3]
+              }
+            });
+          } else {
+            dispatch({
+              type: 'save',
+              payload: {
+                defaultPersonKey: pathnameArray[3]
+              }
+            });
+          }
           dispatch({
             type: 'save',
-            avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`
+            payload: {
+              avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`
+            }
           });
           dispatch({
             type: 'getUserCommunityInfo',
@@ -193,16 +227,23 @@ export default {
                 userName: userName
               }
             });
-          }
-
-          if (current === '/personCenter/edit/personInfo') {
+          } else if (current === '/personCenter/people/followQuestion') {
+            dispatch({
+              type: 'getUserFollowedQuestion',
+              payload: {
+                operatorName: userInfo.UserName,
+                pageSize: 10,
+                pageStart: 1,
+                userName: userName
+              }
+            });
+          } else if (current === '/personCenter/edit/personInfo') {
             dispatch({ type: 'getUserInfo', payload: { userName: encodeURIComponent(userName) } });
             dispatch({ type: 'save', payload: { defaultKey: 'personInfo' } });
           } else if (current === '/personCenter/edit/avatar') {
             dispatch({ type: 'getUserHeadPicture', payload: { userName } });
             dispatch({ type: 'save', payload: { defaultKey: 'avatar' } });
           } else if (current === '/personCenter/edit/updatePassword') {
-            // dispatch({ type: 'getUserHeadPicture', payload: { userName } });
             dispatch({ type: 'save', payload: { defaultKey: 'updatePassword' } });
           }
         }

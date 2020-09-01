@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import RestTools from 'Utils/RestTools';
 
 function PeopleMenu(props) {
-  const { defaultPersonKey, dispatch } = props;
+  const { defaultPersonKey, dispatch, userName } = props;
   const menuItemStyle = {
     width: 150,
     textAlign: 'center',
@@ -14,20 +14,19 @@ function PeopleMenu(props) {
   };
 
   function handleClick(item) {
-    const userInfo = RestTools.getLocalStorage('userInfo');
     dispatch({
       type: 'personCenter/save',
       payload: {
         defaultPersonKey: item.key
       }
     });
-    router.push(`/personCenter/people/${item.key}?userName=${userInfo.UserName}`);
+    router.push(`/personCenter/people/${item.key}?userName=${userName}`);
   }
 
   return (
     <Menu
       mode="horizontal"
-      style={{ width: 750, border: '1px solid #bbb' }}
+      style={{ width: 750, border: '1px solid #ccc' }}
       onClick={handleClick}
       selectedKeys={[defaultPersonKey]}
     >

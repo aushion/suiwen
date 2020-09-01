@@ -64,6 +64,9 @@ export default {
     return request.post(serverurl + `/getDetailByQuestion`, null, {
       params: {
         qId: QID,
+        sort: 'hot',
+        pageSize: 10,
+        pageStart: 1,
         userId: uid
       }
     });
@@ -79,7 +82,7 @@ export default {
   },
 
   editAnswer(payload) {
-    return request.post(serverurl + `/editCommuityAnswer`, { ...payload });
+    return request.post(serverurl + `/editCommunityAnswer`, { ...payload });
   },
 
   setQanswer(payload) {
@@ -138,16 +141,16 @@ export default {
   disLikeAnswer(payload) {
     return request.post(process.env.apiUrl + '/like/disLikeAnswer', null, { params: payload });
   },
-  followQuestion(payload){
-    return request.post(process.env.apiUrl + '/follow/followQuestion',null, {params: payload})
+  followQuestion(payload) {
+    return request.post(process.env.apiUrl + '/follow/followQuestion', null, { params: payload });
   },
-  unFollowQuestion(payload){
-    return request.post(process.env.apiUrl + '/follow/unFollowQuestion',null, {params: payload})
+  unFollowQuestion(payload) {
+    return request.post(process.env.apiUrl + '/follow/unFollowQuestion', null, { params: payload });
   },
-  followUser(payload){
-    return request.post(process.env.apiUrl + '/follow/followUser',null, {params: payload})
+  followUser(payload) {
+    return request.post(process.env.apiUrl + '/follow/followUser', null, { params: payload });
   },
-  unFollowUser(payload){
-    return request.post(process.env.apiUrl + '/follow/unFollowUser',null, {params: payload})
+  unFollowUser(payload) {
+    return request.post(process.env.apiUrl + '/follow/unFollowUser', null, { params: payload });
   }
 };

@@ -19,8 +19,8 @@ let timerCount = null;
 function Reply(props) {
   const { dispatch, followed, location } = props;
   const params = location.query;
-  const { QID } = params;
-  const [showEditor, switchEditor] = useState(false); //是否显示回答框
+  const { QID, editStatus = false } = params;
+  const [showEditor, switchEditor] = useState(editStatus); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))

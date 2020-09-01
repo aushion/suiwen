@@ -96,6 +96,7 @@ export default {
             ? JSON.parse(sessionStorage.getItem('communityNode'))
             : null;
           const current = pathname;
+          window.document.title = `知网随问-社区`
           dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
           dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } });
           dispatch({

@@ -5,7 +5,7 @@ import router from 'umi/router';
 import DomainTags from './components/DomainTags';
 import HelpList from './components/HelpList';
 import HelpMenu from './components/HelpMenu';
-import RestTools from '../../utils/RestTools';
+
 import NewHelp from '../query/components/NewHelp';
 import UserInfo from './components/UserInfo';
 import helpStyle from './index.less';
@@ -23,28 +23,13 @@ function NewHelpPage(props) {
     loading,
     communityNode
   } = props;
-  const menus = RestTools.getLocalStorage('userInfo')
-    ? [
-        {
-          key: 'newHelp',
-          text: '新求助'
-        },
+  const menus = [
+    {
+      key: 'newHelp',
+      text: '新求助'
+    }
+  ];
 
-        {
-          key: 'myHelp',
-          text: '我的求助'
-        },
-        {
-          key: 'myReply',
-          text: '我的回答'
-        }
-      ]
-    : [
-        {
-          key: 'newHelp',
-          text: '新求助'
-        }
-      ];
   //点击tag响应事件
   function handleClickTag(payload) {
     dispatch({
