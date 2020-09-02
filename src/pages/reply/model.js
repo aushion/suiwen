@@ -46,6 +46,22 @@ export default {
       const res = yield call(helpServer.unFollowUser, payload);
       return res.data;
     },
+    *getUserCommunityInfo({ payload }, { call, put }) {
+      const res = yield call(helpServer.getUserCommunityInfo, {
+        ...payload
+      });
+      const resultData = res.data;
+      yield put({
+        type: 'global/save',
+        payload: {
+          ...payload,
+          userInfo: resultData.result
+        }
+      });
+      if (!sessionStorage.getItem('userCommuityInfo')) {
+        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
+      }
+    },
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnwser, payload);
       const response = res.data;
@@ -219,6 +235,9 @@ export default {
               domains: []
             }
           });
+          if(uid){
+            dispatch({type: 'getUserCommunityInfo', payload: {userName:uid}})
+          }
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
           } else {

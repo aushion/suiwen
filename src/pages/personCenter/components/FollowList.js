@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { List, Button, Avatar } from 'antd';
 import { throttle } from 'lodash';
 import RestTools from 'Utils/RestTools';
+import { router } from 'umi';
 
 function FollowList(props) {
   const { data, dispatch, loading, stateName } = props;
@@ -80,9 +81,16 @@ function FollowList(props) {
         dataSource={data}
         renderItem={(item, index) => {
           return (
-            <List.Item>
-              <div style={{ fontWeight: 'bold' }}>
+            <List.Item >
+              <div style={{ fontWeight: 'bold',cursor: "pointer" }}>
                 <Avatar
+                
+                onClick={() => {
+                  if(userCommunityInfo.userName !== item.userName){
+                    router.push(`/personCenter/people/ask?userName=${item.userName}`)
+                  }
+                  return;
+                }}
                   size={64}
                   shape="square"
                   src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}`}

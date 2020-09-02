@@ -15,7 +15,8 @@ export default {
     theme: '#0BB3FF',
     showLoginModal: false,
     avatar:'',
-    userInfo: {}
+    userInfo: {},
+    messageCount: 0,
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {

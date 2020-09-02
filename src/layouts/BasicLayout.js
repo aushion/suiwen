@@ -10,6 +10,7 @@ import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
 import logo from '../assets/logo1.png';
 import LoginRegister from '../components/LoginRegister';
+import MessageBox from '../components/MessageBox';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
@@ -72,7 +73,6 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-        
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logo} alt="logo" />
             {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
@@ -88,25 +88,31 @@ function BasicLayout(props) {
             />
           </div>
           <div className={styles.login}>
-            {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-            <span className={styles.tips}>
-              您好，
+            <span className={`${styles.tips} display_flex`}>
               {username ? (
-                <Link
-                  style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
-                >
-                  <Avatar
-                    size="small"
-                    src={
-                      avatar ||
-                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                        userInfo ? userInfo.UserName : ''
-                      }`
-                    }
-                  />
-                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
+                <>
+                  <span style={{ cursor: 'pointer', marginRight: 20 }}>
+                    <MessageBox userName={username} />
+                  </span>
+                  <Link
+                    style={{ color: '#fff', marginLeft: 10 }}
+                    to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                  >
+                    <Avatar
+                      size="small"
+                      src={
+                        avatar ||
+                        `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                          userInfo ? userInfo.UserName : ''
+                        }`
+                      }
+                    />
+                    <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                  </Link>
+                  <button onClick={logout} className={styles.login_btn}>
+                    退出
+                  </button>
+                </>
               ) : (
                 '游客'
               )}
@@ -138,11 +144,6 @@ function BasicLayout(props) {
                 注册
               </Button>
             )}
-            {username ? (
-              <button onClick={logout} className={styles.login_btn}>
-                退出
-              </button>
-            ) : null}
           </div>
         </div>
       </Header>
