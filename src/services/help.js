@@ -59,6 +59,11 @@ export default {
       }
     });
   },
+
+  waitAnswer(payload){
+    return request.post(serverurl+`/waitAnswer`)
+  },
+
   getAnwser(payload) {
     const { QID, uid = '' } = payload;
     return request.post(serverurl + `/getDetailByQuestion`, null, {
@@ -84,6 +89,8 @@ export default {
   editAnswer(payload) {
     return request.post(serverurl + `/editCommunityAnswer`, { ...payload });
   },
+
+
 
   setQanswer(payload) {
     return request.post(serverurl + '/setQuestionAndAnswer', { ...payload });

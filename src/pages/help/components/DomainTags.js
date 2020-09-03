@@ -15,7 +15,8 @@ function DomainTags(props) {
     border: 'none',
     color: '#585A5D',
     padding: '4px 15px',
-    fontSize: 14
+    fontSize: 14,
+    fontWeight: 'bolder',
   };
   const { data, onClickTag, dispatch, communityNode } = props;
   const localChecked = data.map((item) => item.cName).indexOf(communityNode?.firstNode.cName);

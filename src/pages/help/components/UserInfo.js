@@ -32,7 +32,7 @@ function UserInfo(props) {
               <div style={{ color: '#414141', fontSize: 18 }}>
                 {RestTools.formatPhoneNumber(userInfo.userName) || '游客'}
               </div>
-              <div style={{ color: '#919191' }}>我很懒什么也没留下</div>
+              <div style={{ color: '#666', fontSize: 13 }}>我很懒什么也没留下</div>
             </div>
           </Link>
         </div>
@@ -41,21 +41,24 @@ function UserInfo(props) {
           className="display_flex justify-content_flex-justify"
           style={{ padding: '20px 20px 0', textAlign: 'center' }}
         >
-          <Link to={`/personCenter/people/answer?userName=${userInfo.userName}`} style={{ textAlign: 'center' }}>
+          <Link
+            to={`/personCenter/people/answer?userName=${userInfo.userName}`}
+            style={{ textAlign: 'center' }}
+          >
             <div>{userInfo.answerNum || 0}</div>
-            <div style={{ color: '#919191' }}>回答</div>
+            <div style={{ color: '#333', fontWeight: 'bolder' }}>回答</div>
           </Link>
-          <Link to={`/personCenter/people/ask?userName=${userInfo.userName}`} >
+          <Link to={`/personCenter/people/ask?userName=${userInfo.userName}`}>
             <div>{userInfo.questionNum || 0}</div>
-            <div style={{ color: '#919191' }}>提问</div>
+            <div style={{ color: '#333', fontWeight: 'bolder' }}>提问</div>
           </Link>
-          <Link to={`/personCenter/people/fans?userName=${userInfo.userName}`} >
+          <Link to={`/personCenter/people/fans?userName=${userInfo.userName}`}>
             <div>{userInfo.followers || 0}</div>
-            <div style={{ color: '#919191' }}>粉丝</div>
+            <div style={{ color: '#333', fontWeight: 'bolder' }}>粉丝</div>
           </Link>
-          <Link to={`/personCenter/people/follow?userName=${userInfo.userName}`} >
+          <Link to={`/personCenter/people/follow?userName=${userInfo.userName}`}>
             <div>{userInfo.followees || 0}</div>
-            <div style={{ color: '#919191' }}>关注</div>
+            <div style={{ color: '#333', fontWeight: 'bolder' }}>关注</div>
           </Link>
         </div>
       </div>

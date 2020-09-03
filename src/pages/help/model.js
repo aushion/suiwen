@@ -16,7 +16,8 @@ export default {
     index: 1,
     uid: JSON.parse(localStorage.getItem('userInfo'))
       ? JSON.parse(localStorage.getItem('userInfo')).UserName
-      : Cookies.get('cnki_qa_uuid')
+      : Cookies.get('cnki_qa_uuid'),
+    waitAnswer: []
   },
 
   effects: {
@@ -30,6 +31,11 @@ export default {
         type: 'saveList',
         payload: { newHelpData: resultData.result, ...payload }
       });
+    },
+
+    *getHotQuestions({ payload }, { call, put }) {
+      const res = yield call(helpService.getHotQuestions, payload);
+      yield put({ type: 'saveList', payload: { hotHelpData: res.data.result, ...payload } });
     },
 
     *getUserCommunityInfo({ payload }, { call, put }) {
@@ -61,11 +67,6 @@ export default {
       yield put({ type: 'saveDomainList', payload: { domainList: resultData.result } });
     },
 
-    *getHotQuestions({ payload }, { call, put }) {
-      const res = yield call(helpService.getHotQuestions, payload);
-      yield put({ type: 'saveList', payload: { hotHelpData: res.data.result, ...payload } });
-    },
-
     *getMyAnswerQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getMyAnswerQuestions, payload);
       yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
@@ -81,13 +82,23 @@ export default {
           payload: { domain: '', uid }
         });
       }
+    },
+    *waitAnswer({ payload }, { call, put }) {
+      const res = yield call(helpService.waitAnswer, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'saveList',
+          payload: {
+            waitAnswer: res.data.result
+          }
+        });
+      }
     }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const match = pathname.match(/Help/i);
-        const { username } = query;
         if (match) {
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
@@ -96,9 +107,12 @@ export default {
             ? JSON.parse(sessionStorage.getItem('communityNode'))
             : null;
           const current = pathname;
-          window.document.title = `知网随问-社区`
+          window.document.title = `知网随问-社区`;
+
           dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
-          dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } });
+          dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } }); //获取社区个人信息
+          dispatch({ type: 'waitAnswer' });
+
           dispatch({
             type: 'getHotQuestions',
             payload: { domain: encodeURIComponent('') }
@@ -125,44 +139,13 @@ export default {
 
             dispatch({
               type: 'getHotQuestions',
-              payload: { domain: encodeURIComponent('') }
-            });
-          } else if (current === '/help/myHelp') {
-            dispatch({
-              type: 'getDomain',
-              payload: { uId: uid }
-            });
-            dispatch({
-              type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent(''), uid }
-            });
-          } else if (current === '/help/myReply') {
-            dispatch({
-              type: 'getMyAnswerQuestions',
-              payload: { domain: encodeURIComponent(''), uid }
-            });
-
-            dispatch({
-              type: 'getPersonDomain',
-              payload: { uId: uid }
-            });
-          } else if (current === '/help/otherHelp') {
-            dispatch({
-              type: 'getDomain',
-              payload: { uId: username }
-            });
-            dispatch({
-              type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent(''), uid: username }
-            });
-          } else if (current === '/help/otherReply') {
-            dispatch({
-              type: 'getDomain',
-              payload: { uId: username }
-            });
-            dispatch({
-              type: 'getMyAnswerQuestions',
-              payload: { domain: encodeURIComponent(''), uid: username }
+              payload: {
+                domain: communityNode
+                  ? communityNode.secondNode
+                    ? communityNode.secondNode.cId
+                    : communityNode.firstNode.cId
+                  : ''
+              }
             });
           }
         }

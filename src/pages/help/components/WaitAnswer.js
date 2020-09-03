@@ -1,11 +1,18 @@
 import { List, Icon } from 'antd';
 import Link from 'umi/link';
-import RestTools from '../../../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
-function NewHelp(props) {
+function WaitAnswer(props) {
   const { data, title } = props;
   return (
-    <div style={{ backgroundColor: '#fff', padding: 20, boxShadow: '#cecece 0 0 6px 0' }}>
+    <div
+      style={{
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 4,
+        boxShadow: '#cecece 0 0 6px 0'
+      }}
+    >
       <div
         style={{
           paddingBottom: 10,
@@ -39,25 +46,14 @@ function NewHelp(props) {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                   fontSize: 14,
-                  color: '#333',
+                  color: '#666',
                   fontWeight: 'bold',
                   display: 'block'
                 }}
                 title={item.Content}
-                to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
+                to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}&editStatus=true`}
               >
                 {item.content}
-                <div
-                  style={{
-                    float: 'right',
-                    color: '#999',
-                    fontSize: 12,
-                    width: 60,
-                    lineHeight: '25px'
-                  }}
-                >
-                  回答数：{item.checkCount}
-                </div>
               </Link>
             </div>
           </List.Item>
@@ -67,4 +63,4 @@ function NewHelp(props) {
   );
 }
 
-export default NewHelp;
+export default WaitAnswer;

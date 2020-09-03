@@ -1,78 +1,71 @@
 import React from 'react';
-import { Divider } from 'antd';
+import { Row, Col } from 'antd';
 import { connect } from 'dva';
-import router from 'umi/router';
+import WaitAnswer from './components/WaitAnswer';
 import DomainTags from './components/DomainTags';
 import HelpList from './components/HelpList';
 import HelpMenu from './components/HelpMenu';
-
+import UserInfo from './components/UserInfo';
 import helpStyle from './index.less';
 
 function HotHelp(props) {
-  const { domainList, newHelpData, dispatch, domain, size, index, uid, loading, communityNode } = props;
-  const menus = JSON.parse(localStorage.getItem('userInfo'))
-  ? [
-      {
-        key: 'newHelp',
-        text: '新求助'
-      },
-      {
-        key: 'hotHelp',
-        text: '热门求助'
-      },
-      {
-        key: 'myHelp',
-        text: '我的求助'
-      },
-      {
-        key: 'myReply',
-        text: '我的回答'
-      }
-    ]
-  : [
-      {
-        key: 'newHelp',
-        text: '新求助'
-      },
-      {
-        key: 'hotHelp',
-        text: '热门求助'
-      }
-    ];
+  const {
+    domainList,
+    hotHelpData,
+    dispatch,
+    domain,
+    size,
+    index,
+    uid,
+    loading,
+    communityNode,
+    waitAnswer
+  } = props;
+  const menus = [
+    {
+      key: 'newHelp',
+      text: '新求助'
+    },
+    {
+      key: 'hotHelp',
+      text: '热门求助'
+    }
+  ];
+
   //点击tag响应事件
   function handleClickTag(payload) {
     dispatch({
       type: 'help/getHotQuestions',
-      payload: payload,
+      payload: payload
     });
   }
-  function handleClickItem(item) {
-    dispatch({ type: 'global/setQuestion', payload: { q: item.content } });
-    router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.id}&domain=${item.domain}`);
-  }
+
 
   function handleSearchOrChangePage(payload) {
     dispatch({
       type: 'help/getHotQuestions',
-      payload: payload,
+      payload: payload
     });
   }
 
   return (
     <div className={helpStyle.help}>
-      <HelpMenu current="hotHelp" data={menus}></HelpMenu>
-
       <div className={helpStyle.content}>
-        {domainList.length ? (
-          <div className={helpStyle.domainTags}>
-            <DomainTags localDomain={domain} data={domainList} onClickTag={handleClickTag} />
-          </div>
-        ) : null}
-        <div>
-          <Divider style={{ margin: 0 }} />
-          {newHelpData ? (
+        <Row gutter={24}>
+          <Col span={18} className={helpStyle.content_left}>
+            <HelpMenu current="hotHelp" data={menus} dispatch={dispatch}/>
+            {domainList.length ? (
+              <div className={helpStyle.domainTags}>
+                <DomainTags
+                  localDomain={domain}
+                  communityNode={communityNode}
+                  data={domainList}
+                  onClickTag={handleClickTag}
+                />
+              </div>
+            ) : null}
             <HelpList
-              data={newHelpData}
+              data={hotHelpData}
               domain={domain}
               size={size}
               index={index}
@@ -80,10 +73,16 @@ function HotHelp(props) {
               uid={uid}
               communityNode={communityNode}
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
-              handleClickItem={handleClickItem}
+              // handleClickItem={handleClickItem}
             />
-          ) : null}
-        </div>
+          </Col>
+          <Col span={6}>
+            <div style={{ marginBottom: 20 }}>
+              <UserInfo />
+            </div>
+            {waitAnswer.length ? <WaitAnswer title="等我来答" data={waitAnswer} /> : null}
+          </Col>
+        </Row>
       </div>
     </div>
   );
@@ -92,7 +91,7 @@ function HotHelp(props) {
 function mapStateToProps(state) {
   return {
     ...state.help,
-    loading: state.loading.models.help,
+    loading: state.loading.models.help
   };
 }
 export default connect(mapStateToProps)(HotHelp);

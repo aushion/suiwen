@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, Input, Popconfirm, Tag, Breadcrumb, Avatar, Button } from 'antd';
 import RestTools from '../../../utils/RestTools';
-import { router } from 'umi';
+import { Link } from 'umi';
 
 const { Search } = Input;
 function HelpList(props) {
@@ -13,8 +13,7 @@ function HelpList(props) {
     domain,
     handleSearchOrChangePage,
     loading,
-    dispatch,
-    handleClickItem
+    dispatch
   } = props;
   const { firstNode = null, secondNode = null } = communityNode || {};
   function confirm(id) {
@@ -86,45 +85,58 @@ function HelpList(props) {
         renderItem={(item) => {
           return (
             <List.Item style={{ padding: '16px 0' }}>
-              <div>
-                <Avatar icon="user" />
-                <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
-              </div>
-              <div
-                style={{
-                  width: '60%',
-                  color: '#454749',
-                  fontWeight: 800,
-                  lineHeight: '28px',
-                  fontSize: 15,
-                  padding: '10px 0',
-                  cursor: 'pointer',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }}
-                onClick={() => handleClickItem(item)}
-              >
-                {current === 'myReply' ? item.question : item.content}
-                <span style={{ marginLeft: 10 }}>
-                  {item.tag
-                    ? item.tag.split(';').map((item, index) => (
-                        <Tag color="volcano" key={index}>
-                          {item}
-                        </Tag>
-                      ))
-                    : null}
-                </span>
-              </div>
               <div className="display_flex justify-content_flex-justify">
-                <Button icon="edit" size="small" ghost type="primary" onClick={() => {
-                  router.push(`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}&editStatus=true`)
-                }}>
-                    写回答
-                </Button>
-                {current === 'myReply' ? (
-                  <div>查看回答</div>
-                ) : (
+                <div
+                  style={{
+                    width: '60%',
+
+                    fontWeight: 800,
+                    lineHeight: '28px',
+                    fontSize: 15,
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                  // onClick={() => handleClickItem(item)}
+                >
+                  <div>
+                    <Avatar icon="user" />
+                    <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
+                  </div>
+                  <Link
+                    style={{ color: '#454749' }}
+                    to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
+                    target="_blank"
+                  >
+                    {current === 'myReply' ? item.question : item.content}
+                  </Link>
+                  <span style={{ marginLeft: 10 }}>
+                    {item.tag
+                      ? item.tag.split(',').map((item, index) => (
+                          <Tag color="volcano" key={index}>
+                            {item}
+                          </Tag>
+                        ))
+                      : null}
+                  </span>
+                </div>
+                <div>
+                  <div style={{ textAlign: 'right' }}>
+                    <Button
+                      icon="edit"
+                      size="small"
+                      ghost
+                      type="primary"
+                      href={`/reply?q=${encodeURIComponent(item.content)}&QID=${
+                        item.qid
+                      }&editStatus=true`}
+                      target="_blank"
+                    >
+                      写回答
+                    </Button>
+                  </div>
+
                   <div style={{ color: '#8590A6', lineHeight: '40px' }}>
                     {current === 'myHelp' && item.checkCount === 0 ? (
                       <Popconfirm
@@ -152,7 +164,7 @@ function HelpList(props) {
                       {item.commitTime}
                     </span>
                   </div>
-                )}
+                </div>
               </div>
             </List.Item>
           );
