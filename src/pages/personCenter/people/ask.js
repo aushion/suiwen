@@ -15,7 +15,7 @@ function People(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo.UserName === userName ? `我的提问` : `他的提问`}
+          {userInfo?.UserName === userName ? `我的提问` : `他的提问`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>

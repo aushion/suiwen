@@ -20,7 +20,8 @@ function NewHelpPage(props) {
     uid,
     loading,
     communityNode,
-    waitAnswer
+    waitAnswer,
+    userInfo
   } = props;
   const menus = [
     {
@@ -40,7 +41,6 @@ function NewHelpPage(props) {
       payload: payload
     });
   }
-
 
   function handleSearchOrChangePage(payload) {
     dispatch({
@@ -78,12 +78,8 @@ function NewHelpPage(props) {
             />
           </Col>
           <Col span={6}>
-            <div style={{ marginBottom: 20 }}>
-              <UserInfo />
-            </div>
-            {waitAnswer.length ? (
-              <WaitAnswer title="等我来答" data={waitAnswer} />
-            ) : null}
+            {userInfo ? <UserInfo /> : null}
+            {waitAnswer.length ? <WaitAnswer title="等我来答" data={waitAnswer} /> : null}
           </Col>
         </Row>
       </div>
@@ -94,6 +90,7 @@ function NewHelpPage(props) {
 function mapStateToProps(state) {
   return {
     ...state.help,
+    ...state.global,
     loading: state.loading.models.help
   };
 }

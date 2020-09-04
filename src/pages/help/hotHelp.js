@@ -19,7 +19,8 @@ function HotHelp(props) {
     uid,
     loading,
     communityNode,
-    waitAnswer
+    waitAnswer,
+    userInfo
   } = props;
   const menus = [
     {
@@ -40,7 +41,6 @@ function HotHelp(props) {
     });
   }
 
-
   function handleSearchOrChangePage(payload) {
     dispatch({
       type: 'help/getHotQuestions',
@@ -53,7 +53,7 @@ function HotHelp(props) {
       <div className={helpStyle.content}>
         <Row gutter={24}>
           <Col span={18} className={helpStyle.content_left}>
-            <HelpMenu current="hotHelp" data={menus} dispatch={dispatch}/>
+            <HelpMenu current="hotHelp" data={menus} dispatch={dispatch} />
             {domainList.length ? (
               <div className={helpStyle.domainTags}>
                 <DomainTags
@@ -77,9 +77,7 @@ function HotHelp(props) {
             />
           </Col>
           <Col span={6}>
-            <div style={{ marginBottom: 20 }}>
-              <UserInfo />
-            </div>
+            {userInfo ? <UserInfo /> : null}
             {waitAnswer.length ? <WaitAnswer title="等我来答" data={waitAnswer} /> : null}
           </Col>
         </Row>
@@ -91,6 +89,7 @@ function HotHelp(props) {
 function mapStateToProps(state) {
   return {
     ...state.help,
+    ...state.global,
     loading: state.loading.models.help
   };
 }

@@ -11,13 +11,14 @@ import UserInfo from '../help/components/UserInfo';
 import AnswerList from './components/AnswerList';
 import replyStyle from './index.less';
 import AnswerForm from './components/AnswerForm';
+import WaitAnswer from '../help/components/WaitAnswer';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');
 
 let timerCount = null;
 function Reply(props) {
-  const { dispatch, followed, location } = props;
+  const { dispatch, followed, location, waitAnswer } = props;
   const params = location.query;
   const { QID, editStatus = false } = params;
   const [showEditor, switchEditor] = useState(editStatus); //是否显示回答框
@@ -91,7 +92,8 @@ function Reply(props) {
           </Col>
           <Col span={6}>
             <div>
-              <UserInfo />
+              {userCommunityInfo ? <UserInfo /> : null}
+              {waitAnswer.length ? <WaitAnswer data={waitAnswer} title="等你来答" /> : null}
             </div>
           </Col>
         </Row>

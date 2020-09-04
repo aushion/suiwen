@@ -15,7 +15,7 @@ function Fans(props) {
     <div className={styles.people}>
 
       <div className={styles.main}>
-        <div className={styles.title}>{userInfo.UserName === userName ? '我的粉丝': '他的粉丝'}</div>
+        <div className={styles.title}>{userInfo?.UserName === userName ? '我的粉丝': '他的粉丝'}</div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
           <FollowList data={fans} dispatch={dispatch} stateName="fans" loading={loading} />

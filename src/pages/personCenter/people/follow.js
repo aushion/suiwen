@@ -14,7 +14,7 @@ function Follow(props) {
   return (
     <div className={styles.people}>
       <div className={styles.main}>
-        <div className={styles.title}>{userInfo.UserName === userName ? '我的关注': '他的关注'}</div>
+        <div className={styles.title}>{userInfo?.UserName === userName ? '我的关注': '他的关注'}</div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
           <FollowList

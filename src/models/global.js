@@ -15,7 +15,7 @@ export default {
     theme: '#0BB3FF',
     showLoginModal: false,
     avatar:'',
-    userInfo: {},
+    userInfo: null,
     messageCount: 0,
   },
   subscriptions: {

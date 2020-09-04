@@ -31,6 +31,13 @@ function HomeLayout(props) {
   function logout() {
     window.Ecp_LogoutOptr_my(0);
     localStorage.removeItem('userInfo');
+    sessionStorage.removeItem('userCommunityInfo');
+    dispatch({
+      type: 'global/save',
+      payload: {
+        userInfo: null
+      }
+    })
     setUsername(null);
   }
 
@@ -66,7 +73,7 @@ function HomeLayout(props) {
                 </button>
               </>
             ) : (
-              '游客'
+              null
             )}
           </span>
           {username ? null : (

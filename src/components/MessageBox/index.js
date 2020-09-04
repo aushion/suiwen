@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Icon, Badge, Popover, Tabs, List } from 'antd';
-import io from 'socket.io-client';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import { connect } from 'dva';
 import { Link } from 'umi';
 import { getUnReadNotification } from '../../services/message';
@@ -163,17 +164,21 @@ function MessageBox(props) {
             return <List.Item>{sentence[`${type}${item.entityType}`]}</List.Item>;
           }}
         />
-        
       </div>
     );
   };
 
   useEffect(() => {
-    // const socket = io('http://192.168.22.16:3103/im/conn?uid=' + userName);
-    // socket.on('connect', function(data) {
-    //   console.log('data', data);
-    // });
-  }, []);
+    const sock = new SockJS(`http://192.168.103.25:8080/sw.test.api/im/conn?uid=${userName}`);
+    const stompClient = Stomp.over(sock);
+    // 创建连接
+    stompClient.connect({}, function(frame) {
+      //订阅消息
+      stompClient.subscribe(`/user/${userName}/msg`, function(data) {
+        console.log(data.body);
+      });
+    });
+  }, [userName]);
 
   useEffect(() => {
     setLoading(true);
@@ -216,7 +221,7 @@ function MessageBox(props) {
         key="3"
       >
         <MessageList data={notifyList} type="3" />
-        <Link>查看所有通知</Link>
+        <Link to={`/notify?type=3`}>查看所有通知</Link>
       </TabPane>
       <TabPane
         tab={
@@ -227,7 +232,7 @@ function MessageBox(props) {
         key="1"
       >
         <MessageList data={notifyList} type="1" />
-        <Link>查看所有通知</Link>
+        <Link to={`/notify?type=1`}>查看所有通知</Link>
       </TabPane>
       <TabPane
         tab={
@@ -238,7 +243,7 @@ function MessageBox(props) {
         key="2"
       >
         <MessageList data={notifyList} type="2" />
-        <Link>查看所有通知</Link>
+        <Link to={`/notify?type=2`}>查看所有通知</Link>
       </TabPane>
       <TabPane
         tab={
@@ -249,7 +254,7 @@ function MessageBox(props) {
         key="0"
       >
         <MessageList data={notifyList} type="0" />
-        <Link>查看所有通知</Link>
+        <Link to={`/notify?type=0`}>查看所有通知</Link>
       </TabPane>
     </Tabs>
   );

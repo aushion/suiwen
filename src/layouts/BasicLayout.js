@@ -18,6 +18,7 @@ const { Header, Footer, Content } = Layout;
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
   let { q = sessionStorage.getItem('q'), topic = '', topicName = '' } = query;
+
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData =
     JSON.parse(sessionStorage.getItem('topicData')) ||
@@ -63,6 +64,13 @@ function BasicLayout(props) {
   function logout() {
     window.Ecp_LogoutOptr_my(0);
     localStorage.removeItem('userInfo');
+    sessionStorage.removeItem('userCommunityInfo');
+    dispatch({
+      type: 'global/save',
+      payload: {
+        userInfo: null
+      }
+    })
     setUsername(null);
     if (window.location.pathname.includes('personCenter')) {
       router.push('/');
@@ -114,7 +122,7 @@ function BasicLayout(props) {
                   </button>
                 </>
               ) : (
-                '游客'
+                null
               )}
             </span>
             {username ? null : (

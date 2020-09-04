@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'dva';
 import { Link } from 'umi';
 import { Icon, Avatar, Button, Spin } from 'antd';
@@ -57,7 +57,7 @@ function AnswerList(props) {
           pageSize: 10,
           pageStart: 1,
           sort: 'time',
-          userName: userInfo.UserName
+          userName: userInfo?.UserName
         }
       }).then((res) => {
         //这个res就是answerList由model中传过来的
@@ -146,7 +146,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo.UserName
+            userId: userInfo?.UserName
           }
         };
         dispatch(localAction); //本地页面先修改点赞信息
@@ -175,7 +175,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo.UserName
+            userId: userInfo?.UserName
           }
         });
         break;
@@ -202,7 +202,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo.UserName
+            userId: userInfo?.UserName
           }
         };
         dispatch(effectAction);
@@ -235,7 +235,7 @@ function AnswerList(props) {
         type: current.followedUser ? 'reply/unFollowUser' : 'reply/followUser',
         payload: {
           followUser: current.userName,
-          userId: userInfo.UserName
+          userId: userInfo?.UserName
         }
       });
     }, 300);
@@ -253,9 +253,9 @@ function AnswerList(props) {
         )}
       </div>
       {answerList.map((item, index) => {
-        const username = item.UserName || item.userName;
+        const username = item.userName;
         return (
-          <div className={replyStyle.answerItem} key={item.answerid || item.aid}>
+          <div className={replyStyle.answerItem} key={item.aid}>
             <div className="display_flex justify-content_flex-justify">
               <div className={replyStyle.answerAvatar}>
                 <Link
@@ -269,7 +269,7 @@ function AnswerList(props) {
                   <span style={{ marginLeft: 10 }}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link>
               </div>
-              {item.userName !== userInfo.UserName ? (
+              {item.userName !== userInfo?.UserName ? (
                 <div className={replyStyle.followBtn}>
                   <Button
                     onClick={followUser.bind(this, item)}

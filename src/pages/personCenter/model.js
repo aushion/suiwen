@@ -42,7 +42,6 @@ export default {
           userCommunityInfo: resultData.result
         }
       });
-    
     },
 
     *getMyCommunityQuestion({ payload }, { call, put }) {
@@ -160,7 +159,7 @@ export default {
           : null;
         const current = pathname;
         const pathnameArray = current.split('/'); //获取路由信息为了渲染默认菜单选中
-        if (match) {
+        if (match && userName) {
           if (pathnameArray[2] === 'edit') {
             dispatch({
               type: 'save',
@@ -182,16 +181,12 @@ export default {
               avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`
             }
           });
-          dispatch({
-            type: 'getUserCommunityInfo',
-            payload: { userName: encodeURIComponent(userName) }
-          });
-
+       
           if (current === '/personCenter/people/ask') {
             dispatch({
               type: 'getMyCommunityQuestion',
               payload: {
-                operatorName: userInfo.UserName,
+                operatorName: userInfo?userInfo.UserName:userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -201,7 +196,7 @@ export default {
             dispatch({
               type: 'getMyCommunityAnswer',
               payload: {
-                operatorName: userInfo.UserName,
+                operatorName: userInfo?userInfo.UserName:userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -211,7 +206,7 @@ export default {
             dispatch({
               type: 'getUserFolloweeInfo',
               payload: {
-                operatorName: userInfo.UserName,
+                operatorName: userInfo?userInfo.UserName:userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -221,7 +216,7 @@ export default {
             dispatch({
               type: 'getUserFollowerInfo',
               payload: {
-                operatorName: userInfo.UserName,
+                operatorName: userInfo?userInfo.UserName:userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -231,7 +226,7 @@ export default {
             dispatch({
               type: 'getUserFollowedQuestion',
               payload: {
-                operatorName: userInfo.UserName,
+                operatorName: userInfo?userInfo.UserName:userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName

@@ -7,7 +7,7 @@ import RestTools from 'Utils/RestTools';
 import styles from './ReplyList.less';
 
 let timer = null;
-function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerList }) {
+function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerList, qId }) {
   const [newComment, setNewComment] = useState('');
 
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
@@ -27,13 +27,14 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
     setNewComment(e.target.value);
   }
 
-  function getComment() {
+  function getComment(type='time') {
     dispatch({
       type: 'reply/getComment',
       payload: {
         aId: entityId,
         pageSize: 10,
         pageStart: 1,
+        sort: type,
         userName: userCommunityInfo.userName
       }
     }).then((res) => {
@@ -57,7 +58,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
         }
       }).then((res) => {
         if (res.code === 200) {
-          getComment();
+          getComment('time');
         }
       });
     }
@@ -68,12 +69,13 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
       type: 'reply/delReply',
       payload: {
         answerId: entityId,
-        replyId: replyId
+        replyId: replyId,
+        qId:qId,
       }
     }).then((res) => {
       if (res.code === 200) {
         message.success('删除成功');
-        getComment();
+        getComment('hot');
       }
     });
   }

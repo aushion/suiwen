@@ -100,9 +100,11 @@ export default {
       return history.listen(({ pathname, query }) => {
         const match = pathname.match(/Help/i);
         if (match) {
-          const uid = RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : Cookies.get('cnki_qa_uuid');
+          const userInfo = RestTools.getLocalStorage('userInfo')
+            ? RestTools.getLocalStorage('userInfo')
+            : null;
+            console.log('userInfo', userInfo)
+
           const communityNode = sessionStorage.getItem('communityNode')
             ? JSON.parse(sessionStorage.getItem('communityNode'))
             : null;
@@ -110,13 +112,16 @@ export default {
           window.document.title = `知网随问-社区`;
 
           dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
-          dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } }); //获取社区个人信息
+
           dispatch({ type: 'waitAnswer' });
 
           dispatch({
             type: 'getHotQuestions',
             payload: { domain: encodeURIComponent('') }
           });
+
+          userInfo &&
+            dispatch({ type: 'getUserCommunityInfo', payload: { userName: userInfo.UserName } }); //获取社区个人信息
           if (current === '/help/newHelp') {
             dispatch({
               type: 'getDomain'

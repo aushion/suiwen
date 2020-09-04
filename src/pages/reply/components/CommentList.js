@@ -41,6 +41,7 @@
               payload: {
                 aId: item.aid,
                 pageSize: 10,
+                sort: 'time',
                 pageStart: 1,
                 userName: userCommunityInfo.userName
               }
@@ -286,6 +287,7 @@
                                 <ReplyList
                                   commentId={item.commentId}
                                   entityId={entityId}
+                                  qId={qId}
                                   replyData={item.replyList}
                                 />
                               ) : null}

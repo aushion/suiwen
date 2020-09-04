@@ -1,6 +1,5 @@
 import helpServer from '../../services/help';
 import RestTools from '../../utils/RestTools';
-import Cookies from 'js-cookie';
 import querystring from 'querystring';
 import { message } from 'antd';
 import router from 'umi/router';
@@ -26,7 +25,10 @@ export default {
     username: RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
       : '',
-    uid: RestTools.getLocalStorage('userInfo') ? RestTools.getLocalStorage('userInfo').UserName : ''
+    uid: RestTools.getLocalStorage('userInfo')
+      ? RestTools.getLocalStorage('userInfo').UserName
+      : '',
+    waitAnswer: []
   },
 
   effects: {
@@ -162,7 +164,7 @@ export default {
       const res = yield call(helpServer.setAnswer, payload);
       if (res.data && res.data.code === 200) {
         message.success('回答成功，感谢您的参与');
-        router.push(`reply?q=${q}&QID=${QID}`)
+        router.push(`reply?q=${q}&QID=${QID}`);
       } else {
         message.warning(res.data.msg);
       }
@@ -210,6 +212,17 @@ export default {
           }
         });
       }
+    },
+    *waitAnswer({ payload }, { call, put }) {
+      const res = yield call(helpServer.waitAnswer, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'saveAnswers',
+          payload: {
+            waitAnswer: res.data.result
+          }
+        });
+      }
     }
   },
   subscriptions: {
@@ -221,10 +234,8 @@ export default {
           const uid = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo').UserName
             : '';
+
           window.document.title = `社区-${q}`;
-          // const userId = RestTools.getLocalStorage('userInfo')
-          //   ? RestTools.getLocalStorage('userInfo').UserName
-          //   : Cookies.get('cnki_qa_uuid');
 
           dispatch({
             type: 'saveAnswers',
@@ -235,8 +246,11 @@ export default {
               domains: []
             }
           });
-          if(uid){
-            dispatch({type: 'getUserCommunityInfo', payload: {userName:uid}})
+
+          dispatch({ type: 'waitAnswer' });
+
+          if (uid) {
+            dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } });
           }
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });

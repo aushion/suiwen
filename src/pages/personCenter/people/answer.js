@@ -15,7 +15,7 @@ function Answer(props) {
   return (
     <div className={styles.people}>
       <div className={styles.main}>
-        <div className={styles.title}>{userInfo.UserName === userName ? `我的回答`:`他的回答`}</div>
+        <div className={styles.title}>{userInfo?.UserName === userName ? `我的回答`:`他的回答`}</div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
           <List
