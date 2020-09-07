@@ -70,16 +70,16 @@ function HelpList(props) {
         pagination={
           data.total && data.total > size
             ? {
-                total: data.total,
-                pageSize: data.pageCount,
-                current: data.pageNum,
-                onChange: function(page, pageSize) {
-                  RestTools.setSession('page', { size: pageSize, index: page });
-                  const searchKey = sessionStorage.getItem('searchKey');
-                  const payload = { size: pageSize, index: page, domain: domain, searchKey };
-                  handleSearchOrChangePage(payload);
-                }
+              total: data.total,
+              pageSize: data.pageCount,
+              current: data.pageNum,
+              onChange: function (page, pageSize) {
+                RestTools.setSession('page', { size: pageSize, index: page });
+                const searchKey = sessionStorage.getItem('searchKey');
+                const payload = { size: pageSize, index: page, domain: domain, searchKey };
+                handleSearchOrChangePage(payload);
               }
+            }
             : null
         }
         renderItem={(item) => {
@@ -98,7 +98,7 @@ function HelpList(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
                   }}
-                  // onClick={() => handleClickItem(item)}
+                // onClick={() => handleClickItem(item)}
                 >
                   <div>
                     <Avatar icon="user" />
@@ -114,10 +114,10 @@ function HelpList(props) {
                   <span style={{ marginLeft: 10 }}>
                     {item.tag
                       ? item.tag.split(',').map((item, index) => (
-                          <Tag color="volcano" key={index}>
-                            {item}
-                          </Tag>
-                        ))
+                        <Tag color="volcano" key={index}>
+                          {item}
+                        </Tag>
+                      ))
                       : null}
                   </span>
                 </div>
@@ -130,7 +130,7 @@ function HelpList(props) {
                       type="primary"
                       href={`/reply?q=${encodeURIComponent(item.content)}&QID=${
                         item.qid
-                      }&editStatus=true`}
+                        }&editStatus=true`}
                       target="_blank"
                     >
                       写回答

@@ -164,7 +164,7 @@ export default {
       const res = yield call(helpServer.setAnswer, payload);
       if (res.data && res.data.code === 200) {
         message.success('回答成功，感谢您的参与');
-        router.push(`reply?q=${q}&QID=${QID}`);
+        router.push(`reply?q=${q}&QID=${QID}&editStatus=false`);
       } else {
         message.warning(res.data.msg);
       }
@@ -176,7 +176,7 @@ export default {
       const res = yield call(helpServer.editAnswer, payload);
       if (res.data && res.data.code === 200) {
         message.success('修改成功，感谢您的参与');
-        router.push(`reply?q=${q}&QID=${QID}`);
+        router.push(`reply?q=${q}&QID=${QID}&editStatus=false`);
       } else {
         message.warning(res.data.msg);
       }

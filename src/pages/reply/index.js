@@ -21,7 +21,8 @@ function Reply(props) {
   const { dispatch, followed, location, waitAnswer } = props;
   const params = location.query;
   const { QID, editStatus = false } = params;
-  const [showEditor, switchEditor] = useState(editStatus); //是否显示回答框
+
+  const [showEditor, switchEditor] = useState(JSON.parse(editStatus)); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
@@ -30,6 +31,10 @@ function Reply(props) {
   useEffect(() => {
     switchFollowQ(followed);
   }, [followed]);
+
+  useEffect(() => {
+    switchEditor(JSON.parse(editStatus));
+  }, [editStatus]);
 
   function followQuestion() {
     clearTimeout(timerCount);

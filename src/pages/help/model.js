@@ -37,7 +37,10 @@ export default {
       const res = yield call(helpService.getHotQuestions, payload);
       yield put({ type: 'saveList', payload: { hotHelpData: res.data.result, ...payload } });
     },
-
+    *getNeedHelpQuestions({ payload }, { call, put }) {
+      const res = yield call(helpService.getNeedHelpQuestions, payload);
+      yield put({ type: 'saveList', payload: { hotHelpData: res.data.result, ...payload } });
+    },
     *getUserCommunityInfo({ payload }, { call, put }) {
       const res = yield call(helpService.getUserCommunityInfo, {
         ...payload
@@ -103,7 +106,6 @@ export default {
           const userInfo = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo')
             : null;
-            console.log('userInfo', userInfo)
 
           const communityNode = sessionStorage.getItem('communityNode')
             ? JSON.parse(sessionStorage.getItem('communityNode'))
@@ -111,22 +113,13 @@ export default {
           const current = pathname;
           window.document.title = `知网随问-社区`;
 
-          dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
-
+          dispatch({ type: 'saveList', payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 } }); //重置状态
           dispatch({ type: 'waitAnswer' });
 
-          dispatch({
-            type: 'getHotQuestions',
-            payload: { domain: encodeURIComponent('') }
-          });
-
+          dispatch({ type: 'getDomain' });
           userInfo &&
             dispatch({ type: 'getUserCommunityInfo', payload: { userName: userInfo.UserName } }); //获取社区个人信息
           if (current === '/help/newHelp') {
-            dispatch({
-              type: 'getDomain'
-            });
-
             dispatch({
               type: 'getNewQuestions',
               payload: {
@@ -139,11 +132,18 @@ export default {
             });
           } else if (current === '/help/hotHelp') {
             dispatch({
-              type: 'getDomain'
-            });
-
-            dispatch({
               type: 'getHotQuestions',
+              payload: {
+                domain: communityNode
+                  ? communityNode.secondNode
+                    ? communityNode.secondNode.cId
+                    : communityNode.firstNode.cId
+                  : ''
+              }
+            });
+          } else if (current === '/help/needHelp') {
+            dispatch({
+              type: 'getNeedHelpQuestions',
               payload: {
                 domain: communityNode
                   ? communityNode.secondNode

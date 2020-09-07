@@ -46,6 +46,24 @@ export default {
     });
   },
 
+  getNeedHelpQuestions(payload) {
+    const page = sessionStorage.getItem('page');
+    const {
+      size = page ? page.size : 10,
+      index = page ? page.index : 1,
+      searchKey = '',
+      domain = '全部'
+    } = payload;
+    return request.post(serverurl + `/getNewQuestion`, null, {
+      params: {
+        pageSize: size,
+        pageStart: index,
+        searchKey,
+        domain,
+        type: 'unsolved'
+      }
+    });
+  },
   getMyAnswerQuestions(payload) {
     const { size = 10, index = 1, searchKey = '', domain = '全部', uid } = payload;
     return request.post(serverurl + `/getMyCommunityAnswer`, null, {
@@ -60,8 +78,8 @@ export default {
     });
   },
 
-  waitAnswer(payload){
-    return request.post(serverurl+`/waitAnswer`)
+  waitAnswer(payload) {
+    return request.post(serverurl + `/waitAnswer`);
   },
 
   getAnwser(payload) {
@@ -89,8 +107,6 @@ export default {
   editAnswer(payload) {
     return request.post(serverurl + `/editCommunityAnswer`, { ...payload });
   },
-
-
 
   setQanswer(payload) {
     return request.post(serverurl + '/setQuestionAndAnswer', { ...payload });

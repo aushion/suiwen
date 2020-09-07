@@ -9,28 +9,11 @@ import UserInfo from './components/UserInfo';
 import helpStyle from './index.less';
 
 function HotHelp(props) {
-  const {
-    domainList,
-    hotHelpData,
-    dispatch,
-    domain,
-    size,
-    index,
-    uid,
-    loading,
-    communityNode,
-    waitAnswer,
-    userInfo
-  } = props;
+  const { domainList, hotHelpData, dispatch, domain, size, index, uid, loading, communityNode, waitAnswer, userInfo } = props;
   const menus = [
-    {
-      key: 'newHelp',
-      text: '新求助'
-    },
-    {
-      key: 'hotHelp',
-      text: '热门求助'
-    }
+    { key: 'newHelp', text: '新求助' },
+    { key: 'hotHelp', text: '热门求助' },
+    { key: 'needHelp', text: '待解决' }
   ];
 
   //点击tag响应事件
@@ -73,7 +56,7 @@ function HotHelp(props) {
               uid={uid}
               communityNode={communityNode}
               handleSearchOrChangePage={handleSearchOrChangePage} //响应搜索或者分页事件
-              // handleClickItem={handleClickItem}
+            // handleClickItem={handleClickItem}
             />
           </Col>
           <Col span={6}>
