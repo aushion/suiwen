@@ -16,11 +16,24 @@ function MessageBox(props) {
   const [tabKey, setTabKey] = useState('3'); //消息tabs默认的key
   const [loading, setLoading] = useState(false); //数据list的loading状态
 
+  function hidePopover() {
+    setVisible(false);
+  }
   //连接组件
   const LinkElement = ({ to, content }) => {
     return (
-      <Link style={{ padding: '0 10px' }} to={to}>
+      <Link style={{ padding: '0 10px' }} to={to} onClick={hidePopover}>
         {content}
+      </Link>
+    );
+  };
+
+  //查看所有通知
+
+  const ViewAll = ({ to }) => {
+    return (
+      <Link onClick={hidePopover} style={{ color: '#999' }} to={to}>
+        查看所有通知
       </Link>
     );
   };
@@ -28,7 +41,7 @@ function MessageBox(props) {
   //消息列表组件
   const MessageList = ({ data, type }) => {
     return (
-      <div style={{ height: 300 }}>
+      <div style={{ height: 100, overflowY: 'auto' }}>
         <List
           loading={loading}
           style={{ width: 300 }}
@@ -221,7 +234,7 @@ function MessageBox(props) {
         key="3"
       >
         <MessageList data={notifyList} type="3" />
-        <Link to={`/notify?type=3`}>查看所有通知</Link>
+        <ViewAll to={`/notify?type=3`} />
       </TabPane>
       <TabPane
         tab={
@@ -232,7 +245,7 @@ function MessageBox(props) {
         key="1"
       >
         <MessageList data={notifyList} type="1" />
-        <Link to={`/notify?type=1`}>查看所有通知</Link>
+        <ViewAll to={`/notify?type=1`} />
       </TabPane>
       <TabPane
         tab={
@@ -243,7 +256,7 @@ function MessageBox(props) {
         key="2"
       >
         <MessageList data={notifyList} type="2" />
-        <Link to={`/notify?type=2`}>查看所有通知</Link>
+        <ViewAll to={`/notify?type=2`} />
       </TabPane>
       <TabPane
         tab={
@@ -254,7 +267,7 @@ function MessageBox(props) {
         key="0"
       >
         <MessageList data={notifyList} type="0" />
-        <Link to={`/notify?type=0`}>查看所有通知</Link>
+        <ViewAll to={`/notify?type=0`} />
       </TabPane>
     </Tabs>
   );

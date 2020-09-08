@@ -44,22 +44,31 @@ function UserInfo(props) {
         >
           <Link
             to={`/personCenter/people/answer?userName=${userInfo?.userName}`}
-            style={{ textAlign: 'center' }}
+            style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.answerNum || 0}</div>
-            <div style={{ color: '#333', fontWeight: 'bolder' }}>回答</div>
+            <div style={{color: '#868686', fontWeight: 400}}>回答</div>
           </Link>
-          <Link to={`/personCenter/people/ask?userName=${userInfo?.userName}`}>
+          <Link
+            to={`/personCenter/people/ask?userName=${userInfo?.userName}`}
+            style={{ color: '#333', fontWeight: 'bold' }}
+          >
             <div>{userInfo?.questionNum || 0}</div>
-            <div style={{ color: '#333', fontWeight: 'bolder' }}>提问</div>
+            <div style={{color: '#868686', fontWeight: 400}}>提问</div>
           </Link>
-          <Link to={`/personCenter/people/fans?userName=${userInfo?.userName}`}>
+          <Link
+            to={`/personCenter/people/fans?userName=${userInfo?.userName}`}
+            style={{ color: '#333', fontWeight: 'bold' }}
+          >
             <div>{userInfo?.followers || 0}</div>
-            <div style={{ color: '#333', fontWeight: 'bolder' }}>粉丝</div>
+            <div style={{color: '#868686', fontWeight: 400}}>粉丝</div>
           </Link>
-          <Link to={`/personCenter/people/follow?userName=${userInfo?.userName}`}>
+          <Link
+            to={`/personCenter/people/follow?userName=${userInfo?.userName}`}
+            style={{ color: '#333', fontWeight: 'bold' }}
+          >
             <div>{userInfo?.followees || 0}</div>
-            <div style={{ color: '#333', fontWeight: 'bolder' }}>关注</div>
+            <div style={{color: '#868686', fontWeight: 400}}>关注</div>
           </Link>
         </div>
       </div>

@@ -9,7 +9,7 @@ function FollowList(props) {
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
-  const [buttonIndex, setButrtonIndex] = useState(-1);
+  const [buttonIndex, setButtonIndex] = useState(-1);
   const followedStyle = {
     backgroundColor: '#8C97AC',
     color: '#fff',
@@ -29,7 +29,7 @@ function FollowList(props) {
 
   function handleMouseHover(item, index) {
     if (item.hasFollowed === 2 || item.hasFollowed === 3) {
-      setButrtonIndex(index);
+      setButtonIndex(index);
     }
   }
 
@@ -37,9 +37,9 @@ function FollowList(props) {
       if(hasFollowed === 0){
           return;
       }
-    let tempdata = data;
+    let tempest = data;
     if (hasFollowed === 2 || hasFollowed === 3) {
-      tempdata = data.map((item) => {
+      tempest = data.map((item) => {
         if (item.userName === userName) {
           return {
             ...item,
@@ -49,7 +49,7 @@ function FollowList(props) {
         return item;
       });
     } else if (hasFollowed === 1) {
-      tempdata = data.map((item) => {
+      tempest = data.map((item) => {
         if (item.userName === userName) {
           return {
             ...item,
@@ -63,7 +63,7 @@ function FollowList(props) {
     dispatch({
       type: 'personCenter/save',
       payload: {
-        [stateName]: tempdata
+        [stateName]: tempest
       }
     });
     dispatch({
@@ -101,7 +101,7 @@ function FollowList(props) {
                 <Button
                   onMouseOver={handleMouseHover.bind(this, item, index)}
                   onMouseLeave={() => {
-                    setButrtonIndex(-1);
+                    setButtonIndex(-1);
                   }}
                   onClick={throttle(() => {
                     handleFollow(item);

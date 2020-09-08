@@ -326,9 +326,9 @@ function Home(props) {
 
                     <Link
                       className={homeStyles.help_more}
-                      // onClick={() => {
-                      //   router.push('/help/newHelp');
-                      // }}
+                      onClick={() => {
+                        sessionStorage.removeItem('page') //删除分页缓存
+                      }}
                       to={'/help/newHelp'}
                       target="_blank"
                     >

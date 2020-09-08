@@ -5,28 +5,28 @@ import { Divider, Icon, Button, Form, Row, Col } from 'antd';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import 'dayjs/locale/zh-cn';
 
 import UserInfo from '../help/components/UserInfo';
 import AnswerList from './components/AnswerList';
 import replyStyle from './index.less';
 import AnswerForm from './components/AnswerForm';
-import WaitAnswer from '../help/components/WaitAnswer';
+import WaitAnswer from '../../components/WaitAnswer';
 
 dayjs.extend(relativeTime);
+dayjs.extend(isSameOrAfter);
 dayjs.locale('zh-cn');
 
 let timerCount = null;
 function Reply(props) {
-  const { dispatch, followed, location, waitAnswer } = props;
+  const { dispatch, followed, location, userCommunityInfo } = props;
   const params = location.query;
   const { QID, editStatus = false } = params;
 
   const [showEditor, switchEditor] = useState(JSON.parse(editStatus)); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
-  const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
-    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
-    : null;
+ 
 
   useEffect(() => {
     switchFollowQ(followed);
@@ -98,7 +98,7 @@ function Reply(props) {
           <Col span={6}>
             <div>
               {userCommunityInfo ? <UserInfo /> : null}
-              {waitAnswer.length ? <WaitAnswer data={waitAnswer} title="等你来答" /> : null}
+               <WaitAnswer /> 
             </div>
           </Col>
         </Row>

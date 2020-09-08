@@ -20,7 +20,7 @@ export default {
     avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
       RestTools.getLocalStorage('userInfo') ? RestTools.getLocalStorage('userInfo').UserName : ''
     }`,
-    userCommunityInfo: null,
+    userCommunityInfo: sessionStorage.getItem('userCommunityInfo') ? JSON.parse(sessionStorage.getItem('userCommunityInfo')):null,
     defaultKey: window.location.pathname.replace('/web/personCenter/edit', ''),
     defaultPersonKey: window.location.pathname.replace('/web/personCenter/people/', ''),
     myCommunityQuestion: null,
@@ -42,6 +42,7 @@ export default {
           userCommunityInfo: resultData.result
         }
       });
+      // sessionStorage.setItem('userCommunityInfo',JSON.stringify(resultData.result))
     },
 
     *getMyCommunityQuestion({ payload }, { call, put }) {
@@ -160,6 +161,10 @@ export default {
         const current = pathname;
         const pathnameArray = current.split('/'); //获取路由信息为了渲染默认菜单选中
         if (match && userName) {
+          window.document.title = `个人中心`;
+          dispatch({type: 'getUserCommunityInfo', payload:{
+            userName
+          }})
           if (pathnameArray[2] === 'edit') {
             dispatch({
               type: 'save',

@@ -7,8 +7,8 @@ import RestTools from '../../../utils/RestTools';
 export default function HelpMenu(props) {
   const [current, setCurrent] = useState(props.current);
   const { data = [], dispatch } = props;
-  const paramstr = window.location.href.split('?')[1];
-  const query = querystring.parse(paramstr);
+  const paramStr = window.location.href.split('?')[1];
+  const query = querystring.parse(paramStr);
   const { username = '' } = query;
 
   function handleClick(e) {

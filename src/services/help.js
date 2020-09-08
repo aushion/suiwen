@@ -1,9 +1,9 @@
 import request from '../utils/request';
-const serverurl = process.env.apiUrl + '/community';
+const serverUrl = process.env.apiUrl + '/community';
 
 export default {
   getNewHelpList() {
-    return request.get(serverurl + '/GetNewQuestion?size=6');
+    return request.get(serverUrl + '/GetNewQuestion?size=6');
   },
   getNewQuestions(payload) {
     const page = JSON.parse(sessionStorage.getItem('page'));
@@ -15,7 +15,7 @@ export default {
       domain = '',
       uid = ''
     } = payload;
-    return request.post(serverurl + `/getNewQuestion`, null, {
+    return request.post(serverUrl + `/getNewQuestion`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -35,7 +35,7 @@ export default {
       searchKey = '',
       domain = '全部'
     } = payload;
-    return request.post(serverurl + `/getNewQuestion`, null, {
+    return request.post(serverUrl + `/getNewQuestion`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -54,7 +54,7 @@ export default {
       searchKey = '',
       domain = '全部'
     } = payload;
-    return request.post(serverurl + `/getNewQuestion`, null, {
+    return request.post(serverUrl + `/getNewQuestion`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -66,7 +66,7 @@ export default {
   },
   getMyAnswerQuestions(payload) {
     const { size = 10, index = 1, searchKey = '', domain = '全部', uid } = payload;
-    return request.post(serverurl + `/getMyCommunityAnswer`, null, {
+    return request.post(serverUrl + `/getMyCommunityAnswer`, null, {
       params: {
         pageSize: size,
         pageStart: index,
@@ -79,12 +79,12 @@ export default {
   },
 
   waitAnswer(payload) {
-    return request.post(serverurl + `/waitAnswer`);
+    return request.post(serverUrl + `/waitAnswer`);
   },
 
-  getAnwser(payload) {
+  getAnswer(payload) {
     const { QID, uid = '' } = payload;
-    return request.post(serverurl + `/getDetailByQuestion`, null, {
+    return request.post(serverUrl + `/getDetailByQuestion`, null, {
       params: {
         qId: QID,
         sort: 'hot',
@@ -97,38 +97,38 @@ export default {
 
   getUserFAQ(payload) {
     const { question } = payload;
-    return request.get(serverurl + `/getUserFAQ?q=${question}`);
+    return request.get(serverUrl + `/getUserFAQ?q=${question}`);
   },
 
   setAnswer(payload) {
-    return request.post(serverurl + `/replyAnswer`, { ...payload });
+    return request.post(serverUrl + `/replyAnswer`, { ...payload });
   },
 
   editAnswer(payload) {
-    return request.post(serverurl + `/editCommunityAnswer`, { ...payload });
+    return request.post(serverUrl + `/editCommunityAnswer`, { ...payload });
   },
 
   setQanswer(payload) {
-    return request.post(serverurl + '/setQuestionAndAnswer', { ...payload });
+    return request.post(serverUrl + '/setQuestionAndAnswer', { ...payload });
   },
   getDomain(payload) {
     return payload
-      ? request.post(serverurl + '/getCommunityClass', null, {
+      ? request.post(serverUrl + '/getCommunityClass', null, {
           params: {
             uId: payload.uId
           }
         })
-      : request.post(serverurl + '/getCommunityClass');
+      : request.post(serverUrl + '/getCommunityClass');
   },
 
   getPersonDomain(payload) {
-    return request.post(serverurl + '/getCommunityClass', null, {
+    return request.post(serverUrl + '/getCommunityClass', null, {
       params: { ...payload }
     });
   },
   deleteQuestion(payload) {
     const { qId } = payload;
-    return request.get(serverurl + `/delQuestion?qId=${qId}`);
+    return request.get(serverUrl + `/delQuestion?qId=${qId}`);
   },
   getUserCommunityInfo(payload) {
     return request.post(process.env.apiUrl + `/user/getUserCommunityInfo`, null, {
@@ -136,7 +136,7 @@ export default {
     });
   },
   getComment(payload) {
-    return request.post(serverurl + `/getCommentByAnswer`, null, {
+    return request.post(serverUrl + `/getCommentByAnswer`, null, {
       params: { ...payload }
     });
   },

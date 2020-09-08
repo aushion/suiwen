@@ -28,6 +28,7 @@ export default {
     uid: RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
       : '',
+    userCommunityInfo: null,
     waitAnswer: []
   },
 
@@ -53,19 +54,16 @@ export default {
         ...payload
       });
       const resultData = res.data;
-      yield put({
-        type: 'global/save',
-        payload: {
-          ...payload,
-          userInfo: resultData.result
-        }
-      });
-      if (!sessionStorage.getItem('userCommuityInfo')) {
+      yield put({ type: 'global/save', payload: { ...payload, userInfo: resultData.result, } });
+      yield put({type: 'saveAnswers', payload: { userCommunityInfo: resultData.result}})
+
+
+      // if (!sessionStorage.getItem('userCommunityInfo')) {
         sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
-      }
+      // }
     },
     *getAnswer({ payload }, { call, put }) {
-      const res = yield call(helpServer.getAnwser, payload);
+      const res = yield call(helpServer.getAnswer, payload);
       const response = res.data;
       if (response && response.code === 200) {
         let answerList = response.result.answer.dataList.map((item) => {
@@ -246,8 +244,6 @@ export default {
               domains: []
             }
           });
-
-          dispatch({ type: 'waitAnswer' });
 
           if (uid) {
             dispatch({ type: 'getUserCommunityInfo', payload: { userName: uid } });

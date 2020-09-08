@@ -128,7 +128,7 @@ function HelpList(props) {
                       size="small"
                       ghost
                       type="primary"
-                      href={`/reply?q=${encodeURIComponent(item.content)}&QID=${
+                      href={`/web/reply?q=${encodeURIComponent(item.content)}&QID=${
                         item.qid
                         }&editStatus=true`}
                       target="_blank"

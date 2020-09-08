@@ -35,11 +35,11 @@ export default {
 
     *getHotQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getHotQuestions, payload);
-      yield put({ type: 'saveList', payload: { hotHelpData: res.data.result, ...payload } });
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
     },
     *getNeedHelpQuestions({ payload }, { call, put }) {
       const res = yield call(helpService.getNeedHelpQuestions, payload);
-      yield put({ type: 'saveList', payload: { hotHelpData: res.data.result, ...payload } });
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
     },
     *getUserCommunityInfo({ payload }, { call, put }) {
       const res = yield call(helpService.getUserCommunityInfo, {
@@ -53,9 +53,9 @@ export default {
           userInfo: resultData.result
         }
       });
-      if (!sessionStorage.getItem('userCommuityInfo')) {
+ 
         sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
-      }
+      
     },
 
     *getDomain({ payload }, { call, put }) {
@@ -113,8 +113,11 @@ export default {
           const current = pathname;
           window.document.title = `知网随问-社区`;
 
-          dispatch({ type: 'saveList', payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 } }); //重置状态
-          dispatch({ type: 'waitAnswer' });
+          dispatch({
+            type: 'saveList',
+            payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 }
+          }); //重置状态
+         
 
           dispatch({ type: 'getDomain' });
           userInfo &&

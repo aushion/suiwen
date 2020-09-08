@@ -14,6 +14,7 @@ function UserLayout(props) {
     : null;
   const { pathname, query } = location;
   const { userName } = query;
+
   function showEditMenu(pathname) {
     return pathname.indexOf('edit') > 0;
   }

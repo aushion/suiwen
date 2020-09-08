@@ -1,17 +1,18 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import { connect } from 'dva';
-import WaitAnswer from './components/WaitAnswer';
-import DomainTags from './components/DomainTags';
-import HelpList from './components/HelpList';
-import HelpMenu from './components/HelpMenu';
-import UserInfo from './components/UserInfo';
-import helpStyle from './index.less';
 
-function NeedHelp(props) {
+import DomainTags from './DomainTags';
+import HelpList from './HelpList';
+import HelpMenu from './HelpMenu';
+import WaitAnswer from '../../../components/WaitAnswer';
+import UserInfo from './UserInfo';
+import helpStyle from '../index.less';
+
+function HelpPage(props) {
   const {
     domainList,
-    hotHelpData,
+    newHelpData,
     dispatch,
     domain,
     size,
@@ -19,7 +20,7 @@ function NeedHelp(props) {
     uid,
     loading,
     communityNode,
-    waitAnswer,
+    current,
     userInfo
   } = props;
   const menus = [
@@ -27,17 +28,24 @@ function NeedHelp(props) {
     { key: 'hotHelp', text: '热门求助' },
     { key: 'needHelp', text: '待解决' }
   ];
+
+  const actionType = {
+      'newHelp': 'help/getNewQuestions',
+      'hotHelp': 'help/getHotQuestions',
+      'needHelp': 'help/getNeedHelpQuestions',
+  }
+
   //点击tag响应事件
   function handleClickTag(payload) {
     dispatch({
-      type: 'help/getNeedHelpQuestions',
+      type: actionType[current],
       payload: payload
     });
   }
 
   function handleSearchOrChangePage(payload) {
     dispatch({
-      type: 'help/getNeedHelpQuestions',
+      type: actionType[current],
       payload: payload
     });
   }
@@ -47,7 +55,7 @@ function NeedHelp(props) {
       <div className={helpStyle.content}>
         <Row gutter={24}>
           <Col span={18} className={helpStyle.content_left}>
-            <HelpMenu current="needHelp" data={menus} dispatch={dispatch} />
+            <HelpMenu current={current} data={menus} dispatch={dispatch} />
             {domainList.length ? (
               <div className={helpStyle.domainTags}>
                 <DomainTags
@@ -59,7 +67,7 @@ function NeedHelp(props) {
               </div>
             ) : null}
             <HelpList
-              data={hotHelpData}
+              data={newHelpData}
               domain={domain}
               size={size}
               index={index}
@@ -72,7 +80,7 @@ function NeedHelp(props) {
           </Col>
           <Col span={6}>
             {userInfo ? <UserInfo /> : null}
-            {waitAnswer.length ? <WaitAnswer title="等我来答" data={waitAnswer} /> : null}
+             <WaitAnswer title="等我来答"  /> 
           </Col>
         </Row>
       </div>
@@ -87,4 +95,4 @@ function mapStateToProps(state) {
     loading: state.loading.models.help
   };
 }
-export default connect(mapStateToProps)(NeedHelp);
+export default connect(mapStateToProps)(HelpPage);
