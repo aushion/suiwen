@@ -252,7 +252,8 @@ function MessageBox(props) {
   }
   useEffect(() => {
     fetchData();
-  }, [fetchData, tabKey]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabKey]);
 
   useEffect(() => {
     getUnReadCount({ userName }).then((res) => {
@@ -266,7 +267,8 @@ function MessageBox(props) {
         });
       }
     });
-  }, [dispatch, userName]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleChange(activeKey) {
     setTabKey(activeKey);
