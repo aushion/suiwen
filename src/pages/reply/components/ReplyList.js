@@ -3,7 +3,7 @@ import { List, Avatar, Input, Button, Popconfirm, message } from 'antd';
 import { connect } from 'dva';
 import dayjs from 'dayjs';
 import IconText from './IconText';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../utils/RestTools';
 import styles from './ReplyList.less';
 
 let timer = null;

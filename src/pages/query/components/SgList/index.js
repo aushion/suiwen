@@ -2,34 +2,14 @@ import React, { useState } from 'react';
 import { List } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
-import RestTools from '../../../../utils/RestTools';
+import FoldText from '../../../../components/FoldText';
 import styles from './index.less';
-import arrow_up from '../../../../assets/arrow_up.png';
-import arrow_down from '../../../../assets/arrow_down.png';
 
 function SgList(props) {
   const { data, needEvaluate = true } = props;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
   const [sgData, updateData] = useState(groupByData);
-
-  function handleShowMore(e, item, index) {
-    if (e.target.className === 'showMore') {
-      let newSgData = { ...sgData }; //拷贝一份元数据
-      let newItem; //初始化一个变量存储新数据
-      newItem = { ...item, originContext: item.data.context + item.data.sub_context };
-      newSgData[item.id][index] = newItem; //更新相应位置数据
-      updateData(newSgData); //更新状态
-    }
-    if (e.target.className === 'up') {
-      let newSgData = { ...sgData }; //拷贝一份元数据
-      let newItem; //初始化一个变量存储新数据
-      newItem = { ...item, originContext: '' };
-      newSgData[item.id][index] = newItem;
-      newSgData[item.id][index] = newItem; //更新相应位置数据
-      updateData(newSgData); //更新状态
-    }
-  }
 
   return (
     <div className={`${styles.SgList} copy`} id="sg">
@@ -90,21 +70,12 @@ function SgList(props) {
                   </div>
                 </div>
               }
-              renderItem={(item, itemIndex) => {
-                const answer = item.originContext
-                  ? item.originContext +
-                    `<a class="up" style="color:#2090E3">  收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}"></a>`
-                  : item.data.context +
-                    `<a class="showMore" style="color:#2090E3;white-space:nowrap;">  更多<img class="showMore" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"> </a>`;
+              renderItem={(item) => {
                 return (
                   <List.Item style={{ overflow: 'hidden' }}>
-                    <div
-                      onClick={(e) => handleShowMore(e, item, itemIndex)}
-                      key={itemIndex}
-                      className={styles.fontStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: RestTools.formatText(RestTools.translateToRed(answer))
-                      }}
+                    <FoldText
+                      originText={item.data.context}
+                      fullText={item.data.context + item.data.sub_context}
                     />
                   </List.Item>
                 );

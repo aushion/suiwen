@@ -17,7 +17,7 @@ import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
 import router from 'umi/router';
 import Cookies from 'js-cookie';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../utils/RestTools';
 
 export default {
   namespace: 'result',

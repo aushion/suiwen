@@ -6,7 +6,7 @@ import SmartInput from '../../components/SmartInput';
 import querystring from 'querystring';
 import { connect } from 'dva';
 import styles from './index.less';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../utils/RestTools';
 import FeedBack from '../../components/FeedBack';
 import LoginRegister from '../../components/LoginRegister';
 import logo from '../../assets/logo1.png';

@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../utils/RestTools';
 
 let timerCount = null;
 let userCount = null;

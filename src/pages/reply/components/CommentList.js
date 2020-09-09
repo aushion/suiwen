@@ -3,7 +3,7 @@
   import dayjs from 'dayjs';
   import { List, Avatar, Input, Button, Popconfirm, message } from 'antd';
   import ReplyList from './ReplyList';
-  import RestTools from 'Utils/RestTools';
+  import RestTools from '../../../utils/RestTools';
   import IconText from './IconText';
   import replyStyle from '../index.less';
 

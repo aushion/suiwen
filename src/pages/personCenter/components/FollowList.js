@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { List, Button, Avatar } from 'antd';
 import { throttle } from 'lodash';
-import RestTools from 'Utils/RestTools';
 import { router } from 'umi';
+import { connect } from 'dva';
+import RestTools from '../../../utils/RestTools';
 
 function FollowList(props) {
-  const { data, dispatch, loading, stateName } = props;
-  const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
-    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
-    : null;
+  const { data, dispatch, loading, stateName, userCommunityInfo } = props;
+
   const [buttonIndex, setButtonIndex] = useState(-1);
   const followedStyle = {
     backgroundColor: '#8C97AC',
@@ -34,9 +33,9 @@ function FollowList(props) {
   }
 
   function handleFollow({ hasFollowed, userName }) {
-      if(hasFollowed === 0){
-          return;
-      }
+    if (hasFollowed === 0) {
+      return;
+    }
     let tempest = data;
     if (hasFollowed === 2 || hasFollowed === 3) {
       tempest = data.map((item) => {
@@ -81,21 +80,32 @@ function FollowList(props) {
         dataSource={data}
         renderItem={(item, index) => {
           return (
-            <List.Item >
-              <div style={{ fontWeight: 'bold',cursor: "pointer" }}>
-                <Avatar
-                
-                onClick={() => {
-                  if(userCommunityInfo.userName !== item.userName){
-                    router.push(`/personCenter/people/ask?userName=${item.userName}`)
-                  }
-                  return;
-                }}
-                  size={64}
-                  shape="square"
-                  src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}`}
-                />
-                <span style={{ marginLeft: 20 }}>{RestTools.formatPhoneNumber(item.userName)}</span>
+            <List.Item>
+              <div style={{ fontWeight: 'bold', cursor: 'pointer' }}>
+                <div style={{ float: 'left' }}>
+                  <Avatar
+                    onClick={() => {
+                      if (userCommunityInfo.userName !== item.userName) {
+                        router.push(`/personCenter/people/ask?userName=${item.userName}`);
+                      }
+                      return;
+                    }}
+                    size={64}
+                    shape="square"
+                    src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}`}
+                  />
+                </div>
+                <div
+                 style={{float: 'left', overflow: 'hidden', paddingLeft: 10}}
+                >
+                  <div style={{ fontSize: 16 }}>{RestTools.formatPhoneNumber(item.userName)}</div>
+                  <div style={{ color: '#999', fontWeight: 400, paddingTop: 16 }}>
+                    <span style={{paddingRight: 4}}> <strong>{item.questionNum}</strong>提问</span>
+                    <span style={{paddingRight: 4}}> <strong>{item.answerNum}</strong>回答</span>
+                    <span style={{paddingRight: 4}}> <strong>{item.followers}</strong>粉丝</span>
+                    <span> <strong>{item.followees}</strong>关注者</span>
+                  </div>
+                </div>
               </div>
               <div>
                 <Button
@@ -130,4 +140,6 @@ function FollowList(props) {
   );
 }
 
-export default FollowList;
+export default connect((state) => ({
+  ...state.personCenter
+}))(FollowList);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
+import Link from 'umi/link';
 import Slider from 'react-slick';
 import BlockTitle from './components/BlockTitle';
 import homeStyles from './index.less';
@@ -10,7 +11,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import RestTools from '../../utils/RestTools';
 import 医学 from '../../assets/医学.png';
 import rd from '../../assets/rd.png';
-import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
@@ -155,7 +155,7 @@ function Home(props) {
                   }
                 >
                   <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>
-                    {item.name}{' '}
+                    {item.name}
                   </span>
                 </Badge>
               ) : (

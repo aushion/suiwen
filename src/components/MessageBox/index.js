@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Icon, Badge, Popover, Tabs, List } from 'antd';
+import { Icon, Badge, Popover, Tabs, List, Spin, Tooltip, Modal } from 'antd';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'dva';
 import { Link } from 'umi';
-import { getUnReadNotification } from '../../services/message';
+import { getUnReadNotification, getUnReadCount, getCommentNotify } from '../../services/message';
 import RestTools from '../../utils/RestTools';
 
 const { TabPane } = Tabs;
 function MessageBox(props) {
-  const { userName, dispatch } = props;
-  const [count, minusCount] = useState(0); //当3-count>0时去掉红点
+  const { userName, messageCount, dispatch } = props;
   const [notifyList, setNotifyList] = useState([]); //列表数据
   const [visible, setVisible] = useState(false); //是否弹出消息层
   const [tabKey, setTabKey] = useState('3'); //消息tabs默认的key
   const [loading, setLoading] = useState(false); //数据list的loading状态
+  const [hasMore, setHasMore] = useState(false); //加载更多状态
+  const [pageInfo, setPageInfo] = useState(null); //初始分页信息
+  const [modalVisible, setModalVisible] = useState(false);
 
   function hidePopover() {
     setVisible(false);
@@ -29,7 +32,6 @@ function MessageBox(props) {
   };
 
   //查看所有通知
-
   const ViewAll = ({ to }) => {
     return (
       <Link onClick={hidePopover} style={{ color: '#999' }} to={to}>
@@ -38,145 +40,176 @@ function MessageBox(props) {
     );
   };
 
+  function getMessageDetail(item) {
+    const { action } = item;
+
+    if (action === 1) {
+      getCommentNotify({
+        date: item.createDate,
+        entityId: item.groupId,
+        entityType: item.entityType,
+        hasRead: 0,
+        operator: userName,
+        pageSize: 10,
+        pageStart: 1,
+        toUser: item.toId
+      }).then((res) => {
+        console.log('res', res);
+      });
+    }
+  }
+
   //消息列表组件
   const MessageList = ({ data, type }) => {
     return (
-      <div style={{ height: 100, overflowY: 'auto' }}>
-        <List
-          loading={loading}
-          style={{ width: 300 }}
-          dataSource={data}
-          renderItem={(item) => {
-            const sentence = {
-              '00': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  喜欢了你的回答
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              ),
-              '04': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  赞了你的评论
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              ),
-              '05': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  赞了你的回复
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              ),
-              '14': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  评论你的回答
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              ),
-              '15': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  回复了你在
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                  中的评论
-                </span>
-              ),
-              '22': (
-                <span>
-                  <>
-                    {item.fromId.split(',').map((item) => (
-                      <LinkElement
-                        key={item}
-                        to={`/personCenter/people/ask?userName=${item}`}
-                        content={RestTools.formatPhoneNumber(item)}
-                      />
-                    ))}
-                  </>
-                  关注了你
-                </span>
-              ),
-              '21': (
-                <span>
-                  <>
-                    {item.fromId.split(',').map((item) => (
-                      <LinkElement
-                        key={item}
-                        to={`/personCenter/people/ask?userName=${item}`}
-                        content={RestTools.formatPhoneNumber(item)}
-                      />
-                    ))}
-                  </>
-                  关注了你的问题
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              ),
-              '31': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  回答了问题
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              ),
-              '33': (
-                <span>
-                  <LinkElement
-                    to={`/personCenter/people/ask?userName=${item.fromId}`}
-                    content={RestTools.formatPhoneNumber(item.fromId)}
-                  />
-                  回答了你关注的问题
-                  <LinkElement
-                    to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                    content={item.content}
-                  />
-                </span>
-              )
-            };
-
-            return <List.Item>{sentence[`${type}${item.entityType}`]}</List.Item>;
+      <div style={{ height: 300, overflowY: 'auto' }}>
+        <InfiniteScroll
+          initialLoad={false}
+          pageStart={0}
+          loadMore={() => {
+            fetchData(pageInfo.pageNum + 1);
           }}
-        />
+          hasMore={!loading && hasMore}
+          useWindow={false}
+        >
+          <List
+            loading={loading}
+            style={{ width: 300 }}
+            dataSource={data}
+            renderItem={(item) => {
+              const sentence = {
+                '00': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    喜欢了你的回答
+                    <LinkElement
+                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
+                      content={item.content}
+                    />
+                  </span>
+                ),
+                '04': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    赞了你的评论
+                    <LinkElement
+                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
+                      content={item.content}
+                    />
+                  </span>
+                ),
+                '05': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    赞了你的回复
+                    <LinkElement
+                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
+                      content={item.content}
+                    />
+                  </span>
+                ),
+                '14': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    评论你的回答
+                    <span onClick={getMessageDetail.bind(this,item)}>{item.content}</span>
+                  </span>
+                ),
+                '15': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    回复了你在
+                    <span  onClick={getMessageDetail.bind(this,item)}>{item.content}</span>
+                    中的评论
+                  </span>
+                ),
+                '22': (
+                  <span>
+                    <>
+                      {item.fromId.split(',').map((item) => (
+                        <LinkElement
+                          key={item}
+                          to={`/personCenter/people/ask?userName=${item}`}
+                          content={RestTools.formatPhoneNumber(item)}
+                        />
+                      ))}
+                    </>
+                    关注了你
+                  </span>
+                ),
+                '21': (
+                  <span>
+                    <>
+                      {item.fromId.split(',').map((item) => (
+                        <LinkElement
+                          key={item}
+                          to={`/personCenter/people/ask?userName=${item}`}
+                          content={RestTools.formatPhoneNumber(item)}
+                        />
+                      ))}
+                    </>
+                    关注了你的问题
+                    <LinkElement
+                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
+                      content={item.content}
+                    />
+                  </span>
+                ),
+                '31': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    回答了问题
+                    <LinkElement
+                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
+                      content={item.content}
+                    />
+                  </span>
+                ),
+                '33': (
+                  <span>
+                    <LinkElement
+                      to={`/personCenter/people/ask?userName=${item.fromId}`}
+                      content={RestTools.formatPhoneNumber(item.fromId)}
+                    />
+                    回答了你关注的问题
+                    <LinkElement
+                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
+                      content={item.content}
+                    />
+                  </span>
+                )
+              };
+
+              return (
+                <List.Item>
+                  <div>
+                    {sentence[`${type}${item.entityType}`]}
+                  </div>
+                </List.Item>
+              );
+            }}
+          >
+            {loading && hasMore && <Spin />}
+          </List>
+        </InfiniteScroll>
       </div>
     );
   };
@@ -193,43 +226,60 @@ function MessageBox(props) {
     });
   }, [userName]);
 
-  useEffect(() => {
-    setLoading(true);
+  function fetchData(pageStart = 1) {
     getUnReadNotification({
       pageSize: 10,
-      pageStart: 1,
+      pageStart,
       type: tabKey,
       userName
     })
       .then((res) => {
         setLoading(false);
         if (res.data.code === 200) {
-          setNotifyList(res.data.result);
-          dispatch({
-            type: 'global/save',
-            payload: {
-              messageCount: res.data.result.length
-            }
+          const { dataList, pageNum, pageCount, total } = res.data.result;
+          setNotifyList(notifyList.concat(dataList));
+          setPageInfo({
+            pageCount: pageCount,
+            pageNum: pageNum,
+            total: total
           });
+          setHasMore(total > pageNum * pageCount);
         }
       })
       .then((err) => {
         setLoading(false);
       });
-  }, [tabKey, userName, dispatch]);
+  }
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, tabKey]);
+
+  useEffect(() => {
+    getUnReadCount({ userName }).then((res) => {
+      if (res.data.code === 200) {
+        // setCount(res.data.result);
+        dispatch({
+          type: 'global/save',
+          payload: {
+            messageCount: res.data.result
+          }
+        });
+      }
+    });
+  }, [dispatch, userName]);
 
   function handleChange(activeKey) {
-    minusCount(count + 1); //每次切换不同选项卡count+1
     setTabKey(activeKey);
+    setNotifyList([]);
   }
 
   const content = (
     <Tabs activeKey={tabKey} animated={false} size="small" onChange={handleChange}>
       <TabPane
         tab={
-          <span>
+          <Tooltip title="通知消息">
             <Icon type="bars" />
-          </span>
+          </Tooltip>
         }
         key="3"
       >
@@ -238,9 +288,9 @@ function MessageBox(props) {
       </TabPane>
       <TabPane
         tab={
-          <span>
+          <Tooltip title="评论相关">
             <Icon type="message" theme="filled" />
-          </span>
+          </Tooltip>
         }
         key="1"
       >
@@ -249,9 +299,9 @@ function MessageBox(props) {
       </TabPane>
       <TabPane
         tab={
-          <span>
+          <Tooltip title="关注消息">
             <Icon type="contacts" theme="filled" />
-          </span>
+          </Tooltip>
         }
         key="2"
       >
@@ -260,9 +310,9 @@ function MessageBox(props) {
       </TabPane>
       <TabPane
         tab={
-          <span>
+          <Tooltip title="点赞消息">
             <Icon type="heart" theme="filled" />
-          </span>
+          </Tooltip>
         }
         key="0"
       >
@@ -283,10 +333,12 @@ function MessageBox(props) {
           setVisible(visible);
         }}
       >
-        <Badge dot={3 - count > 0}>
-          <Icon style={{ fontSize: 24 }} type="bell" theme="filled" />
+        <Badge count={messageCount}>
+          <Icon style={{ fontSize: 20 }} type="bell" theme="filled" />
         </Badge>
       </Popover>
+
+      <Modal visible={modalVisible}>hah</Modal>
     </div>
   );
 }

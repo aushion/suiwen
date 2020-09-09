@@ -22,6 +22,7 @@ function UserLayout(props) {
   return (
     <div className={styles.layout}>
       <div className={styles.bg}>
+        <Link to={`/help/newHelp`}>进入社区</Link>
         <div className={styles.avatar}>
           <PersonAvatar avatar={avatar} userName={query.userName} />
         </div>

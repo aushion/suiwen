@@ -5,7 +5,7 @@ import queryString from 'querystring';
 
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../utils/RestTools';
 
 const FormItem = Form.Item;
 let quoteArray = [];

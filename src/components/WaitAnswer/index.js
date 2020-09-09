@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { List, Icon } from 'antd';
 import Link from 'umi/link';
-import request from 'Utils/request';
-import RestTools from 'Utils/RestTools';
+import request from '../../utils/request';
+import RestTools from '../../utils/RestTools';
 import styles from './index.less';
 
 function WaitAnswer() {

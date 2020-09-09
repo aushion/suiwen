@@ -40,7 +40,8 @@ function FollowQuestion(props) {
                     }}
                   >
                     <span style={{ marginRight: 14 }}>{item.total}个回答</span>
-                    <span>{item.followers}个关注</span>
+                    <span style={{ marginRight: 14 }}>{item.followers}个关注</span>
+                    <span>发布于{item.commitTime}</span>
                   </div>
                 </List.Item>
               );

@@ -1,4 +1,4 @@
-import request from 'Utils/request';
+import request from '../../../utils/request';
 
 export function getUserHistoryNotification(payload) {
   return request.post('/notify/getUserHistoryNotification', null, {

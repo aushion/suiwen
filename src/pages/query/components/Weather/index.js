@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Descriptions } from 'antd';
 import axios from 'axios';
-import RestTools from 'Utils/RestTools'
+import RestTools from '../../../../utils/RestTools'
 
 import styles from './index.less';
 

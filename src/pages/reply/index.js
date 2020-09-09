@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { Divider, Icon, Button, Form, Row, Col } from 'antd';
-
+import Link from 'umi/link';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -63,7 +63,9 @@ function Reply(props) {
     <div className={replyStyle.reply}>
       <div className={replyStyle.content}>
         <Row gutter={40}>
+         
           <Col span={18} className={replyStyle.content_left}>
+          <Link to="/help/newHelp"><Icon type="home"></Icon>返回社区</Link>
             <div className={replyStyle.title}>
               <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
               <span>{params.q}</span>

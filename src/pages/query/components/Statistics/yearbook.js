@@ -1,6 +1,6 @@
 import React from 'react';
 import Evaluate from '../Evaluate';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
 export default function Yearbook(props) {
