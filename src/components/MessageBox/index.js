@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Icon, Badge, Popover, Tabs, List, Spin, Tooltip, Modal } from 'antd';
+import { Icon, Badge, Popover, Tabs, List, Spin, Tooltip, Modal, Divider } from 'antd';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'dva';
 import { Link } from 'umi';
-import { getUnReadNotification, getUnReadCount, getCommentNotify } from '../../services/message';
+import {
+  getUnReadNotification,
+  getUnReadCount,
+  getCommentNotify,
+  getLikeNotify
+} from '../../services/message';
 import RestTools from '../../utils/RestTools';
 
 const { TabPane } = Tabs;
@@ -18,6 +23,7 @@ function MessageBox(props) {
   const [hasMore, setHasMore] = useState(false); //加载更多状态
   const [pageInfo, setPageInfo] = useState(null); //初始分页信息
   const [modalVisible, setModalVisible] = useState(false);
+  const [messageDetail, setMessageDetail] = useState(null);
 
   function hidePopover() {
     setVisible(false);
@@ -41,8 +47,13 @@ function MessageBox(props) {
   };
 
   function getMessageDetail(item) {
+    dispatch({
+      type: 'global/save',
+      payload: {
+        messageCount: messageCount - 1
+      }
+    });
     const { action } = item;
-
     if (action === 1) {
       getCommentNotify({
         date: item.createDate,
@@ -54,15 +65,45 @@ function MessageBox(props) {
         pageStart: 1,
         toUser: item.toId
       }).then((res) => {
-        console.log('res', res);
+        if (res.data.code === 200) {
+          setMessageDetail(res.data.result);
+          hidePopover();
+          setModalVisible(true);
+        }
+      });
+    } else if (action === 0) {
+      getLikeNotify({
+        date: item.createDate,
+        entityId: item.groupId,
+        entityType: item.entityType,
+        hasRead: 0,
+        operator: userName,
+        pageSize: 10,
+        pageStart: 1,
+        toUser: item.toId
+      }).then((res) => {
+        if (res.data.code === 200) {
+          setMessageDetail(res.data.result);
+          hidePopover();
+          setModalVisible(true);
+        }
       });
     }
   }
 
+  const Content = ({ item, content }) => (
+    <span
+      style={{ cursor: 'pointer', fontWeight: 'bold' }}
+      onClick={getMessageDetail.bind(this, item)}
+    >
+      {content}
+    </span>
+  );
+
   //消息列表组件
   const MessageList = ({ data, type }) => {
     return (
-      <div style={{ height: 300, overflowY: 'auto' }}>
+      <div style={{ height: 300, overflowY: 'auto', overflowX: 'hidden' }}>
         <InfiniteScroll
           initialLoad={false}
           pageStart={0}
@@ -85,10 +126,7 @@ function MessageBox(props) {
                       content={RestTools.formatPhoneNumber(item.fromId)}
                     />
                     喜欢了你的回答
-                    <LinkElement
-                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                      content={item.content}
-                    />
+                    <Content content={item.content} item={item} />
                   </span>
                 ),
                 '04': (
@@ -98,10 +136,7 @@ function MessageBox(props) {
                       content={RestTools.formatPhoneNumber(item.fromId)}
                     />
                     赞了你的评论
-                    <LinkElement
-                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                      content={item.content}
-                    />
+                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
                   </span>
                 ),
                 '05': (
@@ -111,10 +146,7 @@ function MessageBox(props) {
                       content={RestTools.formatPhoneNumber(item.fromId)}
                     />
                     赞了你的回复
-                    <LinkElement
-                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                      content={item.content}
-                    />
+                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
                   </span>
                 ),
                 '14': (
@@ -124,7 +156,7 @@ function MessageBox(props) {
                       content={RestTools.formatPhoneNumber(item.fromId)}
                     />
                     评论你的回答
-                    <span onClick={getMessageDetail.bind(this,item)}>{item.content}</span>
+                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
                   </span>
                 ),
                 '15': (
@@ -134,7 +166,7 @@ function MessageBox(props) {
                       content={RestTools.formatPhoneNumber(item.fromId)}
                     />
                     回复了你在
-                    <span  onClick={getMessageDetail.bind(this,item)}>{item.content}</span>
+                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
                     中的评论
                   </span>
                 ),
@@ -200,9 +232,7 @@ function MessageBox(props) {
 
               return (
                 <List.Item>
-                  <div>
-                    {sentence[`${type}${item.entityType}`]}
-                  </div>
+                  <div>{sentence[`${type}${item.entityType}`]}</div>
                 </List.Item>
               );
             }}
@@ -252,7 +282,7 @@ function MessageBox(props) {
   }
   useEffect(() => {
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabKey]);
 
   useEffect(() => {
@@ -267,7 +297,7 @@ function MessageBox(props) {
         });
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleChange(activeKey) {
@@ -324,6 +354,25 @@ function MessageBox(props) {
     </Tabs>
   );
 
+  const CommentPop = ({ messageDetail }) => (
+    <div>
+      <div>{messageDetail?.question}</div>
+      <div dangerouslySetInnerHTML={{ __html: messageDetail?.answer?.dataList.answer }} />
+      <Divider></Divider>
+      <div>
+        {messageDetail?.answer.dataList.comment.dataList.map((item) => {
+          return <div key={item.commentId}>{item.content}</div>;
+        })}
+      </div>
+    </div>
+  );
+
+  const LikePop = ({ messageDetail }) => (
+    <div>
+      <div dangerouslySetInnerHTML={{__html: messageDetail?.answer}} />
+    </div>
+  );
+
   return (
     <div>
       <Popover
@@ -340,7 +389,16 @@ function MessageBox(props) {
         </Badge>
       </Popover>
 
-      <Modal visible={modalVisible}>hah</Modal>
+      <Modal
+        footer={null}
+        visible={modalVisible}
+        onCancel={() => {
+          setModalVisible(false);
+        }}
+      >
+        {tabKey === '0' ? <LikePop messageDetail={messageDetail}></LikePop> : null}
+        {tabKey === '1' ? <CommentPop messageDetail={messageDetail}></CommentPop> : null}
+      </Modal>
     </div>
   );
 }

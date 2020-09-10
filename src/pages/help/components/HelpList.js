@@ -51,11 +51,9 @@ function HelpList(props) {
             size="small"
             defaultValue={sessionStorage.getItem('searchKey') || ''}
             onSearch={(value) => {
-              if (value) {
-                RestTools.setSession('searchKey', value);
-              }
-              const page = JSON.parse(sessionStorage.getItem('page'));
-              const payload = { domain, searchKey: value, ...page };
+              RestTools.setSession('searchKey', value);
+              // const page = JSON.parse(sessionStorage.getItem('page'));
+              const payload = { domain, searchKey: value, size: 10, index: 1, };
               handleSearchOrChangePage(payload);
             }}
           />
@@ -70,16 +68,16 @@ function HelpList(props) {
         pagination={
           data.total && data.total > size
             ? {
-              total: data.total,
-              pageSize: data.pageCount,
-              current: data.pageNum,
-              onChange: function (page, pageSize) {
-                RestTools.setSession('page', { size: pageSize, index: page });
-                const searchKey = sessionStorage.getItem('searchKey');
-                const payload = { size: pageSize, index: page, domain: domain, searchKey };
-                handleSearchOrChangePage(payload);
+                total: data.total,
+                pageSize: 10,
+                current: data.pageNum,
+                onChange: function(page, pageSize) {
+                  RestTools.setSession('page', { size: pageSize, index: page });
+                  const searchKey = sessionStorage.getItem('searchKey');
+                  const payload = { size: pageSize, index: page, domain: domain, searchKey };
+                  handleSearchOrChangePage(payload);
+                }
               }
-            }
             : null
         }
         renderItem={(item) => {
@@ -98,7 +96,7 @@ function HelpList(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
                   }}
-                // onClick={() => handleClickItem(item)}
+                  // onClick={() => handleClickItem(item)}
                 >
                   <div>
                     <Avatar icon="user" />
@@ -114,10 +112,10 @@ function HelpList(props) {
                   <span style={{ marginLeft: 10 }}>
                     {item.tag
                       ? item.tag.split(',').map((item, index) => (
-                        <Tag color="volcano" key={index}>
-                          {item}
-                        </Tag>
-                      ))
+                          <Tag color="volcano" key={index}>
+                            {item}
+                          </Tag>
+                        ))
                       : null}
                   </span>
                 </div>
@@ -130,7 +128,7 @@ function HelpList(props) {
                       type="primary"
                       href={`/web/reply?q=${encodeURIComponent(item.content)}&QID=${
                         item.qid
-                        }&editStatus=true`}
+                      }&editStatus=true`}
                       target="_blank"
                     >
                       写回答

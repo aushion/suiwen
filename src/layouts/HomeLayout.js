@@ -68,9 +68,9 @@ function HomeLayout(props) {
                   />
                   <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link>
-                <button onClick={logout} className={styles.login_btn}>
+                <Button onClick={logout} className={styles.login_btn} >
                   退出
-                </button>
+                </Button>
               </>
             ) : (
               null
