@@ -11,7 +11,7 @@ function FoldText({ originText, fullText = null }) {
     : null;
   let originTextWithIcon = fullText
     ? originText +
-      `<a class="more" style="color:#2090E3">  更多<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"></a>`
+      `<a class="more" style="color:#2090E3">  更多<img class="more" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"></a>`
     : originText;
 
   const [text, updateText] = useState(originTextWithIcon);

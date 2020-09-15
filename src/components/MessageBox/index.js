@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Icon, Badge, Popover, Tabs, List, Spin, Tooltip, Modal, Divider } from 'antd';
+import { Icon, Badge, Popover, Tabs, Tooltip, Modal, Avatar } from 'antd';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
-import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'dva';
 import { Link } from 'umi';
+
 import {
   getUnReadNotification,
   getUnReadCount,
   getCommentNotify,
-  getLikeNotify
+  getLikeNotify,
+  getAnswerNotify
 } from '../../services/message';
+import MessageList from './components/MessageList';
 import RestTools from '../../utils/RestTools';
 
 const { TabPane } = Tabs;
@@ -20,22 +22,13 @@ function MessageBox(props) {
   const [visible, setVisible] = useState(false); //是否弹出消息层
   const [tabKey, setTabKey] = useState('3'); //消息tabs默认的key
   const [loading, setLoading] = useState(false); //数据list的loading状态
-  const [hasMore, setHasMore] = useState(false); //加载更多状态
-  const [pageInfo, setPageInfo] = useState(null); //初始分页信息
+
   const [modalVisible, setModalVisible] = useState(false);
   const [messageDetail, setMessageDetail] = useState(null);
 
   function hidePopover() {
     setVisible(false);
   }
-  //连接组件
-  const LinkElement = ({ to, content }) => {
-    return (
-      <Link style={{ padding: '0 10px' }} to={to} onClick={hidePopover}>
-        {content}
-      </Link>
-    );
-  };
 
   //查看所有通知
   const ViewAll = ({ to }) => {
@@ -46,13 +39,13 @@ function MessageBox(props) {
     );
   };
 
-  function getMessageDetail(item) {
-    dispatch({
-      type: 'global/save',
-      payload: {
-        messageCount: messageCount - 1
-      }
-    });
+  function getMessageDetail(item, content) {
+    // dispatch({
+    //   type: 'global/save',
+    //   payload: {
+    //     messageCount: messageCount - 1
+    //   }
+    // });
     const { action } = item;
     if (action === 1) {
       getCommentNotify({
@@ -66,9 +59,10 @@ function MessageBox(props) {
         toUser: item.toId
       }).then((res) => {
         if (res.data.code === 200) {
-          setMessageDetail(res.data.result);
+          setMessageDetail({ title: content, ...res.data.result });
           hidePopover();
           setModalVisible(true);
+          fetchMessageCount();
         }
       });
     } else if (action === 0) {
@@ -83,166 +77,73 @@ function MessageBox(props) {
         toUser: item.toId
       }).then((res) => {
         if (res.data.code === 200) {
-          setMessageDetail(res.data.result);
+          setMessageDetail({ title: content, ...res.data.result });
           hidePopover();
           setModalVisible(true);
+          fetchMessageCount();
+
+        }
+      });
+    } else if (action === 3) {
+      getAnswerNotify({
+        date: item.createDate,
+        entityId: item.groupId,
+        entityType: item.entityType,
+        hasRead: item.hasRead,
+        operatorName: userName,
+        pageSize: 10,
+        pageStart: 1,
+        toUser: item.toId
+      }).then((res) => {
+        if (res.data.code === 200) {
+          setMessageDetail({ title: content, ...res.data.result });
+          hidePopover();
+          setModalVisible(true);  
+          fetchMessageCount();
+
         }
       });
     }
   }
 
-  const Content = ({ item, content }) => (
-    <span
-      style={{ cursor: 'pointer', fontWeight: 'bold' }}
-      onClick={getMessageDetail.bind(this, item)}
-    >
-      {content}
-    </span>
-  );
+  function fetchMessageCount() {
+    getUnReadCount({ userName }).then((res) => {
+      if (res.data.code === 200) {
+        // setCount(res.data.result);
+        dispatch({
+          type: 'global/save',
+          payload: {
+            messageCount: res.data.result
+          }
+        });
+      }
+    });
+  }
 
-  //消息列表组件
-  const MessageList = ({ data, type }) => {
-    return (
-      <div style={{ height: 300, overflowY: 'auto', overflowX: 'hidden' }}>
-        <InfiniteScroll
-          initialLoad={false}
-          pageStart={0}
-          loadMore={() => {
-            fetchData(pageInfo.pageNum + 1);
-          }}
-          hasMore={!loading && hasMore}
-          useWindow={false}
-        >
-          <List
-            loading={loading}
-            style={{ width: 300 }}
-            dataSource={data}
-            renderItem={(item) => {
-              const sentence = {
-                '00': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    喜欢了你的回答
-                    <Content content={item.content} item={item} />
-                  </span>
-                ),
-                '04': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    赞了你的评论
-                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
-                  </span>
-                ),
-                '05': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    赞了你的回复
-                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
-                  </span>
-                ),
-                '14': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    评论你的回答
-                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
-                  </span>
-                ),
-                '15': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    回复了你在
-                    <span onClick={getMessageDetail.bind(this, item)}>{item.content}</span>
-                    中的评论
-                  </span>
-                ),
-                '22': (
-                  <span>
-                    <>
-                      {item.fromId.split(',').map((item) => (
-                        <LinkElement
-                          key={item}
-                          to={`/personCenter/people/ask?userName=${item}`}
-                          content={RestTools.formatPhoneNumber(item)}
-                        />
-                      ))}
-                    </>
-                    关注了你
-                  </span>
-                ),
-                '21': (
-                  <span>
-                    <>
-                      {item.fromId.split(',').map((item) => (
-                        <LinkElement
-                          key={item}
-                          to={`/personCenter/people/ask?userName=${item}`}
-                          content={RestTools.formatPhoneNumber(item)}
-                        />
-                      ))}
-                    </>
-                    关注了你的问题
-                    <LinkElement
-                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                      content={item.content}
-                    />
-                  </span>
-                ),
-                '31': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    回答了问题
-                    <LinkElement
-                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                      content={item.content}
-                    />
-                  </span>
-                ),
-                '33': (
-                  <span>
-                    <LinkElement
-                      to={`/personCenter/people/ask?userName=${item.fromId}`}
-                      content={RestTools.formatPhoneNumber(item.fromId)}
-                    />
-                    回答了你关注的问题
-                    <LinkElement
-                      to={`/reply?q=${item.content}&QID=${item.groupId}`}
-                      content={item.content}
-                    />
-                  </span>
-                )
-              };
+  function handleChange(activeKey) {
+    setTabKey(activeKey);
+    setNotifyList([]);
+  }
 
-              return (
-                <List.Item>
-                  <div>{sentence[`${type}${item.entityType}`]}</div>
-                </List.Item>
-              );
-            }}
-          >
-            {loading && hasMore && <Spin />}
-          </List>
-        </InfiniteScroll>
-      </div>
-    );
-  };
+  function fetchData(pageStart = 1) {
+    setLoading(true);
+    getUnReadNotification({
+      pageSize: 10,
+      pageStart,
+      type: tabKey,
+      userName
+    })
+      .then((res) => {
+        setLoading(false);
+        if (res.data.code === 200) {
+          const { dataList } = res.data.result;
+          setNotifyList(notifyList.concat(dataList));
+        }
+      })
+      .then((err) => {
+        setLoading(false);
+      });
+  }
 
   useEffect(() => {
     const sock = new SockJS(`http://192.168.103.25:8080/sw.test.api/im/conn?uid=${userName}`);
@@ -256,54 +157,15 @@ function MessageBox(props) {
     });
   }, [userName]);
 
-  function fetchData(pageStart = 1) {
-    getUnReadNotification({
-      pageSize: 10,
-      pageStart,
-      type: tabKey,
-      userName
-    })
-      .then((res) => {
-        setLoading(false);
-        if (res.data.code === 200) {
-          const { dataList, pageNum, pageCount, total } = res.data.result;
-          setNotifyList(notifyList.concat(dataList));
-          setPageInfo({
-            pageCount: pageCount,
-            pageNum: pageNum,
-            total: total
-          });
-          setHasMore(total > pageNum * pageCount);
-        }
-      })
-      .then((err) => {
-        setLoading(false);
-      });
-  }
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabKey]);
 
   useEffect(() => {
-    getUnReadCount({ userName }).then((res) => {
-      if (res.data.code === 200) {
-        // setCount(res.data.result);
-        dispatch({
-          type: 'global/save',
-          payload: {
-            messageCount: res.data.result
-          }
-        });
-      }
-    });
+    fetchMessageCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handleChange(activeKey) {
-    setTabKey(activeKey);
-    setNotifyList([]);
-  }
 
   const content = (
     <Tabs activeKey={tabKey} animated={false} size="small" onChange={handleChange}>
@@ -315,7 +177,13 @@ function MessageBox(props) {
         }
         key="3"
       >
-        <MessageList data={notifyList} type="3" />
+        <MessageList
+          data={notifyList}
+          userName={userName}
+          showLoading={loading}
+          type="3"
+          onContentClick={getMessageDetail}
+        />
         <ViewAll to={`/notify?type=3`} />
       </TabPane>
       <TabPane
@@ -326,7 +194,13 @@ function MessageBox(props) {
         }
         key="1"
       >
-        <MessageList data={notifyList} type="1" />
+        <MessageList
+          data={notifyList}
+          userName={userName}
+          showLoading={loading}
+          type="1"
+          onContentClick={getMessageDetail}
+        />
         <ViewAll to={`/notify?type=1`} />
       </TabPane>
       <TabPane
@@ -337,7 +211,13 @@ function MessageBox(props) {
         }
         key="2"
       >
-        <MessageList data={notifyList} type="2" />
+        <MessageList
+          data={notifyList}
+          userName={userName}
+          showLoading={loading}
+          type="2"
+          onContentClick={getMessageDetail}
+        />
         <ViewAll to={`/notify?type=2`} />
       </TabPane>
       <TabPane
@@ -348,7 +228,13 @@ function MessageBox(props) {
         }
         key="0"
       >
-        <MessageList data={notifyList} type="0" />
+        <MessageList
+          data={notifyList}
+          userName={userName}
+          showLoading={loading}
+          type="0"
+          onContentClick={getMessageDetail}
+        />
         <ViewAll to={`/notify?type=0`} />
       </TabPane>
     </Tabs>
@@ -356,12 +242,29 @@ function MessageBox(props) {
 
   const CommentPop = ({ messageDetail }) => (
     <div>
-      <div>{messageDetail?.question}</div>
-      <div dangerouslySetInnerHTML={{ __html: messageDetail?.answer?.dataList.answer }} />
-      <Divider></Divider>
       <div>
-        {messageDetail?.answer.dataList.comment.dataList.map((item) => {
-          return <div key={item.commentId}>{item.content}</div>;
+        <Avatar
+          src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${messageDetail?.answer?.dataList?.userName}`}
+        />
+        <span>{RestTools.formatPhoneNumber(messageDetail?.answer?.dataList?.userName)}</span>
+        <div
+          style={{ padding: '4px 20px' }}
+          dangerouslySetInnerHTML={{ __html: messageDetail?.answer?.dataList.answer }}
+        />
+      </div>
+
+      <div style={{ background: '#eee', padding: '4px', marginLeft: 20 }}>
+        {messageDetail?.answer?.dataList?.comment?.dataList.map((item) => {
+          return (
+            <div key={item.commentId}>
+              <Avatar
+                size="small"
+                src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${item.userName}`}
+              />
+              <span>{RestTools.formatPhoneNumber(item.userName)}</span>
+              <div style={{ padding: '4px 20px' }}>{item.content}</div>
+            </div>
+          );
         })}
       </div>
     </div>
@@ -369,7 +272,36 @@ function MessageBox(props) {
 
   const LikePop = ({ messageDetail }) => (
     <div>
-      <div dangerouslySetInnerHTML={{__html: messageDetail?.answer}} />
+      <Avatar
+        src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${messageDetail?.userName}`}
+      />
+      <span>{RestTools.formatPhoneNumber(messageDetail?.userName)}</span>
+      <div style={{ background: '#eee', padding: '4px 10px' }}>
+        <div
+          style={{ fontWeight: 'bold', padding: '4px 0' }}
+          dangerouslySetInnerHTML={{ __html: messageDetail?.answer || messageDetail?.content }}
+        />
+        <div style={{ color: '#aaa' }}>
+          <Icon type="like" theme="filled" />
+          {messageDetail?.likedCount || messageDetail?.likeCount}
+        </div>
+      </div>
+    </div>
+  );
+
+  const AnswerPop = ({ messageDetail }) => (
+    <div>
+      <div>
+        <Avatar
+          src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${messageDetail?.answer.dataList[0].userName}`}
+        />
+        <span>{RestTools.formatPhoneNumber(messageDetail?.answer.dataList[0].userName)}</span>
+
+        <div
+          style={{ background: '#eee', padding: '4px 20px', fontWeight: 'bold' }}
+          dangerouslySetInnerHTML={{ __html: messageDetail?.answer.dataList[0].answer }}
+        />
+      </div>
     </div>
   );
 
@@ -392,12 +324,14 @@ function MessageBox(props) {
       <Modal
         footer={null}
         visible={modalVisible}
+        title={messageDetail?.title}
         onCancel={() => {
           setModalVisible(false);
         }}
       >
         {tabKey === '0' ? <LikePop messageDetail={messageDetail}></LikePop> : null}
         {tabKey === '1' ? <CommentPop messageDetail={messageDetail}></CommentPop> : null}
+        {tabKey === '3' ? <AnswerPop messageDetail={messageDetail} /> : null}
       </Modal>
     </div>
   );

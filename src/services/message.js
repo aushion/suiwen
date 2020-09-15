@@ -32,8 +32,8 @@ export function getLikeNotify(payload) {
   })
 }
 
-export function getNotifyAnswer(payload) {
-  return request.post('/notify/getNotifyAnswer',null, {
+export function getAnswerNotify(payload) {
+  return request.post('/notify/getAnswerNotify',null, {
     params: payload
   })
 }

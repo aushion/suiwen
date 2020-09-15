@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { List } from 'antd';
 import groupBy from 'lodash/groupBy';
 import Evaluate from '../Evaluate/index';
@@ -9,7 +9,8 @@ function SgList(props) {
   const { data, needEvaluate = true } = props;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
-  const [sgData, updateData] = useState(groupByData);
+  // const [sgData, updateData] = useState(groupByData);
+  const sgData = groupByData;
 
   return (
     <div className={`${styles.SgList} copy`} id="sg">

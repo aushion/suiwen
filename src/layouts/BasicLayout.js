@@ -105,6 +105,7 @@ function BasicLayout(props) {
                   <Link
                     style={{ color: '#fff', marginLeft: 10 }}
                     to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                    target="_blank"
                   >
                     <Avatar
                       size="small"

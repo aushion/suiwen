@@ -3,7 +3,6 @@ import { Menu, Icon } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
-import RestTools from 'Utils/RestTools';
 
 function PersonMenu(props) {
   const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));

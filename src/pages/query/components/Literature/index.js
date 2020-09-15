@@ -546,7 +546,7 @@ export default function Literature(props) {
               <a
                 style={Object.assign({}, spanStyle, { width: '38%' })}
                 dangerouslySetInnerHTML={{
-                  __html: RestTools.translateToRed(item.题名 || '-')
+                  __html: RestTools.translateToRed(item.题名 || item.篇名 || '-')
                 }}
                 title={RestTools.removeFlag(item.题名 || '-')}
                 href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
