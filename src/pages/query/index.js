@@ -31,6 +31,7 @@ import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
 import LawPost from './components/LawPost';
 import LawCase from './components/LawCase';
+import LawItem from './components/LawItem';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -388,6 +389,17 @@ function ResultPage(props) {
                   {lawcaseData.length
                     ? lawcaseData.map((item) => (
                         <LawCase
+                          key={item.id}
+                          data={item.dataNode}
+                          pagination={item.pagination}
+                          title={item.title}
+                        />
+                      ))
+                    : null}
+
+                  {lawitemData.length
+                    ? lawitemData.map((item) => (
+                        <LawItem
                           key={item.id}
                           data={item.dataNode}
                           pagination={item.pagination}
