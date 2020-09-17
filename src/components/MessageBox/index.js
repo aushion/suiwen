@@ -81,7 +81,6 @@ function MessageBox(props) {
           hidePopover();
           setModalVisible(true);
           fetchMessageCount();
-
         }
       });
     } else if (action === 3) {
@@ -98,9 +97,8 @@ function MessageBox(props) {
         if (res.data.code === 200) {
           setMessageDetail({ title: content, ...res.data.result });
           hidePopover();
-          setModalVisible(true);  
+          setModalVisible(true);
           fetchMessageCount();
-
         }
       });
     }
@@ -149,13 +147,22 @@ function MessageBox(props) {
     const sock = new SockJS(`http://192.168.103.25:8080/sw.test.api/im/conn?uid=${userName}`);
     const stompClient = Stomp.over(sock);
     // 创建连接
-    stompClient.connect({}, function(frame) {
+    stompClient.connect({}, function() {
       //订阅消息
       stompClient.subscribe(`/user/${userName}/msg`, function(data) {
-        console.log(data.body);
+        const res = JSON.parse(data.body);
+        if (res.action) {
+          dispatch({
+            type: 'global/save',
+            payload: {
+              messageCount: messageCount + 1
+            }
+          });
+          setTabKey(res.action);
+        }
       });
     });
-  }, [userName]);
+  }, [dispatch, messageCount, userName]);
 
   useEffect(() => {
     fetchData();

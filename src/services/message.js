@@ -38,6 +38,11 @@ export function getAnswerNotify(payload) {
   })
 }
 
+export function readMessage(payload) {
+  return request.post('/notify/readMessage',null,{
+    params: payload
+  })
+}
 
 
 
