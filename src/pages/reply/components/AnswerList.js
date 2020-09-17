@@ -269,7 +269,7 @@ function AnswerList(props) {
                   />
                   <span style={{ marginLeft: 10 }}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link> */}
-                <CaAvatar userName={username}></CaAvatar>
+                <CaAvatar userName={username} />
               </div>
               {item.userName !== userInfo?.UserName ? (
                 <div className={replyStyle.followBtn}>
@@ -310,7 +310,7 @@ function AnswerList(props) {
 
                 {item.resource && item.resource.includes('<a') ? (
                   <>
-                    <div>引用文献：</div>
+                    <div style={{padding: '6px 0'}}>引用文献：</div>
                     <div dangerouslySetInnerHTML={{ __html: item.resource }} />
                   </>
                 ) : null}

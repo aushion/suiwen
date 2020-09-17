@@ -187,7 +187,8 @@ export default {
     硕士: 'CMFD',
     期刊: 'CJFD',
     中国会议: 'CPFD',
-    报纸: 'CCND'
+    报纸: 'CCND',
+    法律_期刊: 'CJFD'
   },
   formatText(sgText) {
     sgText = sgText.replace(/<\sp>/g, '');

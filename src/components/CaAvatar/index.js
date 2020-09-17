@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Popover, Button, Spin } from 'antd';
+import { Avatar, Popover, Spin } from 'antd';
 import {Link} from  'umi';
 import helpServer from '../../services/help';
 import RestTools from '../../utils/RestTools';
@@ -28,7 +28,7 @@ function CaAvatar({ userName }) {
   return (
     <Link  to={`personCenter/people/ask?userName=${userName}`} target="_blank">
       <Popover
-        placement="bottomRight"
+        placement="bottomLeft"
         content={
           <Spin spinning={loading}>
             <Avatar

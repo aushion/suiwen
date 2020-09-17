@@ -14,7 +14,7 @@ import uniqBy from 'lodash/uniqBy';
 
 const { Search } = Input;
 export default function Literature(props) {
-  const { literatureData, dispatch, loading } = props;
+  const { literatureData, dispatch, loading, law } = props;
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {
@@ -131,6 +131,10 @@ export default function Literature(props) {
   }, [subject]);
 
   const linkMap = {
+    法律期刊: {
+      name: '法律相关期刊',
+      url: () => `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=CLKJ`
+    },
     期刊: {
       name: '期刊论文',
       url: (kw) =>
@@ -539,7 +543,7 @@ export default function Literature(props) {
           const randomKey =
             fieldWord === '题名' || fieldWord === '主题' || fieldWord === '作者'
               ? item['来源数据库']
-              :  item[fieldWord];
+              : item[fieldWord];
 
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>

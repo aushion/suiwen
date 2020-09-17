@@ -164,7 +164,7 @@ function ResultPage(props) {
     kaifangyuData.length;
 
   function showModal() {
-    if (Cookies.get('Ecp_LoginStuts')) {
+    if (Cookies.get('Ecp_LoginStuts') || localStorage.getItem('userInfo')) {
       dispatch({
         type: 'result/save',
         payload: {
@@ -344,6 +344,11 @@ function ResultPage(props) {
                       loading={fetchLiterature}
                     />
                   ) : null}
+
+                  {lawLiteratureData.length ? (
+                    <Literature law literatureData={lawLiteratureData} dispatch={dispatch} />
+                  ) : null}
+
                   {patentData.length
                     ? patentData.map((item) => (
                         <Patent key={item.id} data={item} title={item.title} />
