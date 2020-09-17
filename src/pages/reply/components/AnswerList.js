@@ -7,6 +7,7 @@ import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
 import RestTools from '../../../utils/RestTools';
+import CaAvatar from '../../../components/CaAvatar';
 
 let timerCount = null;
 let userCount = null;
@@ -258,7 +259,7 @@ function AnswerList(props) {
           <div className={replyStyle.answerItem} key={item.aid}>
             <div className="display_flex justify-content_flex-justify">
               <div className={replyStyle.answerAvatar}>
-                <Link
+                {/* <Link
                   to={`personCenter/people/ask?userName=${username}`}
                   style={{ paddingRight: 20 }}
                 >
@@ -267,7 +268,8 @@ function AnswerList(props) {
                     shape="square"
                   />
                   <span style={{ marginLeft: 10 }}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
+                </Link> */}
+                <CaAvatar userName={username}></CaAvatar>
               </div>
               {item.userName !== userInfo?.UserName ? (
                 <div className={replyStyle.followBtn}>

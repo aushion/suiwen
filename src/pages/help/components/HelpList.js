@@ -156,7 +156,7 @@ function HelpList(props) {
                         </span>
                       </Popconfirm>
                     ) : null}
-                    已有回答:{item.checkCount}
+                    已有回答:{item.answerCount}
                     <span>
                       <span style={{ display: 'inline-block', padding: '0 10px' }}>|</span>
                       {item.commitTime}
