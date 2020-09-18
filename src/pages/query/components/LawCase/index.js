@@ -10,6 +10,18 @@ function LawCase({ data }) {
       <List
         itemLayout="vertical"
         dataSource={data}
+        footer={
+          <div style={{textAlign: 'right', }}>
+            <a
+              style={{color: '#999'}}
+              href="https://lawnew.cnki.net/kns/brief/result.aspx?dbprefix=CLKC"
+              rel="noreferrer"
+              target="_blank"
+            >
+              CNKI法律案例库
+            </a>
+          </div>
+        }
         renderItem={(item) => {
           return (
             <List.Item>
@@ -28,12 +40,14 @@ function LawCase({ data }) {
                 {item.裁判日期 ? (
                   <div className={styles.item}>【裁判日期】{item.裁判日期}</div>
                 ) : null}
-                <div className={styles.item}>
-                  【审理法院】
-                  <span
-                    dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.审理法院) }}
-                  ></span>
-                </div>
+                {item.审理法院 ? (
+                  <div className={styles.item}>
+                    【审理法院】
+                    <span
+                      dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.审理法院) }}
+                    />
+                  </div>
+                ) : null}
               </div>
             </List.Item>
           );

@@ -80,6 +80,7 @@ function BasicLayout(props) {
   return (
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
+        
         <div className={styles.inputGroup}>
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logo} alt="logo" />

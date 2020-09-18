@@ -271,7 +271,7 @@ export default {
       const res = yield call(setQuestion, payload);
       if (res.data.result) {
         yield put({ type: 'save', payload: { visible: false } });
-        router.push('/help/myHelp');
+        router.push(`/personCenter/people/ask?userName=${payload.uId}`);
       } else {
         message.error(res.data.msg);
       }

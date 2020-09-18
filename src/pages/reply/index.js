@@ -26,7 +26,6 @@ function Reply(props) {
 
   const [showEditor, switchEditor] = useState(JSON.parse(editStatus)); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
- 
 
   useEffect(() => {
     switchFollowQ(followed);
@@ -63,9 +62,11 @@ function Reply(props) {
     <div className={replyStyle.reply}>
       <div className={replyStyle.content}>
         <Row gutter={40}>
-         
           <Col span={18} className={replyStyle.content_left}>
-          <Link to="/help/newHelp"><Icon type="home"></Icon>返回社区</Link>
+            <Link to="/help/newHelp" style={{ display: 'inline-block', padding: 10 }}>
+              <Icon type="home" style={{marginRight: 4}} />
+              返回社区
+            </Link>
             <div className={replyStyle.title}>
               <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
               <span>{params.q}</span>
@@ -100,7 +101,7 @@ function Reply(props) {
           <Col span={6}>
             <div>
               {userCommunityInfo ? <UserInfo /> : null}
-               <WaitAnswer /> 
+              <WaitAnswer />
             </div>
           </Col>
         </Row>

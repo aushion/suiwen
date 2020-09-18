@@ -27,9 +27,9 @@ function LawPost({ data, pagination, title }) {
                 )}
               </div>
               <div className={styles.otherInfo}>
-                <div className={styles.item}>【时效性】{item.时效性}</div>
-                <div className={styles.item}>【发布日期】{item.发布日期}</div>
-                <div className={styles.item}>【发布机关】{item.发布机关}</div>
+                <div className={styles.item}>【时效性】<span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.时效性)}} /></div>
+                <div className={styles.item}>【发布日期】<span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.发布日期)}} /></div>
+                <div className={styles.item}>【发布机关】<span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.发布机关)}} /></div>
               </div>
             </List.Item>
           );

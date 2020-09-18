@@ -15,12 +15,15 @@ function FoldText({ originText, fullText = null }) {
     : originText;
 
   const [text, updateText] = useState(originTextWithIcon);
+  const [pageYOffset, setPageYOffest] = useState(0); //默认滚动条移动距离
 
   function handleClick(e) {
     if (e.target.className === 'more') {
       updateText(fullTextWithIcon);
+      setPageYOffest(window.pageYOffset); //存储滚动条位置
     } else {
       updateText(originTextWithIcon);
+      window.scrollTo({ top: pageYOffset });//回到原来的滚动条位置
     }
   }
 

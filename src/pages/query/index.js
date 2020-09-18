@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Modal, Input, Result, Button, message, Badge, Skeleton } from 'antd';
+import { Spin, Row, Col, Icon, Modal, Input, Result, Button, message, Badge, Skeleton, Divider } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -171,6 +171,7 @@ function ResultPage(props) {
           visible: true
         }
       });
+
     } else {
       message.warn('请您登录后再操作');
     }
@@ -557,7 +558,11 @@ function ResultPage(props) {
         onOk={submitQuestion}
         confirmLoading={loading}
       >
-        <TextArea rows={4} value={submitQ} onChange={changeQuestion}></TextArea>
+        <TextArea rows={4} value={submitQ} onChange={changeQuestion} />
+        <Divider />
+        <div>
+
+        </div>
       </Modal>
     </div>
   );

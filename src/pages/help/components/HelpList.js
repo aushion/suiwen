@@ -1,6 +1,7 @@
 import React from 'react';
-import { List, Input, Popconfirm, Tag, Breadcrumb, Avatar, Button } from 'antd';
+import { List, Input, Popconfirm, Tag, Breadcrumb, Button } from 'antd';
 import RestTools from '../../../utils/RestTools';
+import CaAvatar from '../../../components/CaAvatar';
 import { Link } from 'umi';
 
 const { Search } = Input;
@@ -53,7 +54,7 @@ function HelpList(props) {
             onSearch={(value) => {
               RestTools.setSession('searchKey', value);
               // const page = JSON.parse(sessionStorage.getItem('page'));
-              const payload = { domain, searchKey: value, size: 10, index: 1, };
+              const payload = { domain, searchKey: value, size: 10, index: 1 };
               handleSearchOrChangePage(payload);
             }}
           />
@@ -82,13 +83,11 @@ function HelpList(props) {
         }
         renderItem={(item) => {
           return (
-            <List.Item style={{ padding: '16px 0' }}>
+            <List.Item >
               <div className="display_flex justify-content_flex-justify">
                 <div
                   style={{
                     width: '60%',
-
-                    fontWeight: 800,
                     lineHeight: '28px',
                     fontSize: 15,
                     cursor: 'pointer',
@@ -96,20 +95,18 @@ function HelpList(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
                   }}
-                  // onClick={() => handleClickItem(item)}
                 >
-                  <div>
-                    <Avatar icon="user" />
-                    <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
+                  <div style={{ display: 'inline-block' }}>
+                    <CaAvatar userName={item.userName} />
                   </div>
+
                   <Link
-                    style={{ color: '#454749' }}
+                    style={{ color: '#454749', fontWeight: 800, display: 'block', paddingTop: 6 }}
                     to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
                     target="_blank"
                   >
                     {current === 'myReply' ? item.question : item.content}
-                  </Link>
-                  <span style={{ marginLeft: 10 }}>
+                    <span style={{ marginLeft: 10 }}>
                     {item.tag
                       ? item.tag.split(',').map((item, index) => (
                           <Tag color="volcano" key={index}>
@@ -118,8 +115,10 @@ function HelpList(props) {
                         ))
                       : null}
                   </span>
+                  </Link>
+                
                 </div>
-                <div>
+                <div style={{paddingTop: 6}}>
                   <div style={{ textAlign: 'right' }}>
                     <Button
                       icon="edit"
@@ -134,7 +133,6 @@ function HelpList(props) {
                       写回答
                     </Button>
                   </div>
-
                   <div style={{ color: '#8590A6', lineHeight: '40px' }}>
                     {current === 'myHelp' && item.checkCount === 0 ? (
                       <Popconfirm

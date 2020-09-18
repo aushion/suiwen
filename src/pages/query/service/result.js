@@ -71,7 +71,7 @@ export function getCustomView(payload) {
 }
 
 export function setQuestion(payload) {
-  return request.post(process.env.apiUrl + '/commitQuestion', null, {
+  return request.post(process.env.apiUrl + '/community/commitQuestion', null, {
     params: {
       ...payload
     }

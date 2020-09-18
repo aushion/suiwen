@@ -190,6 +190,9 @@ export default {
     报纸: 'CCND',
     法律_期刊: 'CJFD'
   },
+  isUUid(str){
+    return /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(str)
+  },
   formatText(sgText) {
     sgText = sgText.replace(/<\sp>/g, '');
     sgText = sgText.replace(/<\s\/p>/g, '');

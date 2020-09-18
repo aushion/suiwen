@@ -14,7 +14,7 @@ import uniqBy from 'lodash/uniqBy';
 
 const { Search } = Input;
 export default function Literature(props) {
-  const { literatureData, dispatch, loading, law } = props;
+  const { literatureData, dispatch, loading,  } = props;
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {

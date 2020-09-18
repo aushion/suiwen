@@ -1,6 +1,5 @@
 import React from 'react';
 import { Avatar } from 'antd';
-import { connect } from 'dva';
 import { Link } from 'umi';
 import RestTools from '../../../utils/RestTools';
 
@@ -47,28 +46,28 @@ function UserInfo(props) {
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.answerNum || 0}</div>
-            <div style={{color: '#868686', fontWeight: 400}}>回答</div>
+            <div style={{ color: '#868686', fontWeight: 400 }}>回答</div>
           </Link>
           <Link
             to={`/personCenter/people/ask?userName=${userInfo?.userName}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.questionNum || 0}</div>
-            <div style={{color: '#868686', fontWeight: 400}}>提问</div>
+            <div style={{ color: '#868686', fontWeight: 400 }}>提问</div>
           </Link>
           <Link
             to={`/personCenter/people/fans?userName=${userInfo?.userName}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.followers || 0}</div>
-            <div style={{color: '#868686', fontWeight: 400}}>粉丝</div>
+            <div style={{ color: '#868686', fontWeight: 400 }}>粉丝</div>
           </Link>
           <Link
             to={`/personCenter/people/follow?userName=${userInfo?.userName}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.followees || 0}</div>
-            <div style={{color: '#868686', fontWeight: 400}}>关注</div>
+            <div style={{ color: '#868686', fontWeight: 400 }}>关注</div>
           </Link>
         </div>
       </div>
@@ -76,6 +75,4 @@ function UserInfo(props) {
   );
 }
 
-export default connect((state) => ({
-  ...state.global
-}))(UserInfo);
+export default UserInfo;

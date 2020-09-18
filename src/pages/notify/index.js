@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Row, Col, Card, List, Select } from 'antd';
 import { connect } from 'dva';
 import UserInfo from '../help/components/UserInfo';
+import RestTools from '../../utils/RestTools';
 import styles from './index.less';
 
 const { Option } = Select;
 function Notify(props) {
-  const { userHistoryNotification, location, dispatch } = props;
+  const { userHistoryNotification, location, userCommunityInfo, dispatch } = props;
   const { query } = location;
   const { type } = query;
   const [selectValue, setSelectValue] = useState(type);
@@ -14,6 +15,8 @@ function Notify(props) {
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
+
+    console.log(userCommunityInfo)
   const action = {
     '00': '喜欢了你的回答',
     '04': '赞了你的评论',
@@ -67,13 +70,17 @@ function Notify(props) {
                   return (
                     <List.Item>
                       <div style={{ fontSize: 12, color: '#999' }}>
-                        <span style={{ color: '#333' }}>{item.fromId}</span>
+                        <span style={{ color: '#333' }}>
+                          {RestTools.formatPhoneNumber(item.fromId)}
+                        </span>
                         <span style={{ padding: '0 10px' }}>
                           {action[`${item.action}${item.entityType}`]}
                         </span>
                         <span>{item.createDate}</span>
                       </div>
-                      <div style={{ color: '#333', fontWeight: 'bold' }}>{item.content}</div>
+                      <div style={{ color: '#333', fontWeight: 'bold' }}>
+                        {RestTools.formatPhoneNumber(item.content)}
+                      </div>
                     </List.Item>
                   );
                 }}
@@ -82,7 +89,7 @@ function Notify(props) {
           </Card>
         </Col>
         <Col span={6}>
-          <UserInfo userName={userInfo.UserName} />
+          <UserInfo userName={userInfo.UserName} userInfo={userCommunityInfo} />
         </Col>
       </Row>
     </div>

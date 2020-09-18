@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Link } from 'umi';
-import { Icon, Avatar, Button, Spin } from 'antd';
+import { Icon, Button, Spin } from 'antd';
 import dayjs from 'dayjs';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
-import RestTools from '../../../utils/RestTools';
+// import RestTools from '../../../utils/RestTools';
 import CaAvatar from '../../../components/CaAvatar';
 
 let timerCount = null;
@@ -259,16 +258,7 @@ function AnswerList(props) {
           <div className={replyStyle.answerItem} key={item.aid}>
             <div className="display_flex justify-content_flex-justify">
               <div className={replyStyle.answerAvatar}>
-                {/* <Link
-                  to={`personCenter/people/ask?userName=${username}`}
-                  style={{ paddingRight: 20 }}
-                >
-                  <Avatar
-                    src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${username}`}
-                    shape="square"
-                  />
-                  <span style={{ marginLeft: 10 }}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link> */}
+               
                 <CaAvatar userName={username} />
               </div>
               {item.userName !== userInfo?.UserName ? (

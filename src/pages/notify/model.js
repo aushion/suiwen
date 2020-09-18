@@ -2,7 +2,6 @@ import { getUserHistoryNotification, getUserInfo } from './service/notify';
 
 export default {
   namespace: 'notify',
-
   state: {
     userHistoryNotification: null,
     userCommunityInfo: null
@@ -28,7 +27,7 @@ export default {
     },
     *getUserInfo({ payload }, { call, put }) {
       const res = yield call(getUserInfo, payload);
-      if (res.data.code === 2000) {
+      if (res.data.code === 200) {
         yield put({
           type: 'save',
           payload: {

@@ -158,7 +158,7 @@ function MessageBox(props) {
               messageCount: messageCount + 1
             }
           });
-          setTabKey(res.action);
+          // setTabKey(res.action);
         }
       });
     });
