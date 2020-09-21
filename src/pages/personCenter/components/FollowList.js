@@ -56,8 +56,8 @@ function FollowList(props) {
               <div>
                 <FollowButton
                   hasFollowed={item.hasFollowed}
-                  userName={item.userName}
-                  userCommunityInfo={userCommunityInfo}
+                  currentUser={item.userName}
+                  loginUserInfo={userCommunityInfo}
                 />
               </div>
             </List.Item>

@@ -32,6 +32,7 @@ import Translate from './components/Translate';
 import LawPost from './components/LawPost';
 import LawCase from './components/LawCase';
 import LawItem from './components/LawItem';
+import AskModal from '../../components/AskModal';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 const { TextArea } = Input;
@@ -60,6 +61,8 @@ function ResultPage(props) {
     fetchSemanticData,
     answerData
   } = props;
+
+
 
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
@@ -186,24 +189,7 @@ function ResultPage(props) {
     });
   }
 
-  function changeQuestion(e) {
-    setSubmitQ(e.target.value);
-  }
-
-  function submitQuestion() {
-    if (submitQ) {
-      dispatch({
-        type: 'result/setQuestion',
-        payload: {
-          q: submitQ,
-          domain: answerData.length ? answerData[0].domain : '',
-          uId: RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : Cookies.get('cnki_qa_uuid')
-        }
-      });
-    }
-  }
+ 
 
   function myReply() {
     if (localStorage.getItem('userInfo')) {
@@ -551,19 +537,7 @@ function ResultPage(props) {
         }}
         images={[{ src: previewImgSrc, alt: '' }]}
       />
-      <Modal
-        visible={visible}
-        onCancel={hideModal}
-        title="提交问题"
-        onOk={submitQuestion}
-        confirmLoading={loading}
-      >
-        <TextArea rows={4} value={submitQ} onChange={changeQuestion} />
-        <Divider />
-        <div>
-
-        </div>
-      </Modal>
+      <AskModal visible={visible} onTriggerCancel={hideModal} q={q} />
     </div>
   );
 }

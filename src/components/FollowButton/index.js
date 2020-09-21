@@ -4,7 +4,10 @@ import { throttle } from 'lodash';
 import RestTools from '../../utils/RestTools';
 import helpServer from '../../services/help';
 
-function FollowButton({ hasFollowed, userName, userCommunityInfo }) {
+//  currentUser: 当前行用户
+//  loginUserInfo：当前登录用户
+
+function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
   const [followStatus, updateStatus] = useState(hasFollowed);
   const followedStyle = {
     backgroundColor: '#8C97AC',
@@ -56,8 +59,8 @@ function FollowButton({ hasFollowed, userName, userCommunityInfo }) {
 
     //发起请求服务端去修改状态
     const payload = {
-      followUser: userName,
-      userId: userCommunityInfo.userName
+      followUser: currentUser,
+      userId: loginUserInfo.userName
     };
     if (followStatus === 1) {
       helpServer.followUser(payload);

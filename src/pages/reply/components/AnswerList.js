@@ -9,7 +9,7 @@ import replyStyle from '../index.less';
 import CaAvatar from '../../../components/CaAvatar';
 
 let timerCount = null;
-let userCount = null;
+
 function AnswerList(props) {
   const { total, answerList, dispatch, qId } = props;
   const userInfo = localStorage.getItem('userInfo')
@@ -212,34 +212,7 @@ function AnswerList(props) {
     }
   }
 
-  function followUser(current) {
-    clearTimeout(userCount);
-    setTimeout(() => {
-      let data = answerList.map((item) => {
-        if (item.aid === current.aid) {
-          return {
-            ...current,
-            followedUser: !current.followedUser
-          };
-        }
-        return item;
-      });
-      dispatch({
-        type: 'reply/saveAnswers',
-        payload: {
-          answerList: data
-        }
-      });
-
-      dispatch({
-        type: current.followedUser ? 'reply/unFollowUser' : 'reply/followUser',
-        payload: {
-          followUser: current.userName,
-          userId: userInfo?.UserName
-        }
-      });
-    }, 300);
-  }
+  
 
   return (
     <div>
@@ -261,21 +234,7 @@ function AnswerList(props) {
                
                 <CaAvatar userName={username} />
               </div>
-              {item.userName !== userInfo?.UserName ? (
-                <div className={replyStyle.followBtn}>
-                  <Button
-                    onClick={followUser.bind(this, item)}
-                    size="small"
-                    style={
-                      item.followedUser
-                        ? { background: '#a0d911', borderColor: '#a0d911', color: '#fff' }
-                        : null
-                    }
-                  >
-                    {item.followedUser ? '已关注' : '关注'}
-                  </Button>
-                </div>
-              ) : null}
+             
             </div>
 
             {item.showEditForm ? (

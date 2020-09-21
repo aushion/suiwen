@@ -200,6 +200,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                 {inputId === k.replyId ? (
                   <div>
                     <Input
+                      maxLength={300}
                       value={newComment}
                       placeholder="输入回复"
                       style={{ width: 550, marginRight: 20 }}

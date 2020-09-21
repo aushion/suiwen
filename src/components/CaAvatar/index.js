@@ -3,17 +3,18 @@ import { Avatar, Popover, Spin } from 'antd';
 import { Link } from 'umi';
 import helpServer from '../../services/help';
 import RestTools from '../../utils/RestTools';
+import FollowButton from '../FollowButton';
 
-function CaAvatar({ userName }) {
+function CaAvatar({ userName, showFollowBtn = true }) {
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  // const loginUser = localStorage.getItem('userInfo')
-  //   ? JSON.parse(localStorage.getItem('userInfo'))
-  //   : null;
+  const loginUser = sessionStorage.getItem('userCommunityInfo')
+    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
+    : null;
   function fetchUser() {
     setLoading(true);
     helpServer
-      .getUserCommunityInfo({ userName })
+      .getUserCommunityInfo({ userName, operator: loginUser.userName })
       .then((res) => {
         if (res.data.code === 200) {
           setUserInfo(res.data.result);
@@ -47,27 +48,35 @@ function CaAvatar({ userName }) {
                 </span>
                 <div>
                   {userInfo ? (
-                    <div
-                      className="display_flex justify-content_flex-justify"
-                      style={{ width: 200, padding: '10px' }}
-                    >
-                      <div style={{ textAlign: 'center' }}>
-                        <div>提问</div>
-                        <strong>{userInfo.questionNum}</strong>
-                      </div>
+                    <>
+                      <div
+                        className="display_flex justify-content_flex-justify"
+                        style={{ width: 200, padding: '10px' }}
+                      >
+                        <div style={{ textAlign: 'center' }}>
+                          <div>提问</div>
+                          <strong>{userInfo.questionNum}</strong>
+                        </div>
 
-                      <div style={{ textAlign: 'center' }}>
-                        <div>回答</div>
-                        <strong>{userInfo.answerNum}</strong>
-                      </div>
+                        <div style={{ textAlign: 'center' }}>
+                          <div>回答</div>
+                          <strong>{userInfo.answerNum}</strong>
+                        </div>
 
-                      <div style={{ textAlign: 'center' }}>
-                        <div>粉丝</div>
-                        <strong>{userInfo.followers}</strong>
+                        <div style={{ textAlign: 'center' }}>
+                          <div>粉丝</div>
+                          <strong>{userInfo.followers}</strong>
+                        </div>
                       </div>
-                    </div>
+                      {showFollowBtn && loginUser.userName !== userName ? (
+                        <FollowButton
+                          hasFollowed={userInfo.hasFollowed}
+                          currentUser={userName}
+                          loginUserInfo={loginUser}
+                        />
+                      ) : null}
+                    </>
                   ) : null}
-                  {/* {loginUser.UserName !== userName ? <Button icon="plus">关注他</Button> : null} */}
                 </div>
               </Spin>
             }

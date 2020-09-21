@@ -97,7 +97,7 @@ function HelpList(props) {
                   }}
                 >
                   <div style={{ display: 'inline-block' }}>
-                    <CaAvatar userName={item.userName} />
+                    <CaAvatar userName={item.userName} showFollowBtn={false} />
                   </div>
 
                   <Link

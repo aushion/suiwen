@@ -11,6 +11,7 @@ import FeedBack from '../components/FeedBack';
 import logo from '../assets/logo1.png';
 import LoginRegister from '../components/LoginRegister';
 import MessageBox from '../components/MessageBox';
+import AskModal from '../components/AskModal';
 
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
@@ -24,10 +25,11 @@ function BasicLayout(props) {
     JSON.parse(sessionStorage.getItem('topicData')) ||
     JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
-  const [visible, setVisible] = useState(false);
-  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
-  const [isVisibleLogin, setShowLogin] = useState(false);
-  const [isVisibleRegister, setShowRegister] = useState(false);
+  const [visible, setVisible] = useState(false); //反馈弹窗
+  const [askModalVisible, setAskModalVisible] = useState(false); //提问弹窗
+  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false); //登陆注册弹窗
+  const [isVisibleLogin, setShowLogin] = useState(false); //默认是否显示登录
+  const [isVisibleRegister, setShowRegister] = useState(false); //默认是否显示注册
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme, showLoginModal, avatar } = props;
@@ -70,7 +72,7 @@ function BasicLayout(props) {
       payload: {
         userInfo: null
       }
-    })
+    });
     setUsername(null);
     if (window.location.pathname.includes('personCenter')) {
       router.push('/');
@@ -80,14 +82,13 @@ function BasicLayout(props) {
   return (
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
-        
         <div className={styles.inputGroup}>
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logo} alt="logo" />
             {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
           </div>
 
-          <div className={styles.inputWrap}>
+          <div className={`${styles.inputWrap} display_flex`}>
             <SmartInput
               question={q}
               needTip
@@ -95,6 +96,12 @@ function BasicLayout(props) {
               onClickItem={handleClickEnterOrItem}
               themeColor={themeColor}
             />
+
+            <Button className={styles.askBtn} type="link" onClick={() => {
+              setAskModalVisible(true)
+            }}>
+              我要提问
+            </Button>
           </div>
           <div className={styles.login}>
             <span className={`${styles.tips} display_flex`}>
@@ -123,9 +130,7 @@ function BasicLayout(props) {
                     退出
                   </button>
                 </>
-              ) : (
-                null
-              )}
+              ) : null}
             </span>
             {username ? null : (
               <Button
@@ -213,6 +218,13 @@ function BasicLayout(props) {
         triggerCancel={() => {
           setShowLoginAndRegister(false);
         }}
+      />
+      <AskModal
+        visible={askModalVisible}
+        onTriggerCancel={() => {
+          setAskModalVisible(false);
+        }}
+        q=""
       />
       <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>
         <Button

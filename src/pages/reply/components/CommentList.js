@@ -269,6 +269,7 @@
                               {inputId === item.commentId ? (
                                 <div>
                                   <Input
+                                    maxLength={300}
                                     value={newReply}
                                     placeholder="输入回复"
                                     style={{ width: 550, marginRight: 20 }}
