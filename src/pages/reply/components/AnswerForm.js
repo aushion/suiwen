@@ -8,10 +8,10 @@ import 'braft-editor/dist/index.css';
 import RestTools from '../../../utils/RestTools';
 
 const FormItem = Form.Item;
-let quoteArray = [];
 
 function AnswerForm(props) {
-  const { editStatus, answerList } = props;
+  const { editStatus, answerList, answerHelpData } = props;
+
   const { getFieldDecorator, validateFields, resetFields, setFieldsValue } = props.form;
   const params = queryString.parse(window.location.href.split('?')[1]);
   const controls = ['font-size', 'bold', 'italic', 'underline', 'text-color', 'separator', 'link'];
@@ -21,34 +21,13 @@ function AnswerForm(props) {
   const username = answerList.length && (answerList[0].userName || answerList[0].UserName);
 
   useEffect(() => {
-    if (editStatus && editStatus.resource) {
-      //创建临时数组，以渲染索引
-      let tempArray = editStatus.resource.split(/<\/p><p>/g).map((item, index) => ({
-        resourceStr: item.replace(/<p>/g, '').replace(/<\/p>/g, ''),
-        index: index + 1,
-        source_id: index
-      }));
-
-      quoteArray = tempArray;
+    if (answerHelpData && answerHelpData.resource) {
       setFieldsValue({
-        contents: BraftEditor.createEditorState(editStatus.answer)
-        //   resource: BraftEditor.createEditorState(editStatus.resource)
-      });
-    } else if (editStatus && editStatus.answer) {
-      quoteArray = [];
-      setFieldsValue({
-        contents: BraftEditor.createEditorState(editStatus.answer)
-        //   resource: BraftEditor.createEditorState(null)
-      });
-    } else {
-      quoteArray = [];
-      setFieldsValue({
-        contents: BraftEditor.createEditorState(null)
-        //    resource: BraftEditor.createEditorState(null)
+        contents: BraftEditor.createEditorState(answerHelpData.contents)
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editStatus]);
+  }, [answerHelpData]);
 
   function submitContent(e) {
     if (userInfo) {
@@ -65,7 +44,7 @@ function AnswerForm(props) {
       if (!error) {
         const submitData = {
           contents: values.contents.toHTML(), // or values.content.toHTML()
-          resource: values.resource ? values.resource.toHTML() : ''
+          resource: answerHelpData.resource
           // domain: values.domain,
         };
         const QID = props.QID || params.QID;
@@ -97,12 +76,11 @@ function AnswerForm(props) {
         }
 
         resetFields(); //重置表单值
-        quoteArray = []; //重置缓存数组
       }
     });
   }
   return (
-    <div style={{overflow: 'hidden'}}>
+    <div style={{ overflow: 'hidden' }}>
       <Form>
         <FormItem>
           {getFieldDecorator('contents', {

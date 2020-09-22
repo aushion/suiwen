@@ -12,7 +12,7 @@ import logo from '../assets/logo1.png';
 import LoginRegister from '../components/LoginRegister';
 import MessageBox from '../components/MessageBox';
 import AskModal from '../components/AskModal';
-
+import feedback from '../assets/feedback.png';
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
@@ -97,9 +97,13 @@ function BasicLayout(props) {
               themeColor={themeColor}
             />
 
-            <Button className={styles.askBtn} type="link" onClick={() => {
-              setAskModalVisible(true)
-            }}>
+            <Button
+              className={styles.askBtn}
+              type="link"
+              onClick={() => {
+                setAskModalVisible(true);
+              }}
+            >
               我要提问
             </Button>
           </div>
@@ -226,14 +230,13 @@ function BasicLayout(props) {
         }}
         q=""
       />
-      <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>
+      <Affix offsetBottom={50} style={{ position: 'absolute', right: 20 }}>
         <Button
-          type="primary"
           onClick={() => {
             setVisible(true);
           }}
         >
-          反馈
+          <img style={{ width: 24, height: 24 }} src={feedback} alt="反馈" />
         </Button>
       </Affix>
       <BackTop />

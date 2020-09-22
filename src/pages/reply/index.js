@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Row, Col } from 'antd';
+import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer } from 'antd';
 import Link from 'umi/link';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -13,6 +13,7 @@ import AnswerList from './components/AnswerList';
 import replyStyle from './index.less';
 import AnswerForm from './components/AnswerForm';
 import WaitAnswer from '../../components/WaitAnswer';
+import AnswerHelper from './components/AnswerHelper';
 
 dayjs.extend(relativeTime);
 dayjs.extend(isSameOrAfter);
@@ -20,12 +21,13 @@ dayjs.locale('zh-cn');
 
 let timerCount = null;
 function Reply(props) {
-  const { dispatch, followed, location, userCommunityInfo } = props;
+  const { dispatch, followed, location, userCommunityInfo, sgData } = props;
   const params = location.query;
   const { QID, editStatus = false } = params;
 
   const [showEditor, switchEditor] = useState(JSON.parse(editStatus)); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
+  const [showDrawer, setDrawer] = useState(false); //展示抽屉
 
   useEffect(() => {
     switchFollowQ(followed);
@@ -64,7 +66,7 @@ function Reply(props) {
         <Row gutter={40}>
           <Col span={18} className={replyStyle.content_left}>
             <Link to="/help/newHelp" style={{ display: 'inline-block', padding: 10 }}>
-              <Icon type="home" style={{marginRight: 4}} />
+              <Icon type="home" style={{ marginRight: 4 }} />
               返回社区
             </Link>
             <div className={replyStyle.title}>
@@ -86,7 +88,19 @@ function Reply(props) {
                     icon="edit"
                     ghost
                     onClick={() => {
+                      console.log('showEditor', showEditor);
                       switchEditor(!showEditor);
+                      if (showEditor) {
+                        dispatch({
+                          type: 'reply/saveAnswers',
+                          payload: {
+                            answerHelpData: {
+                              contents: '',
+                              resource: ''
+                            }
+                          }
+                        });
+                      }
                     }}
                   >
                     {showEditor ? '取消回答' : '写回答'}
@@ -105,6 +119,30 @@ function Reply(props) {
             </div>
           </Col>
         </Row>
+        {sgData.length && showEditor ? (
+          <Affix offsetBottom={300} style={{ position: 'absolute', right: 20, bottom: 10 }}>
+            <Button
+              onClick={() => {
+                setDrawer(true);
+              }}
+            >
+              <Icon type="alert" theme="filled" style={{ color: 'green', fontSize: 24 }} />
+            </Button>
+          </Affix>
+        ) : null}
+
+        <Drawer
+          title="参考回答助手"
+          placement="right"
+          width={800}
+          onClose={() => {
+            setDrawer(false);
+          }}
+          visible={showDrawer}
+          getContainer={false}
+        >
+          <AnswerHelper />
+        </Drawer>
       </div>
     </div>
   );

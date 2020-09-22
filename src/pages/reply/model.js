@@ -29,7 +29,11 @@ export default {
       ? RestTools.getLocalStorage('userInfo').UserName
       : '',
     userCommunityInfo: null,
-    waitAnswer: []
+    waitAnswer: [],
+    answerHelpData: {
+      contents: '',
+      resource: ''
+    }
   },
 
   effects: {
@@ -54,12 +58,11 @@ export default {
         ...payload
       });
       const resultData = res.data;
-      yield put({ type: 'global/save', payload: { ...payload, userInfo: resultData.result, } });
-      yield put({type: 'saveAnswers', payload: { userCommunityInfo: resultData.result}})
-
+      yield put({ type: 'global/save', payload: { ...payload, userInfo: resultData.result } });
+      yield put({ type: 'saveAnswers', payload: { userCommunityInfo: resultData.result } });
 
       // if (!sessionStorage.getItem('userCommunityInfo')) {
-        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
+      sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
       // }
     },
     *getAnswer({ payload }, { call, put }) {
@@ -253,15 +256,15 @@ export default {
           } else {
             dispatch({ type: 'getUserFAQ', payload: params });
           }
-          // dispatch({
-          //   type: 'getSG',
-          //   payload: {
-          //     q: encodeURIComponent(q),
-          //     pageStart: 1,
-          //     pageCount: 10,
-          //     userId
-          //   }
-          // });
+          dispatch({
+            type: 'getSG',
+            payload: {
+              q: encodeURIComponent(q),
+              pageStart: 1,
+              pageCount: 10,
+              userId: uid
+            }
+          });
         }
       });
     }

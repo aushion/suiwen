@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Modal, Input, Result, Button, message, Badge, Skeleton, Divider } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Badge, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -35,7 +35,7 @@ import LawItem from './components/LawItem';
 import AskModal from '../../components/AskModal';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-const { TextArea } = Input;
+
 message.config({
   top: 150,
   duration: 2,
@@ -67,7 +67,7 @@ function ResultPage(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '', topicName = '' } = query;
-  const [submitQ, setSubmitQ] = useState(q);
+ 
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
@@ -105,7 +105,7 @@ function ResultPage(props) {
   }
 
   useEffect(() => {
-    setSubmitQ(q);
+
     document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 

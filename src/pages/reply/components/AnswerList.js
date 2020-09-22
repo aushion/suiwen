@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Icon, Button, Spin } from 'antd';
+import { Icon,Spin } from 'antd';
 import dayjs from 'dayjs';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
-// import RestTools from '../../../utils/RestTools';
 import CaAvatar from '../../../components/CaAvatar';
 
 let timerCount = null;

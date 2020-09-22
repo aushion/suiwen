@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { List, Avatar, Input, Button, Popconfirm, message } from 'antd';
+import { List, Avatar,  Popconfirm, message } from 'antd';
 import { connect } from 'dva';
 import dayjs from 'dayjs';
 import IconText from './IconText';
-import RestTools from '../../../utils/RestTools';
 import styles from './ReplyList.less';
+import SwTextArea from '../../../components/SwTextArea';
+import RestTools from '../../../utils/RestTools';
 
 let timer = null;
 function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerList, qId }) {
@@ -27,7 +28,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
     setNewComment(e.target.value);
   }
 
-  function getComment(type='time') {
+  function getComment(type = 'time') {
     dispatch({
       type: 'reply/getComment',
       payload: {
@@ -70,7 +71,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
       payload: {
         answerId: entityId,
         replyId: replyId,
-        qId:qId,
+        qId: qId
       }
     }).then((res) => {
       if (res.code === 200) {
@@ -199,7 +200,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                 </div>
                 {inputId === k.replyId ? (
                   <div>
-                    <Input
+                    {/* <Input
                       maxLength={300}
                       value={newComment}
                       placeholder="输入回复"
@@ -212,7 +213,16 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                       onClick={sendComment.bind(this, k.userName)}
                     >
                       发表
-                    </Button>
+                    </Button> */}
+                    <SwTextArea
+                      maxLength={200}
+                      value={newComment}
+                      placeholder="输入回复"
+                      style={{ width: 550, marginLeft: 10 }}
+                      onChange={handleChange}
+                      disabled={!newComment}
+                      onClick={sendComment.bind(this, k.userName)}
+                    />
                   </div>
                 ) : null}
               </div>
