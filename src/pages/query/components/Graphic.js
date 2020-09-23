@@ -247,7 +247,14 @@ function Graphic(props) {
 
   return (
     <div className={styles.Graphic}>
-      {data ? <div style={{ color: '#2f8bd6', fontSize: 20 }}>{title}</div> : null}
+      {data ? (
+        <div
+          style={{ color: '#2f8bd6', fontSize: 20 }}
+          dangerouslySetInnerHTML={{
+            __html: data[0].Title ? RestTools.translateToRed(data[0].Title) : title
+          }}
+        />
+      ) : null}
 
       <div className={styles.wrapper}>
         {domain === '翻译' ? (
