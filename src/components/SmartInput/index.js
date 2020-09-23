@@ -26,7 +26,7 @@ const SmartInput = (props) => {
 
   function handleChange(e) {
     const currentValue = e.target.value;
-    setValue(e.target.value);
+    setValue(e.target.value.replace('  摘自【知网随问】', ''));//如果粘贴到输入框直接去掉知网随问提示
     setRecord(e.target.value ? false : true);
     setTips([]);
     if (needTip) {
@@ -97,6 +97,7 @@ const SmartInput = (props) => {
         value={value}
         onChange={handleChange}
         // maxLength={50}
+
         onFocus={() => {
           if (value) {
             if (props.needTip) {
