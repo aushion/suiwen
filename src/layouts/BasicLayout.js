@@ -40,14 +40,16 @@ function BasicLayout(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q } });
-    value && topic
-      ? router.replace(
-          `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
-            topicName
-          )}`
-        )
-      : router.replace(`/query?q=${encodeURIComponent(q)}`);
-    RestTools.setSession('q', q);
+    if (q) {
+      value && topic
+        ? router.replace(
+            `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
+              topicName
+            )}`
+          )
+        : router.replace(`/query?q=${encodeURIComponent(q)}`);
+      RestTools.setSession('q', q);
+    }
   }
 
   function goHomeByDomain() {
@@ -72,7 +74,6 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-        
           <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
             <img src={logo} alt="logo" />
             {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
