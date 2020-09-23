@@ -9,6 +9,7 @@ import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 import LoginRegister from '../components/LoginRegister';
 import MessageBox from '../components/MessageBox';
+import feedback from '../assets/feedback.png';
 
 const { Header, Footer, Content } = Layout;
 
@@ -172,14 +173,13 @@ function HomeLayout(props) {
           setShowLoginAndRegister(false);
         }}
       />
-      <Affix offsetBottom={50} style={{ position: 'absolute', right: 10 }}>
+       <Affix offsetBottom={50} style={{ position: 'absolute', right: 20 }}>
         <Button
-          type="primary"
           onClick={() => {
             setVisible(true);
           }}
         >
-          反馈
+          <img style={{ width: 24, height: 24 }} src={feedback} alt="反馈" />
         </Button>
       </Affix>
     </div>

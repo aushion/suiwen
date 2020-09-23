@@ -18,8 +18,9 @@ const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
-  let { q = sessionStorage.getItem('q'), topic = '', topicName = '' } = query;
 
+  let { q = sessionStorage.getItem('q'), topic = '', topicName = '' } = query;
+ 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData =
     JSON.parse(sessionStorage.getItem('topicData')) ||
@@ -44,14 +45,16 @@ function BasicLayout(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q } });
-    value && topic
-      ? router.replace(
-          `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
-            topicName
-          )}`
-        )
-      : router.replace(`/query?q=${encodeURIComponent(q)}`);
-    RestTools.setSession('q', q);
+    if (q) {
+      q && topic
+        ? router.replace(
+            `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
+              topicName
+            )}`
+          )
+        : router.replace(`/query?q=${encodeURIComponent(q)}`);
+      RestTools.setSession('q', q);
+    }
   }
 
   function goHomeByDomain() {
