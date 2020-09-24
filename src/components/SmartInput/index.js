@@ -126,7 +126,7 @@ const SmartInput = (props) => {
             onClick={handleEnter}
             style={{ background: props.themeColor || '#0086FA' }}
           >
-            获取答案
+            提问
           </Button>
         }
       />

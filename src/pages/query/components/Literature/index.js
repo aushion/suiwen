@@ -14,7 +14,7 @@ import uniqBy from 'lodash/uniqBy';
 
 const { Search } = Input;
 export default function Literature(props) {
-  const { literatureData, dispatch, loading,  } = props;
+  const { literatureData, dispatch, loading } = props;
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {
@@ -193,7 +193,7 @@ export default function Literature(props) {
   };
   const tagStyle = {
     cursor: 'pointer',
-    marginBottom: '2px',
+    marginBottom: '10px',
     lineHeight: 1.5
   };
 
@@ -564,7 +564,7 @@ export default function Literature(props) {
                 <div>
                   {item.被引频次
                     ? `${item.下载频次 || '-'}/${item.被引频次}`
-                    : `${item.下载频次}/-`}
+                    : `${item.下载频次 || '-'}/-`}
                 </div>
               </div>
               {randomKey ? (

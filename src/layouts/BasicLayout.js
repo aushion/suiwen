@@ -107,7 +107,7 @@ function BasicLayout(props) {
                 setAskModalVisible(true);
               }}
             >
-              我要提问
+              社区提问
             </Button>
           </div>
           <div className={styles.login}>

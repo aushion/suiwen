@@ -111,7 +111,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
         onTriggerCancel();
         reset();
       }}
-      title="提交问题"
+      title="问题求助"
       onOk={submitQuestion}
       confirmLoading={loading}
     >
