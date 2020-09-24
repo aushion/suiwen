@@ -51,7 +51,7 @@ export default {
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
-    
+
         yield put({
           type: 'save',
           payload: {
@@ -76,30 +76,32 @@ export default {
       //   ip: '192.168.22.13',
       //   user_id: userId
       // });
-      if (res.data.code === 200) {
-        yield put({
-          type: 'submitQa',
-          payload: {
-            clientType: 'pc',
-            question: decodeURIComponent(q),
-            answerStatus: 'yes',
-            ip: '192.168.22.13',
-            user_id: userId,
-            topic: topicName || ''
-          }
-        });
-      } else {
-        yield put({
-          type: 'submitQa',
-          payload: {
-            clientType: 'pc',
-            question: decodeURIComponent(q),
-            answerStatus: 'no',
-            ip: '192.168.22.13',
-            user_id: userId,
-            topic: topicName || ''
-          }
-        });
+      if (q && decodeURIComponent(q)) {
+        if (res.data.code === 200) {
+          yield put({
+            type: 'submitQa',
+            payload: {
+              clientType: 'pc',
+              question: decodeURIComponent(q),
+              answerStatus: 'yes',
+              ip: '192.168.22.13',
+              user_id: userId,
+              topic: topicName || ''
+            }
+          });
+        } else {
+          yield put({
+            type: 'submitQa',
+            payload: {
+              clientType: 'pc',
+              question: decodeURIComponent(q),
+              answerStatus: 'no',
+              ip: '192.168.22.13',
+              user_id: userId,
+              topic: topicName || ''
+            }
+          });
+        }
       }
     },
 
@@ -293,7 +295,7 @@ export default {
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        let { q, topic = '',topicName } = query;
+        let { q, topic = '', topicName } = query;
         let userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');
@@ -304,7 +306,8 @@ export default {
           });
         }
         const topicData =
-         JSON.parse(window.sessionStorage.getItem('topicData')) || JSON.parse(window.localStorage.getItem('topicData'));
+          JSON.parse(window.sessionStorage.getItem('topicData')) ||
+          JSON.parse(window.localStorage.getItem('topicData'));
         if (!topicData) {
           dispatch({
             type: 'getTopicQuestions'
@@ -330,7 +333,7 @@ export default {
             });
           }
 
-          if (q) {
+          if (q.trim()) {
             //重置问题
             dispatch({
               type: 'global/setQuestion',
@@ -363,7 +366,14 @@ export default {
               } else {
                 dispatch({
                   type: 'getAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId, topic, topicName }
+                  payload: {
+                    q: encodeURIComponent(q),
+                    pageStart: 1,
+                    pageCount: 10,
+                    userId,
+                    topic,
+                    topicName
+                  }
                 });
                 dispatch({
                   type: 'getSG',
@@ -385,7 +395,13 @@ export default {
                 });
                 dispatch({
                   type: 'getRelevantByAnswer',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic, topicName }
+                  payload: {
+                    q: encodeURIComponent(q),
+                    pageStart: 1,
+                    pageCount: 10,
+                    topic,
+                    topicName
+                  }
                 });
               }
             } else {
