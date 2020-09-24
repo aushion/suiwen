@@ -158,7 +158,6 @@ function Home(props) {
               className={homeStyles.title}
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
-            
             >
               {item.name === '阅读理解' ? (
                 <Badge
@@ -339,7 +338,7 @@ function Home(props) {
 
                     <Link className={homeStyles.help_more} to={'/help/newHelp'} target="_blank">
                       MORE
-                      <Icon type="double-right" />
+                      <Icon style={{fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6}} type="right" />
                     </Link>
                   </div>
                 </div>
