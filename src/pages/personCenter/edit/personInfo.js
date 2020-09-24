@@ -50,7 +50,7 @@ function PersonInfo(props) {
   }
 
   return (
-    <div>
+    <div style={{padding:'0 0 0 20%'}}>
       {localUserInfo && localUserInfo.UserType === 'bk' ? (
         <Descriptions title="账号信息" column={1} bordered>
           <Descriptions.Item label="账号">{userInfo ? userInfo.userName : ''}</Descriptions.Item>
@@ -122,7 +122,7 @@ function PersonInfo(props) {
             })(<Input style={{ width: '60%' }} />)}
           </Form.Item>
 
-          <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
+          <Form.Item wrapperCol={{ span: 12, offset: 14 }}>
             <Button type="primary" htmlType="submit">
               保存
             </Button>

@@ -10,22 +10,27 @@ import querystring from 'querystring';
 import FeedBack from '../components/FeedBack';
 import logo from '../assets/logo1.png';
 import LoginRegister from '../components/LoginRegister';
-
+import MessageBox from '../components/MessageBox';
+import AskModal from '../components/AskModal';
+import feedback from '../assets/feedback.png';
 import RestTools from '../utils/RestTools';
 const { Header, Footer, Content } = Layout;
 
 function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
+
   let { q = sessionStorage.getItem('q'), topic = '', topicName = '' } = query;
+ 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData =
     JSON.parse(sessionStorage.getItem('topicData')) ||
     JSON.parse(localStorage.getItem('topicData'));
   const [username, setUsername] = useState(userInfo ? userInfo.ShowName : '');
-  const [visible, setVisible] = useState(false);
-  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
-  const [isVisibleLogin, setShowLogin] = useState(false);
-  const [isVisibleRegister, setShowRegister] = useState(false);
+  const [visible, setVisible] = useState(false); //反馈弹窗
+  const [askModalVisible, setAskModalVisible] = useState(false); //提问弹窗
+  const [showLoginAndRegister, setShowLoginAndRegister] = useState(false); //登陆注册弹窗
+  const [isVisibleLogin, setShowLogin] = useState(false); //默认是否显示登录
+  const [isVisibleRegister, setShowRegister] = useState(false); //默认是否显示注册
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme, showLoginModal, avatar } = props;
@@ -41,7 +46,7 @@ function BasicLayout(props) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q } });
     if (q) {
-      value && topic
+      q && topic
         ? router.replace(
             `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
               topicName
@@ -64,6 +69,13 @@ function BasicLayout(props) {
   function logout() {
     window.Ecp_LogoutOptr_my(0);
     localStorage.removeItem('userInfo');
+    sessionStorage.removeItem('userCommunityInfo');
+    dispatch({
+      type: 'global/save',
+      payload: {
+        userInfo: null
+      }
+    });
     setUsername(null);
     if (window.location.pathname.includes('personCenter')) {
       router.push('/');
@@ -79,7 +91,7 @@ function BasicLayout(props) {
             {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
           </div>
 
-          <div className={styles.inputWrap}>
+          <div className={`${styles.inputWrap} display_flex`}>
             <SmartInput
               question={q}
               needTip
@@ -87,30 +99,45 @@ function BasicLayout(props) {
               onClickItem={handleClickEnterOrItem}
               themeColor={themeColor}
             />
+
+            <Button
+              className={styles.askBtn}
+              type="link"
+              onClick={() => {
+                setAskModalVisible(true);
+              }}
+            >
+              我要提问
+            </Button>
           </div>
           <div className={styles.login}>
-            {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-            <span className={styles.tips}>
-              您好，
+            <span className={`${styles.tips} display_flex`}>
               {username ? (
-                <Link
-                  style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
-                >
-                  <Avatar
-                    size="small"
-                    src={
-                      avatar ||
-                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                        userInfo ? userInfo.UserName : ''
-                      }`
-                    }
-                  />
-                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
-              ) : (
-                '游客'
-              )}
+                <>
+                  <span style={{ cursor: 'pointer', marginRight: 20 }}>
+                    <MessageBox userName={username} />
+                  </span>
+                  <Link
+                    style={{ color: '#fff', marginLeft: 10 }}
+                    to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                    target="_blank"
+                  >
+                    <Avatar
+                      size="small"
+                      src={
+                        avatar ||
+                        `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                          userInfo ? userInfo.UserName : ''
+                        }`
+                      }
+                    />
+                    <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                  </Link>
+                  <button onClick={logout} className={styles.login_btn}>
+                    退出
+                  </button>
+                </>
+              ) : null}
             </span>
             {username ? null : (
               <Button
@@ -139,11 +166,6 @@ function BasicLayout(props) {
                 注册
               </Button>
             )}
-            {username ? (
-              <button onClick={logout} className={styles.login_btn}>
-                退出
-              </button>
-            ) : null}
           </div>
         </div>
       </Header>
@@ -206,14 +228,20 @@ function BasicLayout(props) {
           setShowRegister(false);
         }}
       />
-      <Affix offsetBottom={10} style={{ position: 'absolute', right: 10 }}>
+      <AskModal
+        visible={askModalVisible}
+        onTriggerCancel={() => {
+          setAskModalVisible(false);
+        }}
+        q=""
+      />
+      <Affix offsetBottom={50} style={{ position: 'absolute', right: 20 }}>
         <Button
-          type="primary"
           onClick={() => {
             setVisible(true);
           }}
         >
-          反馈
+          <img style={{ width: 24, height: 24 }} src={feedback} alt="反馈" />
         </Button>
       </Affix>
       <BackTop />

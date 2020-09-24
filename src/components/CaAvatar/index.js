@@ -1,0 +1,98 @@
+import React, { useState } from 'react';
+import { Avatar, Popover, Spin } from 'antd';
+import { Link } from 'umi';
+import helpServer from '../../services/help';
+import RestTools from '../../utils/RestTools';
+import FollowButton from '../FollowButton';
+
+function CaAvatar({ userName, showFollowBtn = true }) {
+  const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const loginUser = sessionStorage.getItem('userCommunityInfo')
+    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
+    : null;
+  function fetchUser() {
+    setLoading(true);
+    helpServer
+      .getUserCommunityInfo({ userName, operator: loginUser.userName })
+      .then((res) => {
+        if (res.data.code === 200) {
+          setUserInfo(res.data.result);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  }
+
+  return (
+    <>
+      {RestTools.isUUid(userName) || !userName ? (
+        <div>
+          <Avatar icon="user" />
+          <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
+        </div>
+      ) : (
+        <Link to={`personCenter/people/ask?userName=${userName}`} target="_blank">
+          <Popover
+            placement="bottomLeft"
+            content={
+              <Spin spinning={loading}>
+                <Avatar
+                  src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`}
+                  shape="square"
+                />
+                <span style={{ marginLeft: 10, fontWeight: 400, color: '#414141' }}>
+                  {RestTools.formatPhoneNumber(userName)}
+                </span>
+                <div>
+                  {userInfo ? (
+                    <>
+                      <div
+                        className="display_flex justify-content_flex-justify"
+                        style={{ width: 200, padding: '10px' }}
+                      >
+                        <div style={{ textAlign: 'center' }}>
+                          <div>提问</div>
+                          <strong>{userInfo.questionNum}</strong>
+                        </div>
+
+                        <div style={{ textAlign: 'center' }}>
+                          <div>回答</div>
+                          <strong>{userInfo.answerNum}</strong>
+                        </div>
+
+                        <div style={{ textAlign: 'center' }}>
+                          <div>粉丝</div>
+                          <strong>{userInfo.followers}</strong>
+                        </div>
+                      </div>
+                      {showFollowBtn && loginUser.userName !== userName ? (
+                        <FollowButton
+                          hasFollowed={userInfo.hasFollowed}
+                          currentUser={userName}
+                          loginUserInfo={loginUser}
+                        />
+                      ) : null}
+                    </>
+                  ) : null}
+                </div>
+              </Spin>
+            }
+          >
+            <div onMouseEnter={fetchUser}>
+              <Avatar
+                shape="square"
+                src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`}
+              />
+              <span style={{ paddingLeft: 6 }}>{RestTools.formatPhoneNumber(userName)}</span>
+            </div>
+          </Popover>
+        </Link>
+      )}
+    </>
+  );
+}
+
+export default CaAvatar;

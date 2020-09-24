@@ -69,7 +69,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            newHelpList: result.list
+            newHelpList: result.dataList
           }
         });
       }
@@ -102,6 +102,7 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/') {
+          sessionStorage.removeItem('q');
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
           dispatch({ type: 'getDomainQuestions' });
           dispatch({ type: 'getTopicQuestions' });

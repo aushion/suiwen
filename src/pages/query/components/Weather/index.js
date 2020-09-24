@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Descriptions } from 'antd';
 import axios from 'axios';
-import RestTools from 'Utils/RestTools'
+import RestTools from '../../../../utils/RestTools'
 
 import styles from './index.less';
 
@@ -27,6 +27,8 @@ function Weather(props) {
   return (
     <div className={styles.weather}>
       {data ? (
+        <div>
+
         <Descriptions title={`${data.basic.location}`}>
           <Descriptions.Item label="天气">
             <img
@@ -44,6 +46,8 @@ function Weather(props) {
           <Descriptions.Item label="相对湿度">{data.now.hum}</Descriptions.Item>
           <Descriptions.Item label="能见度">{data.now.vis}公里</Descriptions.Item>
         </Descriptions>
+        <div style={{textAlign: 'right'}}>数据来源：<a href="https://www.heweather.com/" target="_blank" rel="noreferrer">和风天气</a></div>
+        </div>
       ) : (
         <div></div>
       )}

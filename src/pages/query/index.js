@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Modal, Input, Result, Button, message, Badge, Skeleton } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Badge, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -29,9 +29,13 @@ import ToolsBook from './components/ToolsBook';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
+import LawPost from './components/LawPost';
+import LawCase from './components/LawCase';
+import LawItem from './components/LawItem';
+import AskModal from '../../components/AskModal';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
-const { TextArea } = Input;
+
 message.config({
   top: 150,
   duration: 2,
@@ -58,10 +62,12 @@ function ResultPage(props) {
     answerData
   } = props;
 
+
+
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '', topicName = '' } = query;
-  const [submitQ, setSubmitQ] = useState(q);
+ 
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
@@ -99,8 +105,8 @@ function ResultPage(props) {
   }
 
   useEffect(() => {
-    setSubmitQ(q);
-    document.title =  topicName ? `${topicName}专题-${q}`: q;
+
+    document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 
   useEffect(() => {
@@ -129,6 +135,10 @@ function ResultPage(props) {
   const weather = repositoryData.filter((item) => item.template === 'weather');
   const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域
   const translateData = repositoryData.filter((item) => item.template === 'translate'); //翻译
+  const lawpostData = repositoryData.filter((item) => item.template === 'lawpost'); //法规篇
+  const lawitemData = repositoryData.filter((item) => item.template === 'lawitem'); //法条
+  const lawcaseData = repositoryData.filter((item) => item.template === 'lawcase'); //法规案例
+  const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
@@ -157,13 +167,14 @@ function ResultPage(props) {
     kaifangyuData.length;
 
   function showModal() {
-    if (Cookies.get('Ecp_LoginStuts')) {
+    if (Cookies.get('Ecp_LoginStuts') || localStorage.getItem('userInfo')) {
       dispatch({
         type: 'result/save',
         payload: {
           visible: true
         }
       });
+
     } else {
       message.warn('请您登录后再操作');
     }
@@ -178,27 +189,10 @@ function ResultPage(props) {
     });
   }
 
-  function changeQuestion(e) {
-    setSubmitQ(e.target.value);
-  }
-
-  function submitQuestion() {
-    if (submitQ) {
-      dispatch({
-        type: 'result/setQuestion',
-        payload: {
-          q: submitQ,
-          domain: answerData.length ? answerData[0].domain : '',
-          uId: RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : Cookies.get('cnki_qa_uuid')
-        }
-      });
-    }
-  }
+ 
 
   function myReply() {
-    if (RestTools.getLocalStorage('userInfo')) {
+    if (localStorage.getItem('userInfo')) {
       router.push(`reply?q=${encodeURIComponent(q)}`);
     } else {
       message.warn('请您登录后再操作');
@@ -337,6 +331,11 @@ function ResultPage(props) {
                       loading={fetchLiterature}
                     />
                   ) : null}
+
+                  {lawLiteratureData.length ? (
+                    <Literature law literatureData={lawLiteratureData} dispatch={dispatch} />
+                  ) : null}
+
                   {patentData.length
                     ? patentData.map((item) => (
                         <Patent key={item.id} data={item} title={item.title} />
@@ -367,6 +366,39 @@ function ResultPage(props) {
                     : null}
 
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
+
+                  {lawpostData.length
+                    ? lawpostData.map((item) => (
+                        <LawPost
+                          key={item.id}
+                          data={item.dataNode}
+                          pagination={item.pagination}
+                          title={item.title}
+                        />
+                      ))
+                    : null}
+
+                  {lawcaseData.length
+                    ? lawcaseData.map((item) => (
+                        <LawCase
+                          key={item.id}
+                          data={item.dataNode}
+                          pagination={item.pagination}
+                          title={item.title}
+                        />
+                      ))
+                    : null}
+
+                  {lawitemData.length
+                    ? lawitemData.map((item) => (
+                        <LawItem
+                          key={item.id}
+                          data={item.dataNode}
+                          pagination={item.pagination}
+                          title={item.title}
+                        />
+                      ))
+                    : null}
 
                   {kaifangyuData.length
                     ? kaifangyuData.map((item) => (
@@ -505,15 +537,7 @@ function ResultPage(props) {
         }}
         images={[{ src: previewImgSrc, alt: '' }]}
       />
-      <Modal
-        visible={visible}
-        onCancel={hideModal}
-        title="提交问题"
-        onOk={submitQuestion}
-        confirmLoading={loading}
-      >
-        <TextArea rows={4} value={submitQ} onChange={changeQuestion}></TextArea>
-      </Modal>
+      <AskModal visible={visible} onTriggerCancel={hideModal} q={q} />
     </div>
   );
 }

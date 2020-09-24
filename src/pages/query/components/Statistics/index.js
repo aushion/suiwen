@@ -8,7 +8,7 @@ import Coord from 'bizcharts/lib/components/Coord';
 import Legend from 'bizcharts/lib/components/Legend';
 import flattenDeep from 'lodash/flattenDeep';
 import Evaluate from '../Evaluate';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 const { Column } = Table;
 

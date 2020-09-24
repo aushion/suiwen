@@ -124,6 +124,7 @@ function ToolsBook(props) {
               let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
               
               const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;
+           
               const tagName = item.tagName;
               return (
                 <div key={item.tagName + index} hidden={index !== checkedIndex}>
@@ -212,6 +213,7 @@ function ToolsBook(props) {
                           ? `http://gongjushu.cnki.net/rbook/`
                           : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
                               finalTitle
+                         
                             )}&c=crfdsearch`
                       }
                       target="_blank"

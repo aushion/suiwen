@@ -187,7 +187,11 @@ export default {
     硕士: 'CMFD',
     期刊: 'CJFD',
     中国会议: 'CPFD',
-    报纸: 'CCND'
+    报纸: 'CCND',
+    法律_期刊: 'CJFD'
+  },
+  isUUid(str){
+    return /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(str)
   },
   formatText(sgText) {
     sgText = sgText.replace(/<\sp>/g, '');
@@ -343,6 +347,13 @@ export default {
   topicInfo: {
     法律: { enText: 'Law', topic: 'FL' },
     医学: { enText: 'Medical', topic: 'YX' },
-    农业: { enText: 'Argriculture', topic: 'NY' }
+    农业: { enText: 'Agriculture', topic: 'NY' }
+  },
+  followStatus: {
+    '0': 'self',
+    '1': '关注',
+    '2': '已关注',
+    '3': '互相关注',
+    '4': '取消关注'
   }
 };

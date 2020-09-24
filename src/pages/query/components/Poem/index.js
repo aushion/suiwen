@@ -13,7 +13,7 @@ function Poem(props) {
     intentJson.results[0].fields['作者'] ||
     intentJson.results[0].fields['年代'];
   const [pageYoffset, setPageYOffest] = useState(0);
-  const [data, setData] = useState(dataNode);
+  const [data, setData] = useState(dataNode)
 
   function handleShowMore(e, item, index) {
     if (e.target.className === 'showMore') {

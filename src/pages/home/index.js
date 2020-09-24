@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
+import Link from 'umi/link';
 import Slider from 'react-slick';
 import BlockTitle from './components/BlockTitle';
 import homeStyles from './index.less';
@@ -10,7 +11,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import RestTools from '../../utils/RestTools';
 import 医学 from '../../assets/医学.png';
 import rd from '../../assets/rd.png';
-import Link from 'umi/link';
 
 let skillSlider = null;
 let specialSlider = null;
@@ -26,15 +26,6 @@ function Home(props) {
   const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
   const special_questions = specialQuestions.filter((item) => item.name !== '阅读理解');
   const experience_questions = specialQuestions.filter((item) => item.name === '阅读理解');
-
-  // const [activeSpecial, setActiveSpecial] = useState('专题问答');
-  // console.log('skillPicture', skillPicture)
-  // useEffect(() => {
-  //   RestTools.setSession('tagIndex', activeTag); //存储索引，解决页面回退，索引丢失的问题
-  //   tagSlider.slickGoTo(activeTag, true);
-  //   skillSlider.slickGoTo(activeTag, true);
-  //   return () => {};
-  // }, [activeTag]);
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -53,13 +44,6 @@ function Home(props) {
       </div>
     );
   };
-
-  // const specialActiveStyle = {
-  //   backgroundColor: '#29A7F3',
-  //   padding: '8px 14px',
-  //   color: '#fff',
-  //   borderRadius: 4
-  // };
 
   const tagSettings = {
     infinite: false,
@@ -158,6 +142,7 @@ function Home(props) {
               className={homeStyles.title}
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
+              
             >
               {item.name === '阅读理解' ? (
                 <Badge
@@ -168,7 +153,7 @@ function Home(props) {
                   }
                 >
                   <span style={{ color: '#23242A', fontSize: 24, paddingRight: 10 }}>
-                    {item.name}{' '}
+                    {item.name}
                   </span>
                 </Badge>
               ) : (
@@ -186,6 +171,7 @@ function Home(props) {
                       item.name
                     )}&q=${encodeURIComponent(child.question)}`}
                     key={child.qId}
+                   
                     target="_blank"
                   >
                     {child.question}
@@ -308,7 +294,7 @@ function Home(props) {
                           >
                             <Link
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
-                                item.id
+                                item.qid
                               }`}
                               target="_blank"
                               className={homeStyles.help_item_content}
@@ -323,20 +309,27 @@ function Home(props) {
                             <Link
                               className={homeStyles.myReply}
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
-                                item.id
+                                item.qid
                               }`}
                             >
                               我来回答
                             </Link>
 
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
-                            <span style={{ float: 'right' }}>{item.time}</span>
+                            <span style={{ float: 'right' }}>{item.commitTime}</span>
                           </div>
                         </List.Item>
                       )}
                     />
 
-                    <Link className={homeStyles.help_more} to={'/help/newHelp'} target="_blank">
+                    <Link
+                      className={homeStyles.help_more}
+                      onClick={() => {
+                        sessionStorage.removeItem('page') //删除分页缓存
+                      }}
+                      to={'/help/newHelp'}
+                      target="_blank"
+                    >
                       MORE
                       <Icon style={{fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6}} type="right" />
                     </Link>
@@ -366,7 +359,7 @@ function Home(props) {
               ) : null}
               <div className={homeStyles.questions}>
                 {experience_questions.length
-                  ? experience_questions[0].data.slice(0, 5).map((item) => {
+                  ? experience_questions[0].data.map((item) => {
                       const topic = experience_questions[0].info.topic;
                       const topicName = experience_questions[0].name;
                       return (

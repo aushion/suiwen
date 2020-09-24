@@ -44,7 +44,7 @@ const SmartInput = (props) => {
     }
   }
 
-  function hanldeClickItem(item) {
+  function handleClickItem(item) {
     setRecord(false);
     setTips([]);
     setValue(item);
@@ -126,7 +126,7 @@ const SmartInput = (props) => {
             onClick={handleEnter}
             style={{ background: props.themeColor || '#0086FA' }}
           >
-            提问
+            获取答案
           </Button>
         }
       />
@@ -135,13 +135,13 @@ const SmartInput = (props) => {
 
       {showRecord && inputRecords.length ? (
         <div className={'record-wrap'}>
-          <InputRecord data={inputRecords} clickItem={hanldeClickItem} />
+          <InputRecord data={inputRecords} clickItem={handleClickItem} />
         </div>
       ) : null}
 
       {tipsData.length ? (
         <div className={'record-wrap'}>
-          <InputTips keyword={value} data={tipsData} clickItem={hanldeClickItem} />
+          <InputTips keyword={value} data={tipsData} clickItem={handleClickItem} />
         </div>
       ) : null}
     </div>

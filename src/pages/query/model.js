@@ -17,7 +17,7 @@ import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
 import router from 'umi/router';
 import Cookies from 'js-cookie';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../utils/RestTools';
 
 export default {
   namespace: 'result',
@@ -252,7 +252,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.list
+            helpList: res.data.result.dataList
           }
         });
       }
@@ -273,7 +273,7 @@ export default {
       const res = yield call(setQuestion, payload);
       if (res.data.result) {
         yield put({ type: 'save', payload: { visible: false } });
-        router.push('/help/myHelp');
+        router.push(`/personCenter/people/ask?userName=${payload.uId}`);
       } else {
         message.error(res.data.msg);
       }
