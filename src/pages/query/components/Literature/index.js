@@ -15,6 +15,7 @@ import uniqBy from 'lodash/uniqBy';
 const { Search } = Input;
 export default function Literature(props) {
   const { literatureData, dispatch, loading } = props;
+  console.log('literatureData', literatureData)
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {
@@ -34,7 +35,7 @@ export default function Literature(props) {
       sql
     },
     id,
-    evaluate,
+    evaluate={good:0,bad:0,isevaluate: false},
     intentId,
     pagination,
     intentJson: intent
@@ -42,11 +43,11 @@ export default function Literature(props) {
   const relevant = orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const [sortKey, setSortKey] = useState(
-    relevant > 0 ? 'relevant' : orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]
+    relevant > 0 ? 'relevant' : orderBy && orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]
   );
 
   const [count, setCount] = useState(0);
-  const { good, bad, isevalute } = evaluate;
+  const { good=0, bad=0, isevalute=false } = evaluate;
   const { pageStart, pageCount, total } = pagination;
   const [page, changePage] = useState(pageStart);
   const [searchValue, setSearchValue] = useState(searchword || keyword || '');

@@ -64,11 +64,20 @@ function Special(props) {
         logo: logoUrl
       }
     });
-    router.push(
-      `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
-        question
-      )}`
-    );
+    if (topic === 'law') {
+      router.push(
+        `/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
+          question
+        )}`
+      );
+    } else {
+      router.push(
+        `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
+          question
+        )}`
+      );
+    }
+
     RestTools.setSession('q', question);
     RestTools.setStorageInput(RestTools.HISTORYKEY, question);
   }
@@ -76,10 +85,17 @@ function Special(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    q &&
-      router.push(
-        `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
-      );
+    if (q) {
+      if (topic === 'law') {
+        router.push(
+          `/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
+        );
+      } else {
+        router.push(
+          `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
+        );
+      }
+    }
     RestTools.setSession('q', q);
   }
 
@@ -103,9 +119,7 @@ function Special(props) {
     <div style={{ color: '#fff' }}>
       <div style={{ cursor: 'pointer', borderBottom: '1px solid #fff' }}>
         <span
-          // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
-          //   window.location.href
-          // )}`}
+         
           onClick={() => {
             setShowLoginAndRegister(true);
             setShowLogin(true);
@@ -180,7 +194,7 @@ function Special(props) {
             className={styles.logo}
             onClick={() => {
               router.push('/');
-              document.title = '知网随问'
+              document.title = '知网随问';
             }}
           >
             <img src={logo} alt="logo" />

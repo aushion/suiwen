@@ -206,7 +206,7 @@ function ResultPage(props) {
           {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
 
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
-            问题求助
+            社区求助
           </span>
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
             我来回答
