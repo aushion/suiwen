@@ -21,9 +21,9 @@ function FoldText({ originText, fullText = null }) {
     if (e.target.className === 'more') {
       updateText(fullTextWithIcon);
       setPageYOffest(window.pageYOffset); //存储滚动条位置
-    } else {
+    } else if (e.target.className === 'up') {
       updateText(originTextWithIcon);
-      window.scrollTo({ top: pageYOffset });//回到原来的滚动条位置
+      window.scrollTo({ top: pageYOffset }); //回到原来的滚动条位置
     }
   }
 

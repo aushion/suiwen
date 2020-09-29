@@ -30,8 +30,9 @@ function NewHelp(props) {
                 overflow: 'hidden'
               }}
               onClick={() => {
-                RestTools.setSession('q', item.content);
+                RestTools.setSession('q', item.Content);
               }}
+              title={item.Content}
             >
               <Link
                 style={{

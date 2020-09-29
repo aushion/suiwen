@@ -75,7 +75,7 @@ function BasicLayout(props) {
       router.push('/special?topicId=' + topicId);
     } else {
       router.push('/');
-      document.title = '知网随问';
+      window.document.title = '知网随问';
     }
   }
 
@@ -249,13 +249,15 @@ function BasicLayout(props) {
         q=""
       />
       <Affix offsetBottom={50} style={{ position: 'absolute', right: 20 }}>
-        <Button
+      <div
+          className={styles.feedback}
           onClick={() => {
             setVisible(true);
           }}
         >
-          <img style={{ width: 24, height: 24 }} src={feedback} alt="反馈" />
-        </Button>
+          <img src={feedback} alt="反馈" />
+          <div className={styles.buttonTxt}>反馈</div>
+        </div>
       </Affix>
       <BackTop />
     </div>

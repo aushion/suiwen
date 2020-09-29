@@ -38,7 +38,7 @@ function HomeLayout(props) {
       payload: {
         userInfo: null
       }
-    })
+    });
     setUsername(null);
   }
 
@@ -58,7 +58,6 @@ function HomeLayout(props) {
                   style={{ color: '#fff', marginLeft: 10 }}
                   to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
                   target="_blank"
-
                 >
                   <Avatar
                     size="small"
@@ -71,13 +70,11 @@ function HomeLayout(props) {
                   />
                   <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
                 </Link>
-                <Button onClick={logout} className={styles.login_btn} >
+                <Button onClick={logout} className={styles.login_btn}>
                   退出
                 </Button>
               </>
-            ) : (
-              null
-            )}
+            ) : null}
           </span>
           {username ? null : (
             <Button
@@ -175,14 +172,16 @@ function HomeLayout(props) {
           setShowRegister(false);
         }}
       />
-       <Affix offsetBottom={50} style={{ position: 'absolute', right: 20 }}>
-        <Button
+      <Affix offsetBottom={50} style={{ position: 'absolute', right: 30 }}>
+        <div
+          className={styles.feedback}
           onClick={() => {
             setVisible(true);
           }}
         >
-          <img style={{ width: 24, height: 24 }} src={feedback} alt="反馈" />
-        </Button>
+          <img src={feedback} alt="反馈" />
+          <div className={styles.buttonTxt}>反馈</div>
+        </div>
       </Affix>
     </div>
   );
