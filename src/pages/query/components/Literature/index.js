@@ -15,7 +15,6 @@ import uniqBy from 'lodash/uniqBy';
 const { Search } = Input;
 export default function Literature(props) {
   const { literatureData, dispatch, loading } = props;
-  console.log('literatureData', literatureData)
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {
@@ -40,7 +39,7 @@ export default function Literature(props) {
     pagination,
     intentJson: intent
   } = works;
-  const relevant = orderBy.indexOf('relevant');
+  const relevant = orderBy && orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const [sortKey, setSortKey] = useState(
     relevant > 0 ? 'relevant' : orderBy && orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]

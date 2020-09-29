@@ -24,6 +24,7 @@ function ToolsBook(props) {
   const [checkedIndex, setCheckIndex] = useState(0);
   const sortData = [
     '百科问答',
+    '问答百科',
     '文学百科',
     '地理百科',
     '人物传记',

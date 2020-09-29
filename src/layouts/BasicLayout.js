@@ -113,7 +113,7 @@ function BasicLayout(props) {
               themeColor={themeColor}
             />
 
-            <Button
+            {/* <Button
               className={styles.askBtn}
               type="link"
               onClick={() => {
@@ -121,7 +121,7 @@ function BasicLayout(props) {
               }}
             >
               社区提问
-            </Button>
+            </Button> */}
           </div>
           <div className={styles.login}>
             <span className={`${styles.tips} display_flex`}>
@@ -248,7 +248,7 @@ function BasicLayout(props) {
         }}
         q=""
       />
-      <Affix offsetBottom={50} style={{ position: 'absolute', right: 20 }}>
+      <Affix offsetTop={800}>
       <div
           className={styles.feedback}
           onClick={() => {

@@ -172,7 +172,7 @@ function HomeLayout(props) {
           setShowRegister(false);
         }}
       />
-      <Affix offsetBottom={50} style={{ position: 'absolute', right: 30 }}>
+      <Affix offsetTop={10}>
         <div
           className={styles.feedback}
           onClick={() => {
