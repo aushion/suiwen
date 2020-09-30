@@ -35,7 +35,7 @@ export default function Publication(props) {
               </a>
               <div className={styles.Statistics_right_item}>
                 <label htmlFor="">收录年份：</label>
-                <span>{item.收录年份 || '-'}</span>
+                <span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.收录年份 || '-')}} />
               </div>
               <div className={styles.Statistics_right_item}>
                 <label htmlFor="">历任主编：</label>

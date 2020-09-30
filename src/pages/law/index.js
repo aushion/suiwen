@@ -8,9 +8,13 @@ import LawCase from '../query/components/LawCase';
 import styles from './index.less';
 
 function Law({ data, dispatch }) {
-  //   const topicInfo = sessionStorage.getItem('topicData') ? JSON.parse(sessionStorage.getItem('topicData')): null
-  //   const theme = topicInfo.filter(item => item.name === '法律')[0].info;
+  //获取专题相关信息
+  // const topicInfo = sessionStorage.getItem('topicData') ? JSON.parse(sessionStorage.getItem('topicData')): null;
+  //获取法律专题的主题色
+  // const theme = topicInfo.filter(item => item.name === '法律')[0].info;
 
+  /*  筛选出法律相关的数据
+    法律相关 */
   data =
     data && data.filter((item) => item.template === 'lawcase' || item.template === 'lawliterature');
 
@@ -21,9 +25,13 @@ function Law({ data, dispatch }) {
           {data.map((item, index) => {
             return (
               <Tabs.TabPane tab={`${item.intentDomain}`} key={item.id}>
+                {/* 渲染法规组件 */}
                 {item.intentDomain === '法规篇' ? <LawPost data={item.dataNode} /> : null}
+                {/* 渲染法规条目 */}
                 {item.intentDomain === '法规条目' ? <LawItem data={item.dataNode} /> : null}
+                {/* 渲染案例 */}
                 {item.intentDomain === '案例' ? <LawCase data={item.dataNode} /> : null}
+                {/* 渲染法律相关论文 */}
                 {item.template === 'lawliterature' ? (
                   <Literature law literatureData={data} dispatch={dispatch} />
                 ) : null}

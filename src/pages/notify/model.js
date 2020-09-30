@@ -52,7 +52,7 @@ export default {
               q: ''
             }
           });
-          sessionStorage.removeItem('q');
+          sessionStorage.removeItem('q'); //清楚问题q
 
           dispatch({
             type: 'fetch',

@@ -332,8 +332,8 @@ export default {
               }
             });
           }
-
-          if (q.trim()) {
+          console.log('q',q)
+          if (q && q.trim()) {
             //重置问题
             dispatch({
               type: 'global/setQuestion',

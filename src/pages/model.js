@@ -102,7 +102,7 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/') {
-          sessionStorage.removeItem('q');
+          sessionStorage.removeItem('q'); //清除问题q
           window.document.title = '知网随问';
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
           dispatch({ type: 'getDomainQuestions' });
