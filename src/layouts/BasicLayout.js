@@ -45,7 +45,7 @@ function BasicLayout(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q } });
-    if (q) {
+    if (q && q.trim()) {
       //如果topic有值判断是专题
       if (topic) {
         //如果是法律专题则单独处理
