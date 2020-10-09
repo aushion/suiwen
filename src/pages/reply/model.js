@@ -244,7 +244,8 @@ export default {
               sgData: [],
               answerList: [],
               total: 0,
-              domains: []
+              domains: [],
+              followed: false,
             }
           });
 

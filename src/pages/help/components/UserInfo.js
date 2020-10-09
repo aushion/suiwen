@@ -13,7 +13,7 @@ function UserInfo(props) {
         borderRadius: 4,
         padding: '20px',
         background: '#fff',
-        boxShadow: '0px 0px 5px 0px rgba(216,216,216,0.76)',
+        // boxShadow: '0px 0px 5px 0px rgba(216,216,216,0.76)',
         marginBottom: 20
       }}
     >

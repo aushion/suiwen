@@ -63,6 +63,7 @@ function MessageBox(props) {
           hidePopover();
           setModalVisible(true);
           fetchMessageCount();
+          setNotifyList([]); //清空已读消息
         }
       });
     } else if (action === 0) {
@@ -81,6 +82,7 @@ function MessageBox(props) {
           hidePopover();
           setModalVisible(true);
           fetchMessageCount();
+          setNotifyList([]); //清空已读消息
         }
       });
     } else if (action === 3) {
@@ -99,10 +101,13 @@ function MessageBox(props) {
           hidePopover();
           setModalVisible(true);
           fetchMessageCount();
+          setNotifyList([]); //清空已读消息
         }
       });
     }
   }
+
+
 
   function fetchMessageCount() {
     getUnReadCount({ userName }).then((res) => {
