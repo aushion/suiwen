@@ -1,6 +1,7 @@
 import React from 'react';
 import { List, Descriptions } from 'antd';
 import FoldText from '../../../../components/FoldText';
+import Label from '../Label';
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 
@@ -26,19 +27,29 @@ function LawItem({ data }) {
           return (
             <List.Item>
               <div className={styles.fullContent}>
-                <Descriptions size="small" bordered layout="horizontal">
-                  <Descriptions.Item label="所属法规" >
+                <Descriptions size="small" layout="horizontal" colon={3} >
+                   <Descriptions.Item label={<Label text="条目名称" />} span={3}>
                     <div
-                      dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.所属法规) }}
+                      dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.法条名) }}
                     />
                   </Descriptions.Item>
-                  <Descriptions.Item label="条目全文" span={12}>
-                    {item.条目全文 && item.条目全文.length > 300 ? (
-                      <FoldText originText={item.条目全文.slice(0, 300)} fullText={item.条目全文} />
+                  <Descriptions.Item label={<Label text="时效性" />} span={3}>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.时效性) }}
+                    />
+                  </Descriptions.Item>
+                  <Descriptions.Item label={<Label text="发布日期" />} span={3}>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.发布日期) }}
+                    />
+                  </Descriptions.Item>
+                  <Descriptions.Item label={<Label text="条目全文" />} span={3}>
+                    {item.Answer && item.Answer.length > 300 ? (
+                      <FoldText originText={item.条目全文.slice(0, 300)} fullText={item.Answer} />
                     ) : (
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: RestTools.translateToRed(`${item.全文}`)
+                          __html: RestTools.translateToRed(`${item.Answer}`)
                         }}
                       />
                     )}

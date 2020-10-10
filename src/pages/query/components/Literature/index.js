@@ -48,6 +48,7 @@ export default function Literature(props) {
   const [count, setCount] = useState(0);
   const { good=0, bad=0, isevalute=false } = evaluate;
   const { pageStart, pageCount, total } = pagination;
+
   const [page, changePage] = useState(pageStart);
   const [searchValue, setSearchValue] = useState(searchword || keyword || '');
   const [yearInfo, setYearInfo] = useState({
