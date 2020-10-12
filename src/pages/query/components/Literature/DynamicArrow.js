@@ -8,19 +8,19 @@ const DynamicArrow = (props) => {
       return (
         <Icon
           onClick={onClick.bind(this, props)}
-          // style={{ color: '#999', fontWeight: 'bolder' }}
+          style={{ color: '#999' }}
           className={styles.dynamicIcon}
-          type="arrow-down"
+          type="caret-down"
         />
       );
     } else if (currentLength === basicsLength && basicsLength > size) {
       return (
         <Icon
           onClick={onClick.bind(this, props)}
-          // style={{ color: '#999', fontWeight: 'bolder' }}
+          style={{ color: '#999' }}
           className={styles.dynamicIcon}
 
-          type="arrow-up"
+          type="caret-up"
         />
       );
     }

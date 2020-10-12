@@ -1,6 +1,6 @@
 import React from 'react';
 import Evaluate from '../Evaluate';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
 export default function Yearbook(props) {
@@ -40,7 +40,7 @@ export default function Yearbook(props) {
               </div>
               <div className={styles.Statistics_right_item}>
                 <label htmlFor="">收录年份：</label>
-                <span>{item.收录年份 || '-'}</span>
+                <span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.收录年份 || '-')}} />
               </div>
               <div className={styles.Statistics_right_item}>
                 <label htmlFor="">编辑说明：</label>

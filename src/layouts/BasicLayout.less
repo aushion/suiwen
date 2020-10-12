@@ -3,9 +3,9 @@
   min-height: 100%;
   padding-bottom: 50px;
   box-sizing: border-box;
- 
+
   .header {
-    background:linear-gradient(0deg,rgba(0,138,255,1),rgba(0,205,255,1));
+    background: linear-gradient(0deg, rgba(0, 138, 255, 1), rgba(0, 205, 255, 1));
     height: 84px;
     line-height: 0;
     position: fixed;
@@ -17,21 +17,18 @@
       height: 100%;
       width: 100%;
       position: relative;
-      .slogan{
+      .slogan {
         height: 30px;
         width: auto;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        img{
+        img {
           height: 100%;
           width: auto;
         }
       }
       .logo {
-        // background: url(../assets/lo.png) no-repeat;
-        // margin-left: 50px;
-        // padding-left: calc(50% - 600px);
         vertical-align: top;
         color: #fff;
         height: 38px;
@@ -44,27 +41,27 @@
         position: absolute;
         top: 50%;
         margin-top: -16px;
-        img{
+        img {
           height: 100%;
           width: auto;
         }
       }
-      .title{
-        color: rgba(255,255,255,.8);
+      .title {
+        color: rgba(255, 255, 255, 0.8);
         position: absolute;
         left: 110px;
         top: 40%;
         height: 50px;
         cursor: pointer;
-        &:hover{
+        &:hover {
           color: white;
         }
-        .cn{
+        .cn {
           height: 18px;
           font-size: 16px;
           font-weight: bold;
         }
-        .en{
+        .en {
           height: 12px;
           font-size: 10px;
           font-weight: bold;
@@ -76,39 +73,39 @@
         left: calc(50% - 390px);
         top: 50%;
         margin-top: -20px;
-        width: 35%;
-        :global(.record-wrap){
-          width: calc(100% - 88px);
+        width: 36%;
+
+        :global(.record-wrap) {
+          width: calc(100% - 80px);
         }
-        :global(.ant-input-lg){
+        :global(.ant-input-lg) {
           height: 40px;
           border-top-right-radius: 4px;
           border-bottom-right-radius: 4px;
         }
-        :global(.ant-btn-primary){
+        :global(.ant-btn-primary) {
           height: 40px;
-          background-color: #0084FF;
+          background-color: #0084ff;
           margin-left: 10px;
-          font-size: 20px;
-          
+          font-size: 16px;
         }
         button {
           border: 1px solid #fff;
+          &:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+          }
         }
-        button:active{
-          // -webkit-box-shadow: 0px 2px 0px #84261a;
-          // -moz-box-shadow: 0px 2px 0px #84261a;
-          // box-shadow: 0px 2px 0px #84261a;
-          // position:relative;
-          // top:2px;
+        .askBtn {
+          border: none;
+          font-size: 16px;
+          font-weight: 600;
+          color: #fff;
+          position: absolute;
+          bottom: 10px;
+          right: -100px;
+          height: 20px;
+          margin-left: 10px;
         }
-        // button:active{
-        //   -webkit-box-shadow: 0px 2px 0px #84261a;
-        //   -moz-box-shadow: 0px 2px 0px #84261a;
-        //   box-shadow: 0px 2px 0px #84261a;
-        //   position:relative;
-        //   top:2px;
-        // }
       }
       .login {
         float: right;
@@ -117,11 +114,11 @@
         top: 50%;
         margin-top: -15px;
         color: #fff;
-        .tips{
-          .links{
+        .tips {
+          .links {
             color: #fff;
             margin-left: 4px;
-            &:hover{
+            &:hover {
               text-decoration: underline;
             }
           }
@@ -139,37 +136,35 @@
           border-radius: 4px;
           margin-left: 20px;
           cursor: pointer;
-          
+
           &:hover {
             background: #fff;
             color: #29a7f3;
-           
           }
         }
       }
     }
   }
-  .content{
+  .content {
     background-color: #f6f6f6;
     min-height: calc(100vh - 50px);
     padding-top: 84px;
-
   }
 
   @media screen and (max-width: 1200px) {
-    .header{
-      .inputGroup{
-        .logo{
+    .header {
+      .inputGroup {
+        .logo {
           // display: none;
           margin-left: 0;
         }
-        .title{
+        .title {
           display: none;
         }
-        .tips{
+        .tips {
           display: none;
         }
-        .inputWrap{
+        .inputWrap {
           position: absolute;
           left: 10%;
           width: 50%;
@@ -179,18 +174,18 @@
   }
 
   @media screen and(max-width: 400px) {
-    .header{
-      .inputGroup{
-        .logo{
+    .header {
+      .inputGroup {
+        .logo {
           display: none;
         }
-        .title{
+        .title {
           display: none;
         }
-        .login{
+        .login {
           display: none;
         }
-        .inputWrap{
+        .inputWrap {
           position: absolute;
           // left: 10%;
           width: 100%;
@@ -222,6 +217,34 @@
             color: lightsalmon;
           }
         }
+      }
+    }
+  }
+  .feedback {
+    position: absolute;
+    right: 30px;
+    padding: 6px;
+    overflow: hidden;
+    display: block;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #3474d9;
+    cursor: pointer;
+    box-shadow: 0px 0px 8px 0px rgba(105, 105, 105, 0.14);
+    img {
+      width: 30px;
+    }
+    .buttonTxt {
+      display: none;
+      transition: display 1;
+      -webkit-transition: display 1s;
+    }
+    &:hover,
+    &:active,
+    &:focus {
+      // height: 56px;
+      .buttonTxt {
+        display: block;
       }
     }
   }

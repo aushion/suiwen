@@ -12,7 +12,7 @@
     line-height: 0;
     .login {
       position: absolute;
-      right: 20px;
+      right: 60px;
       top: 30px;
       color: #fff;
       .login_btn,
@@ -109,6 +109,34 @@
             color: lightsalmon;
           }
         }
+      }
+    }
+  }
+  .feedback {
+    position: absolute;
+    right: 30px;
+    padding: 6px;
+    overflow: hidden;
+    display: block;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #3474d9;
+    cursor: pointer;
+    box-shadow: 0px 0px 8px 0px rgba(105, 105, 105, 0.14);
+    img {
+      width: 30px;
+    }
+    .buttonTxt {
+      display: none;
+      transition: display 1;
+      -webkit-transition: display 1s;
+    }
+    &:hover,
+    &:active,
+    &:focus {
+      // height: 56px;
+      .buttonTxt {
+        display: block;
       }
     }
   }

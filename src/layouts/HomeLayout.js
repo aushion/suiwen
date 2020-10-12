@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Layout, Affix, Button, Avatar } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
+import Link from 'umi/link';
 import SmartInput from '../components/SmartInput';
 import FeedBack from '../components/FeedBack';
-import Link from 'umi/link';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 import LoginRegister from '../components/LoginRegister';
+// import MessageBox from '../components/MessageBox';
+import feedback from '../assets/feedback.png';
 
 const { Header, Footer, Content } = Layout;
 
@@ -23,19 +25,20 @@ function HomeLayout(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    value && router.push(`/query?q=${encodeURIComponent(q)}`);
+    q && router.push(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
   function logout() {
-    // Cookies.remove('Ecp_LoginStuts',{expires: -1, path: '/', domain: '.cnki.net' })
-    // Cookies.remove("c_m_expire", { expires: -1, path: '/', domain: '.cnki.net' });
-    // Cookies.remove("c_m_LinID", { expires: -1, path: '/', domain: '.cnki.net' });
-    // Cookies.remove("Ecp_session", { expires: -1 });
-    // Cookies.remove("LID",  { expires: -1, path: '/', domain: '.cnki.net' });
     window.Ecp_LogoutOptr_my(0);
-
     localStorage.removeItem('userInfo');
+    sessionStorage.removeItem('userCommunityInfo');
+    dispatch({
+      type: 'global/save',
+      payload: {
+        userInfo: null
+      }
+    });
     setUsername(null);
   }
 
@@ -45,30 +48,33 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-          {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
-            回到旧版
-          </a> */}
-          <span className={styles.tips}>
-            您好，
+          <span className={`${styles.tips} display_flex`}>
             {username ? (
-              <Link
-                style={{ color: '#fff', marginLeft: 10 }}
-                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
-              >
-                <Avatar
-                  size="small"
-                  src={
-                    avatar ||
-                    `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                      userInfo ? userInfo.UserName : ''
-                    }`
-                  }
-                />
-                <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-              </Link>
-            ) : (
-              '游客'
-            )}
+              <>
+                {/* <span style={{ cursor: 'pointer', marginRight: 20 }}>
+                  <MessageBox userName={username} />
+                </span> */}
+                <Link
+                  style={{ color: '#fff', marginLeft: 10 }}
+                  to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                  target="_blank"
+                >
+                  <Avatar
+                    size="small"
+                    src={
+                      avatar ||
+                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                        userInfo ? userInfo.UserName : ''
+                      }`
+                    }
+                  />
+                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                </Link>
+                <Button onClick={logout} className={styles.login_btn}>
+                  退出
+                </Button>
+              </>
+            ) : null}
           </span>
           {username ? null : (
             <Button
@@ -78,10 +84,6 @@ function HomeLayout(props) {
                 setShowLogin(true);
                 setShowRegister(false);
               }}
-              // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
-              //   window.location.href
-              // )}`}
             >
               登录
             </Button>
@@ -94,18 +96,10 @@ function HomeLayout(props) {
                 setShowLogin(false);
                 setShowRegister(true);
               }}
-              // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
-              //   window.location.href
-              // )}`}
             >
               注册
             </Button>
           )}
-          {username ? (
-            <button onClick={logout} className={styles.login_btn}>
-              退出
-            </button>
-          ) : null}
         </div>
 
         <div className={styles.inputWrap}>
@@ -178,15 +172,16 @@ function HomeLayout(props) {
           setShowRegister(false);
         }}
       />
-      <Affix offsetBottom={50} style={{ position: 'absolute', right: 10 }}>
-        <Button
-          type="primary"
+      <Affix offsetBottom={100}>
+        <div
+          className={styles.feedback}
           onClick={() => {
             setVisible(true);
           }}
         >
-          反馈
-        </Button>
+          <img src={feedback} alt="反馈" />
+          <div className={styles.buttonTxt}>反馈</div>
+        </div>
       </Affix>
     </div>
   );

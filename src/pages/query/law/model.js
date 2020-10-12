@@ -1,9 +1,9 @@
-import { getAnswer, getSG } from '../query/service/result';
+import { getAnswer, getSG } from '../service/result';
 export default {
   namespace: 'law',
 
   state: {
-    data: null,
+    repositoryData: null,
     sgData:null,
   },
 
@@ -20,7 +20,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            data: res.data.result.metaList
+            repositoryData: res.data.result.metaList
           }
         });
       }
@@ -42,14 +42,14 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/law') {
+        if (pathname === '/query/law') {
           const { q, topic } = query;
 
           if (q) {
             dispatch({
               type: 'save',
               payload: {
-                data: null,
+                repositoryData: null,
                 sgData: null,
               }
             });

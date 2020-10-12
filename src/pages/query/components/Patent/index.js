@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
 const { Column } = Table;
