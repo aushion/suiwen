@@ -31,7 +31,7 @@ function Law({ data, sgData, loading, dispatch }) {
                   {/* 渲染法规组件 */}
                   {item.intentDomain === '法规篇' ? <LawPost data={item.dataNode} /> : null}
                   {/* 渲染法规条目 */}
-                  {item.intentDomain === '法规章节' ? <LawItem data={item.dataNode} /> : null}
+                  {item.template === 'lawitem' ? <LawItem data={item.dataNode} /> : null}
                   {/* 渲染案例 */}
                   {item.intentDomain === '案例' ? <LawCase data={item.dataNode} /> : null}
                   {/* 渲染法律相关论文 */}

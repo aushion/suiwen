@@ -35,23 +35,34 @@ function LawCase({ data }) {
                 }
                 colon={3}
               >
-                {item.裁判日期  ? 
-                <Descriptions.Item label={<Label text="裁判日期" />} span={3}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: RestTools.translateToRed(item.裁判日期 || '/')
-                    }}
-                  />
-                </Descriptions.Item>:null}
-              
-              {item.审理法院 ?
-                <Descriptions.Item label={<Label text="审理法院" />} span={3}>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: RestTools.translateToRed(item.审理法院 || '/')
-                    }}
-                  />
-                </Descriptions.Item>: null}
+                {item.案由 ? (
+                  <Descriptions.Item label={<Label text="案由" />} span={3}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.案由 || '/')
+                      }}
+                    />
+                  </Descriptions.Item>
+                ) : null}
+                {item.裁判日期 ? (
+                  <Descriptions.Item label={<Label text="裁判日期" />} span={3}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.裁判日期 || '/')
+                      }}
+                    />
+                  </Descriptions.Item>
+                ) : null}
+
+                {item.审理法院 ? (
+                  <Descriptions.Item label={<Label text="审理法院" />} span={3}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.审理法院 || '/')
+                      }}
+                    />
+                  </Descriptions.Item>
+                ) : null}
 
                 <Descriptions.Item span={3}>
                   <div className={styles.fullContent}>

@@ -45,7 +45,7 @@ function LawItem({ data }) {
                   </Descriptions.Item>
                   <Descriptions.Item label={<Label text="条目全文" />} span={3}>
                     {item.Answer && item.Answer.length > 300 ? (
-                      <FoldText originText={item.条目全文.slice(0, 300)} fullText={item.Answer} />
+                      <FoldText originText={item.Answer.slice(0, 300)} fullText={item.Answer} />
                     ) : (
                       <div
                         dangerouslySetInnerHTML={{
