@@ -356,7 +356,10 @@ export default {
                 relaventQuestions: []
               }
             });
-
+            dispatch({ type: 'collectQuestion', payload: { q, userId } });
+            dispatch({
+              type: 'getHotHelpList'
+            });
             if (topic) {
               if (topic === 'YD') {
                 dispatch({
@@ -429,10 +432,7 @@ export default {
                 payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
               });
             }
-            dispatch({ type: 'collectQuestion', payload: { q, userId } });
-            dispatch({
-              type: 'getHotHelpList'
-            });
+           
           }
         }
       });

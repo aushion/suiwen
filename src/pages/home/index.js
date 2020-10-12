@@ -73,10 +73,12 @@ function Home(props) {
   };
 
   function handleClickItem(item) {
-    props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
-    router.push('/query?q=' + encodeURIComponent(item));
-    RestTools.setSession('q', item);
-    RestTools.setStorageInput(HISTORYKEY, item.trim());
+    if (item && item.trim()) {
+      props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
+      router.push('/query?q=' + encodeURIComponent(item));
+      RestTools.setSession('q', item);
+      RestTools.setStorageInput(HISTORYKEY, item.trim());
+    }
   }
 
   function clickTag(i) {
@@ -142,7 +144,6 @@ function Home(props) {
               className={homeStyles.title}
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
-              
             >
               {item.name === '阅读理解' ? (
                 <Badge
@@ -171,7 +172,6 @@ function Home(props) {
                       item.name
                     )}&q=${encodeURIComponent(child.question)}`}
                     key={child.qId}
-                   
                     target="_blank"
                   >
                     {child.question}
@@ -325,13 +325,16 @@ function Home(props) {
                     <Link
                       className={homeStyles.help_more}
                       onClick={() => {
-                        sessionStorage.removeItem('page') //删除分页缓存
+                        sessionStorage.removeItem('page'); //删除分页缓存
                       }}
                       to={'/help/newHelp'}
                       target="_blank"
                     >
                       MORE
-                      <Icon style={{fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6}} type="right" />
+                      <Icon
+                        style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}
+                        type="right"
+                      />
                     </Link>
                   </div>
                 </div>

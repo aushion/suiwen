@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Result, Button, message, Badge, Skeleton } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Card, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -62,12 +62,10 @@ function ResultPage(props) {
     answerData
   } = props;
 
-
-
   const query = querystring.parse(window.location.href.split('?')[1]);
   //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
   let { topic = '', topicName = '' } = query;
- 
+
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
@@ -105,7 +103,6 @@ function ResultPage(props) {
   }
 
   useEffect(() => {
-
     document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 
@@ -174,7 +171,6 @@ function ResultPage(props) {
           visible: true
         }
       });
-
     } else {
       message.warn('请您登录后再操作');
     }
@@ -188,8 +184,6 @@ function ResultPage(props) {
       }
     });
   }
-
- 
 
   function myReply() {
     if (localStorage.getItem('userInfo')) {
@@ -214,7 +208,7 @@ function ResultPage(props) {
         </div>
 
         <Row gutter={24}>
-          <Col span={4} style={{ padding: 0 }}>
+          {/* <Col span={4} style={{ padding: 0 }}>
             <div className={styles.topicList}>
               <div className={styles.title}>您也可以选择专题问答</div>
               <div>
@@ -259,8 +253,8 @@ function ResultPage(props) {
                   : null}
               </div>
             </div>
-          </Col>
-          <Col span={15}>
+          </Col> */}
+          <Col span={18}>
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
@@ -490,7 +484,7 @@ function ResultPage(props) {
               </Skeleton>
             </div>
           </Col>
-          <Col span={5} style={{ padding: 0 }}>
+          <Col span={6} style={{ padding: 0 }}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
@@ -524,6 +518,67 @@ function ResultPage(props) {
               />
             ) : null}
             {helpList.length ? <NewHelp data={helpList} /> : null}
+
+            <div className={styles.topicWrap}>
+              <Card
+                title={
+                  <div>
+                    <img
+                      style={{ width: 24, height: 24 }}
+                      src={require('../../assets/topic_icon.png')}
+                      alt=""
+                    />
+                    专题问答
+                  </div>
+                }
+              >
+                <div className="display_flex">
+                  <div className={styles.item}>
+                    <div className={styles.imgWrap} style={{ background: '#ffebdd' }}>
+                      <img src={require('../../assets/law_icon.png')} alt="" />
+                    </div>
+                    <div>法律</div>
+                  </div>
+
+                  <div className={styles.item}>
+                    <div className={styles.imgWrap} style={{ background: '#DFFFEC' }}>
+                      <img src={require('../../assets/agriculture_icon.png')} alt="" />
+                    </div>
+                    <div>农业</div>
+                  </div>
+
+                  <div className={styles.item}>
+                    <div className={styles.imgWrap} style={{ background: '#DDEFFF' }}>
+                      <img src={require('../../assets/medical_icon.png')} alt="" />
+                    </div>
+                    <div>医学</div>
+                  </div>
+
+                  <div className={styles.item}>
+                    <div className={styles.imgWrap} style={{ background: '#D5E5FF' }}>
+                      <img src={require('../../assets/cov19_icon.png')} alt="" />
+                    </div>
+                    <div>疫情防护</div>
+                  </div>
+
+                  <div className={styles.item}>
+                    <div className={styles.imgWrap} style={{ background: '#DBE8FF' }}>
+                      <img src={require('../../assets/history_icon.png')} alt="" />
+                    </div>
+
+                    <div>文学历史</div>
+                  </div>
+
+                  <div className={styles.item}>
+                    <div className={styles.imgWrap} style={{ background: '#D5FDFF' }}>
+                      <img src={require('../../assets/reading_icon.png')} alt="" />
+                    </div>
+
+                    <div>阅读理解</div>
+                  </div>
+                </div>
+              </Card>
+            </div>
           </Col>
         </Row>
       </div>

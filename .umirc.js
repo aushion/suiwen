@@ -3,12 +3,12 @@ import path from 'path';
 export default {
   treeShaking: true,
   define: {
-    'process.env.apiUrl': 'http://192.168.103.25:8080/sw.test.api',
     'process.env.UMI_ENV': process.env.UMI_ENV,
+    'process.env.apiUrl': 'http://192.168.103.25:8080/sw.test.api',
     'process.env.apiUrl_help': 'http://192.168.107.232/qa.fb/api',
     'process.env.apiUrl_collect': 'http://192.168.103.25:8080/SWcollect',
     'process.env.returnUrl': 'http://local.cnki.net:8002',
-    'process.env.basePath':'/web'
+    'process.env.basePath': '/web'
   },
   base: '/web',
   publicPath: '/web/',
@@ -23,6 +23,10 @@ export default {
     // '@ant-design/icons/lib/dist$': path.resolve(__dirname, 'src/icon.js'),
     // '@': path.resolve(__dirname, 'src')
   },
+  autoprefixer: {
+    // browsers: ['> 1%', 'last 2 versions', 'not ie <= 10'],
+    flexbox: true
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [
@@ -36,6 +40,7 @@ export default {
           loadingComponent: './components/Loading/index'
         },
         title: '知网随问',
+
         scripts: [
           {
             src:
@@ -43,11 +48,11 @@ export default {
             //'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://local.cnki.net:8000'
 
             // 'http://132.cnki.net/TopLogin/api/loginapi/get?type=top&returnurl=http://localhost:8000&style=2&iswithiplogin=false&isAutoIpLogin=false',
-          },
+          }
           // {
           //   content: `try {
           //         window.FlushLogin();
-          //       } catch (e) {}   
+          //       } catch (e) {}
           //    `
           // }
         ],
@@ -62,8 +67,7 @@ export default {
           ]
         }
       }
-    ],
-   
+    ]
   ],
   chainWebpack(config) {
     config.optimization.splitChunks({

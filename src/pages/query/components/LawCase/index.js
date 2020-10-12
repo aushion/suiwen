@@ -1,6 +1,7 @@
 import React from 'react';
 import { List, Descriptions } from 'antd';
 import FoldText from '../../../../components/FoldText';
+import Label from '../Label';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
@@ -25,28 +26,45 @@ function LawCase({ data }) {
         renderItem={(item) => {
           return (
             <List.Item>
-              <Descriptions title={item.标题} bordered colon={3} layout="vertical">
-               
-                  <Descriptions.Item label="裁判日期" span={1}>
+              <Descriptions
+                title={
+                  <div
+                    style={{ color: '#047AE8' }}
+                    dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.标题) }}
+                  />
+                }
+                colon={3}
+              >
+                {item.案由 ? (
+                  <Descriptions.Item label={<Label text="案由" />} span={3}>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateToRed(item.案由 || '/')
+                      }}
+                    />
+                  </Descriptions.Item>
+                ) : null}
+                {item.裁判日期 ? (
+                  <Descriptions.Item label={<Label text="裁判日期" />} span={3}>
                     <div
                       dangerouslySetInnerHTML={{
                         __html: RestTools.translateToRed(item.裁判日期 || '/')
                       }}
-                    ></div>
+                    />
                   </Descriptions.Item>
-                
+                ) : null}
 
-            
-                  <Descriptions.Item label="审理法院" span={2}>
+                {item.审理法院 ? (
+                  <Descriptions.Item label={<Label text="审理法院" />} span={3}>
                     <div
                       dangerouslySetInnerHTML={{
                         __html: RestTools.translateToRed(item.审理法院 || '/')
                       }}
-                    ></div>
+                    />
                   </Descriptions.Item>
-             
+                ) : null}
 
-                <Descriptions.Item label="全文" span={3}>
+                <Descriptions.Item span={3}>
                   <div className={styles.fullContent}>
                     {item.全文.length > 300 ? (
                       <FoldText originText={item.全文.slice(0, 300)} fullText={item.全文} />

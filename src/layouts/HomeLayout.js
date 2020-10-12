@@ -25,7 +25,7 @@ function HomeLayout(props) {
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
-    value && router.push(`/query?q=${encodeURIComponent(q)}`);
+    q && router.push(`/query?q=${encodeURIComponent(q)}`);
     RestTools.setSession('q', q);
   }
 
