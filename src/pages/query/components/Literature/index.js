@@ -16,7 +16,7 @@ import { getCustomView } from '../../service/result';
 const { Search } = Input;
 export default function Literature(props) {
   const [resource, updateResource] = useState(props);
-  const { literatureData, dispatch, loading } = resource;
+  const { literatureData } = resource;
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {
@@ -64,6 +64,8 @@ export default function Literature(props) {
     subject: subjectValid ? subjectValid.slice(0, 8) : []
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     RestTools.setSession('preSearchValue', searchValue);
   }, []);
@@ -90,11 +92,8 @@ export default function Literature(props) {
     }
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
-
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart,
+    fetchData({
+      pageStart,
         whereSql: sql,
         yearSql,
         subjectSql,
@@ -105,8 +104,23 @@ export default function Literature(props) {
         searchword: '',
         SN,
         orderSql: order
-      }
-    });
+    })
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart,
+    //     whereSql: sql,
+    //     yearSql,
+    //     subjectSql,
+    //     intent,
+    //     keyword: '',
+    //     fieldWord,
+    //     replaceSql,
+    //     searchword: '',
+    //     SN,
+    //     orderSql: order
+    //   }
+    // });
   }, [count, sortKey]);
 
   useEffect(() => {
@@ -205,21 +219,28 @@ export default function Literature(props) {
   };
 
   function fetchData(params) {
-    getCustomView(params).then((res) => {
-      if (res.data.code === 200) {
-        updateResource({
-          ...resource,
-          literatureData: res.data.result
-        });
-      }
-    });
+    setLoading(true);
+    getCustomView(params)
+      .then((res) => {
+        if (res.data.code === 200) {
+          setLoading(false);
+          updateResource({
+            ...resource,
+            literatureData: res.data.result
+          });
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
   }
 
   function handleChangePage(page) {
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
     changePage(page);
-
     fetchData({
       pageStart: page,
       whereSql: sql,
@@ -231,7 +252,7 @@ export default function Literature(props) {
       searchword: '',
       intent,
       SN,
-      orderSql: ' ' + orderBy
+      orderSql:  orderBy
     });
 
     // dispatch({

@@ -2,8 +2,6 @@ import React from 'react';
 import { Tabs, Spin } from 'antd';
 import { connect } from 'dva';
 import Literature from '../components/Literature';
-import LawPost from '../components/LawPost';
-import LawItem from '../components/LawItem';
 import LawCase from '../components/LawCase';
 import ToolsBook from '../components/ToolsBook';
 import SgList from '../components/SgList';
@@ -29,11 +27,11 @@ function Law({ repositoryData, sgData, loading, dispatch }) {
                     <ToolsBook data={referenceData} /> 
                   ) : null}
                   {/* 渲染法规组件 */}
-                  {item.template === 'lawpost' ? <LawPost data={item}  /> : null}
+                  {item.template === 'lawpost' ? <LawCase data={item} type='lawpost'  /> : null}
                   {/* 渲染法规条目 */}
-                  {item.template === 'lawitem' ? <LawItem data={item} /> : null}
+                  {item.template === 'lawitem' ? <LawCase data={item} type='lawitem' /> : null}
                   {/* 渲染案例 */}
-                  {item.template === 'lawcase' ? <LawCase data={item} /> : null}
+                  {item.template === 'lawcase' ? <LawCase data={item} type='lawcase' /> : null}
                   {/* 渲染法律相关论文 */}
                   {item.template === 'lawliterature' ? (
                     <Literature law literatureData={literatureData} dispatch={dispatch} />

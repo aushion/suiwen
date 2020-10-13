@@ -4,7 +4,7 @@ export default {
 
   state: {
     repositoryData: null,
-    sgData:null,
+    sgData: null
   },
 
   reducers: {
@@ -44,13 +44,13 @@ export default {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/query/law') {
           const { q, topic } = query;
-
+          window.document.title = `${q}`;
           if (q) {
             dispatch({
               type: 'save',
               payload: {
                 repositoryData: null,
-                sgData: null,
+                sgData: null
               }
             });
             dispatch({

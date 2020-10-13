@@ -248,7 +248,7 @@ function BasicLayout(props) {
         }}
         q=""
       />
-      <Affix offsetBottom={60}>
+      <Affix offsetBottom={100}>
       <div
           className={styles.feedback}
           onClick={() => {
