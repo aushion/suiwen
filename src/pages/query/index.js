@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Result, Button, message, Card, Skeleton } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Card,Badge, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -29,9 +29,7 @@ import ToolsBook from './components/ToolsBook';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
-import LawPost from './components/LawPost';
 import LawCase from './components/LawCase';
-import LawItem from './components/LawItem';
 import AskModal from '../../components/AskModal';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
@@ -208,7 +206,7 @@ function ResultPage(props) {
         </div>
 
         <Row gutter={24}>
-          {/* <Col span={4} style={{ padding: 0 }}>
+          <Col span={4} style={{ padding: 0 }}>
             <div className={styles.topicList}>
               <div className={styles.title}>您也可以选择专题问答</div>
               <div>
@@ -253,8 +251,8 @@ function ResultPage(props) {
                   : null}
               </div>
             </div>
-          </Col> */}
-          <Col span={18}>
+          </Col>
+          <Col span={15}>
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
@@ -363,11 +361,10 @@ function ResultPage(props) {
 
                   {lawpostData.length
                     ? lawpostData.map((item) => (
-                        <LawPost
+                        <LawCase
                           key={item.id}
-                          data={item.dataNode}
-                          pagination={item.pagination}
-                          title={item.title}
+                          data={item}
+                          type='lawpost'
                         />
                       ))
                     : null}
@@ -376,20 +373,18 @@ function ResultPage(props) {
                     ? lawcaseData.map((item) => (
                         <LawCase
                           key={item.id}
-                          data={item.dataNode}
-                          pagination={item.pagination}
-                          title={item.title}
+                          data={item}
+                         type='lawcase'
                         />
                       ))
                     : null}
 
                   {lawitemData.length
                     ? lawitemData.map((item) => (
-                        <LawItem
+                        <LawCase
                           key={item.id}
-                          data={item.dataNode}
-                          pagination={item.pagination}
-                          title={item.title}
+                          data={item}
+                          type='lawitem'
                         />
                       ))
                     : null}
@@ -484,7 +479,7 @@ function ResultPage(props) {
               </Skeleton>
             </div>
           </Col>
-          <Col span={6} style={{ padding: 0 }}>
+          <Col span={5} style={{ padding: 0 }}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
@@ -519,7 +514,7 @@ function ResultPage(props) {
             ) : null}
             {helpList.length ? <NewHelp data={helpList} /> : null}
 
-            <div className={styles.topicWrap}>
+            {/* <div className={styles.topicWrap}>
               <Card
                 title={
                   <div>
@@ -578,7 +573,7 @@ function ResultPage(props) {
                   </div>
                 </div>
               </Card>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </div>

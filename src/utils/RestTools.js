@@ -189,7 +189,6 @@ export default {
     法律_期刊: 'CJFD',
     中国会议: 'CPFD',
     报纸: 'CCND',
-    法律_期刊: 'CJFD'
   },
   isUUid(str){
     return /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(str)
