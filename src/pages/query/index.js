@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Result, Button, message, Card,Badge, Skeleton } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Badge, Skeleton } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -29,8 +29,8 @@ import ToolsBook from './components/ToolsBook';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
-import LawCase from './components/LawCase';
 import AskModal from '../../components/AskModal';
+import LawTabs from './components/LawTabs';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -130,9 +130,10 @@ function ResultPage(props) {
   const weather = repositoryData.filter((item) => item.template === 'weather');
   const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域
   const translateData = repositoryData.filter((item) => item.template === 'translate'); //翻译
-  const lawpostData = repositoryData.filter((item) => item.template === 'lawpost'); //法规篇
-  const lawitemData = repositoryData.filter((item) => item.template === 'lawitem'); //法条
-  const lawcaseData = repositoryData.filter((item) => item.template === 'lawcase'); //法规案例
+  // const lawpostData = repositoryData.filter((item) => item.template === 'lawpost'); //法规篇
+  // const lawitemData = repositoryData.filter((item) => item.template === 'lawitem'); //法条
+  // const lawcaseData = repositoryData.filter((item) => item.template === 'lawcase'); //法规案例
+  const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
   const relatedLiterature = relatedData.length
@@ -359,35 +360,7 @@ function ResultPage(props) {
 
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
-                  {lawpostData.length
-                    ? lawpostData.map((item) => (
-                        <LawCase
-                          key={item.id}
-                          data={item}
-                          type='lawpost'
-                        />
-                      ))
-                    : null}
-
-                  {lawcaseData.length
-                    ? lawcaseData.map((item) => (
-                        <LawCase
-                          key={item.id}
-                          data={item}
-                         type='lawcase'
-                        />
-                      ))
-                    : null}
-
-                  {lawitemData.length
-                    ? lawitemData.map((item) => (
-                        <LawCase
-                          key={item.id}
-                          data={item}
-                          type='lawitem'
-                        />
-                      ))
-                    : null}
+                  {lawData.length ? <LawTabs data={lawData} /> : null}
 
                   {kaifangyuData.length
                     ? kaifangyuData.map((item) => (
