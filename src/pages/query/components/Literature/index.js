@@ -11,10 +11,12 @@ import SameNames from './SameNames';
 import PeopleInfo from './PeopleInfo';
 import SortTag from './SortTag';
 import uniqBy from 'lodash/uniqBy';
+import { getCustomView } from '../../service/result';
 
 const { Search } = Input;
 export default function Literature(props) {
-  const { literatureData, dispatch, loading } = props;
+  const [resource, updateResource] = useState(props);
+  const { literatureData } = resource;
   const [works, people = null, sameNames = null] = literatureData;
   //嵌套解构
   let {
@@ -34,21 +36,20 @@ export default function Literature(props) {
       sql
     },
     id,
-    evaluate={good:0,bad:0,isevaluate: false},
+    evaluate = { good: 0, bad: 0, isevaluate: false },
     intentId,
     pagination,
     intentJson: intent
   } = works;
   const relevant = orderBy && orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
+  const { good = 0, bad = 0, isevalute = false } = evaluate;
+  const { pageStart, pageCount, total } = pagination;
+
   const [sortKey, setSortKey] = useState(
     relevant > 0 ? 'relevant' : orderBy && orderBy.replace(/\s/g, '').match(/BY\((\S*),/)[1]
   );
-
   const [count, setCount] = useState(0);
-  const { good=0, bad=0, isevalute=false } = evaluate;
-  const { pageStart, pageCount, total } = pagination;
-
   const [page, changePage] = useState(pageStart);
   const [searchValue, setSearchValue] = useState(searchword || keyword || '');
   const [yearInfo, setYearInfo] = useState({
@@ -62,6 +63,8 @@ export default function Literature(props) {
     subjectSql: '',
     subject: subjectValid ? subjectValid.slice(0, 8) : []
   });
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     RestTools.setSession('preSearchValue', searchValue);
@@ -89,11 +92,8 @@ export default function Literature(props) {
     }
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
-
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart,
+    fetchData({
+      pageStart,
         whereSql: sql,
         yearSql,
         subjectSql,
@@ -104,8 +104,23 @@ export default function Literature(props) {
         searchword: '',
         SN,
         orderSql: order
-      }
-    });
+    })
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart,
+    //     whereSql: sql,
+    //     yearSql,
+    //     subjectSql,
+    //     intent,
+    //     keyword: '',
+    //     fieldWord,
+    //     replaceSql,
+    //     searchword: '',
+    //     SN,
+    //     orderSql: order
+    //   }
+    // });
   }, [count, sortKey]);
 
   useEffect(() => {
@@ -203,26 +218,59 @@ export default function Literature(props) {
     color: '#fff'
   };
 
+  function fetchData(params) {
+    setLoading(true);
+    getCustomView(params)
+      .then((res) => {
+        if (res.data.code === 200) {
+          setLoading(false);
+          updateResource({
+            ...resource,
+            literatureData: res.data.result
+          });
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  }
+
   function handleChangePage(page) {
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
     changePage(page);
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart: page,
-        whereSql: sql,
-        yearSql,
-        subjectSql,
-        fieldWord,
-        replaceSql,
-        keyword: '',
-        searchword: '',
-        intent,
-        SN,
-        orderSql: ' ' + orderBy
-      }
+    fetchData({
+      pageStart: page,
+      whereSql: sql,
+      yearSql,
+      subjectSql,
+      fieldWord,
+      replaceSql,
+      keyword: '',
+      searchword: '',
+      intent,
+      SN,
+      orderSql:  orderBy
     });
+
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart: page,
+    //     whereSql: sql,
+    //     yearSql,
+    //     subjectSql,
+    //     fieldWord,
+    //     replaceSql,
+    //     keyword: '',
+    //     searchword: '',
+    //     intent,
+    //     SN,
+    //     orderSql: ' ' + orderBy
+    //   }
+    // });
   }
 
   function sortBy(key) {
@@ -244,23 +292,35 @@ export default function Literature(props) {
     };
     setYearInfo(newYearInfo); //修改年份选中状态
     changePage(1);
-
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart: 1,
-        whereSql: sql,
-        yearSql: yearSql,
-        intent,
-        subjectSql,
-        fieldWord,
-        replaceSql,
-        keyword: '',
-        searchword: '',
-        SN,
-        orderSql: orderBy
-      }
+    fetchData({
+      pageStart: 1,
+      whereSql: sql,
+      yearSql: yearSql,
+      intent,
+      subjectSql,
+      fieldWord,
+      replaceSql,
+      keyword: '',
+      searchword: '',
+      SN,
+      orderSql: orderBy
     });
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart: 1,
+    //     whereSql: sql,
+    //     yearSql: yearSql,
+    //     intent,
+    //     subjectSql,
+    //     fieldWord,
+    //     replaceSql,
+    //     keyword: '',
+    //     searchword: '',
+    //     SN,
+    //     orderSql: orderBy
+    //   }
+    // });
   }
 
   function filterBySubject(subject, index) {
@@ -275,22 +335,35 @@ export default function Literature(props) {
     });
     setYearInfo({ ...yearInfo, index: 0, yearSql: '' });
     changePage(1);
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart: 1,
-        whereSql: sql,
-        yearSql: '',
-        intent,
-        subjectSql,
-        fieldWord,
-        replaceSql,
-        searchword: '',
-        keyword: '',
-        SN,
-        orderSql: orderBy
-      }
+    fetchData({
+      pageStart: 1,
+      whereSql: sql,
+      yearSql: '',
+      intent,
+      subjectSql,
+      fieldWord,
+      replaceSql,
+      searchword: '',
+      keyword: '',
+      SN,
+      orderSql: orderBy
     });
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart: 1,
+    //     whereSql: sql,
+    //     yearSql: '',
+    //     intent,
+    //     subjectSql,
+    //     fieldWord,
+    //     replaceSql,
+    //     searchword: '',
+    //     keyword: '',
+    //     SN,
+    //     orderSql: orderBy
+    //   }
+    // });
   }
 
   function handleSearch(value) {
@@ -317,22 +390,35 @@ export default function Literature(props) {
       subject: []
     });
     changePage(1);
-    dispatch({
-      type: 'result/getCustomView',
-      payload: {
-        pageStart: 1,
-        whereSql: sql,
-        yearSql: '',
-        intent,
-        subjectSql: '',
-        fieldWord,
-        replaceSql,
-        keyword,
-        searchword: value,
-        SN,
-        orderSql: orderBy
-      }
+    fetchData({
+      pageStart: 1,
+      whereSql: sql,
+      yearSql: '',
+      intent,
+      subjectSql: '',
+      fieldWord,
+      replaceSql,
+      keyword,
+      searchword: value,
+      SN,
+      orderSql: orderBy
     });
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart: 1,
+    //     whereSql: sql,
+    //     yearSql: '',
+    //     intent,
+    //     subjectSql: '',
+    //     fieldWord,
+    //     replaceSql,
+    //     keyword,
+    //     searchword: value,
+    //     SN,
+    //     orderSql: orderBy
+    //   }
+    // });
     //记录上一次搜索框的值
     RestTools.setSession('preSearchValue', value);
   }

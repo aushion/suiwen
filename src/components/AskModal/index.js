@@ -34,18 +34,21 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   };
 
   useEffect(() => {
-    request
-      .post('/community/getCommunityClass')
-      .then((res) => {
-        if (res.data.code === 200) {
-          setDomain(res.data.result);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (visible) {
+      request
+        .post('/community/getCommunityClass')
+        .then((res) => {
+          if (res.data.code === 200) {
+            setDomain(res.data.result);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
     return () => {};
-  }, []);
+  }, [visible]);
 
   function changeQuestion(e) {
     setSubmitQ(e.target.value);
@@ -71,15 +74,13 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
           if (res.data.result) {
             setLoading(false);
             onTriggerCancel();
-           
             router.push(`/personCenter/people/ask?userName=${loginUser.UserName}`);
           } else {
             onTriggerCancel();
             setLoading(false);
             message.error(res.data.msg);
           }
-          reset()
-         
+          reset();
         })
         .catch((err) => {
           console.log(err);
@@ -87,7 +88,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
     }
   }
 
-  function reset(){
+  function reset() {
     setDomainChildren(null);
     setSelectedRoot(null);
     updateCheckedTag([]);

@@ -1,15 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { List, Descriptions } from 'antd';
+import querystring from 'querystring';
 import FoldText from '../../../../components/FoldText';
 import Label from '../Label';
-import styles from './index.less';
+import { getAnswerByTopicPage } from '../../service/result';
 import RestTools from '../../../../utils/RestTools';
+import styles from './index.less'
 
 function LawItem({ data }) {
+  const [resource, setResource] = useState(data);
+  const { dataNode, pagination, domain, intentDomain, intentId } = resource;
+  const { q, topic } = querystring.parse(window.location.search.substring(1));
+
+  function fetchData(params) {
+    getAnswerByTopicPage(params).then((res) => {
+      if (res.data.code === 200) {
+        setResource(res.data.result.metaList[0]);
+        window.scrollTo({
+          top: 0
+        });
+      }
+    });
+  }
   return (
     <div className={styles.LawItem}>
       <List
         itemLayout="vertical"
+        pagination={{
+          current: pagination.pageStart,
+          pageSize: pagination.pageCount,
+          total: pagination.total,
+          onChange: (page) => {
+            fetchData({
+              domain,
+              intentDomain,
+              intentId,
+              q,
+              topic,
+              pageStart: page,
+              pageCount: 10
+            });
+          }
+        }}
         footer={
           <div style={{ textAlign: 'right' }}>
             <a
@@ -22,7 +54,7 @@ function LawItem({ data }) {
             </a>
           </div>
         }
-        dataSource={data}
+        dataSource={dataNode}
         renderItem={(item) => {
           return (
             <List.Item>

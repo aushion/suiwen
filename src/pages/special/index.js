@@ -66,7 +66,7 @@ function Special(props) {
     });
     if (topic === 'law') {
       router.push(
-        `/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
+        `/query/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
           question
         )}`
       );
@@ -88,7 +88,7 @@ function Special(props) {
     if (q) {
       if (topic === 'law') {
         router.push(
-          `/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
+          `/query/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
         );
       } else {
         router.push(

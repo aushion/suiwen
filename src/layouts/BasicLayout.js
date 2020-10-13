@@ -51,7 +51,7 @@ function BasicLayout(props) {
         //如果是法律专题则单独处理
         if (topic === 'law') {
           router.replace(
-            `/law?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
+            `/query/law?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
               topicName
             )}`
           );
@@ -248,7 +248,7 @@ function BasicLayout(props) {
         }}
         q=""
       />
-      <Affix offsetBottom={60}>
+      <Affix offsetBottom={100}>
       <div
           className={styles.feedback}
           onClick={() => {

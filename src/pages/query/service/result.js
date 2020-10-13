@@ -11,11 +11,11 @@ export function getAnswer(payload) {
       });
 }
 
-// export function getAnswerByTopic(payload) {
-//   return request.get('/getAnswerByTopic', {
-//     params: { ...payload }
-//   });
-// }
+export function getAnswerByTopicPage(payload) {
+  return request.get('/getAnswerByTopicPage', {
+    params: { ...payload }
+  });
+}
 
 export function getSG(payload) {
   return request.get('/getSGData', {

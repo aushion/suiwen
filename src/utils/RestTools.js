@@ -186,6 +186,7 @@ export default {
     博士: 'CDFD',
     硕士: 'CMFD',
     期刊: 'CJFD',
+    法律_期刊: 'CJFD',
     中国会议: 'CPFD',
     报纸: 'CCND',
     法律_期刊: 'CJFD'

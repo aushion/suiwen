@@ -1,20 +1,13 @@
 import { List, Icon } from 'antd';
 import Link from 'umi/link';
 import RestTools from '../../../../utils/RestTools';
+import styles from './index.less';
 
 function NewHelp(props) {
   const { data, title } = props;
   return (
-    <div style={{ backgroundColor: '#fff', padding: 20, boxShadow: '#cecece 0 0 6px 0' }}>
-      <div
-        style={{
-          paddingBottom: 10,
-          borderBottom: '1px solid #e6e6e6',
-          fontSize: 16,
-          fontWeight: 'bold',
-          color: '#333'
-        }}
-      >
+    <div className={styles.newHelp}>
+      <div className={styles.title}>
         <Icon type="question-circle" style={{ fontSize: 16, marginRight: 6, color: '#f39b27' }} />
         {title || '新求助'}
       </div>
@@ -24,26 +17,14 @@ function NewHelp(props) {
         renderItem={(item) => (
           <List.Item>
             <div
-              style={{
-                width: '100%',
-                fontSize: 12,
-                overflow: 'hidden'
-              }}
+              className={styles.listItem}
               onClick={() => {
                 RestTools.setSession('q', item.Content);
               }}
               title={item.Content}
             >
               <Link
-                style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  fontSize: 14,
-                  color: '#333',
-                  fontWeight: 'bold',
-                  display: 'block'
-                }}
+                className={styles.question}
                 title={item.Content}
                 to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
               >
@@ -60,6 +41,16 @@ function NewHelp(props) {
                   回答数：{item.checkCount}
                 </div>
               </Link>
+              <div
+                style={{
+                  color: '#999',
+                  fontSize: 12,
+                  width: 60,
+                  lineHeight: '25px'
+                }}
+              >
+                回答数：{item.checkCount}
+              </div>
             </div>
           </List.Item>
         )}

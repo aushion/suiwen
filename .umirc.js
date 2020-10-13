@@ -24,8 +24,7 @@ export default {
     // '@': path.resolve(__dirname, 'src')
   },
   autoprefixer: {
-    // browsers: ['> 1%', 'last 2 versions', 'not ie <= 10'],
-    flexbox: true
+    flexbox: 'no-2009'
   },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html

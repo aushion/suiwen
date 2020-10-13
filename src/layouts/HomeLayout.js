@@ -20,7 +20,7 @@ function HomeLayout(props) {
   const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
   const [isVisibleLogin, setShowLogin] = useState(false);
   const [isVisibleRegister, setShowRegister] = useState(false);
-
+  window.document.title = '知网随问';
   const { dispatch, avatar } = props;
   function handleClickEnterOrItem(value) {
     const q = value.trim();
