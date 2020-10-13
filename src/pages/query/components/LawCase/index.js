@@ -14,7 +14,7 @@ function LawCase({ data, type }) {
   const { q, topic } = querystring.parse(window.location.search.substring(1));
   const showType = {
     lawitem: {
-      dataItem: ['法条名', '时效性', '发布日期', '全文']
+      dataItem: [ '所属法规','时效性', '发布日期', '全文']
     },
     lawcase: {
       title: '标题',
@@ -52,6 +52,11 @@ function LawCase({ data, type }) {
         itemLayout="vertical"
         dataSource={dataNode}
         loading={loading}
+        header={
+          <div>
+            共<strong>{pagination.total}</strong>条结果
+          </div>
+        }
         pagination={{
           current: pagination.pageStart,
           pageSize: pagination.pageCount,
