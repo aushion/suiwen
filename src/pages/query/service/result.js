@@ -11,8 +11,8 @@ export function getAnswer(payload) {
       });
 }
 
-export function getAnswerByTopicPage(payload) {
-  return request.get('/getAnswerByTopicPage', {
+export function getAnswerByPage(payload) {
+  return request.get('/getAnswerByPage', {
     params: { ...payload }
   });
 }

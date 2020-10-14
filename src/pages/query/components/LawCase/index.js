@@ -3,7 +3,7 @@ import { List, Descriptions } from 'antd';
 import querystring from 'querystring';
 import FoldText from '../../../../components/FoldText';
 import Label from '../Label';
-import { getAnswerByTopicPage } from '../../service/result';
+import { getAnswerByPage } from '../../service/result';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
@@ -30,7 +30,7 @@ function LawCase({ data, type }) {
   };
   function fetchData(params) {
     setLoading(true);
-    getAnswerByTopicPage(params)
+    getAnswerByPage(params)
       .then((res) => {
         if (res.data.code === 200) {
           setResource(res.data.result.metaList[0]);
