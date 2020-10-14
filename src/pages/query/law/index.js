@@ -5,33 +5,55 @@ import Literature from '../components/Literature';
 import LawCase from '../components/LawCase';
 import ToolsBook from '../components/ToolsBook';
 import SgList from '../components/SgList';
+import Graphic from '../components/Graphic';
 import styles from './index.less';
 
 function Law({ repositoryData, sgData, loading, dispatch }) {
   repositoryData = repositoryData && repositoryData.filter((item) => item.intentDomain !== '案由'); //案由
 
-  const referenceData = repositoryData && repositoryData.filter((item) => item.template === 'referencebook'); //工具书
+  const referenceData =
+    repositoryData && repositoryData.filter((item) => item.template === 'referencebook'); //工具书
 
-  const literatureData = repositoryData && repositoryData.filter((item) => item.template === 'lawliterature'); //文献
+  const literatureData =
+    repositoryData && repositoryData.filter((item) => item.template === 'lawliterature'); //文献
+
+  const kaifangyuData =
+    repositoryData && repositoryData.filter((item) => item.template === 'graphic'); //开放域
 
   return (
     <Spin spinning={loading}>
       <div className={styles.law}>
         {repositoryData ? (
-          <Tabs type="card" tabBarGutter={0}  tabPosition="left">
+          <Tabs type="card" tabBarGutter={0} tabPosition="left">
             {repositoryData.map((item, index) => {
               return (
                 <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={item.id}>
+                  {item.template === 'graphic'
+                    ? kaifangyuData.map((item) => (
+                        <Graphic
+                          key={item.id}
+                          id={item.id}
+                          // q={q}
+                          data={item.dataNode}
+                          intentJson={item.intentJson}
+                          intentDomain={item.intentDomain}
+                          domain={item.domain}
+                          pagination={item.pagination}
+                          title={item.title}
+                          evaluate={item.evaluate}
+                          intentFocus={item.intentFocus}
+                          dispatch={dispatch}
+                        />
+                      ))
+                    : null}
                   {/* 渲染工具书 */}
-                  {item.tagName === '百科问答' ? (
-                    <ToolsBook data={referenceData} /> 
-                  ) : null}
+                  {item.tagName === '百科问答' ? <ToolsBook data={referenceData} /> : null}
                   {/* 渲染法规组件 */}
-                  {item.template === 'lawpost' ? <LawCase data={item} type='lawpost'  /> : null}
+                  {item.template === 'lawpost' ? <LawCase data={item} type="lawpost" /> : null}
                   {/* 渲染法规条目 */}
-                  {item.template === 'lawitem' ? <LawCase data={item} type='lawitem' /> : null}
+                  {item.template === 'lawitem' ? <LawCase data={item} type="lawitem" /> : null}
                   {/* 渲染案例 */}
-                  {item.template === 'lawcase' ? <LawCase data={item} type='lawcase' /> : null}
+                  {item.template === 'lawcase' ? <LawCase data={item} type="lawcase" /> : null}
                   {/* 渲染法律相关论文 */}
                   {item.template === 'lawliterature' ? (
                     <Literature law literatureData={literatureData} dispatch={dispatch} />
