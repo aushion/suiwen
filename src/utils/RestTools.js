@@ -231,7 +231,7 @@ export default {
   },
 
   removeFlag(str) {
-    return str.replace(/###/g, '').replace(/\$\$\$/g, '');
+    return str?str.replace(/###/g, '').replace(/\$\$\$/g, ''):'';
   },
 
   removeHtmlTag(str) {

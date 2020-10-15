@@ -8,9 +8,18 @@ import ToolsBook from '../components/ToolsBook';
 import SgList from '../components/SgList';
 import Graphic from '../components/Graphic';
 import RelatedList from '../components/RelatedList';
+import NewHelp from '../components/NewHelp';
 import styles from './index.less';
 
-function Law({ repositoryData, sgData, loading, dispatch, relaventQuestions, relatedData = [] }) {
+function Law({
+  repositoryData,
+  sgData,
+  loading,
+  dispatch,
+  relaventQuestions,
+  relatedData = [],
+  helpList
+}) {
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
@@ -35,54 +44,60 @@ function Law({ repositoryData, sgData, loading, dispatch, relaventQuestions, rel
       <div className={styles.law}>
         <Row gutter={24}>
           <Col span={19}>
-            {repositoryData ? (
-              <Tabs type="card" tabBarGutter={0} tabPosition="left">
-                {repositoryData.map((item, index) => {
-                  return (
-                    <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={item.id}>
-                      {item.template === 'graphic'
-                        ? kaifangyuData.map((item) => (
-                            <Graphic
-                              key={item.id}
-                              id={item.id}
-                              // q={q}
-                              data={item.dataNode}
-                              intentJson={item.intentJson}
-                              intentDomain={item.intentDomain}
-                              domain={item.domain}
-                              pagination={item.pagination}
-                              title={item.title}
-                              evaluate={item.evaluate}
-                              intentFocus={item.intentFocus}
-                              dispatch={dispatch}
-                            />
-                          ))
-                        : null}
-                      {/* 渲染工具书 */}
-                      {item.tagName === '百科问答' ? <ToolsBook data={referenceData} /> : null}
-                      {/* 渲染法规组件 */}
-                      {item.template === 'lawpost' ? <LawCase data={item} type="lawpost" /> : null}
-                      {/* 渲染法规条目 */}
-                      {item.template === 'lawitem' ? <LawCase data={item} type="lawitem" /> : null}
-                      {/* 渲染案例 */}
-                      {item.template === 'lawcase' ? <LawCase data={item} type="lawcase" /> : null}
-                      {/* 渲染法律相关论文 */}
-                      {item.template === 'lawliterature' ? (
-                        <Literature law literatureData={literatureData} dispatch={dispatch} />
-                      ) : null}
-                    </Tabs.TabPane>
-                  );
-                })}
-                {/* 句群 */}
-                {sgData ? (
-                  <Tabs.TabPane tab="知识片段" key="知识片段">
-                    <SgList data={sgData} needEvaluate={false} />
-                  </Tabs.TabPane>
-                ) : null}
-              </Tabs>
-            ) : (
-              <Empty />
-            )}
+            <Tabs type="card" tabBarGutter={0} tabPosition="left">
+              {repositoryData
+                ? repositoryData.map((item, index) => {
+                    return (
+                      <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={item.id}>
+                        {item.template === 'graphic'
+                          ? kaifangyuData.map((item) => (
+                              <Graphic
+                                key={item.id}
+                                id={item.id}
+                                // q={q}
+                                data={item.dataNode}
+                                intentJson={item.intentJson}
+                                intentDomain={item.intentDomain}
+                                domain={item.domain}
+                                pagination={item.pagination}
+                                title={item.title}
+                                evaluate={item.evaluate}
+                                intentFocus={item.intentFocus}
+                                dispatch={dispatch}
+                              />
+                            ))
+                          : null}
+                        {/* 渲染工具书 */}
+                        {item.tagName === '百科问答' ? <ToolsBook data={referenceData} /> : null}
+                        {/* 渲染法规组件 */}
+                        {item.template === 'lawpost' ? (
+                          <LawCase data={item} type="lawpost" />
+                        ) : null}
+                        {/* 渲染法规条目 */}
+                        {item.template === 'lawitem' ? (
+                          <LawCase data={item} type="lawitem" />
+                        ) : null}
+                        {/* 渲染案例 */}
+                        {item.template === 'lawcase' ? (
+                          <LawCase data={item} type="lawcase" />
+                        ) : null}
+                        {/* 渲染法律相关论文 */}
+                        {item.template === 'lawliterature' ? (
+                          <Literature law literatureData={literatureData} dispatch={dispatch} />
+                        ) : null}
+                      </Tabs.TabPane>
+                    );
+                  })
+                : null}
+              {/* 句群 */}
+              {sgData ? (
+                <Tabs.TabPane tab="知识片段" key="知识片段">
+                  <SgList data={sgData} needEvaluate={false} />
+                </Tabs.TabPane>
+              ) : null}
+            </Tabs>
+            ) : !loading ? (
+            <Empty />
           </Col>
           <Col span={5}>
             {relatedLiterature.length ? (
@@ -117,6 +132,7 @@ function Law({ repositoryData, sgData, loading, dispatch, relaventQuestions, rel
                 topic={topic}
               />
             ) : null}
+            {helpList.length ? <NewHelp data={helpList} /> : null}
           </Col>
         </Row>
       </div>
@@ -127,7 +143,6 @@ function Law({ repositoryData, sgData, loading, dispatch, relaventQuestions, rel
 function mapStateToProps(state) {
   return {
     ...state.result,
-
     ...state.law,
     loading: state.loading.models.law
   };

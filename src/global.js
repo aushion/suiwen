@@ -10,7 +10,7 @@ const userTypeMap = {
 if(userInfo){
   request.post('/Login/refreshLogin',null,{
     params: {
-      isPerson: userTypeMap[userInfo.UserType],
+      isPerson: userTypeMap[userInfo.UserType] || 1,
       username: userInfo.UserName
     }
   }).then(res => {
