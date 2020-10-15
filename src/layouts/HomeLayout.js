@@ -48,33 +48,30 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-          <span className={`${styles.tips} display_flex`}>
+          {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
+            回到旧版
+          </a> */}
+          <span className={styles.tips}>
+            您好，
             {username ? (
-              <>
-                {/* <span style={{ cursor: 'pointer', marginRight: 20 }}>
-                  <MessageBox userName={username} />
-                </span> */}
-                <Link
-                  style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
-                  target="_blank"
-                >
-                  <Avatar
-                    size="small"
-                    src={
-                      avatar ||
-                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                        userInfo ? userInfo.UserName : ''
-                      }`
-                    }
-                  />
-                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
-                <Button onClick={logout} className={styles.login_btn}>
-                  退出
-                </Button>
-              </>
-            ) : null}
+              <Link
+                style={{ color: '#fff', marginLeft: 10 }}
+                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+              >
+                <Avatar
+                  size="small"
+                  src={
+                    avatar ||
+                    `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                      userInfo ? userInfo.UserName : ''
+                    }`
+                  }
+                />
+                <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+              </Link>
+            ) : (
+              '游客'
+            )}
           </span>
           {username ? null : (
             <Button
@@ -84,6 +81,10 @@ function HomeLayout(props) {
                 setShowLogin(true);
                 setShowRegister(false);
               }}
+              // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
+              // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
+              //   window.location.href
+              // )}`}
             >
               登录
             </Button>
@@ -96,11 +97,20 @@ function HomeLayout(props) {
                 setShowLogin(false);
                 setShowRegister(true);
               }}
+              // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
+              //   window.location.href
+              // )}`}
             >
               注册
             </Button>
           )}
+          {username ? (
+            <button onClick={logout} className={styles.login_btn}>
+              退出
+            </button>
+          ) : null}
         </div>
+
 
         <div className={styles.inputWrap}>
           <SmartInput
