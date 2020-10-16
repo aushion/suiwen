@@ -1,4 +1,4 @@
-import { getAnswer, getSG, getRelevant, getRelevantByAnswer } from '../service/result';
+import { getAnswer, getSG, getRelevant, getRelevantByAnswer, getHotHelpList } from '../service/result';
 export default {
   namespace: 'law',
 
@@ -6,7 +6,8 @@ export default {
     repositoryData: null,
     sgData: null,
     relaventQuestions: [],
-    relatedData: []
+    relatedData: [],
+    helpList: []
   },
 
   reducers: {
@@ -27,7 +28,18 @@ export default {
         });
       }
     },
+    *getHotHelpList({ payload }, { call, put }) {
+      const res = yield call(getHotHelpList);
 
+      if (res.data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            helpList: res.data.result.list
+          }
+        });
+      }
+    },
     *getSG({ payload }, { call, put }) {
       const res = yield call(getSG, payload);
       if (res.data.code === 200) {
@@ -76,7 +88,7 @@ export default {
             dispatch({ type: 'fetch', payload: { q, topic } });
             dispatch({ type: 'getSG', payload: { q } });
             dispatch({ type: 'getRelavent', payload: { q: encodeURIComponent(q), area: topic } });
-
+            dispatch({ type: 'getHotHelpList'})
             dispatch({
               type: 'getRelevantByAnswer',
               payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, topic, topicName }

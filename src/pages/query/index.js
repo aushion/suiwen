@@ -212,7 +212,7 @@ function ResultPage(props) {
               <div className={styles.title}>您也可以选择专题问答</div>
               <div>
                 {topicData.length
-                  ? topicData.map((item, index) => (
+                  ? topicData.filter(item => item.name!=='阅读理解').map((item, index) => (
                       <div className={styles.item} key={item.name}>
                         <Link
                           to={`/special?topicId=${item.topicId}&q=${q}`}
