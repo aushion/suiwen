@@ -224,6 +224,12 @@ export default {
           }
         });
       }
+    },
+    // 举报
+
+    *communityReport({ payload }, { call }) {
+      const res = yield call(helpServer.communityReport, payload);
+      return res;
     }
   },
   subscriptions: {
@@ -245,7 +251,7 @@ export default {
               answerList: [],
               total: 0,
               domains: [],
-              followed: false,
+              followed: false
             }
           });
 

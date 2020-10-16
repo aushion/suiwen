@@ -175,5 +175,8 @@ export default {
   },
   unFollowUser(payload) {
     return request.post(process.env.apiUrl + '/follow/unFollowUser', null, { params: payload });
+  },
+  communityReport(payload) {
+    return request.post(serverUrl + '/communityReport',{...payload})
   }
 };

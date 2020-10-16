@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Icon,Spin } from 'antd';
+import { Icon, message, Spin } from 'antd';
 import dayjs from 'dayjs';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
 import CaAvatar from '../../../components/CaAvatar';
+import ReasonModal from '../../../components/ReasonModal';
 
 let timerCount = null;
 
@@ -14,6 +15,10 @@ function AnswerList(props) {
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
+  const [modalState, setModalState] = useState({
+    visible: false
+  });
+
   //编辑框的状态
   function handleComment(data) {
     //如果当前评论列表是展开的就修改其状态，让其关闭
@@ -211,7 +216,34 @@ function AnswerList(props) {
     }
   }
 
-  
+  function handleOk(id,radioValue,moreReason=''){
+    const reason = radioValue === '5' ? moreReason:radioValue;
+    dispatch({
+      type: 'reply/communityReport',
+      payload: {
+        entityId:id,
+        entityType:0,
+        reason,
+        userName: userInfo.UserName,
+        reportType:radioValue 
+
+      }
+    }).then(res => {
+      if(res.data.code === 200){
+        message.success('感谢您的反馈，共建美好社区');
+        
+      }else{
+        message.error(res.data.msg);
+      }
+      setModalState({
+        visible: false
+      })
+    }).catch(err => {
+      setModalState({
+        visible: false
+      })
+    })
+  }
 
   return (
     <div>
@@ -230,10 +262,8 @@ function AnswerList(props) {
           <div className={replyStyle.answerItem} key={item.aid}>
             <div className="display_flex justify-content_flex-justify">
               <div className={replyStyle.answerAvatar}>
-               
                 <CaAvatar userName={username} />
               </div>
-             
             </div>
 
             {item.showEditForm ? (
@@ -258,7 +288,7 @@ function AnswerList(props) {
 
                 {item.resource && item.resource.includes('<a') ? (
                   <>
-                    <div style={{padding: '6px 0'}}>引用文献：</div>
+                    <div style={{ padding: '6px 0' }}>引用文献：</div>
                     <div dangerouslySetInnerHTML={{ __html: item.resource }} />
                   </>
                 ) : null}
@@ -310,12 +340,20 @@ function AnswerList(props) {
                     <span style={{ paddingLeft: 4 }}>分享</span>
                   </span>
 
-                  <span className={replyStyle.action}>
+                  <span
+                    className={replyStyle.action}
+                    onClick={() => {
+                      setModalState({
+                        visible: true,
+                        id: item.aid
+                      });
+                    }}
+                  >
                     <Icon type="warning" />
                     <span style={{ paddingLeft: 4 }}>举报</span>
                   </span>
 
-                  <span className={replyStyle.action}>发布于{dayjs(item.replyTime).fromNow()}</span>
+                  <span style={{ marginLeft: 20 }}>发布于{dayjs(item.replyTime).fromNow()}</span>
                 </div>
               </>
             )}
@@ -329,6 +367,16 @@ function AnswerList(props) {
           </div>
         );
       })}
+      <ReasonModal
+        visible={modalState.visible}
+        id={modalState.id}
+        handleOk={handleOk}
+        triggerCancel={() => {
+          setModalState({
+            visible: false
+          });
+        }}
+      />
     </div>
   );
 }
