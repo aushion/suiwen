@@ -44,11 +44,11 @@ function Law({
       <div className={styles.law}>
         <Row gutter={24}>
           <Col span={19}>
-            <Tabs type="card" tabBarGutter={0} tabPosition="left">
+            <Tabs type="card"  tabBarGutter={0} tabPosition="left">
               {repositoryData
                 ? repositoryData.map((item, index) => {
                     return (
-                      <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={item.id}>
+                      <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={index}>
                         {item.template === 'graphic'
                           ? kaifangyuData.map((item) => (
                               <Graphic
@@ -90,14 +90,13 @@ function Law({
                   })
                 : null}
               {/* 句群 */}
-              {sgData ? (
+              {sgData && !loading  ? (
                 <Tabs.TabPane tab="知识片段" key="知识片段">
                   <SgList data={sgData} needEvaluate={false} />
                 </Tabs.TabPane>
               ) : null}
             </Tabs>
-            ) : !loading ? (
-            <Empty />
+            ){!loading && !repositoryData ? <Empty /> : null}
           </Col>
           <Col span={5}>
             {relatedLiterature.length ? (
