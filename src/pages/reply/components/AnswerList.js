@@ -335,10 +335,10 @@ function AnswerList(props) {
                     </span>
                   </span>
 
-                  <span className={replyStyle.action}>
+                  {/* <span className={replyStyle.action}>
                     <Icon type="share-alt" />
                     <span style={{ paddingLeft: 4 }}>分享</span>
-                  </span>
+                  </span> */}
 
                   <span
                     className={replyStyle.action}
