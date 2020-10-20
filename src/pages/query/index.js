@@ -31,6 +31,7 @@ import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
 import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
+import Concept from './components/Concept';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -130,11 +131,11 @@ function ResultPage(props) {
   const weather = repositoryData.filter((item) => item.template === 'weather');
   const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域
   const translateData = repositoryData.filter((item) => item.template === 'translate'); //翻译
-  // const lawpostData = repositoryData.filter((item) => item.template === 'lawpost'); //法规篇
-  // const lawitemData = repositoryData.filter((item) => item.template === 'lawitem'); //法条
-  // const lawcaseData = repositoryData.filter((item) => item.template === 'lawcase'); //法规案例
+
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
+
+  const conceptData = repositoryData.filter(item => item.template === 'concept'); //知识元数据
 
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
@@ -212,43 +213,45 @@ function ResultPage(props) {
               <div className={styles.title}>您也可以选择专题问答</div>
               <div>
                 {topicData.length
-                  ? topicData.filter(item => item.name!=='阅读理解').map((item, index) => (
-                      <div className={styles.item} key={item.name}>
-                        <Link
-                          to={`/special?topicId=${item.topicId}&q=${q}`}
-                          target="_blank"
-                          style={{
-                            color: index === topicIndex ? '#0097FF' : '#43474A',
-                            display: 'inline-block',
-                            width: '100%',
-                            padding: '8px 10px'
-                          }}
-                        >
-                          {item.name === '阅读理解' ? (
-                            <Badge
-                              count={
-                                <div
-                                  style={{
-                                    backgroundColor: '#f50',
-                                    color: '#fff',
-                                    fontSize: 10,
-                                    top: '-2px',
-                                    right: '-20px',
-                                    padding: '2px'
-                                  }}
-                                >
-                                  Beta
-                                </div>
-                              }
-                            >
-                              {item.name}专题
-                            </Badge>
-                          ) : (
-                            item.name + '专题'
-                          )}
-                        </Link>
-                      </div>
-                    ))
+                  ? topicData
+                      .filter((item) => item.name !== '阅读理解')
+                      .map((item, index) => (
+                        <div className={styles.item} key={item.name}>
+                          <Link
+                            to={`/special?topicId=${item.topicId}&q=${q}`}
+                            target="_blank"
+                            style={{
+                              color: index === topicIndex ? '#0097FF' : '#43474A',
+                              display: 'inline-block',
+                              width: '100%',
+                              padding: '8px 10px'
+                            }}
+                          >
+                            {item.name === '阅读理解' ? (
+                              <Badge
+                                count={
+                                  <div
+                                    style={{
+                                      backgroundColor: '#f50',
+                                      color: '#fff',
+                                      fontSize: 10,
+                                      top: '-2px',
+                                      right: '-20px',
+                                      padding: '2px'
+                                    }}
+                                  >
+                                    Beta
+                                  </div>
+                                }
+                              >
+                                {item.name}专题
+                              </Badge>
+                            ) : (
+                              item.name + '专题'
+                            )}
+                          </Link>
+                        </div>
+                      ))
                   : null}
               </div>
             </div>
@@ -271,7 +274,7 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                  {referenceBookData.length ? <ToolsBook data={referenceBookData}  /> : null}
+                  {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
@@ -300,6 +303,13 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
+
+                  {
+                    conceptData.length ? conceptData.map(item => <Concept
+                        key={item.id}
+                        data ={item.intentJson}
+                      />) :null
+                  }  
 
                   {yearbookData.length
                     ? yearbookData.map((item) => (
