@@ -52,7 +52,6 @@ function HomeLayout(props) {
             回到旧版
           </a> */}
           <span className={styles.tips}>
-            您好，
             {username ? (
               <>
                 <span style={{ cursor: 'pointer', marginRight: 20 }}>
@@ -111,11 +110,11 @@ function HomeLayout(props) {
               注册
             </Button>
           )}
-          {username ? (
+          {/* {username ? (
             <button onClick={logout} className={styles.login_btn}>
               退出
             </button>
-          ) : null}
+          ) : null} */}
         </div>
 
 

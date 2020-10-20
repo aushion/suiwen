@@ -126,7 +126,6 @@ function BasicLayout(props) {
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
             <span className={styles.tips}>
-              您好，
               {username ? (
                 <>
                   <span style={{ cursor: 'pointer', marginRight: 20 }}>
@@ -181,11 +180,6 @@ function BasicLayout(props) {
                 注册
               </Button>
             )}
-            {username ? (
-              <button onClick={logout} className={styles.login_btn}>
-                退出
-              </button>
-            ) : null}
           </div>
         </div>
       </Header>
@@ -256,7 +250,7 @@ function BasicLayout(props) {
         q=""
       />
       <Affix offsetBottom={100}>
-      <div
+        <div
           className={styles.feedback}
           onClick={() => {
             setVisible(true);
