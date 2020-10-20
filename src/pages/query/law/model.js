@@ -35,7 +35,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.list
+            helpList: res.data.result.dataList
           }
         });
       }
@@ -54,7 +54,8 @@ export default {
     *getRelavent({ payload }, { call, put }) {
       const res = yield call(getRelevant, payload);
       const { data } = res;
-      if (data.result.metaList) {
+      if (data.code === 200 && data.result.metaList.length) {
+        console.log(data.result.metaList.length)
         yield put({
           type: 'save',
           payload: {
