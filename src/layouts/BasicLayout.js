@@ -124,7 +124,9 @@ function BasicLayout(props) {
             </Button> */}
           </div>
           <div className={styles.login}>
-            <span className={`${styles.tips} display_flex`}>
+            {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
+            <span className={styles.tips}>
+              您好，
               {username ? (
                 <>
                   <span style={{ cursor: 'pointer', marginRight: 20 }}>
@@ -179,6 +181,11 @@ function BasicLayout(props) {
                 注册
               </Button>
             )}
+            {username ? (
+              <button onClick={logout} className={styles.login_btn}>
+                退出
+              </button>
+            ) : null}
           </div>
         </div>
       </Header>

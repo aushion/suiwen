@@ -14,16 +14,19 @@ function LawCase({ data, type }) {
   const { q, topic } = querystring.parse(window.location.search.substring(1));
   const showType = {
     lawitem: {
-      dataItem: [ '所属法规','时效性', '发布日期', '全文']
+      dataItem: ['所属法规', '时效性', '发布日期', '全文']
     },
     lawcase: {
       title: '标题',
-      link: (kw) => `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=clkc&kw=${kw}&korder=0&sel=1`,
+      link: (kw) =>
+        `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=clkc&kw=${kw}&korder=0&sel=1`,
       dataItem: ['案由', '裁判日期', '审理法院', '全文']
     },
     lawpost: {
       title: '中文标题',
-      link: (kw) => `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=clklk&kw=${kw}&korder=0&sel=1
+      link: (
+        kw
+      ) => `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=clklk&kw=${kw}&korder=0&sel=1
       `,
       dataItem: ['时效性', '发布机关', '发布日期', '全文']
     }
@@ -64,10 +67,10 @@ function LawCase({ data, type }) {
           hideOnSinglePage: true,
           onChange: (page) => {
             fetchData({
-              domain,
-              intentDomain,
+              domain: encodeURIComponent(domain),
+              intentDomain: encodeURIComponent(intentDomain),
               intentId,
-              q,
+              q: encodeURIComponent(q),
               topic,
               pageStart: page,
               pageCount: 10

@@ -7,7 +7,7 @@ import RestTools from '../../utils/RestTools';
 import request from '../../utils/request';
 
 const { Link } = Anchor;
-const { Footer, Sider, Content } = Layout;
+const { Footer} = Layout;
 
 function Detail() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -93,18 +93,16 @@ function Detail() {
       </div>
       <Spin spinning={!medicalData} style={{ height: 'calc(100vh - 150px)' }}>
         {medicalData && typeof medicalData === 'object' ? (
-          <Layout className={styles.main}>
-            <Sider className={styles.sider} width={258}>
-              <div className={styles.wrapper}>
-                <Anchor bounds={10}>
-                  <div className={styles.title}>目录</div>
-                  {Object.keys(medicalData).map((item) => (
-                    <Link key={item} href={`#${item}`} title={item} className={styles.link_item} />
-                  ))}
-                </Anchor>
-              </div>
-            </Sider>
-            <Content className={styles.content} id="content">
+          <div className={styles.main}>
+            <div className={styles.wrapper}>
+              <Anchor affix targetOffset={50}>
+                {Object.keys(medicalData).map((item) => (
+                  <Link key={item} href={`#${item}`} title={item} />
+                ))}
+              </Anchor>
+            </div>
+
+            <div className={styles.content} id="content"> 
               {Object.keys(medicalData).map((item) => (
                 <div key={item} id={item} className={styles.content_item}>
                   <div className={styles.title}>{item}</div>
@@ -116,8 +114,8 @@ function Detail() {
                   />
                 </div>
               ))}
-            </Content>
-          </Layout>
+            </div>
+          </div>
         ) : medicalData === true ? (
           <Empty style={{ minHeight: 'calc(100vh - 160px)' }} />
         ) : null}

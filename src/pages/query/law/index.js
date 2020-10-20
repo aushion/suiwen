@@ -16,11 +16,10 @@ function Law({
   sgData,
   loading,
   dispatch,
-  relaventQuestions = [],
+  relaventQuestions,
   relatedData = [],
   helpList
 }) {
-
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
@@ -97,7 +96,7 @@ function Law({
                 </Tabs.TabPane>
               ) : null}
             </Tabs>
-            ){!loading && !repositoryData ? <Empty /> : null}
+            {!loading && !repositoryData ? <Empty /> : null}
           </Col>
           <Col span={5}>
             {relatedLiterature.length ? (

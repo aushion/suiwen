@@ -1,49 +1,59 @@
-.ToolsBook{
-    box-shadow: #cecece 0 0 6px 0;
+.ToolsBook {
+  box-shadow: #cecece 0 0 6px 0;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fff;
+  h2 {
+    padding-bottom: 10px;
+    color: lightslategray;
+    font-size: 18px;
+  }
+
+  .item {
+    padding: 15px 0 10px 0;
+    border-bottom: 1px dashed orange;
+  }
+  .ReferenceBook_title {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    color: #0079ff;
+  }
+  .ReferenceBook_answer {
+    color: #333;
+    letter-spacing: 2px;
+    line-height: 27.2px;
     margin-bottom: 20px;
-    padding: 20px;
-    background: #fff;
- 
-    .ReferenceBook_title {
-        font-size: 16px;
-        margin-bottom: 10px;
-        font-weight: 400;
-        color: #0079ff;
+    text-align: left;
+    small {
+      font-size: 14px;
+    }
+
+    img {
+      width: 15%;
+      height: auto;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
+  .ReferenceBook_more {
+    color: #c4c4c4;
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px 0;
+    text-align: right;
+    &:hover {
+      color: #0079ff;
+    }
+  }
+  .ReferenceBook_extra {
+    text-align: right;
+    .ReferenceBook_name {
+      color: #c4c4c4;
+      cursor: pointer;
+      &:hover {
+        color: lightsalmon;
       }
-      .ReferenceBook_answer {
-        color: #333;
-        letter-spacing: 2px;
-        line-height: 27.2px;
-        margin-bottom: 20px;
-        text-align: left;
-        small{
-          font-size: 14px;
-        }
-       
-        img{
-          width: 15%;
-          height: auto;
-          display: inline-block;
-          cursor: pointer;
-        }
-    
-      }
-      .ReferenceBook_more {
-        // color: #999;
-        cursor: pointer;
-        display: inline-block;
-        padding: 10px 0;
-        text-align: right;
-      }
-      .ReferenceBook_extra {
-        text-align: right;
-        .ReferenceBook_name {
-          color: #c4c4c4;
-          cursor: pointer;
-          &:hover {
-            color: lightsalmon;
-          }
-        }
-    
-      }
+    }
+  }
 }
