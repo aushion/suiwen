@@ -3,7 +3,7 @@ import path from 'path';
 export default {
   treeShaking: true,
   define: {
-    'process.env.apiUrl': 'http://192.168.103.25:8080/sw.api',
+    'process.env.apiUrl': 'http://192.168.103.25:8080/sw.test.api',
     'process.env.UMI_ENV': process.env.UMI_ENV,
     'process.env.apiUrl_help': 'http://192.168.107.232/qa.fb/api',
     'process.env.apiUrl_collect': 'http://192.168.103.25:8080/SWcollect',
