@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Collapse, Divider } from 'antd';
+import { Collapse } from 'antd';
 import { find } from 'lodash';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
@@ -7,17 +7,20 @@ import styles from './index.less';
 const { Panel } = Collapse;
 function ToolsBook(props) {
   const { data } = props;
+
   const checkedStyle = {
     backgroundColor: '#1890ff',
-    color: '#fff'
+    color: '#fff',
+    border: '1px solid #1890ff'
   };
   const normalStyle = {
     cursor: 'pointer',
     display: 'inline-block',
-    padding: '2px 4px',
-    color: '#333',
+    padding: '4px 8px',
+    color: 'lightslategray',
+    border: '1px solid #a8a8a8',
     marginRight: 10,
-    fontSize: 13,
+    fontSize: 14,
     borderRadius: 2
   };
 
@@ -98,6 +101,18 @@ function ToolsBook(props) {
 
   return (
     <div className={styles.ToolsBook}>
+      <h2>
+        <a
+          href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
+            RestTools.getKeyword(data[0].dataNode[0].Title)
+          )}&c=crfdsearch`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>{RestTools.getKeyword(data[0].dataNode[0].Title)}</span>
+        </a>
+        -知网工具书
+      </h2>
       <div className={styles.tags}>
         {initData &&
           initData.length > 1 &&
@@ -115,17 +130,17 @@ function ToolsBook(props) {
             );
           })}
       </div>
-      {initData && initData.length > 1 ? <Divider /> : null}
+
       <div className={styles.content}>
         {initData && initData.length
           ? initData.map((item, index) => {
-            const redReg = /###(.*)\$\$\$/;
+              const redReg = /###(.*)\$\$\$/;
               const intentFocus = item.intentFocus;
               const domain = item.domain;
               let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
-              
+
               const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;
-           
+
               const tagName = item.tagName;
               return (
                 <div key={item.tagName + index} hidden={index !== checkedIndex}>
@@ -140,13 +155,8 @@ function ToolsBook(props) {
                         : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
                     const blockAnswer = handleAnswer(answer);
                     return (
-                      <div key={item.条目编码 + index}>
-                        <div
-                          className={styles.ReferenceBook_title}
-                          // dangerouslySetInnerHTML={{
-                          //   __html: RestTools.translateToRed(title)
-                          // }}
-                        >
+                      <div key={item.条目编码 + index} className={styles.item}>
+                        <div className={styles.ReferenceBook_title}>
                           <a
                             target="_blank"
                             rel="noopener noreferrer"
@@ -214,16 +224,12 @@ function ToolsBook(props) {
                           ? `http://gongjushu.cnki.net/rbook/`
                           : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
                               finalTitle
-                         
                             )}&c=crfdsearch`
                       }
                       target="_blank"
                       rel="noopener noreferrer"
                       dangerouslySetInnerHTML={{
-                        __html:
-                          domain === '翻译'
-                            ? 'CNKI翻译助手'
-                            : `更多“${finalTitle}”的工具书`
+                        __html: domain === '翻译' ? 'CNKI翻译助手' : `查看更多`
                       }}
                     />
                   </div>

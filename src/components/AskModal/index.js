@@ -118,7 +118,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       confirmLoading={loading}
     >
       <TextArea rows={4} value={submitQ} onChange={changeQuestion} />
-      <Divider />
+      {/* <Divider />
       <div>
         <div>选择标签</div>
         <div style={{ padding: 10 }}>
@@ -135,7 +135,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
                 </Tag>
               ))
             : null}
-        </div>
+        </div> 
         <Divider dashed />
         <div>
           {domainChildren
@@ -155,7 +155,9 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
               ))
             : null}
         </div>
+                
       </div>
+      */}
     </Modal>
   );
 }

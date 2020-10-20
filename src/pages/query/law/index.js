@@ -44,7 +44,7 @@ function Law({
       <div className={styles.law}>
         <Row gutter={24}>
           <Col span={19}>
-            <Tabs type="card"  tabBarGutter={0} tabPosition="left">
+            <Tabs type="card" tabBarGutter={0} tabPosition="left">
               {repositoryData
                 ? repositoryData.map((item, index) => {
                     return (
@@ -90,13 +90,13 @@ function Law({
                   })
                 : null}
               {/* 句群 */}
-              {sgData && !loading  ? (
+              {sgData && !loading ? (
                 <Tabs.TabPane tab="知识片段" key="知识片段">
                   <SgList data={sgData} needEvaluate={false} />
                 </Tabs.TabPane>
               ) : null}
             </Tabs>
-            ){!loading && !repositoryData ? <Empty /> : null}
+            {!loading && !repositoryData ? <Empty /> : null}
           </Col>
           <Col span={5}>
             {relatedLiterature.length ? (

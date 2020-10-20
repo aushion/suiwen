@@ -271,7 +271,7 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                  {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
+                  {referenceBookData.length ? <ToolsBook data={referenceBookData}  /> : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics

@@ -138,10 +138,12 @@ export default {
     return inputRecords;
   },
   translateToRed(str) {
-    return str ? str
-      .replace(/###/g, '<span style="color:red">')
-      .replace(/\$\$\$/g, '</span>')
-      .replace(/&nbsp;/g, ''):'';
+    return str
+      ? str
+          .replace(/###/g, '<span style="color:red">')
+          .replace(/\$\$\$/g, '</span>')
+          .replace(/&nbsp;/g, '')
+      : '';
   },
 
   superMarkRed(str) {
@@ -231,7 +233,7 @@ export default {
   },
 
   removeFlag(str) {
-    return str?str.replace(/###/g, '').replace(/\$\$\$/g, ''):'';
+    return str ? str.replace(/###/g, '').replace(/\$\$\$/g, '') : '';
   },
 
   removeHtmlTag(str) {
@@ -339,6 +341,13 @@ export default {
       }
     }
     return len;
+  },
+
+  getKeyword(str) {
+    const redReg = /###(.*)\$\$\$/;
+    if (str) {
+      return redReg.test(str) ? str.match(redReg)[1] : str;
+    }
   },
 
   topicInfo: {
