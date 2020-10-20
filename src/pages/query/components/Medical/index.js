@@ -95,14 +95,17 @@ export default function Medical(props) {
   return (
     <div className={styles.Medical}>
       {tableId ? (
-        <Link
-          className={styles.title}
-          target="_blank"
-          rel="noopener noreferrer"
-          to={`/detail?name=${data[0].table}&id=${tableId}`}
-        >
-          {intentJson.parsed_key + '_医药知识库'}
-        </Link>
+        <h2>
+          <Link
+            // className={styles.title}
+            target="_blank"
+            rel="noopener noreferrer"
+            to={`/detail?name=${data[0].table}&id=${tableId}`}
+          >
+            {intentJson.parsed_key}
+          </Link>
+          <span>-知网医药知识库</span>
+        </h2>
       ) : (
         <div className={styles.title}>{intentJson.parsed_key + '_医药知识库'}</div>
       )}

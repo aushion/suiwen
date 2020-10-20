@@ -60,7 +60,7 @@ function Concept({ data }) {
     <div className={styles.concept}>
       <h2>
         <a
-          href={`https://concept.cnki.net/search_result.aspx?w=${概念}`}
+          href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}`}
           rel="noreferrer"
           target="_blank"
         >
@@ -113,6 +113,14 @@ function Concept({ data }) {
             })}
           </Tabs>
         ) : null}
+        <a
+          className={styles.more}
+          rel="noreferrer"
+          target="_blank"
+          href={`https://concept.cnki.net/search_result.aspx?w=${概念}`}
+        >
+          查看更多
+        </a>
       </div>
     </div>
   );

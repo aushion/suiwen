@@ -4,51 +4,51 @@ import { router } from 'umi';
 import request from '../../utils/request';
 
 const { TextArea } = Input;
-// const { CheckableTag } = Tag;
+const { CheckableTag } = Tag;
 function AskModal({ visible, q = '', onTriggerCancel }) {
   const [submitQ, setSubmitQ] = useState(q);
   const [loading, setLoading] = useState(false);
-  // const [domain, setDomain] = useState(null);
-  // const [domainChildren, setDomainChildren] = useState(null);
+  const [domain, setDomain] = useState(null);
+  const [domainChildren, setDomainChildren] = useState(null);
   const [selectedTags, updateCheckedTag] = useState([]);
   const [selectedRoot, setSelectedRoot] = useState(null);
 
-  // const rootTagStyle = {
-  //   background: '#F5F5F5',
-  //   border: 'none',
-  //   marginBottom: 6,
-  //   padding: '2px 8px'
-  // };
+  const rootTagStyle = {
+    background: '#F5F5F5',
+    border: 'none',
+    marginBottom: 6,
+    padding: '2px 8px'
+  };
 
-  // const childTagStyle = {
-  //   border: '1px dashed #8590A6',
-  //   background: '#fff',
-  //   color: '#8590A6',
-  //   cursor: 'pointer',
-  //   borderRadius: 10,
-  //   marginBottom: 6
-  // };
-  // const childChecked = {
-  //   background: '#1890ff',
-  //   color: '#fff'
-  // };
+  const childTagStyle = {
+    border: '1px dashed #8590A6',
+    background: '#fff',
+    color: '#8590A6',
+    cursor: 'pointer',
+    borderRadius: 10,
+    marginBottom: 6
+  };
+  const childChecked = {
+    background: '#1890ff',
+    color: '#fff'
+  };
 
-  // useEffect(() => {
-  //   if (visible) {
-  //     request
-  //       .post('/community/getCommunityClass')
-  //       .then((res) => {
-  //         if (res.data.code === 200) {
-  //           setDomain(res.data.result);
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
+  useEffect(() => {
+    if (visible) {
+      request
+        .post('/community/getCommunityClass')
+        .then((res) => {
+          if (res.data.code === 200) {
+            setDomain(res.data.result);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
 
-  //   return () => {};
-  // }, [visible]);
+    return () => {};
+  }, [visible]);
 
   function changeQuestion(e) {
     setSubmitQ(e.target.value);
@@ -89,22 +89,22 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   }
 
   function reset() {
-    // setDomainChildren(null);
+    setDomainChildren(null);
     setSelectedRoot(null);
     updateCheckedTag([]);
   }
 
-  // function handleClickRoot(item) {
-  //   setDomainChildren(item.communityClassList);
-  //   setSelectedRoot(item.cId);
-  // }
+  function handleClickRoot(item) {
+    setDomainChildren(item.communityClassList);
+    setSelectedRoot(item.cId);
+  }
 
-  // function handleChange(tag, checked) {
-  //   const nextSelectedTags = checked
-  //     ? [...selectedTags, tag.cId]
-  //     : selectedTags.filter((t) => t !== tag.cId);
-  //   updateCheckedTag(nextSelectedTags);
-  // }
+  function handleChange(tag, checked) {
+    const nextSelectedTags = checked
+      ? [...selectedTags, tag.cId]
+      : selectedTags.filter((t) => t !== tag.cId);
+    updateCheckedTag(nextSelectedTags);
+  }
   return (
     <Modal
       visible={visible}
@@ -117,7 +117,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       confirmLoading={loading}
     >
       <TextArea rows={4} value={submitQ} onChange={changeQuestion} />
-      {/* <Divider />
+      <Divider />
       <div>
         <div>选择标签</div>
         <div style={{ padding: 10 }}>
@@ -156,7 +156,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
         </div>
                 
       </div>
-      */}
+     
     </Modal>
   );
 }
