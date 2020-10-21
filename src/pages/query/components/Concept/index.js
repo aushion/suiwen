@@ -84,7 +84,7 @@ function Concept({ data }) {
                   target="_blank"
                   rel="noreferrer"
                   href={`https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
-                    RestTools.sourceDb[basicContent.资源类型]
+                    RestTools.sourceDb['期刊']
                   }&filename=${basicContent.文件名}`}
                 >
                   <span style={{ color: '#999' }}>来源：</span>
