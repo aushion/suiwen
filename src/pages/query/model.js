@@ -11,13 +11,15 @@ import {
   setQuestion,
   getCustomView,
   collectQuestion,
-  submitQa
+  submitQa,
+  getConcept
 } from './service/result';
 import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
 import router from 'umi/router';
 import Cookies from 'js-cookie';
-import RestTools from 'Utils/RestTools';
+
+import RestTools from '../../utils/RestTools';
 
 export default {
   namespace: 'result',
@@ -32,7 +34,8 @@ export default {
     helpList: [],
     relaventQuestions: [], //相关问题
     communityAnswer: null,
-    specialQuestions: []
+    specialQuestions: [],
+    conceptData: null //知识元数据
   },
   reducers: {
     save(state, { payload }) {
@@ -51,6 +54,7 @@ export default {
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
+        const conceptData = repositoryData.filter((item) => item.template === 'concept'); //知识元
 
         yield put({
           type: 'save',
@@ -68,14 +72,16 @@ export default {
           repositoryData: repositoryData,
           source: 'getAnswer'
         });
+
+        if (conceptData[0].intentJson.results[0].fields) {
+          const payload = conceptData[0].intentJson.results[0].fields;
+          yield put({
+            type: 'getConcept',
+            payload
+          });
+        }
       }
-      // yield call(submitQa, {
-      //   clientType: 'pc',
-      //   question: decodeURIComponent(q),
-      //   answerStatus: res.data.code === 200 ? 'yes' : 'no',
-      //   ip: '192.168.22.13',
-      //   user_id: userId
-      // });
+
       if (q && decodeURIComponent(q)) {
         if (res.data.code === 200) {
           yield put({
@@ -99,6 +105,23 @@ export default {
               ip: '192.168.22.13',
               user_id: userId,
               topic: topicName || ''
+            }
+          });
+        }
+      }
+    },
+    *getConcept({ payload }, { call, put }) {
+      const res = yield call(getConcept, payload);
+
+      if (res.data.Code === 0) {
+        if (
+          (Array.isArray(res.data.Data) && res.data.Data.length) ||
+          !Array.isArray(res.data.Data)
+        ) {
+          yield put({
+            type: 'save',
+            payload: {
+              conceptData: res.data.Data
             }
           });
         }
@@ -252,7 +275,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.list
+            helpList: res.data.result.dataList
           }
         });
       }
@@ -273,7 +296,7 @@ export default {
       const res = yield call(setQuestion, payload);
       if (res.data.result) {
         yield put({ type: 'save', payload: { visible: false } });
-        router.push('/help/myHelp');
+        router.push(`/personCenter/people/ask?userName=${payload.uId}`);
       } else {
         message.error(res.data.msg);
       }
@@ -332,8 +355,8 @@ export default {
               }
             });
           }
-
-          if (q.trim()) {
+          console.log('q', q);
+          if (q && q.trim()) {
             //重置问题
             dispatch({
               type: 'global/setQuestion',
@@ -353,10 +376,14 @@ export default {
                 relatedData: [],
                 helpList: [],
                 communityAnswer: null,
-                relaventQuestions: []
+                relaventQuestions: [],
+                conceptData: null
               }
             });
-
+            dispatch({ type: 'collectQuestion', payload: { q, userId } });
+            dispatch({
+              type: 'getHotHelpList'
+            });
             if (topic) {
               if (topic === 'YD') {
                 dispatch({
@@ -429,10 +456,6 @@ export default {
                 payload: { q: encodeURIComponent(q && q.replace(/？/g, '')), userId }
               });
             }
-            dispatch({ type: 'collectQuestion', payload: { q, userId } });
-            dispatch({
-              type: 'getHotHelpList'
-            });
           }
         }
       });

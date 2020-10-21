@@ -58,7 +58,8 @@ function ResultPage(props) {
     fetchLiterature,
     fetchSg,
     fetchSemanticData,
-    answerData
+    answerData,
+    conceptData
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -135,7 +136,8 @@ function ResultPage(props) {
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
-  const conceptData = repositoryData.filter(item => item.template === 'concept'); //知识元数据
+  const conceptInfo = repositoryData.filter(item => item.template === 'concept'); //知识元数据
+  
 
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
@@ -185,13 +187,13 @@ function ResultPage(props) {
     });
   }
 
-  function myReply() {
-    if (localStorage.getItem('userInfo')) {
-      router.push(`reply?q=${encodeURIComponent(q)}`);
-    } else {
-      message.warn('请您登录后再操作');
-    }
-  }
+  // function myReply() {
+  //   if (localStorage.getItem('userInfo')) {
+  //     router.push(`reply?q=${encodeURIComponent(q)}`);
+  //   } else {
+  //     message.warn('请您登录后再操作');
+  //   }
+  // }
 
   return (
     <div className={styles.result} id="result">
@@ -202,9 +204,9 @@ function ResultPage(props) {
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
             社区求助
           </span>
-          <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
+          {/* <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
             我来回答
-          </span>
+          </span> */}
         </div>
 
         <Row gutter={24}>
@@ -304,12 +306,7 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  {
-                    conceptData.length ? conceptData.map(item => <Concept
-                        key={item.id}
-                        data ={item.intentJson}
-                      />) :null
-                  }  
+                  {conceptData ? <Concept data={conceptData} intentJson={conceptInfo[0].intentJson} /> : null}
 
                   {yearbookData.length
                     ? yearbookData.map((item) => (
@@ -396,11 +393,11 @@ function ResultPage(props) {
                   {faqData.length ? (
                     <div>
                       {faqData.map((item) => (
-                        <FAQ key={item.id} data={item} />
+                        <FAQ key={item.id} data={item} q={q} />
                       ))}
                     </div>
                   ) : null}
-                  {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
+                  {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} /> : null}
                   {semanticData.length ? <ReadComp data={semanticData} /> : null}
                   {translateData.length

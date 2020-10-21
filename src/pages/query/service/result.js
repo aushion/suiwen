@@ -1,3 +1,4 @@
+import axios from 'axios';
 import request from '../../../utils/request';
 
 export function getAnswer(payload) {
@@ -48,7 +49,7 @@ export function setEvaluate(payload) {
 }
 
 export function getHotHelpList() {
-  return request.get('/getNewQuestion', {
+  return request.post('/community/getNewQuestion', null, {
     params: {
       pageSize: 5,
       pageStart: 1
@@ -71,7 +72,7 @@ export function getCustomView(payload) {
 }
 
 export function setQuestion(payload) {
-  return request.post(process.env.apiUrl + '/commitQuestion', null, {
+  return request.post(process.env.apiUrl + '/community/commitQuestion', null, {
     params: {
       ...payload
     }
@@ -103,4 +104,24 @@ export function submitQa(payload) {
       ...payload
     }
   });
+}
+
+// 知识元
+
+export function getConcept(payload) {
+  const { 概念, focus } = payload;
+  if (focus === '基本定义') {
+    return axios.post(`http://sxzsy.cnki-shanxi.net:8044/api/Concept/GetTermDataList`, null, {
+      params: {
+        term: 概念
+      }
+    });
+  } else {
+    return axios.post(`http://sxzsy.cnki-shanxi.net:8044/api/Concept/GetConceptDataList`, null, {
+      params: {
+        termName: 概念,
+        attrType: focus
+      }
+    });
+  }
 }

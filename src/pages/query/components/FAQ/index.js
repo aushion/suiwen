@@ -31,6 +31,10 @@ function FAQ(props) {
   }
   return (
     <div className={styles.FAQ}>
+      <h2>
+        <span style={{color: '#1890ff'}}>{props.q}</span>
+        <span> - 知网{domain}问答库</span>
+      </h2>
       <div className={styles.wrapper}>
         <div className={styles.icon}>Q</div>
         <div
