@@ -8,23 +8,41 @@
     font-size: 18px;
   }
   .card {
-    ol > li {
-      padding-bottom: 10px;
+    .content {
+      padding: 10px 0 20px;
       color: #333;
       letter-spacing: 2px;
       line-height: 24px;
       text-align: left;
-      .source {
-        display: flex;
-        justify-content: flex-end;
+    }
+    .item {
+      padding: 4px 8px;
+      border: 1px solid lightblue;
+      margin-right: 10px;
+      border-radius: 4px;
+      &:hover {
+        background-color: #1890ff;
+        color: #fff;
       }
     }
+    ol > li {
+      padding: 10px 0;
+      color: #333;
+      letter-spacing: 2px;
+      line-height: 24px;
+      text-align: left;
+      
+    }
+    .source {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
-  .more{
-    color: #999;
+  .more {
+    color: #c4c4c4;
     display: flex;
     justify-content: flex-end;
-    &:hover{
+    &:hover {
       color: #1890ff;
     }
   }

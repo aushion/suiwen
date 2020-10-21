@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Row, Col, Card, List, Select } from 'antd';
 import { connect } from 'dva';
+import { Link } from 'umi';
 import UserInfo from '../help/components/UserInfo';
 import RestTools from '../../utils/RestTools';
 import styles from './index.less';
@@ -78,9 +79,11 @@ function Notify(props) {
                         </span>
                         <span>{item.createDate}</span>
                       </div>
-                      <div style={{ color: '#333', fontWeight: 'bold' }}>
+                      <Link style={{ color: '#333', fontWeight: 'bold' }} to={
+                        `/reply?q=${item.content}&QID=${item.groupId}`
+                      }>
                         {RestTools.formatPhoneNumber(item.content)}
-                      </div>
+                      </Link>
                     </List.Item>
                   );
                 }}

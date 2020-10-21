@@ -109,9 +109,9 @@ function ToolsBook(props) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span>{RestTools.getKeyword(data[0].dataNode[0].Title)}</span>
+          <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
         </a>
-        -知网工具书
+        - 知网工具书
       </h2>
       <div className={styles.tags}>
         {initData &&

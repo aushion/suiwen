@@ -60,7 +60,7 @@ function AnswerForm(props) {
           payload = {
             content: submitData.contents,
             resource: submitData.resource,
-            uId: props.uid,
+            userName: props.uid,
             domain: '',
             question: params.q
           };

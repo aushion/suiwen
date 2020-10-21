@@ -65,8 +65,12 @@ function CommentItem({ answerList, item, dispatch, entityId, qId }) {
           userName: userCommunityInfo.userName
         }
       }).then((res) => {
+      
         if (res.code === 200) {
           getComment();
+        }else{
+         
+          message.warning(res.msg)
         }
       });
     }

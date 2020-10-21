@@ -112,7 +112,7 @@ export default {
             : null;
           const current = pathname;
           window.document.title = `知网随问-社区`;
-
+          sessionStorage.removeItem('q');
           dispatch({
             type: 'saveList',
             payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 }

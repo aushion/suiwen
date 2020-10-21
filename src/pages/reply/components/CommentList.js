@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { List, Avatar } from 'antd';
+import { List, Avatar, message } from 'antd';
 import SwTextArea from '../../../components/SwTextArea';
 import replyStyle from '../index.less';
 import CommentItem from './CommentItem';
@@ -44,6 +44,8 @@ function CommentList(props) {
               payload: { answerList: res }
             });
           });
+        } else {
+          message.warning(res.msg);
         }
       });
     }
