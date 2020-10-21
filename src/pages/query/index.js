@@ -58,7 +58,8 @@ function ResultPage(props) {
     fetchLiterature,
     fetchSg,
     fetchSemanticData,
-    answerData
+    answerData,
+    conceptData
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -131,15 +132,12 @@ function ResultPage(props) {
   const weather = repositoryData.filter((item) => item.template === 'weather');
   const kaifangyuData = repositoryData.filter((item) => item.template === 'graphic'); //开放域
   const translateData = repositoryData.filter((item) => item.template === 'translate'); //翻译
-  // const lawpostData = repositoryData.filter((item) => item.template === 'lawpost'); //法规篇
-  // const lawitemData = repositoryData.filter((item) => item.template === 'lawitem'); //法条
-  // const lawcaseData = repositoryData.filter((item) => item.template === 'lawcase'); //法规案例
+
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
-
-
-  const conceptData = repositoryData.filter(item => item.template === 'concept'); //知识元数据
+  const conceptInfo = repositoryData.filter(item => item.template === 'concept'); //知识元数据
+  
 
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
@@ -308,12 +306,7 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  {
-                    conceptData.length ? conceptData.map(item => <Concept
-                        key={item.id}
-                        data ={item.intentJson}
-                      />) :null
-                  }  
+                  {conceptData ? <Concept data={conceptData} intentJson={conceptInfo[0].intentJson} /> : null}
 
                   {yearbookData.length
                     ? yearbookData.map((item) => (
@@ -400,11 +393,11 @@ function ResultPage(props) {
                   {faqData.length ? (
                     <div>
                       {faqData.map((item) => (
-                        <FAQ key={item.id} data={item} />
+                        <FAQ key={item.id} data={item} q={q} />
                       ))}
                     </div>
                   ) : null}
-                  {communityAnswer ? <CommunityAnswer data={communityAnswer} /> : null}
+                  {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} /> : null}
                   {semanticData.length ? <ReadComp data={semanticData} /> : null}
                   {translateData.length

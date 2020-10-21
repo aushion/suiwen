@@ -8,13 +8,13 @@ import FollowButton from '../FollowButton';
 function CaAvatar({ userName, showFollowBtn = true }) {
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const loginUser = sessionStorage.getItem('userCommunityInfo')
-    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
+  const loginUser = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
   function fetchUser() {
     setLoading(true);
     helpServer
-      .getUserCommunityInfo({ userName, operator: loginUser.userName })
+      .getUserCommunityInfo({ userName, operator: loginUser.UserName })
       .then((res) => {
         if (res.data.code === 200) {
           setUserInfo(res.data.result);

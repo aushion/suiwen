@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'umi/link';
+import { Icon } from 'antd';
 import Evaluate from '../Evaluate';
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 import arrow_down from '../../../../assets/arrow_down.png';
 import arrow_up from '../../../../assets/arrow_up.png';
+import CaAvatar from '../../../../components/CaAvatar';
 
 const CommunityAnswer = (props) => {
   const { question, prepared_ANSWER, user_NAME, answer_ID, time, qid, evaluate } = props.data;
@@ -33,13 +35,28 @@ const CommunityAnswer = (props) => {
 
   return (
     <div className={styles.CommunityAnswer}>
+      <h2>
+        {/* <Link
+          to={`/reply?q=${encodeURIComponent(question)}&QID=${qid}`}
+          target="_blank"
+          className={styles.CommunityAnswer_question}
+        >
+
+        </Link> */}
+        <span> 知网随问社区问答</span>
+      </h2>
       <Link
         to={`/reply?q=${encodeURIComponent(question)}&QID=${qid}`}
         target="_blank"
-        className={styles.CommunityAnswer_question}
+        style={{ display: 'block', fontSize: 17, color: '#1890ff', paddingBottom: 10, fontWeight: '400' }}
       >
-        {question + '_网友回答'}
+        <Icon type="question-circle" style={{ color: '#1890ff', marginRight: 4 }} />
+        {question}
       </Link>
+      <div style={{ paddingBottom: 6 }}>
+        <CaAvatar userName={user_NAME} showFollowBtn={false} />
+      </div>
+
       <div
         onClick={(e) => handleClick(e, prepared_ANSWER)}
         className={styles.CommunityAnswer_answer}
@@ -47,10 +64,10 @@ const CommunityAnswer = (props) => {
       />
 
       <div className={styles.CommunityAnswer_more}>
-        <span style={{ marginRight: 20 }}>
+        {/* <span style={{ marginRight: 20 }}>
           网友：
           {RestTools.formatPhoneNumber(user_NAME)}
-        </span>
+        </span> */}
         <span>{time ? time : '-'}</span>
       </div>
       <div>
