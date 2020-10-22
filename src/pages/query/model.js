@@ -355,7 +355,7 @@ export default {
               }
             });
           }
-          console.log('q', q);
+         
           if (q && q.trim()) {
             //重置问题
             dispatch({

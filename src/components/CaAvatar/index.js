@@ -34,7 +34,7 @@ function CaAvatar({ userName, showFollowBtn = true }) {
           <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
         </div>
       ) : (
-        <Link to={`personCenter/people/ask?userName=${userName}`} target="_blank">
+        <Link to={`/personCenter/people/ask?userName=${userName}`} target="_blank">
           <Popover
             placement="bottomLeft"
             content={

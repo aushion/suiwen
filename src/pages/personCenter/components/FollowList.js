@@ -7,13 +7,17 @@ import FollowButton from '../../../components/FollowButton';
 import RestTools from '../../../utils/RestTools';
 
 function FollowList(props) {
-  const { data, loading, userCommunityInfo } = props;
+  const { data, loading, userCommunityInfo, pagination } = props;
+  const loginUserInfo = window.localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
 
   return (
     <div>
       <List
         loading={loading}
         dataSource={data}
+        pagination={{ ...pagination, hideOnSinglePage: true }}
         renderItem={(item, index) => {
           return (
             <List.Item>
@@ -32,7 +36,17 @@ function FollowList(props) {
                   />
                 </div>
                 <div style={{ float: 'left', overflow: 'hidden', paddingLeft: 10 }}>
-                  <div style={{ fontSize: 16 }}>{RestTools.formatPhoneNumber(item.userName)}</div>
+                  <div
+                    onClick={() => {
+                      if (userCommunityInfo.userName !== item.userName) {
+                        router.push(`/personCenter/people/ask?userName=${item.userName}`);
+                      }
+                      return;
+                    }}
+                    style={{ fontSize: 16 }}
+                  >
+                    {RestTools.formatPhoneNumber(item.userName)}
+                  </div>
                   <div style={{ color: '#999', fontWeight: 400, paddingTop: 16 }}>
                     <span style={{ paddingRight: 4 }}>
                       {' '}
@@ -57,7 +71,7 @@ function FollowList(props) {
                 <FollowButton
                   hasFollowed={item.hasFollowed}
                   currentUser={item.userName}
-                  loginUserInfo={userCommunityInfo}
+                  loginUserInfo={loginUserInfo}
                 />
               </div>
             </List.Item>

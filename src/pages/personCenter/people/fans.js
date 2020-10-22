@@ -3,6 +3,7 @@ import { Divider } from 'antd';
 import { connect } from 'dva';
 import FollowList from '../components/FollowList';
 import styles from './people.less';
+import RestTools from '../../../utils/RestTools';
 
 function Fans(props) {
   const { fans, loading, dispatch, location } = props;
@@ -15,11 +16,21 @@ function Fans(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? '我的粉丝' : '他的粉丝'}
+          {userInfo?.UserName === userName ? '我的粉丝' : `${RestTools.formatPhoneNumber(userName)}的粉丝`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
-          <FollowList data={fans} dispatch={dispatch} stateName="fans" loading={loading} />
+          <FollowList
+            data={fans.dataList}
+            pagination={{
+              pageSize: fans.pageCount || 10,
+              current: fans.pageNum,
+              total: fans.total
+            }}
+            dispatch={dispatch}
+            stateName="fans"
+            loading={loading}
+          />
         </div>
       </div>
     </div>

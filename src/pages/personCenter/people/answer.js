@@ -7,7 +7,7 @@ import FoldText from '../../../components/FoldText';
 import styles from './people.less';
 
 function Answer(props) {
-  const { myCommunityAnswer, avatar, loading, location } = props;
+  const { myCommunityAnswer, avatar, loading, location, dispatch } = props;
   const { query } = location;
   const { userName } = query;
   const userInfo = localStorage.getItem('userInfo')
@@ -17,7 +17,7 @@ function Answer(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? `我的回答` : `他的回答`}
+          {userInfo?.UserName === userName ? `我的回答` : `${RestTools.formatPhoneNumber(userName)}的回答`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
@@ -30,7 +30,18 @@ function Answer(props) {
                     hideOnSinglePage: true,
                     pageSize: myCommunityAnswer.pageCount,
                     size: myCommunityAnswer.pageNum,
-                    total: myCommunityAnswer.total
+                    total: myCommunityAnswer.total,
+                    onChange: (page) => {
+                      dispatch({
+                        type: 'personCenter/getMyCommunityAnswer',
+                        payload: {
+                          operatorName: userInfo.UserName,
+                          pageSize: 10,
+                          pageStart: page,
+                          userName
+                        }
+                      });
+                    }
                   }
                 : null
             }
@@ -47,7 +58,9 @@ function Answer(props) {
                   </Link>
                   <div style={{ padding: '10px 0' }}>
                     <Avatar src={avatar} />
-                    <span style={{paddingLeft: 4}}>{RestTools.formatPhoneNumber(item.answer[0].userName)}</span>
+                    <span style={{ paddingLeft: 4 }}>
+                      {RestTools.formatPhoneNumber(item.answer[0].userName)}
+                    </span>
                   </div>
 
                   <FoldText
@@ -66,7 +79,7 @@ function Answer(props) {
                     <span style={{ marginRight: 14 }}>{item.total}个回答</span>
                     <span style={{ marginRight: 14 }}>{item.followers}个关注</span>
 
-                  <span>发布于{item.answer[0].replyTime}</span>
+                    <span>发布于{item.answer[0].replyTime}</span>
                   </div>
                 </List.Item>
               );

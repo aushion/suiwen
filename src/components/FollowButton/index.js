@@ -33,34 +33,23 @@ function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
     '3': followedStyle
   };
 
-  function handleMouseOver() {
-    if (followStatus === 2 || followStatus === 3) {
-      updateStatus(4);
-    }
-  }
-
-  function handleMouseLeave() {
-    if (followStatus === 1) {
-      return;
-    }
-    updateStatus(hasFollowed);
-  }
-
   function handleFollow() {
     //修改本地状态使其实时修改页面显示
+
     if (followStatus === 0) {
       return;
     }
-    if (followStatus === 4) {
+    if (followStatus === 3 || followStatus === 2) {
       updateStatus(1);
-    } else if (followStatus === 1) {
+    }
+    if (followStatus === 1) {
       updateStatus(2);
     }
 
     //发起请求服务端去修改状态
     const payload = {
       followUser: currentUser,
-      userId: loginUserInfo.userName
+      userId: loginUserInfo.UserName
     };
     if (followStatus === 1) {
       helpServer.followUser(payload);
@@ -71,8 +60,8 @@ function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
 
   return (
     <Button
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseLeave}
+      // onMouseOver={handleMouseOver}
+      // onMouseLeave={handleMouseLeave}
       onClick={throttle(() => {
         handleFollow();
       }, 200)}

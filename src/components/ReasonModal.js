@@ -20,7 +20,7 @@ function ReasonModal({ visible, handleOk, triggerCancel, id }) {
 
   return (
     <Modal
-      title="审核不通过原因"
+      title="举报原因"
       visible={visible}
       onOk={() => {
         if (value) {

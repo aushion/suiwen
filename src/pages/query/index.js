@@ -420,7 +420,7 @@ function ResultPage(props) {
               </Skeleton>
 
               <Skeleton loading={fetchSg} active>
-                {sgData.length ? <SgList data={sgData} /> : null}
+                {sgData.length ? <SgList data={sgData} q={q} /> : null}
               </Skeleton>
 
               <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData}>

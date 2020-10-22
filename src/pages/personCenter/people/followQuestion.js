@@ -3,9 +3,10 @@ import { Divider, List } from 'antd';
 import { connect } from 'dva';
 import { Link } from 'umi';
 import styles from './people.less';
+import RestTools from '../../../utils/RestTools';
 
 function FollowQuestion(props) {
-  const { userFollowQuestion, loading, location } = props;
+  const { userFollowQuestion, loading, location, dispatch } = props;
   const { query } = location;
   const { userName } = query;
   const userInfo = localStorage.getItem('userInfo')
@@ -15,14 +16,30 @@ function FollowQuestion(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? '我关注的问题' : '他关注的问题'}
+          {userInfo?.UserName === userName ? '我关注的问题' : `${RestTools.formatPhoneNumber(userName)}关注的问题`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
           <List
             loading={loading}
             itemLayout="vertical"
-            dataSource={userFollowQuestion}
+            dataSource={userFollowQuestion.dataList}
+            pagination={{
+              pageSize: userFollowQuestion.pageCount || 10,
+              current: userFollowQuestion.pageNum,
+              total: userFollowQuestion.total,
+              onChange: (page) => {
+                dispatch({
+                  type: 'personCenter/getUserFollowedQuestion',
+                  payload: {
+                    operatorName: userInfo.UserName,
+                    pageSize: 10,
+                    pageStart: page,
+                    userName
+                  }
+                });
+              }
+            }}
             renderItem={(item) => {
               return (
                 <List.Item>

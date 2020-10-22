@@ -12,7 +12,7 @@ function Journal(props) {
             const size = item.核心期刊版次 ? 'mid' : 'mid';
             return (
               <div
-                key={item.ID}
+                key={index}
                 className={styles.Journal_wrapper}
                 style={{ borderBottom: index === data.length - 1 ? 'none' : '1px dashed #ccc' }}
               >

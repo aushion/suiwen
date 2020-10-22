@@ -125,10 +125,10 @@ function BasicLayout(props) {
           </div>
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-            <span className={styles.tips}>
+          
               {username ? (
                 <>
-                  <span style={{ cursor: 'pointer', marginRight: 20 }}>
+                  <span style={{ cursor: 'pointer', marginRight: 20,verticalAlign:'middle' }}>
                     <MessageBox userName={username} />
                   </span>
                   <Link
@@ -152,7 +152,7 @@ function BasicLayout(props) {
                   </button>
                 </>
               ) : null}
-            </span>
+          
             {username ? null : (
               <Button
                 className={styles.login_btn}

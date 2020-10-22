@@ -6,7 +6,7 @@ import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 import arrow_down from '../../../../assets/arrow_down.png';
 import arrow_up from '../../../../assets/arrow_up.png';
-import CaAvatar from '../../../../components/CaAvatar';
+// import CaAvatar from '../../../../components/CaAvatar';
 
 const CommunityAnswer = (props) => {
   const { question, prepared_ANSWER, user_NAME, answer_ID, time, qid, evaluate } = props.data;
@@ -36,25 +36,28 @@ const CommunityAnswer = (props) => {
   return (
     <div className={styles.CommunityAnswer}>
       <h2>
-        {/* <Link
+        <Link
           to={`/reply?q=${encodeURIComponent(question)}&QID=${qid}`}
           target="_blank"
-          className={styles.CommunityAnswer_question}
+          // className={styles.CommunityAnswer_question}
         >
-
-        </Link> */}
-        <span> 知网随问社区问答</span>
+          {props.q}
+        </Link>
+        <span> - 随问社区</span>
       </h2>
-      <Link
-        to={`/reply?q=${encodeURIComponent(question)}&QID=${qid}`}
-        target="_blank"
-        style={{ display: 'block', fontSize: 17, color: '#1890ff', paddingBottom: 10, fontWeight: '400' }}
+      <div
+        // to={`/reply?q=${encodeURIComponent(question)}&QID=${qid}`}
+        // target="_blank"
+        style={{
+          display: 'block',
+          fontSize: 17,
+          paddingBottom: 10,
+          fontWeight: '400',
+          textIndent: '1em'
+        }}
       >
         <Icon type="question-circle" style={{ color: '#1890ff', marginRight: 4 }} />
         {question}
-      </Link>
-      <div style={{ paddingBottom: 6 }}>
-        <CaAvatar userName={user_NAME} showFollowBtn={false} />
       </div>
 
       <div
@@ -64,10 +67,10 @@ const CommunityAnswer = (props) => {
       />
 
       <div className={styles.CommunityAnswer_more}>
-        {/* <span style={{ marginRight: 20 }}>
+        <span style={{ marginRight: 20 }}>
           网友：
           {RestTools.formatPhoneNumber(user_NAME)}
-        </span> */}
+        </span>
         <span>{time ? time : '-'}</span>
       </div>
       <div>

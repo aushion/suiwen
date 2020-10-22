@@ -3,9 +3,10 @@ import { Divider, List } from 'antd';
 import { Link } from 'umi';
 import { connect } from 'dva';
 import styles from './people.less';
+import RestTools from '../../../utils/RestTools';
 
 function People(props) {
-  const { myCommunityQuestion, loading, location } = props;
+  const { myCommunityQuestion, loading, location, dispatch } = props;
   const { query } = location;
   const { userName } = query;
   const userInfo = localStorage.getItem('userInfo')
@@ -15,7 +16,7 @@ function People(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? `我的提问` : `他的提问`}
+          {userInfo?.UserName === userName ? `我的提问` : `${RestTools.formatPhoneNumber(userName)}的提问`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
@@ -29,7 +30,18 @@ function People(props) {
                     hideOnSinglePage: true,
                     pageSize: myCommunityQuestion?.pageCount,
                     size: myCommunityQuestion?.pageNum,
-                    total: myCommunityQuestion?.total
+                    total: myCommunityQuestion?.total,
+                    onChange:(page)=>{
+                      dispatch({
+                        type: 'personCenter/getMyCommunityQuestion',
+                        payload:{
+                          operatorName: userInfo.UserName,
+                          pageSize: 10,
+                          pageStart:page,
+                          userName
+                        }
+                      })
+                    }
                   }
                 : null
             }

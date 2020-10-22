@@ -11,9 +11,7 @@ import ReasonModal from '../../../components/ReasonModal';
 let timer = null;
 function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerList, qId }) {
   const [newComment, setNewComment] = useState('');
-  const [modalState, setModalState] = useState({
-    visible: false
-  });
+  const [modalState, setModalState] = useState({ visible: false });
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
@@ -54,6 +52,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
   }
 
   function sendComment(replyUserName) {
+
     if (newComment && userCommunityInfo) {
       dispatch({
         type: 'reply/replyComment',
@@ -67,6 +66,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
       }).then((res) => {
         if (res.code === 200) {
           getComment('time');
+          setNewComment('');
         }
       });
     }

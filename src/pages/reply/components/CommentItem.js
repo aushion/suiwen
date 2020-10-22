@@ -68,6 +68,7 @@ function CommentItem({ answerList, item, dispatch, entityId, qId }) {
       
         if (res.code === 200) {
           getComment();
+          addReply('')
         }else{
          
           message.warning(res.msg)

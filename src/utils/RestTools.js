@@ -359,7 +359,7 @@ export default {
     农业: { enText: 'Agriculture', topic: 'NY' }
   },
   followStatus: {
-    '0': 'self',
+    '0': '我',
     '1': '关注',
     '2': '已关注',
     '3': '互相关注',
