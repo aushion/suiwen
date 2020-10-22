@@ -49,7 +49,7 @@ export function setEvaluate(payload) {
 }
 
 export function getHotHelpList() {
-  return request.post('/community/getNewQuestion', null, {
+  return request.get('/getNewQuestion', {
     params: {
       pageSize: 5,
       pageStart: 1

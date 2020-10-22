@@ -275,7 +275,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.dataList
+            helpList: res.data.result.list
           }
         });
       }
@@ -355,7 +355,7 @@ export default {
               }
             });
           }
-          console.log('q', q);
+
           if (q && q.trim()) {
             //重置问题
             dispatch({

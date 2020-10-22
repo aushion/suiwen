@@ -6,7 +6,7 @@ import FoldText from '../../../../components/FoldText';
 import styles from './index.less';
 
 function SgList(props) {
-  const { data, needEvaluate = true } = props;
+  const { data, needEvaluate = true,  } = props;
   const groupByData = groupBy(data, 'id');
   const keys = Object.keys(groupByData);
   // const [sgData, updateData] = useState(groupByData);
@@ -14,6 +14,7 @@ function SgList(props) {
 
   return (
     <div className={`${styles.SgList} copy`} id="sg">
+      <h2>知网期刊 - 片段优选汇聚</h2>
       {keys.map((item, keyIndex) => {
         const year = (sgData[item][0].sgAdditionInfo && sgData[item][0].sgAdditionInfo.年) || '';
         // const qikan = sgData[item][0].Data.additional_info && sgData[item][0].Data.additional_info.来源数据库 || '';
@@ -23,7 +24,7 @@ function SgList(props) {
           <div key={item} className={styles.wrapper}>
             <List
               itemLayout="vertical"
-              dataSource={sgData[item]}
+              dataSource={sgData[item].slice(0,1)}
               footer={
                 <div
                   style={{ textAlign: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}
@@ -73,7 +74,7 @@ function SgList(props) {
               }
               renderItem={(item) => {
                 return (
-                  <List.Item style={{ overflow: 'hidden' }}>
+                  <List.Item style={{ overflow: 'hidden',border:'none'}}>
                     <FoldText
                       originText={item.data.context}
                       fullText={item.data.context + item.data.sub_context}

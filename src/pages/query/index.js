@@ -147,10 +147,12 @@ function ResultPage(props) {
     : []; //相关专利
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
-
+  const sgCount = [...new Set(sgData.map(item => item.id))].length;
+  const conceptCount = conceptData ? 1:0;
   const resultLength =
     // cnkizhishi.length +
-    sgData.length +
+    conceptCount+
+    sgCount +
     semanticData.length +
     faqData.length +
     referenceBookData.length +
@@ -187,13 +189,13 @@ function ResultPage(props) {
     });
   }
 
-  // function myReply() {
-  //   if (localStorage.getItem('userInfo')) {
-  //     router.push(`reply?q=${encodeURIComponent(q)}`);
-  //   } else {
-  //     message.warn('请您登录后再操作');
-  //   }
-  // }
+  function myReply() {
+    if (localStorage.getItem('userInfo')) {
+      router.push(`reply?q=${encodeURIComponent(q)}`);
+    } else {
+      message.warn('请您登录后再操作');
+    }
+  }
 
   return (
     <div className={styles.result} id="result">
@@ -204,9 +206,9 @@ function ResultPage(props) {
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
             社区求助
           </span>
-          {/* <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
+          <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
             我来回答
-          </span> */}
+          </span>
         </div>
 
         <Row gutter={24}>
