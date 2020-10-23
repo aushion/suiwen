@@ -87,7 +87,7 @@ export default {
     return request.post(serverUrl + `/getDetailByQuestion`, null, {
       params: {
         qId: QID,
-        sort: 'hot',
+        sort: 'time',
         pageSize: 10,
         pageStart: 1,
         userId: uid

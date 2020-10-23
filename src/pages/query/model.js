@@ -73,7 +73,7 @@ export default {
           source: 'getAnswer'
         });
 
-        if (conceptData[0].intentJson.results[0].fields) {
+        if (conceptData[0]?.intentJson?.results[0]?.fields) {
           const payload = conceptData[0].intentJson.results[0].fields;
           yield put({
             type: 'getConcept',

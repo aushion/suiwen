@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Input, message, Tag, Divider } from 'antd';
+import { Modal, message, Tag, Divider, Input } from 'antd';
 import { router } from 'umi';
-import request from '../../utils/request';
+import { find } from 'lodash';
 
+import request from '../../utils/request';
 const { TextArea } = Input;
 const { CheckableTag } = Tag;
 function AskModal({ visible, q = '', onTriggerCancel }) {
@@ -12,6 +13,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   const [domainChildren, setDomainChildren] = useState(null);
   const [selectedTags, updateCheckedTag] = useState([]);
   const [selectedRoot, setSelectedRoot] = useState(null);
+
 
   const rootTagStyle = {
     background: '#F5F5F5',
@@ -34,7 +36,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   };
 
   useEffect(() => {
-    if (visible) {
+    if (visible && q) {
       request
         .post('/community/getCommunityClass')
         .then((res) => {
@@ -48,7 +50,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
     }
 
     return () => {};
-  }, [visible]);
+  }, [visible, q]);
 
   function changeQuestion(e) {
     setSubmitQ(e.target.value);
@@ -91,18 +93,21 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   function reset() {
     setDomainChildren(null);
     setSelectedRoot(null);
-    updateCheckedTag([]);
+    updateCheckedTag(selectedTags);
+    setSubmitQ('');
   }
 
   function handleClickRoot(item) {
     setDomainChildren(item.communityClassList);
     setSelectedRoot(item.cId);
+    updateCheckedTag([])
   }
 
   function handleChange(tag, checked) {
     const nextSelectedTags = checked
       ? [...selectedTags, tag.cId]
       : selectedTags.filter((t) => t !== tag.cId);
+   
     updateCheckedTag(nextSelectedTags);
   }
   return (
@@ -116,7 +121,13 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       onOk={submitQuestion}
       confirmLoading={loading}
     >
-      <TextArea rows={4} value={submitQ} onChange={changeQuestion} />
+      <TextArea
+        maxLength={200}
+        showButton={false}
+        value={submitQ}
+        rows={4}
+        onChange={changeQuestion}
+      />
       <Divider />
       <div>
         <div>选择标签</div>
@@ -134,8 +145,8 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
                 </Tag>
               ))
             : null}
-        </div> 
-        <Divider dashed />
+        </div>
+
         <div>
           {domainChildren
             ? domainChildren.map((item) => (
@@ -154,9 +165,20 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
               ))
             : null}
         </div>
-                
+
+        {selectedTags.length && domainChildren.length && selectedRoot.length ? (
+          <div style={{ borderTop: '1px dashed #ccc', paddingTop: 20 }}>
+            <label style={{ fontSize: 12 }}>已选：</label>
+            {selectedTags.map((item) => (
+              <Tag color="green">
+                {find(domain, { cId: selectedRoot }).cName +
+                  '/' +
+                  find(domainChildren, { cId: item }).cName}
+              </Tag>
+            ))}
+          </div>
+        ) : null}
       </div>
-     
     </Modal>
   );
 }

@@ -23,7 +23,6 @@ function QuestionItem({ item }) {
         userName: userInfo.UserName
       })
       .then((res) => {
-        
         if (res.data.code === 200) {
           message.success('感谢您的反馈，共建美好社区');
         } else {
@@ -48,9 +47,9 @@ function QuestionItem({ item }) {
           lineHeight: '28px',
           fontSize: 15,
           cursor: 'pointer',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap'
+          // overflow: 'hidden',
+          // textOverflow: 'ellipsis',
+          // whiteSpace: 'nowrap'
         }}
       >
         <div style={{ display: 'inline-block' }}>
@@ -58,11 +57,18 @@ function QuestionItem({ item }) {
         </div>
 
         <Link
-          style={{ color: '#454749', fontWeight: 800, display: 'block', paddingTop: 6 }}
+          style={{
+            color: '#454749',
+            fontWeight: 800,
+            display: 'block',
+            paddingTop: 6,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
           to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
           target="_blank"
         >
-          {item.content}
+          <span>{item.content}</span>
           <span style={{ marginLeft: 10 }}>
             {item.tag
               ? item.tag.split(',').map((item, index) => (

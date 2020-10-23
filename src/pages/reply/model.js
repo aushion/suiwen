@@ -68,20 +68,24 @@ export default {
     *getAnswer({ payload }, { call, put }) {
       const res = yield call(helpServer.getAnswer, payload);
       const response = res.data;
+
       if (response && response.code === 200) {
-        let answerList = response.result.answer.dataList.map((item) => {
-          return {
-            ...item,
-            showComment: false
-          };
-        });
+        let answerList = response.result.answer
+          ? response.result.answer.dataList.map((item) => {
+              return {
+                ...item,
+                showComment: false
+              };
+            })
+          : [];
+
         yield put({
           type: 'saveAnswers',
           payload: {
             answerList: answerList,
             followers: response.result.followers,
             followed: response.result.followed,
-            total: response.result.answer.total
+            total: response.result.total
           }
         });
       }
@@ -176,7 +180,7 @@ export default {
       const { q, QID } = query;
       const res = yield call(helpServer.editAnswer, payload);
       if (res.data && res.data.code === 200) {
-        message.success('修改成功，感谢您的参与');
+        message.success('修改成功');
         router.push(`reply?q=${q}&QID=${QID}&editStatus=false`);
       } else {
         message.warning(res.data.msg);
@@ -189,7 +193,7 @@ export default {
 
       const res = yield call(helpServer.setQanswer, payload);
       if (res.data && res.data.code === 200) {
-        message.success('回答成功，感谢您的参与');
+        message.success('回答成功');
         router.push(`reply?q=${q}&QID=${QID}`);
       } else {
         message.warning(res.data.msg);

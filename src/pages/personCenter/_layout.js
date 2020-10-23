@@ -25,7 +25,7 @@ function UserLayout(props) {
         <Link to={`/help/newHelp`} style={{verticalAlign:'middle', display: 'flex',padding: 20}}>
           <svg
             t="1603347246432"
-            class="icon"
+            // class="icon"
             viewBox="0 0 1024 1024"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"

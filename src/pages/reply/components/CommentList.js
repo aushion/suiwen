@@ -91,6 +91,7 @@ function CommentList(props) {
 
               <SwTextArea
                 id={data.aid}
+                autoSize
                 maxLength={200}
                 value={newComment}
                 placeholder="输入评论"

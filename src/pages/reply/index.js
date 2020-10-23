@@ -29,7 +29,9 @@ function Reply(props) {
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
   const [showDrawer, setDrawer] = useState(false); //展示抽屉
 
+
   useEffect(() => {
+    
     switchFollowQ(followed);
   }, [followed]);
 

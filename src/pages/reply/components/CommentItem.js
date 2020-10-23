@@ -214,6 +214,7 @@ function CommentItem({ answerList, item, dispatch, entityId, qId }) {
                 <div>
                   <SwTextArea
                     maxLength={200}
+                    autoSize
                     value={newReply}
                     placeholder="输入回复"
                     style={{ width: 550, marginLeft: 10 }}

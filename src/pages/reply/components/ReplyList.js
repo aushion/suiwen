@@ -52,7 +52,6 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
   }
 
   function sendComment(replyUserName) {
-
     if (newComment && userCommunityInfo) {
       dispatch({
         type: 'reply/replyComment',
@@ -249,6 +248,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                 {inputId === k.replyId ? (
                   <div>
                     <SwTextArea
+                      autoSize
                       maxLength={200}
                       value={newComment}
                       placeholder="输入回复"

@@ -29,6 +29,15 @@ function AnswerForm(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answerHelpData]);
 
+  useEffect(() => {
+    if(editStatus && editStatus.answer){
+      setFieldsValue({
+        contents: BraftEditor.createEditorState(editStatus.answer)
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[editStatus])
+
   function submitContent(e) {
     if (userInfo) {
       if (username === userInfo.user_name) {
