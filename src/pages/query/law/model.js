@@ -35,7 +35,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.list
+            helpList: res.data.result.list || res.data.result.dataList
           }
         });
       }

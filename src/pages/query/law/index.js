@@ -43,8 +43,8 @@ function Law({
     <Spin spinning={loading}>
       <div className={styles.law}>
         <Row gutter={24}>
-          <Col span={19}>
-            <Tabs type="card" tabBarGutter={0} tabPosition="left">
+          <Col span={18}>
+            <Tabs type="card" tabBarGutter={0} >
               {repositoryData
                 ? repositoryData.map((item, index) => {
                     return (
@@ -98,7 +98,7 @@ function Law({
             </Tabs>
             {!loading && !repositoryData ? <Empty /> : null}
           </Col>
-          <Col span={5}>
+          <Col span={6}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}

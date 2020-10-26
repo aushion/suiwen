@@ -42,6 +42,19 @@ function BasicLayout(props) {
     setShowLogin(showLoginModal);
   }, [showLoginModal]);
 
+  useEffect(() => {
+    // const logo = document.getElementById('logo');
+    // const inputWrap = document.getElementById('inputWrap');
+    // const paddingLeft = parseInt(window.getComputedStyle(inputWrap)['padding-left']);
+    // const logoWidth = parseInt(window.getComputedStyle(logo).width);
+    // console.log('paddingLeft', paddingLeft);
+    // console.log('logowidth', logoWidth);
+    // console.log('11', 11);
+    // inputWrap.style['padding-left'] = `${paddingLeft - logoWidth}px`;
+    return () => {};
+    // logo.style['margin-right'] = '10px';
+  }, []);
+
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q } });
@@ -99,21 +112,30 @@ function BasicLayout(props) {
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
         <div className={styles.inputGroup}>
-          <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
-            <img src={logo} alt="logo" />
-            {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
-          </div>
+          <div
+            className={`${styles.wrap} display_flex align-items_center`}
+           
+            id="inputWrap"
+          >
+            <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo} id="logo">
+              <img src={logo} alt="logo" />
+              {name ? (
+                <span id="logoText" style={{ fontSize: 20, paddingLeft: 5 }}>
+                  {name}
+                </span>
+              ) : null}
+            </div>
 
-          <div className={`${styles.inputWrap} display_flex`}>
-            <SmartInput
-              question={q}
-              needTip
-              onClickEnter={handleClickEnterOrItem}
-              onClickItem={handleClickEnterOrItem}
-              themeColor={themeColor}
-            />
+            <div className={`${styles.inputWrap} display_flex`}>
+              <SmartInput
+                question={q}
+                needTip
+                onClickEnter={handleClickEnterOrItem}
+                onClickItem={handleClickEnterOrItem}
+                themeColor={themeColor}
+              />
 
-            {/* <Button
+              {/* <Button
               className={styles.askBtn}
               type="link"
               onClick={() => {
@@ -122,37 +144,38 @@ function BasicLayout(props) {
             >
               社区提问
             </Button> */}
+            </div>
           </div>
           <div className={styles.login}>
             {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-          
-              {username ? (
-                <>
-                  <span style={{ cursor: 'pointer', marginRight: 20,verticalAlign:'middle' }}>
-                    <MessageBox userName={username} />
-                  </span>
-                  <Link
-                    style={{ color: '#fff', marginLeft: 10 }}
-                    to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
-                    target="_blank"
-                  >
-                    <Avatar
-                      size="small"
-                      src={
-                        avatar ||
-                        `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                          userInfo ? userInfo.UserName : ''
-                        }`
-                      }
-                    />
-                    <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                  </Link>
-                  <button onClick={logout} className={styles.login_btn}>
-                    退出
-                  </button>
-                </>
-              ) : null}
-          
+
+            {username ? (
+              <>
+                <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
+                  <MessageBox userName={username} />
+                </span>
+                <Link
+                  style={{ color: '#fff', marginLeft: 10 }}
+                  to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                  target="_blank"
+                >
+                  <Avatar
+                    size="small"
+                    src={
+                      avatar ||
+                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                        userInfo ? userInfo.UserName : ''
+                      }`
+                    }
+                  />
+                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                </Link>
+                <button onClick={logout} className={styles.login_btn}>
+                  退出
+                </button>
+              </>
+            ) : null}
+
             {username ? null : (
               <Button
                 className={styles.login_btn}
@@ -161,8 +184,6 @@ function BasicLayout(props) {
                   setShowLogin(true);
                   setShowRegister(false);
                 }}
-                // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-                // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
               >
                 登录
               </Button>
