@@ -182,7 +182,7 @@ function Home(props) {
                 return (
                   <Link
                     className={homeStyles.questions_item}
-                    to={`/query?topic=${item.info.topic}&topicName=${encodeURIComponent(
+                    to={`/query`+(item.name === '法律' ? `/law`:``)+`?topic=${item.info.topic}&topicName=${encodeURIComponent(
                       item.name
                     )}&q=${encodeURIComponent(child.question)}`}
                     key={child.qId}
