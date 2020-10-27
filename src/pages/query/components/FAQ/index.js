@@ -59,7 +59,7 @@ function FAQ(props) {
             __html: RestTools.translateToRed(showAnswer)
           }}
         />
-        <div className={styles.source}>{domain} 常见问题集</div>
+        {/* <div className={styles.source}>{domain} 常见问题集</div> */}
         <div className={styles.faq_evaluate}>
           <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
         </div>
