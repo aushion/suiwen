@@ -49,7 +49,7 @@ function Law({
 
   function showModal() {
     if (Cookies.get('Ecp_LoginStuts') || localStorage.getItem('userInfo')) {
-      setVisible(true)
+      setVisible(true);
     } else {
       message.warn('请您登录后再操作');
     }
@@ -62,7 +62,7 @@ function Law({
   return (
     <Spin spinning={loading}>
       <div className={styles.law}>
-        <div style={{padding:'0 0 10px 0',fontSize: 15}}>
+        <div style={{ padding: '0 0 10px 0', fontSize: 15 }}>
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
             社区求助
           </span>
@@ -169,21 +169,23 @@ function Law({
               >
                 {topicData.length ? (
                   <div className="display_flex">
-                    {topicData.filter(item => item.name!=='法律').map((item) => {
-                      return (
-                        <div className={styles.item} key={item.topicId}>
-                          <Link
-                            to={`/special?topicId=${item.topicId}&q=${q}`}
-                            target="_blank"
-                            className={styles.imgWrap}
-                            style={{ background: '#DDF0FF' }}
-                          >
-                            <img src={item.logoUrl} alt="" />
-                          </Link>
-                          <div>{item.name}</div>
-                        </div>
-                      );
-                    })}
+                    {topicData
+                      .filter((item) => item.name !== '法律' && item.name !== '阅读理解')
+                      .map((item) => {
+                        return (
+                          <div className={styles.item} key={item.topicId}>
+                            <Link
+                              to={`/special?topicId=${item.topicId}&q=${q}`}
+                              target="_blank"
+                              className={styles.imgWrap}
+                              style={{ background: '#DDF0FF' }}
+                            >
+                              <img src={item.logoUrl} alt="" />
+                            </Link>
+                            <div>{item.name}</div>
+                          </div>
+                        );
+                      })}
                   </div>
                 ) : null}
               </Card>
