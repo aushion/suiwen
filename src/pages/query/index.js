@@ -70,7 +70,7 @@ function ResultPage(props) {
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
-  
+
   // const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
   // const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   const [imgVisible, setVisible] = useState(false); //图片状态
@@ -209,7 +209,7 @@ function ResultPage(props) {
           </span> */}
         </div>
 
-        <Row gutter={16} >
+        <Row gutter={16}>
           {/* <Col span={4} style={{ padding: 0 }}>
             <div className={styles.topicList}>
               <div className={styles.title}>您也可以选择专题问答</div>
@@ -258,7 +258,7 @@ function ResultPage(props) {
               </div>
             </div>
           </Col> */}
-          <Col span={18} >
+          <Col span={17}>
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
@@ -461,7 +461,7 @@ function ResultPage(props) {
               </Skeleton>
             </div>
           </Col>
-          <Col span={6} >
+          <Col span={7}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
@@ -499,92 +499,94 @@ function ResultPage(props) {
             <div className={styles.topicWrap}>
               <Card
                 title={
-                  <div>
-                    <img
-                      style={{ width: 24, height: 24 }}
-                      src={require('../../assets/topic_icon.png')}
-                      alt=""
-                    />
+                  <div style={{ fontWeight: 'bold' }}>
+                    <Icon type="appstore" style={{ color: 'rgb(243, 155, 39)', marginRight: 6 }} />
                     专题问答
                   </div>
                 }
               >
-                {topicData.length ?
-                <div className="display_flex">
-                  <div className={styles.item}>
-                    <Link
-                      to={`/special?topicId=${find(topicData, { name: '法律' }).topicId}&q=${q}`}
-                      target="_blank"
-                      className={styles.imgWrap}
-                      style={{ background: '#ffebdd' }}
-                    >
-                      <img src={require('../../assets/law_icon.png')} alt="" />
-                    </Link>
-                    <div>法律</div>
-                  </div>
+                {topicData.length ? (
+                  <div className="display_flex">
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${find(topicData, { name: '法律' }).topicId}&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#ffebdd' }}
+                      >
+                        <img src={require('../../assets/law_icon.png')} alt="" />
+                      </Link>
+                      <div>法律</div>
+                    </div>
 
-                  <div className={styles.item}>
-                    <Link
-                      to={`/special?topicId=${find(topicData, { name: '农业' }).topicId}&q=${q}`}
-                      target="_blank"
-                      className={styles.imgWrap}
-                      style={{ background: '#DFFFEC' }}
-                    >
-                      <img src={require('../../assets/agriculture_icon.png')} alt="" />
-                    </Link>
-                    <div>农业</div>
-                  </div>
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${find(topicData, { name: '农业' }).topicId}&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#DFFFEC' }}
+                      >
+                        <img src={require('../../assets/agriculture_icon.png')} alt="" />
+                      </Link>
+                      <div>农业</div>
+                    </div>
 
-                  <div className={styles.item}>
-                    <Link
-                      to={`/special?topicId=${find(topicData, { name: '医学' }).topicId}&q=${q}`}
-                      target="_blank"
-                      className={styles.imgWrap}
-                      style={{ background: '#DDEFFF' }}
-                    >
-                      <img src={require('../../assets/medical_icon.png')} alt="" />
-                    </Link>
-                    <div>医学</div>
-                  </div>
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${find(topicData, { name: '医学' }).topicId}&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#DDEFFF' }}
+                      >
+                        <img src={require('../../assets/medical_icon.png')} alt="" />
+                      </Link>
+                      <div>医学</div>
+                    </div>
 
-                  <div className={styles.item}>
-                    <Link
-                      to={`/special?topicId=${find(topicData, { name: '疫情防护' }).topicId}&q=${q}`}
-                      target="_blank"
-                      className={styles.imgWrap}
-                      style={{ background: '#D5E5FF' }}
-                    >
-                      <img src={require('../../assets/cov19_icon.png')} alt="" />
-                    </Link>
-                    <div>疫情防护</div>
-                  </div>
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${
+                          find(topicData, { name: '疫情防护' }).topicId
+                        }&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#D5E5FF' }}
+                      >
+                        <img src={require('../../assets/cov19_icon.png')} alt="" />
+                      </Link>
+                      <div>疫情防护</div>
+                    </div>
 
-                  <div className={styles.item}>
-                    <Link
-                      to={`/special?topicId=${find(topicData, { name: '文学·历史' }).topicId}&q=${q}`}
-                      target="_blank"
-                      className={styles.imgWrap}
-                      style={{ background: '#DBE8FF' }}
-                    >
-                      <img src={require('../../assets/history_icon.png')} alt="" />
-                    </Link>
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${
+                          find(topicData, { name: '文学·历史' }).topicId
+                        }&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#DBE8FF' }}
+                      >
+                        <img src={require('../../assets/history_icon.png')} alt="" />
+                      </Link>
 
-                    <div>文学历史</div>
-                  </div>
+                      <div>文学历史</div>
+                    </div>
 
-                  <div className={styles.item}>
-                    <Link
-                      to={`/special?topicId=${find(topicData, { name: '阅读理解' }).topicId}&q=${q}`}
-                      target="_blank"
-                      className={styles.imgWrap}
-                      style={{ background: '#D5FDFF' }}
-                    >
-                      <img src={require('../../assets/reading_icon.png')} alt="" />
-                    </Link>
-                    <div>阅读理解</div>
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${
+                          find(topicData, { name: '阅读理解' }).topicId
+                        }&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#D5FDFF' }}
+                      >
+                        <img src={require('../../assets/reading_icon.png')} alt="" />
+                      </Link>
+                      <div>阅读理解</div>
+                    </div>
                   </div>
-                </div>
-                   :null}
+                ) : null}
               </Card>
             </div>
           </Col>

@@ -111,97 +111,80 @@ function BasicLayout(props) {
   return (
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
+        <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo} id="logo">
+          <img src={logo} alt="logo" />
+          {name ? (
+            <span id="logoText" style={{ fontSize: 20, paddingLeft: 5 }}>
+              {name}
+            </span>
+          ) : null}
+        </div>
         <div className={styles.inputGroup}>
-          <div
-            className={`${styles.wrap} display_flex align-items_center`}
-           
-            id="inputWrap"
-          >
-            <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo} id="logo">
-              <img src={logo} alt="logo" />
-              {name ? (
-                <span id="logoText" style={{ fontSize: 20, paddingLeft: 5 }}>
-                  {name}
-                </span>
-              ) : null}
-            </div>
+          <div className={`${styles.inputWrap}`}>
+            <SmartInput
+              question={q}
+              needTip
+              onClickEnter={handleClickEnterOrItem}
+              onClickItem={handleClickEnterOrItem}
+              themeColor={themeColor}
+            />
+          </div>
+        </div>
+        <div className={styles.login}>
+          {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
 
-            <div className={`${styles.inputWrap} display_flex`}>
-              <SmartInput
-                question={q}
-                needTip
-                onClickEnter={handleClickEnterOrItem}
-                onClickItem={handleClickEnterOrItem}
-                themeColor={themeColor}
-              />
+          {username ? (
+            <>
+              <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
+                <MessageBox userName={username} />
+              </span>
+              <Link
+                style={{ color: '#fff', marginLeft: 10 }}
+                to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                target="_blank"
+              >
+                <Avatar
+                  size="small"
+                  src={
+                    avatar ||
+                    `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                      userInfo ? userInfo.UserName : ''
+                    }`
+                  }
+                />
+                <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+              </Link>
+              <button onClick={logout} className={styles.login_btn}>
+                退出
+              </button>
+            </>
+          ) : null}
 
-              {/* <Button
-              className={styles.askBtn}
-              type="link"
+          {username ? null : (
+            <Button
+              className={styles.login_btn}
               onClick={() => {
-                setAskModalVisible(true);
+                setShowLoginAndRegister(true);
+                setShowLogin(true);
+                setShowRegister(false);
               }}
             >
-              社区提问
-            </Button> */}
-            </div>
-          </div>
-          <div className={styles.login}>
-            {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-
-            {username ? (
-              <>
-                <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
-                  <MessageBox userName={username} />
-                </span>
-                <Link
-                  style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
-                  target="_blank"
-                >
-                  <Avatar
-                    size="small"
-                    src={
-                      avatar ||
-                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                        userInfo ? userInfo.UserName : ''
-                      }`
-                    }
-                  />
-                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
-                <button onClick={logout} className={styles.login_btn}>
-                  退出
-                </button>
-              </>
-            ) : null}
-
-            {username ? null : (
-              <Button
-                className={styles.login_btn}
-                onClick={() => {
-                  setShowLoginAndRegister(true);
-                  setShowLogin(true);
-                  setShowRegister(false);
-                }}
-              >
-                登录
-              </Button>
-            )}
-            {username ? null : (
-              <Button
-                className={styles.register_btn}
-                onClick={() => {
-                  setShowLoginAndRegister(true);
-                  setShowLogin(false);
-                  setShowRegister(true);
-                }}
-                // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
-              >
-                注册
-              </Button>
-            )}
-          </div>
+              登录
+            </Button>
+          )}
+          {username ? null : (
+            <Button
+              className={styles.register_btn}
+              onClick={() => {
+                setShowLoginAndRegister(true);
+                setShowLogin(false);
+                setShowRegister(true);
+              }}
+              // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
+            >
+              注册
+            </Button>
+          )}
         </div>
       </Header>
       <Content className={styles.content}>{props.children}</Content>

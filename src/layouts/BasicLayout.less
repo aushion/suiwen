@@ -12,65 +12,27 @@
     width: 100%;
     z-index: 999;
     box-shadow: 0 0 5px #888;
-    // padding-left: calc(50% - 620px);
-    .inputGroup {
-      height: 100%;
-      width: 100%;
-      position: relative;
-      .slogan {
-        height: 30px;
-        width: auto;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        img {
-          height: 100%;
-          width: auto;
-        }
-      }
-      .wrap {
-        position: absolute;
-        right: 41.6%;
-        overflow: hidden;
+    display: flex;
+    padding: 0;
+    align-items: center;
+    .logo {
+      vertical-align: top;
+      color: #fff;
+      height: 38px;
+      width: calc(50% - 500px);
+      text-align: end;
+      img {
         height: 100%;
+        width: auto;
       }
-      .logo {
-        vertical-align: top;
-        color: #fff;
-        height: 38px;
-        // padding-right: 10px;
-        img {
-          height: 100%;
-          width: auto;
-        }
-      }
-      .title {
-        color: rgba(255, 255, 255, 0.8);
-        position: absolute;
-        left: 110px;
-        top: 40%;
-        height: 50px;
-        cursor: pointer;
-        &:hover {
-          color: white;
-        }
-        .cn {
-          height: 18px;
-          font-size: 16px;
-          font-weight: bold;
-        }
-        .en {
-          height: 12px;
-          font-size: 10px;
-          font-weight: bold;
-        }
-      }
+    }
+    .inputGroup {
+      width: 750px;
       .inputWrap {
-        // width: 40%;
-        width: 600px;
+        width: 75%;
         margin-left: 10px;
         :global(.record-wrap) {
-          width: calc(100% - 80px);
+          width: calc(750px * 0.75 - 80px);
         }
         :global(.ant-input-lg) {
           height: 40px;
@@ -101,40 +63,39 @@
           margin-left: 10px;
         }
       }
-      .login {
-        float: right;
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        margin-top: -15px;
-        color: #fff;
-        .tips {
-          .links {
-            color: #fff;
-            margin-left: 4px;
-            &:hover {
-              text-decoration: underline;
-            }
+    }
+
+    .login {
+      color: #fff;
+      flex: 1;
+      text-align: end;
+      padding-right: 20px;
+      .tips {
+        .links {
+          color: #fff;
+          margin-left: 4px;
+          &:hover {
+            text-decoration: underline;
           }
         }
-        .login_btn,
-        .register_btn {
-          height: 30px;
-          // width: 60px;
-          display: inline-block;
-          text-align: center;
-          line-height: 28px;
-          background: transparent;
-          color: #fff;
-          border: 1px solid #fff;
-          border-radius: 4px;
-          margin-left: 20px;
-          cursor: pointer;
+      }
+      .login_btn,
+      .register_btn {
+        height: 30px;
+        // width: 60px;
+        display: inline-block;
+        text-align: center;
+        line-height: 28px;
+        background: transparent;
+        color: #fff;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        margin-left: 20px;
+        cursor: pointer;
 
-          &:hover {
-            background: #fff;
-            color: #29a7f3;
-          }
+        &:hover {
+          background: #fff;
+          color: #29a7f3;
         }
       }
     }
