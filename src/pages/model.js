@@ -45,7 +45,7 @@ export default {
         .map((item) => {
           return {
             ...item,
-            // logoUrl: `${urlPrefix}/file/topic/topicHome/${item.data[0].topicId}.png`,
+            logoUrl: `${urlPrefix}/file/topic/icon/${item.data[0].topicId}.png`,
             thumbUrl: `${urlPrefix}/file/topic/home/${item.data[0].topicId}.png`,
             topicId: item.data[0].topicId
           };
@@ -69,7 +69,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            newHelpList: result.list
+            newHelpList: result.dataList
           }
         });
       }
@@ -102,6 +102,8 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         if (pathname === '/') {
+          sessionStorage.removeItem('q'); //清除问题q
+          window.document.title = '知网随问';
           dispatch({ type: 'global/setQuestion', payload: { q: '' } });
           dispatch({ type: 'getDomainQuestions' });
           dispatch({ type: 'getTopicQuestions' });

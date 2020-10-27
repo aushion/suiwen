@@ -73,7 +73,7 @@ export default {
           source: 'getAnswer'
         });
 
-        if (conceptData[0]?.intentJson.results[0].fields) {
+        if (conceptData[0]?.intentJson?.results[0]?.fields) {
           const payload = conceptData[0].intentJson.results[0].fields;
           yield put({
             type: 'getConcept',
@@ -140,8 +140,8 @@ export default {
         .map((item) => {
           return {
             ...item,
-            logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
-            thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
+            logoUrl: `${urlPrefix}/file/topic/icon/${item.data[0].topicId}.png`,
+            thumbUrl: `${urlPrefix}/file/topic/home/${item.data[0].topicId}.png`,
             topicId: item.data[0].topicId
           };
         });
@@ -275,7 +275,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            helpList: res.data.result.list
+            helpList: res.data.result.dataList
           }
         });
       }
@@ -355,7 +355,7 @@ export default {
               }
             });
           }
-
+         
           if (q && q.trim()) {
             //重置问题
             dispatch({

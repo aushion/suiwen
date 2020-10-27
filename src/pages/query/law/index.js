@@ -1,6 +1,8 @@
-import React from 'react';
-import { Tabs, Spin, Empty, Row, Col } from 'antd';
+import React, { useState } from 'react';
+import { Tabs, Spin, Empty, Row, Col, Card, Icon, message } from 'antd';
+import { Link } from 'umi';
 import { connect } from 'dva';
+import Cookies from 'js-cookie';
 import querystring from 'querystring';
 import Literature from '../components/Literature';
 import LawCase from '../components/LawCase';
@@ -9,6 +11,7 @@ import SgList from '../components/SgList';
 import Graphic from '../components/Graphic';
 import RelatedList from '../components/RelatedList';
 import NewHelp from '../components/NewHelp';
+import AskModal from '../../../components/AskModal';
 import styles from './index.less';
 
 function Law({
@@ -20,6 +23,9 @@ function Law({
   relatedData = [],
   helpList
 }) {
+  const topicData =
+    JSON.parse(window.sessionStorage.getItem('topicData')) ||
+    JSON.parse(localStorage.getItem('topicData'));
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
@@ -39,12 +45,32 @@ function Law({
 
   const { q, topic } = querystring.parse(window.location.search.substring(1));
 
+  const [visible, setVisible] = useState(false);
+
+  function showModal() {
+    if (Cookies.get('Ecp_LoginStuts') || localStorage.getItem('userInfo')) {
+      setVisible(true)
+    } else {
+      message.warn('请您登录后再操作');
+    }
+  }
+
+  function hideModal() {
+    setVisible(false);
+  }
+
   return (
     <Spin spinning={loading}>
       <div className={styles.law}>
+        <div style={{padding:'0 0 10px 0',fontSize: 15}}>
+          <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
+            社区求助
+          </span>
+        </div>
+
         <Row gutter={24}>
-          <Col span={18}>
-            <Tabs type="card" tabBarGutter={0} >
+          <Col span={17}>
+            <Tabs type="card" tabBarGutter={0}>
               {repositoryData
                 ? repositoryData.map((item, index) => {
                     return (
@@ -98,7 +124,7 @@ function Law({
             </Tabs>
             {!loading && !repositoryData ? <Empty /> : null}
           </Col>
-          <Col span={6}>
+          <Col span={7}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
@@ -132,8 +158,39 @@ function Law({
               />
             ) : null}
             {helpList.length ? <NewHelp data={helpList} /> : null}
+            <div className={styles.topicWrap}>
+              <Card
+                title={
+                  <div style={{ fontWeight: 'bold' }}>
+                    <Icon type="appstore" style={{ color: 'rgb(243, 155, 39)', margin: '0 6px' }} />
+                    专题问答
+                  </div>
+                }
+              >
+                {topicData.length ? (
+                  <div className="display_flex">
+                    {topicData.filter(item => item.name!=='法律').map((item) => {
+                      return (
+                        <div className={styles.item} key={item.topicId}>
+                          <Link
+                            to={`/special?topicId=${item.topicId}&q=${q}`}
+                            target="_blank"
+                            className={styles.imgWrap}
+                            style={{ background: '#DDF0FF' }}
+                          >
+                            <img src={item.logoUrl} alt="" />
+                          </Link>
+                          <div>{item.name}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </Card>
+            </div>
           </Col>
         </Row>
+        <AskModal visible={visible} onTriggerCancel={hideModal} q={q} />
       </div>
     </Spin>
   );
