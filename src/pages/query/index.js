@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Result, Button, message, Badge, Skeleton } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Skeleton, Card } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
 import Viewer from 'react-viewer';
 import router from 'umi/router';
-import findIndex from 'lodash/findIndex';
+// import findIndex from 'lodash/findIndex';
 import styles from './index.less';
 import SgList from './components/SgList';
 import FAQ from './components/FAQ';
@@ -32,6 +32,7 @@ import Translate from './components/Translate';
 import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
 import Concept from './components/Concept';
+import { find } from 'lodash';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -69,8 +70,9 @@ function ResultPage(props) {
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
-  const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
-  const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
+
+  // const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
+  // const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   const [imgVisible, setVisible] = useState(false); //图片状态
   const [previewImgSrc, setPreviewImgSrc] = useState('');
   function handleCopy(event) {
@@ -106,9 +108,9 @@ function ResultPage(props) {
     document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 
-  useEffect(() => {
-    setTopicIndex(topicindex);
-  }, [topicindex]);
+  // useEffect(() => {
+  //   setTopicIndex(topicindex);
+  // }, [topicindex]);
 
   useEffect(() => {
     document.addEventListener('copy', handleCopy);
@@ -136,8 +138,7 @@ function ResultPage(props) {
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
-  const conceptInfo = repositoryData.filter(item => item.template === 'concept'); //知识元数据
-  
+  const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元数据
 
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
@@ -147,12 +148,10 @@ function ResultPage(props) {
     : []; //相关专利
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
-  const sgCount = [...new Set(sgData.map(item => item.id))].length;
-  const conceptCount = conceptData ? 1:0;
+
   const resultLength =
     // cnkizhishi.length +
-    conceptCount+
-    sgCount +
+    sgData.length +
     semanticData.length +
     faqData.length +
     referenceBookData.length +
@@ -189,30 +188,29 @@ function ResultPage(props) {
     });
   }
 
-  function myReply() {
-    if (localStorage.getItem('userInfo')) {
-      router.push(`reply?q=${encodeURIComponent(q)}`);
-    } else {
-      message.warn('请您登录后再操作');
-    }
-  }
+  // function myReply() {
+  //   if (localStorage.getItem('userInfo')) {
+  //     router.push(`reply?q=${encodeURIComponent(q)}`);
+  //   } else {
+  //     message.warn('请您登录后再操作');
+  //   }
+  // }
 
   return (
     <div className={styles.result} id="result">
       <div style={{ minHeight: 'calc(45vh)' }}>
         <div className={styles.result_tips}>
           {resultLength ? <span>为您找到{resultLength}条结果</span> : null}
-
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
             社区求助
           </span>
-          <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
+          {/* <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
             我来回答
-          </span>
+          </span> */}
         </div>
 
-        <Row gutter={24}>
-          <Col span={4} style={{ padding: 0 }}>
+        <Row gutter={16}>
+          {/* <Col span={4} style={{ padding: 0 }}>
             <div className={styles.topicList}>
               <div className={styles.title}>您也可以选择专题问答</div>
               <div>
@@ -259,8 +257,8 @@ function ResultPage(props) {
                   : null}
               </div>
             </div>
-          </Col>
-          <Col span={15}>
+          </Col> */}
+          <Col span={17}>
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
@@ -308,7 +306,9 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  {conceptData ? <Concept data={conceptData} intentJson={conceptInfo[0].intentJson} /> : null}
+                  {conceptData ? (
+                    <Concept data={conceptData} intentJson={conceptInfo[0].intentJson} />
+                  ) : null}
 
                   {yearbookData.length
                     ? yearbookData.map((item) => (
@@ -422,7 +422,7 @@ function ResultPage(props) {
               </Skeleton>
 
               <Skeleton loading={fetchSg} active>
-                {sgData.length ? <SgList data={sgData} /> : null}
+                {sgData.length ? <SgList data={sgData} q={q} /> : null}
               </Skeleton>
 
               <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData}>
@@ -461,7 +461,7 @@ function ResultPage(props) {
               </Skeleton>
             </div>
           </Col>
-          <Col span={5} style={{ padding: 0 }}>
+          <Col span={7}>
             {relatedLiterature.length ? (
               <RelatedList
                 q={q}
@@ -496,66 +496,99 @@ function ResultPage(props) {
             ) : null}
             {helpList.length ? <NewHelp data={helpList} /> : null}
 
-            {/* <div className={styles.topicWrap}>
+            <div className={styles.topicWrap}>
               <Card
                 title={
-                  <div>
-                    <img
-                      style={{ width: 24, height: 24 }}
-                      src={require('../../assets/topic_icon.png')}
-                      alt=""
-                    />
+                  <div style={{ fontWeight: 'bold' }}>
+                    <Icon type="appstore" style={{ color: 'rgb(243, 155, 39)', marginRight: 6 }} />
                     专题问答
                   </div>
                 }
               >
-                <div className="display_flex">
-                  <div className={styles.item}>
-                    <div className={styles.imgWrap} style={{ background: '#ffebdd' }}>
-                      <img src={require('../../assets/law_icon.png')} alt="" />
-                    </div>
-                    <div>法律</div>
-                  </div>
-
-                  <div className={styles.item}>
-                    <div className={styles.imgWrap} style={{ background: '#DFFFEC' }}>
-                      <img src={require('../../assets/agriculture_icon.png')} alt="" />
-                    </div>
-                    <div>农业</div>
-                  </div>
-
-                  <div className={styles.item}>
-                    <div className={styles.imgWrap} style={{ background: '#DDEFFF' }}>
-                      <img src={require('../../assets/medical_icon.png')} alt="" />
-                    </div>
-                    <div>医学</div>
-                  </div>
-
-                  <div className={styles.item}>
-                    <div className={styles.imgWrap} style={{ background: '#D5E5FF' }}>
-                      <img src={require('../../assets/cov19_icon.png')} alt="" />
-                    </div>
-                    <div>疫情防护</div>
-                  </div>
-
-                  <div className={styles.item}>
-                    <div className={styles.imgWrap} style={{ background: '#DBE8FF' }}>
-                      <img src={require('../../assets/history_icon.png')} alt="" />
+                {topicData.length ? (
+                  <div className="display_flex">
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${find(topicData, { name: '法律' }).topicId}&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#ffebdd' }}
+                      >
+                        <img src={require('../../assets/law_icon.png')} alt="" />
+                      </Link>
+                      <div>法律</div>
                     </div>
 
-                    <div>文学历史</div>
-                  </div>
-
-                  <div className={styles.item}>
-                    <div className={styles.imgWrap} style={{ background: '#D5FDFF' }}>
-                      <img src={require('../../assets/reading_icon.png')} alt="" />
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${find(topicData, { name: '农业' }).topicId}&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#DFFFEC' }}
+                      >
+                        <img src={require('../../assets/agriculture_icon.png')} alt="" />
+                      </Link>
+                      <div>农业</div>
                     </div>
 
-                    <div>阅读理解</div>
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${find(topicData, { name: '医学' }).topicId}&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#DDEFFF' }}
+                      >
+                        <img src={require('../../assets/medical_icon.png')} alt="" />
+                      </Link>
+                      <div>医学</div>
+                    </div>
+
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${
+                          find(topicData, { name: '疫情防护' }).topicId
+                        }&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#D5E5FF' }}
+                      >
+                        <img src={require('../../assets/cov19_icon.png')} alt="" />
+                      </Link>
+                      <div>疫情防护</div>
+                    </div>
+
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${
+                          find(topicData, { name: '文学·历史' }).topicId
+                        }&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#DBE8FF' }}
+                      >
+                        <img src={require('../../assets/history_icon.png')} alt="" />
+                      </Link>
+
+                      <div>文学历史</div>
+                    </div>
+
+                    <div className={styles.item}>
+                      <Link
+                        to={`/special?topicId=${
+                          find(topicData, { name: '阅读理解' }).topicId
+                        }&q=${q}`}
+                        target="_blank"
+                        className={styles.imgWrap}
+                        style={{ background: '#D5FDFF' }}
+                      >
+                        <img src={require('../../assets/reading_icon.png')} alt="" />
+                      </Link>
+                      <div>阅读理解</div>
+                    </div>
                   </div>
-                </div>
+                ) : null}
               </Card>
-            </div> */}
+            </div>
           </Col>
         </Row>
       </div>

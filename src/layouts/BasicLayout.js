@@ -42,6 +42,19 @@ function BasicLayout(props) {
     setShowLogin(showLoginModal);
   }, [showLoginModal]);
 
+  useEffect(() => {
+    // const logo = document.getElementById('logo');
+    // const inputWrap = document.getElementById('inputWrap');
+    // const paddingLeft = parseInt(window.getComputedStyle(inputWrap)['padding-left']);
+    // const logoWidth = parseInt(window.getComputedStyle(logo).width);
+    // console.log('paddingLeft', paddingLeft);
+    // console.log('logowidth', logoWidth);
+    // console.log('11', 11);
+    // inputWrap.style['padding-left'] = `${paddingLeft - logoWidth}px`;
+    return () => {};
+    // logo.style['margin-right'] = '10px';
+  }, []);
+
   function handleClickEnterOrItem(value) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q } });
@@ -98,13 +111,16 @@ function BasicLayout(props) {
   return (
     <div className={styles.wrapper}>
       <Header className={styles.header} style={{ background: themeColor }}>
+        <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo} id="logo">
+          <img src={logo} alt="logo" />
+          {name ? (
+            <span id="logoText" style={{ fontSize: 20, paddingLeft: 5 }}>
+              {name}
+            </span>
+          ) : null}
+        </div>
         <div className={styles.inputGroup}>
-          <div onClick={goHomeByDomain.bind(this, title)} className={styles.logo}>
-            <img src={logo} alt="logo" />
-            {name ? <span style={{ fontSize: 20, paddingLeft: 5 }}>{name}</span> : null}
-          </div>
-
-          <div className={`${styles.inputWrap} display_flex`}>
+          <div className={`${styles.inputWrap}`}>
             <SmartInput
               question={q}
               needTip
@@ -112,74 +128,63 @@ function BasicLayout(props) {
               onClickItem={handleClickEnterOrItem}
               themeColor={themeColor}
             />
-
-            {/* <Button
-              className={styles.askBtn}
-              type="link"
-              onClick={() => {
-                setAskModalVisible(true);
-              }}
-            >
-              社区提问
-            </Button> */}
           </div>
-          <div className={styles.login}>
-            {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
-            <span className={styles.tips}>
-              您好，
-              {username ? (
-                <Link
-                  style={{ color: '#fff', marginLeft: 10 }}
-                  to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
-                >
-                  <Avatar
-                    size="small"
-                    src={
-                      avatar ||
-                      `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
-                        userInfo ? userInfo.UserName : ''
-                      }`
-                    }
-                  />
-                  <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
-                </Link>
-              ) : (
-                '游客'
-              )}
-            </span>
-            {username ? null : (
-              <Button
-                className={styles.login_btn}
-                onClick={() => {
-                  setShowLoginAndRegister(true);
-                  setShowLogin(true);
-                  setShowRegister(false);
-                }}
-                // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-                // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(window.location.href)}`}
+        </div>
+        <div className={styles.login}>
+          {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
+
+          {username ? (
+            <>
+              <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
+                {/* <MessageBox userName={username} /> */}
+              </span>
+              <Link
+                style={{ color: '#fff', marginLeft: 10 }}
+                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+                target="_blank"
               >
-                登录
-              </Button>
-            )}
-            {username ? null : (
-              <Button
-                className={styles.register_btn}
-                onClick={() => {
-                  setShowLoginAndRegister(true);
-                  setShowLogin(false);
-                  setShowRegister(true);
-                }}
-                // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
-              >
-                注册
-              </Button>
-            )}
-            {username ? (
+                <Avatar
+                  size="small"
+                  src={
+                    avatar ||
+                    `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                      userInfo ? userInfo.UserName : ''
+                    }`
+                  }
+                />
+                <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+              </Link>
               <button onClick={logout} className={styles.login_btn}>
                 退出
               </button>
-            ) : null}
-          </div>
+            </>
+          ) : null}
+
+          {username ? null : (
+            <Button
+              className={styles.login_btn}
+              onClick={() => {
+                setShowLoginAndRegister(true);
+                setShowLogin(true);
+                setShowRegister(false);
+              }}
+            >
+              登录
+            </Button>
+          )}
+          {username ? null : (
+            <Button
+              className={styles.register_btn}
+              onClick={() => {
+                setShowLoginAndRegister(true);
+                setShowLogin(false);
+                setShowRegister(true);
+              }}
+              // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(window.location.href)}`}
+            >
+              注册
+            </Button>
+          )}
         </div>
       </Header>
       <Content className={styles.content}>{props.children}</Content>
@@ -248,8 +253,8 @@ function BasicLayout(props) {
         }}
         q=""
       />
-      <Affix offsetBottom={100}>
-      <div
+      <Affix offsetBottom={90}>
+        <div
           className={styles.feedback}
           onClick={() => {
             setVisible(true);
