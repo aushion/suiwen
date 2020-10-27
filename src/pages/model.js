@@ -69,7 +69,7 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            newHelpList: result.dataList
+            newHelpList: result.dataList || result.list
           }
         });
       }
