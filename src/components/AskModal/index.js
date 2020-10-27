@@ -107,11 +107,11 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   }
 
   function handleClickRoot(item) {
-    if (item.cName === '其他') {
+    if (item.cName === '其他分类') {
       setDomainChildren([]);
       updateCheckedTag([item]);
     } else {
-      updateCheckedTag(selectedTags.filter((item) => item.cName !== '其他'));
+      updateCheckedTag(selectedTags.filter((item) => item.cName !== '其他分类'));
       setDomainChildren(item.communityClassList);
     }
     setSelectedRoot(item);

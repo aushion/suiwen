@@ -15,7 +15,6 @@ import AnswerForm from './components/AnswerForm';
 import WaitAnswer from '../../components/WaitAnswer';
 import AnswerHelper from './components/AnswerHelper';
 
-
 dayjs.extend(relativeTime);
 dayjs.extend(isSameOrAfter);
 dayjs.locale('zh-cn');
@@ -66,19 +65,6 @@ function Reply(props) {
       <div className={replyStyle.content}>
         <Row gutter={40}>
           <Col span={18} className={replyStyle.content_left}>
-            {/* <Link to="/help/newHelp" style={{ display: 'inline-block', padding: 10 }}>
-              <Icon type="home" style={{ marginRight: 4 }} />
-              返回社区
-            </Link> */}
-            {/* <PageHeader
-              ghost={false}
-              onBack={() => {
-                router.push('/help/newHelp');
-              }}
-              title="返回社区"
-              // subTitle="This is a subtitle"
-            /> */}
-
             <div className={replyStyle.title}>
               <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
               <span>{params.q}</span>
@@ -122,7 +108,7 @@ function Reply(props) {
             <div className={replyStyle.draft}>{showEditor ? <AnswerForm /> : null}</div>
             <AnswerList qId={QID} />
           </Col>
-          <Col span={6}>
+          <Col span={6} style={{paddingRight: 0}}>
             <div>
               {userCommunityInfo ? <UserInfo /> : null}
               <WaitAnswer />
@@ -136,7 +122,7 @@ function Reply(props) {
                 setDrawer(true);
               }}
             >
-              <Icon type="alert" theme="filled" style={{ color: 'green', fontSize: 24 }} />
+              <Icon type="alert" theme="filled" style={{ color: 'gold', fontSize: 24 }} />
             </Button>
           </Affix>
         ) : null}

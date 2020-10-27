@@ -10,8 +10,8 @@ import styles from './CommentItem.less';
 
 let timer = null;
 
-function CommentItem({ answerList, item, dispatch, entityId, qId }) {
-  const [inputId, setInputId] = useState(null);
+function CommentItem({  item, dispatch, entityId, qId, inputId }) {
+  const [InputId, setInputId] = useState(inputId);
   const [newReply, addReply] = useState('');
   const [likeInfo, setLikeInfo] = useState({
     isLiked: item.isLiked,
@@ -210,14 +210,15 @@ function CommentItem({ answerList, item, dispatch, entityId, qId }) {
                   <IconText type="warning" text="举报" />{' '}
                 </span>
               </div>
-              {inputId === item.commentId ? (
+              {InputId === item.commentId ? (
                 <div>
                   <SwTextArea
                     maxLength={200}
                     autoSize
+                    width={200}
                     value={newReply}
                     placeholder="输入回复"
-                    style={{ width: 550, marginLeft: 10 }}
+                    style={{ width: 500, marginLeft: 10 }}
                     onChange={editReply}
                     onClick={sendReply.bind(this, item.commentId)}
                   />

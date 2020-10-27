@@ -89,7 +89,7 @@ function AnswerForm(props) {
     });
   }
   return (
-    <div style={{ overflow: 'hidden' }}>
+    <div style={{ overflow: 'hidden', borderBottom: '1px solid #eee' }}>
       <Form>
         <FormItem>
           {getFieldDecorator('contents', {

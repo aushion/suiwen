@@ -6,7 +6,7 @@ import replyStyle from '../index.less';
 import CommentItem from './CommentItem';
 
 function CommentList(props) {
-  const { data = null, dispatch, entityId, answerList, qId, fetchCommentList } = props;
+  const { data = null, dispatch, entityId, answerList, qId, fetchCommentList, inputId } = props;
   const [newComment, addComment] = useState(''); //评论
 
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
@@ -92,10 +92,11 @@ function CommentList(props) {
               <SwTextArea
                 id={data.aid}
                 autoSize
+                
                 maxLength={200}
                 value={newComment}
                 placeholder="输入评论"
-                style={{ width: 550, marginLeft: 10 }}
+                style={{ width: 500, marginLeft: 10 }}
                 onChange={(e) => {
                   editComment(e, data.aid);
                 }}
@@ -129,6 +130,8 @@ function CommentList(props) {
                       dispatch={dispatch}
                       entityId={entityId}
                       qId={qId}
+                      inputId={inputId}
+
                     />
                   );
                 }}

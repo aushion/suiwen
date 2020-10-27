@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'dva';
-import { Icon, message, Spin, Alert } from 'antd';
+import { Icon, message, Spin } from 'antd';
 import dayjs from 'dayjs';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
@@ -253,7 +253,8 @@ function AnswerList(props) {
             共<strong style={{ color: '#333' }}>{total}</strong>个回答
           </span>
         ) : (
-         <Alert message="暂时还没有回答" type="info" />
+        //  <Alert message="暂时还没有回答" type="info" />
+        null
         )}
       </div>
       {answerList.map((item, index) => {

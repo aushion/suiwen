@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tag, Popover, Row, Col } from 'antd';
+import { Tag, Popover, Row, Col, Button } from 'antd';
 import { connect } from 'dva';
 import styles from './DomainTag.less';
 
@@ -16,9 +16,10 @@ function DomainTags(props) {
     color: '#585A5D',
     padding: '4px 15px',
     fontSize: 14,
-    fontWeight: 'bolder',
+    fontWeight: 'bolder'
   };
   const { data, onClickTag, dispatch, communityNode } = props;
+  const [showData, setShowData] = useState(data.slice(0, 6));
   const localChecked = data.map((item) => item.cName).indexOf(communityNode?.firstNode.cName);
   const [checked, setChecked] = useState(localChecked || -1);
   useEffect(() => {
@@ -50,6 +51,14 @@ function DomainTags(props) {
     });
   }
 
+  function handleShowMore() {
+    if (showData.length === 6) {
+      setShowData(data);
+    } else {
+      setShowData(data.slice(0, 6));
+    }
+  }
+
   function tagChildren(data, index) {
     return (
       <div style={{ width: 160 }}>
@@ -69,15 +78,15 @@ function DomainTags(props) {
   return (
     <div>
       <div style={{ fontSize: 16, paddingBottom: '20px', paddingLeft: '10px', color: '#2B2C2E' }}>
-        求助分类
+        标签分类
       </div>
       <Tag
         style={checked === -1 ? { ...normalStyle, ...checkedStyle } : normalStyle}
         onClick={handleClick.bind(this, -1, '')}
       >
-        全部
+        全部分类
       </Tag>
-      {data.map((item, index) => {
+      {showData.map((item, index) => {
         if (item.communityClassList.length) {
           return (
             <Popover content={tagChildren(item.communityClassList, index)} key={index}>
@@ -101,6 +110,14 @@ function DomainTags(props) {
           </Tag>
         );
       })}
+      <Button
+        icon={showData.length === 6 ? 'down' : 'up'}
+        shape="round"
+        size="small"
+        onClick={handleShowMore}
+      >
+        {showData.length === 6 ? '更多' : '收起'}
+      </Button>
     </div>
   );
 }

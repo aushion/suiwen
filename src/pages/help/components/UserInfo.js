@@ -13,14 +13,13 @@ function UserInfo(props) {
         borderRadius: 4,
         padding: '20px',
         background: '#fff',
-        // boxShadow: '0px 0px 5px 0px rgba(216,216,216,0.76)',
         marginBottom: 20
       }}
     >
       <div>
         <div>
           <Link
-            className="display_flex"
+            className="display_flex justify-content_flex-center"
             to={`/personCenter/people/ask?userName=${userInfo?.userName}`}
           >
             <Avatar
