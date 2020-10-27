@@ -140,8 +140,8 @@ export default {
         .map((item) => {
           return {
             ...item,
-            logoUrl: `${urlPrefix}/getTopicLogo?topicId=${item.data[0].topicId}`,
-            thumbUrl: `${urlPrefix}/getTopicHomePicture?topicId=${item.data[0].topicId}`,
+            logoUrl: `${urlPrefix}/file/topic/icon/${item.data[0].topicId}.png`,
+            thumbUrl: `${urlPrefix}/file/topic/home/${item.data[0].topicId}.png`,
             topicId: item.data[0].topicId
           };
         });

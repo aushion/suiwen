@@ -32,7 +32,6 @@ import Translate from './components/Translate';
 import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
 import Concept from './components/Concept';
-import { find } from 'lodash';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -210,54 +209,7 @@ function ResultPage(props) {
         </div>
 
         <Row gutter={16}>
-          {/* <Col span={4} style={{ padding: 0 }}>
-            <div className={styles.topicList}>
-              <div className={styles.title}>您也可以选择专题问答</div>
-              <div>
-                {topicData.length
-                  ? topicData
-                      .filter((item) => item.name !== '阅读理解')
-                      .map((item, index) => (
-                        <div className={styles.item} key={item.name}>
-                          <Link
-                            to={`/special?topicId=${item.topicId}&q=${q}`}
-                            target="_blank"
-                            style={{
-                              color: index === topicIndex ? '#0097FF' : '#43474A',
-                              display: 'inline-block',
-                              width: '100%',
-                              padding: '8px 10px'
-                            }}
-                          >
-                            {item.name === '阅读理解' ? (
-                              <Badge
-                                count={
-                                  <div
-                                    style={{
-                                      backgroundColor: '#f50',
-                                      color: '#fff',
-                                      fontSize: 10,
-                                      top: '-2px',
-                                      right: '-20px',
-                                      padding: '2px'
-                                    }}
-                                  >
-                                    Beta
-                                  </div>
-                                }
-                              >
-                                {item.name}专题
-                              </Badge>
-                            ) : (
-                              item.name + '专题'
-                            )}
-                          </Link>
-                        </div>
-                      ))
-                  : null}
-              </div>
-            </div>
-          </Col> */}
+         
           <Col span={17}>
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
@@ -500,91 +452,28 @@ function ResultPage(props) {
               <Card
                 title={
                   <div style={{ fontWeight: 'bold' }}>
-                    <Icon type="appstore" style={{ color: 'rgb(243, 155, 39)', marginRight: 6 }} />
+                    <Icon type="appstore" style={{ color: 'rgb(243, 155, 39)', margin: '0 6px' }} />
                     专题问答
                   </div>
                 }
               >
                 {topicData.length ? (
                   <div className="display_flex">
-                    <div className={styles.item}>
-                      <Link
-                        to={`/special?topicId=${find(topicData, { name: '法律' }).topicId}&q=${q}`}
-                        target="_blank"
-                        className={styles.imgWrap}
-                        style={{ background: '#ffebdd' }}
-                      >
-                        <img src={require('../../assets/law_icon.png')} alt="" />
-                      </Link>
-                      <div>法律</div>
-                    </div>
-
-                    <div className={styles.item}>
-                      <Link
-                        to={`/special?topicId=${find(topicData, { name: '农业' }).topicId}&q=${q}`}
-                        target="_blank"
-                        className={styles.imgWrap}
-                        style={{ background: '#DFFFEC' }}
-                      >
-                        <img src={require('../../assets/agriculture_icon.png')} alt="" />
-                      </Link>
-                      <div>农业</div>
-                    </div>
-
-                    <div className={styles.item}>
-                      <Link
-                        to={`/special?topicId=${find(topicData, { name: '医学' }).topicId}&q=${q}`}
-                        target="_blank"
-                        className={styles.imgWrap}
-                        style={{ background: '#DDEFFF' }}
-                      >
-                        <img src={require('../../assets/medical_icon.png')} alt="" />
-                      </Link>
-                      <div>医学</div>
-                    </div>
-
-                    <div className={styles.item}>
-                      <Link
-                        to={`/special?topicId=${
-                          find(topicData, { name: '疫情防护' }).topicId
-                        }&q=${q}`}
-                        target="_blank"
-                        className={styles.imgWrap}
-                        style={{ background: '#D5E5FF' }}
-                      >
-                        <img src={require('../../assets/cov19_icon.png')} alt="" />
-                      </Link>
-                      <div>疫情防护</div>
-                    </div>
-
-                    <div className={styles.item}>
-                      <Link
-                        to={`/special?topicId=${
-                          find(topicData, { name: '文学·历史' }).topicId
-                        }&q=${q}`}
-                        target="_blank"
-                        className={styles.imgWrap}
-                        style={{ background: '#DBE8FF' }}
-                      >
-                        <img src={require('../../assets/history_icon.png')} alt="" />
-                      </Link>
-
-                      <div>文学历史</div>
-                    </div>
-
-                    <div className={styles.item}>
-                      <Link
-                        to={`/special?topicId=${
-                          find(topicData, { name: '阅读理解' }).topicId
-                        }&q=${q}`}
-                        target="_blank"
-                        className={styles.imgWrap}
-                        style={{ background: '#D5FDFF' }}
-                      >
-                        <img src={require('../../assets/reading_icon.png')} alt="" />
-                      </Link>
-                      <div>阅读理解</div>
-                    </div>
+                    {topicData.filter(item => item.name !== topicName).map((item) => {
+                      return (
+                        <div className={styles.item} key={item.topicId}>
+                          <Link
+                            to={`/special?topicId=${item.topicId}&q=${q}`}
+                            target="_blank"
+                            className={styles.imgWrap}
+                            style={{ background: '#DDF0FF' }}
+                          >
+                            <img src={item.logoUrl} alt="" />
+                          </Link>
+                          <div>{item.name}</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : null}
               </Card>
