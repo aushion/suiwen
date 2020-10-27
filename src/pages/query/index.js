@@ -209,7 +209,6 @@ function ResultPage(props) {
         </div>
 
         <Row gutter={16}>
-         
           <Col span={17}>
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
@@ -459,21 +458,23 @@ function ResultPage(props) {
               >
                 {topicData.length ? (
                   <div className="display_flex">
-                    {topicData.filter(item => item.name !== topicName).map((item) => {
-                      return (
-                        <div className={styles.item} key={item.topicId}>
-                          <Link
-                            to={`/special?topicId=${item.topicId}&q=${q}`}
-                            target="_blank"
-                            className={styles.imgWrap}
-                            style={{ background: '#DDF0FF' }}
-                          >
-                            <img src={item.logoUrl} alt="" />
-                          </Link>
-                          <div>{item.name}</div>
-                        </div>
-                      );
-                    })}
+                    {topicData
+                      .filter((item) => item.name !== topicName && item.name !== '阅读理解')
+                      .map((item) => {
+                        return (
+                          <div className={styles.item} key={item.topicId}>
+                            <Link
+                              to={`/special?topicId=${item.topicId}&q=${q}`}
+                              target="_blank"
+                              className={styles.imgWrap}
+                              style={{ background: '#DDF0FF' }}
+                            >
+                              <img src={item.logoUrl} alt="" />
+                            </Link>
+                            <div>{item.name}</div>
+                          </div>
+                        );
+                      })}
                   </div>
                 ) : null}
               </Card>
