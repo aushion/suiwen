@@ -12,6 +12,9 @@ function CaAvatar({ userName, showFollowBtn = true }) {
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
   function fetchUser() {
+    if(!loginUser){
+      return;
+    }
     setLoading(true);
     helpServer
       .getUserCommunityInfo({ userName, operator: loginUser.UserName })

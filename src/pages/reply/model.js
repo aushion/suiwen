@@ -10,6 +10,8 @@ message.config({
   duration: 2,
   maxCount: 3
 });
+
+const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')):false;
 export default {
   namespace: 'reply',
   state: {
@@ -38,22 +40,39 @@ export default {
 
   effects: {
     *followQuestion({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.followQuestion, payload);
       return res.data;
     },
     *unFollowQuestion({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.unFollowQuestion, payload);
       return res.data;
     },
     *followUser({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.followUser, payload);
       return res.data;
     },
     *unFollowUser({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.unFollowUser, payload);
       return res.data;
     },
     *getUserCommunityInfo({ payload }, { call, put }) {
+    
       const res = yield call(helpServer.getUserCommunityInfo, {
         ...payload
       });
@@ -118,43 +137,69 @@ export default {
     },
 
     *addComment({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.addComment, payload);
       return res.data;
     },
 
     *replyComment({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.replyComment, payload);
       return res.data;
     },
 
     *delComment({ payload }, { call }) {
+    
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.delComment, payload);
       return res.data;
     },
     *delReply({ payload }, { call }) {
+
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.delReply, payload);
       return res.data;
     },
     *likeAnswer({ payload }, { call }) {
+     
       const res = yield call(helpServer.likeAnswer, payload);
       return res.data;
     },
 
     *disLikeAnswer({ payload }, { call }) {
+     
       const res = yield call(helpServer.disLikeAnswer, payload);
       return res.data;
     },
 
     *likeComment({ payload }, { call }) {
+     
       const res = yield call(helpServer.likeComment, payload);
       return res.data;
     },
     *likeReply({ payload }, { call }) {
+    
       const res = yield call(helpServer.likeReply, payload);
       return res.data;
     },
 
     *getUserFAQ({ payload }, { call, put }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const res = yield call(helpServer.getUserFAQ, payload);
       if (!res.data.result) return;
       if (Object.keys(res.data.result).length) {
@@ -165,6 +210,10 @@ export default {
       }
     },
     *setAnswer({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const query = querystring.parse(window.location.search.split('?')[1]);
       const { q, QID } = query;
 
@@ -178,6 +227,10 @@ export default {
     },
 
     *editAnswer({ payload }, { call }) {
+      if(!userInfo){
+        message.warning('请先登录');
+        return;
+      }
       const query = querystring.parse(window.location.search.split('?')[1]);
       const { q, QID } = query;
       const res = yield call(helpServer.editAnswer, payload);

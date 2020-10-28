@@ -25,7 +25,7 @@ function FollowList(props) {
                 <div style={{ float: 'left' }}>
                   <Avatar
                     onClick={() => {
-                      if (userCommunityInfo.userName !== item.userName) {
+                      if (userCommunityInfo?.userName !== item.userName) {
                         router.push(`/personCenter/people/ask?userName=${item.userName}`);
                       }
                       return;

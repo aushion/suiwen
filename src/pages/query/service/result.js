@@ -111,14 +111,15 @@ export function submitQa(payload) {
 export function getConcept(payload) {
   const { 概念, focus } = payload;
   if (focus === '基本定义') {
-    return axios.post(`http://sxzsy.cnki-shanxi.net:8044/api/Concept/GetTermDataList`, null, {
-      params: {
-        term: 概念
+    return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
+      data: {
+        termName: 概念,
+        attrType: ''
       }
     });
   } else {
-    return axios.post(`http://sxzsy.cnki-shanxi.net:8044/api/Concept/GetConceptDataList`, null, {
-      params: {
+    return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
+      data: {
         termName: 概念,
         attrType: focus
       }

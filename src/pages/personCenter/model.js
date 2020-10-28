@@ -11,6 +11,7 @@ import {
 import helpServer from '../../services/help';
 import helpService from '../../services/help';
 import querystring from 'querystring';
+import Cookies from 'js-cookie';
 import RestTools from '../../utils/RestTools';
 
 export default {
@@ -166,7 +167,7 @@ export default {
             type: 'getUserCommunityInfo',
             payload: {
               userName,
-              operator: userInfo.UserName
+              operator: userInfo?userInfo.UserName:''
             }
           });
           if (pathnameArray[2] === 'edit') {
@@ -195,7 +196,7 @@ export default {
             dispatch({
               type: 'getMyCommunityQuestion',
               payload: {
-                operatorName: userInfo ? userInfo.UserName : userName,
+                operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -205,7 +206,7 @@ export default {
             dispatch({
               type: 'getMyCommunityAnswer',
               payload: {
-                operatorName: userInfo ? userInfo.UserName : userName,
+                operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -215,7 +216,7 @@ export default {
             dispatch({
               type: 'getUserFolloweeInfo',
               payload: {
-                operatorName: userInfo ? userInfo.UserName : userName,
+                operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -225,7 +226,7 @@ export default {
             dispatch({
               type: 'getUserFollowerInfo',
               payload: {
-                operatorName: userInfo ? userInfo.UserName : userName,
+                operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -235,7 +236,7 @@ export default {
             dispatch({
               type: 'getUserFollowedQuestion',
               payload: {
-                operatorName: userInfo ? userInfo.UserName : userName,
+                operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName

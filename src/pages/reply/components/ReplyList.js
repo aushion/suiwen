@@ -16,6 +16,9 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
 
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : false;
   function handleReply(replyId) {
     dispatch({
       type: 'reply/saveAnswers',
@@ -37,7 +40,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
         pageSize: 10,
         pageStart: 1,
         sort: type,
-        userName: userCommunityInfo.userName
+        userName: userCommunityInfo ? userCommunityInfo.userName : ''
       }
     }).then((res) => {
       dispatch({
@@ -68,6 +71,10 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
   }
 
   function confirm(replyId) {
+    if (!userInfo) {
+      message.warning('请先登录');
+      return;
+    }
     dispatch({
       type: 'reply/delReply',
       payload: {
@@ -78,12 +85,16 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
     }).then((res) => {
       if (res.code === 200) {
         message.success('删除成功');
-        getComment('hot');
+        getComment('time');
       }
     });
   }
 
   function handleLike(current) {
+    if (!userInfo) {
+      message.warning('请您先登录');
+      return;
+    }
     clearTimeout(timer);
     timer = setTimeout(() => {
       sendLike(current);
@@ -179,7 +190,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                     text={`赞${k.likedCount ? k.likedCount : ''}`}
                     key="list-vertical-like-o"
                   />
-                  {k.userName !== userCommunityInfo.userName ? (
+                  {userInfo && k.userName !== userCommunityInfo?.userName ? (
                     <IconText
                       type="message"
                       text="回复"
@@ -187,7 +198,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                       onClick={handleReply.bind(this, k.replyId)}
                     />
                   ) : null}
-                  {k.userName === userCommunityInfo.userName ? (
+                  {k.userName === userCommunityInfo?.userName && userInfo ? (
                     <span className={styles.delete}>
                       <Popconfirm
                         title="确定删除这条回复吗"
@@ -212,14 +223,14 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
                     <IconText type="warning" text="举报" />{' '}
                   </span>
                 </div>
-                {inputId === k.replyId ? (
+                {userInfo && inputId === k.replyId ? (
                   <div>
                     <SwTextArea
                       autoSize
                       maxLength={200}
                       value={newComment}
                       placeholder="输入回复"
-                      style={{ width: 550, marginLeft: 10 }}
+                      style={{ width: 500, marginLeft: 10 }}
                       onChange={handleChange}
                       disabled={!newComment}
                       onClick={sendComment.bind(this, k.userName)}

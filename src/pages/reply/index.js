@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton } from 'antd';
+import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton, message } from 'antd';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -38,6 +38,10 @@ function Reply(props) {
   }, [editStatus]);
 
   function followQuestion() {
+    if(!userCommunityInfo){
+      message.warning('请您先登录')
+      return;
+    }
     clearTimeout(timerCount);
     setTimeout(() => {
       switchFollowQ(!isFollowQ);
@@ -75,8 +79,9 @@ function Reply(props) {
                       type="primary"
                       style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
                       onClick={followQuestion}
+                      disabled={!userCommunityInfo}
                     >
-                      {isFollowQ ? '取消关注' : '关注问题'}
+                      {isFollowQ  ? '取消关注' : '关注问题'}
                     </Button>
                   </div>
                   <div>

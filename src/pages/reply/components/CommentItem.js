@@ -20,11 +20,14 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
   const [modalState, setModalState] = useState({
     visible: false
   });
+  const [loading, setLoading] = useState(false);
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
 
-
+    const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : false;  
 
   function showInput(id) {
     setInputId(id);
@@ -37,8 +40,8 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
         aId: entityId,
         pageSize: 10,
         pageStart: page,
-        sort: 'hot',
-        userName: userCommunityInfo.userName
+        sort: 'time',
+        userName: userCommunityInfo?.userName
       }
     }).then((res) => {
       dispatch({
@@ -52,7 +55,8 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
     addReply(e.target.value);
   }
   function sendReply(commentId) {
-    if (newReply && userCommunityInfo) {
+    if (newReply  && userInfo) {
+      setLoading(true);
       dispatch({
         type: 'reply/replyComment',
         payload: {
@@ -62,18 +66,28 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
           replyUserName: '',
           userName: userCommunityInfo.userName
         }
-      }).then((res) => {
-        if (res.code === 200) {
-          getComment();
-          addReply('');
-        } else {
-          message.warning(res.msg);
-        }
-      });
+      })
+        .then((res) => {
+          if (res.code === 200) {
+            getComment();
+            addReply('');
+          } else {
+            message.warning(res.msg);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     }
   }
 
   function confirm(commentId) {
+   
+    if (!userInfo) {
+      message.warning('请先登录');
+      return;
+    }
     dispatch({
       type: 'reply/delComment',
       payload: {
@@ -97,6 +111,10 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
   }
 
   function sendLike(current) {
+    if(!userInfo){
+      message.warning('请您先登录')
+      return;
+    }
     setLikeInfo({
       isLiked: current.isLiked === 0 ? 1 : 0,
       likedCount: current.isLiked
@@ -144,7 +162,7 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
                   key="list-vertical-like-o"
                   onClick={handleLike.bind(this, { ...likeInfo, commentId: item.commentId })}
                 />
-                {item.userName !== userCommunityInfo.userName ? (
+                {item.userName !== userCommunityInfo?.userName && userInfo ? (
                   <IconText
                     type="message"
                     text="回复"
@@ -152,7 +170,7 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
                     onClick={showInput.bind(this, item.commentId)}
                   />
                 ) : null}
-                {item.userName === userCommunityInfo.userName ? (
+                {item.userName === userCommunityInfo?.userName && userInfo ? (
                   <span>
                     <Popconfirm
                       title="确定删除这条评论吗"
@@ -183,6 +201,7 @@ function CommentItem({ item, dispatch, entityId, qId, inputId }) {
                     autoSize
                     width={200}
                     value={newReply}
+                    loading={loading}
                     placeholder="输入回复"
                     style={{ width: 500, marginLeft: 10 }}
                     onChange={editReply}

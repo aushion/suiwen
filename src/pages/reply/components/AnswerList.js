@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'dva';
 import { Icon, message, Spin } from 'antd';
 import dayjs from 'dayjs';
+import Cookies from 'js-cookie';
+
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
@@ -61,7 +63,7 @@ function AnswerList(props) {
           pageSize: 10,
           pageStart: 1,
           sort: 'time',
-          userName: userInfo?.UserName
+          userName: userInfo ? userInfo.UserName : ''
         }
       }).then((res) => {
         //这个res就是answerList由model中传过来的
@@ -118,6 +120,10 @@ function AnswerList(props) {
   }
 
   function handleLike(current, type) {
+    if (!userInfo) {
+      message.warning('请您先登录');
+      return;
+    }
     clearTimeout(timerCount);
     timerCount = setTimeout(() => {
       sendEvaluate(current, type);
@@ -161,7 +167,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo?.UserName
+            userId: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid')
           }
         };
         dispatch(localAction); //本地页面先修改点赞信息
@@ -190,7 +196,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo?.UserName
+            userId: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid')
           }
         });
         break;
@@ -217,7 +223,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo?.UserName
+            userId: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid')
           }
         };
         dispatch(effectAction);
@@ -341,7 +347,7 @@ function AnswerList(props) {
             <Spin spinning={!!item.loading} style={{ textAlign: 'center' }}>
               <div className={replyStyle.commentWrapper}>
                 {item.showComment ? (
-                  <CommentList qId={qId} entityId={item.aid} data={item} answerIndex={index} />
+                  <CommentList qId={qId} entityId={item.aid}  data={item} answerIndex={index} />
                 ) : null}
               </div>
             </Spin>

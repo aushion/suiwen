@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Radio, Input, Typography, message } from 'antd';
+import Cookies from 'js-cookie';
 import helpServer from '../services/help';
 const { Text } = Typography;
 
@@ -35,13 +36,13 @@ function ReasonModal({ visible, triggerCancel, id, entityType }) {
                 entityId: id,
                 entityType,
                 reason,
-                userName: userInfo.UserName,
+                userName: userInfo?userInfo.UserName:Cookies.get('cnki_qa_uuid'),
                 reportType: value
               }
             : {
                 entityId: id,
                 entityType,
-                userName: userInfo.UserName,
+                userName: userInfo?userInfo.UserName:Cookies.get('cnki_qa_uuid'),
                 reportType: value
               };
           helpServer

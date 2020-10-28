@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { throttle } from 'lodash';
 import RestTools from '../../utils/RestTools';
 import helpServer from '../../services/help';
@@ -9,6 +9,7 @@ import helpServer from '../../services/help';
 
 function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
   const [followStatus, updateStatus] = useState(hasFollowed);
+  const userInfo  = localStorage.getItem('userInfo') ? localStorage.getItem('userInfo') :null;
   const followedStyle = {
     backgroundColor: '#8C97AC',
     color: '#fff',
@@ -35,7 +36,10 @@ function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
 
   function handleFollow() {
     //修改本地状态使其实时修改页面显示
-
+    if(!userInfo){
+      message.warning('请您先登录');
+      return;
+    }
     if (followStatus === 0) {
       return;
     }
@@ -58,7 +62,7 @@ function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
     }
   }
 
-  return (
+  return followStatus ? (
     <Button
       // onMouseOver={handleMouseOver}
       // onMouseLeave={handleMouseLeave}
@@ -69,7 +73,7 @@ function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
     >
       {RestTools.followStatus[followStatus]}
     </Button>
-  );
+  ) : null;
 }
 
 export default FollowButton;

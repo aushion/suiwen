@@ -4,7 +4,14 @@ import { Input, Button } from 'antd';
 const { TextArea } = Input;
 
 function SwTextArea(props) {
-  const { disabled, onClick, buttonText = '发表', showButton = true, ...textAreaProps } = props;
+  const {
+    disabled,
+    onClick,
+    buttonText = '发表',
+    showButton = true,
+    loading = false,
+    ...textAreaProps
+  } = props;
   const suffixStyle = {
     position: 'relative',
     userSelect: 'none',
@@ -14,10 +21,11 @@ function SwTextArea(props) {
   };
   return (
     <>
-      <TextArea {...textAreaProps}  />
-      <span  style={suffixStyle}>{`${props.value.length}/200`}</span>
+      <TextArea {...textAreaProps} />
+      <span style={suffixStyle}>{`${props.value.length}/200`}</span>
       {showButton ? (
         <Button
+          loading={loading}
           style={{ verticalAlign: 'top', marginLeft: -20 }}
           type="primary"
           disabled={props.disabled}
