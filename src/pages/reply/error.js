@@ -7,7 +7,7 @@ function ErrorPage() {
       status="warning"
       title="该问题已被删除"
       extra={
-        <Button type="primary" key="console" href={`/web/help/newHelp`}>
+        <Button type="primary" key="console" href={`${process.env.basePath}/help/newHelp`}>
           去社区首页
         </Button>
       }
