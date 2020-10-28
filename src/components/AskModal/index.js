@@ -78,7 +78,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
           params: {
             q: submitQ,
             uId: loginUser.UserName,
-            domain:''
+            domain,
           }
         })
         .then((res) => {
