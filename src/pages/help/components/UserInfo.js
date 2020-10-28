@@ -13,7 +13,7 @@ function UserInfo(props) {
         borderRadius: 4,
         padding: '20px',
         background: '#fff',
-        marginBottom: 20
+        marginBottom: 10
       }}
     >
       <div>

@@ -166,7 +166,7 @@ function ResultPage(props) {
     kaifangyuData.length;
 
   function showModal() {
-    if (Cookies.get('Ecp_LoginStuts') || localStorage.getItem('userInfo')) {
+    if (Cookies.get('Ecp_LoginStuts')) {
       dispatch({
         type: 'result/save',
         payload: {

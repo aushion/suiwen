@@ -16,10 +16,6 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
 
-  const userInfo = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
-    : null;
-
   function handleReply(replyId) {
     dispatch({
       type: 'reply/saveAnswers',
@@ -138,35 +134,6 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
     });
   }
 
-  function handleOk(id, radioValue, moreReason = '') {
-    const reason = radioValue === '5' ? moreReason : radioValue;
-    dispatch({
-      type: 'reply/communityReport',
-      payload: {
-        entityId: id,
-        entityType: 5,
-        reason,
-        userName: userInfo.UserName,
-        reportType: radioValue
-      }
-    })
-      .then((res) => {
-        if (res.data.code === 200) {
-          message.success('感谢您的反馈，共建美好社区');
-        } else {
-          message.error(res.data.msg);
-        }
-        setModalState({
-          visible: false
-        });
-      })
-      .catch((err) => {
-        setModalState({
-          visible: false
-        });
-      });
-  }
-
   return (
     <div className={styles.replylist}>
       <List
@@ -267,7 +234,7 @@ function ReplyList({ replyData, inputId, dispatch, entityId, commentId, answerLi
       <ReasonModal
         visible={modalState.visible}
         id={modalState.id}
-        handleOk={handleOk}
+        entityType={5}
         triggerCancel={() => {
           setModalState({
             visible: false

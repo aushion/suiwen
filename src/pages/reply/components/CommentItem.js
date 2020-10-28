@@ -10,7 +10,7 @@ import styles from './CommentItem.less';
 
 let timer = null;
 
-function CommentItem({  item, dispatch, entityId, qId, inputId }) {
+function CommentItem({ item, dispatch, entityId, qId, inputId }) {
   const [InputId, setInputId] = useState(inputId);
   const [newReply, addReply] = useState('');
   const [likeInfo, setLikeInfo] = useState({
@@ -24,9 +24,7 @@ function CommentItem({  item, dispatch, entityId, qId, inputId }) {
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : null;
 
-  const userInfo = localStorage.getItem('userInfo')
-    ? JSON.parse(localStorage.getItem('userInfo'))
-    : null;
+
 
   function showInput(id) {
     setInputId(id);
@@ -65,13 +63,11 @@ function CommentItem({  item, dispatch, entityId, qId, inputId }) {
           userName: userCommunityInfo.userName
         }
       }).then((res) => {
-      
         if (res.code === 200) {
           getComment();
-          addReply('')
-        }else{
-         
-          message.warning(res.msg)
+          addReply('');
+        } else {
+          message.warning(res.msg);
         }
       });
     }
@@ -101,7 +97,6 @@ function CommentItem({  item, dispatch, entityId, qId, inputId }) {
   }
 
   function sendLike(current) {
-   
     setLikeInfo({
       isLiked: current.isLiked === 0 ? 1 : 0,
       likedCount: current.isLiked
@@ -119,35 +114,6 @@ function CommentItem({  item, dispatch, entityId, qId, inputId }) {
         userId: userCommunityInfo.userName
       }
     });
-  }
-
-  function handleOk(id, radioValue, moreReason = '') {
-    const reason = radioValue === '5' ? moreReason : radioValue;
-    dispatch({
-      type: 'reply/communityReport',
-      payload: {
-        entityId: id,
-        entityType: 4,
-        reason,
-        userName: userInfo.UserName,
-        reportType: radioValue
-      }
-    })
-      .then((res) => {
-        if (res.data.code === 200) {
-          message.success('感谢您的反馈，共建美好社区');
-        } else {
-          message.error(res.data.msg);
-        }
-        setModalState({
-          visible: false
-        });
-      })
-      .catch((err) => {
-        setModalState({
-          visible: false
-        });
-      });
   }
 
   return (
@@ -176,7 +142,7 @@ function CommentItem({  item, dispatch, entityId, qId, inputId }) {
                   type="like"
                   text={`赞${likeInfo.likedCount ? likeInfo.likedCount : ''}`}
                   key="list-vertical-like-o"
-                  onClick={handleLike.bind(this, {...likeInfo,commentId:item.commentId})}
+                  onClick={handleLike.bind(this, { ...likeInfo, commentId: item.commentId })}
                 />
                 {item.userName !== userCommunityInfo.userName ? (
                   <IconText
@@ -239,7 +205,7 @@ function CommentItem({  item, dispatch, entityId, qId, inputId }) {
       <ReasonModal
         visible={modalState.visible}
         id={modalState.id}
-        handleOk={handleOk}
+        entityType={4}
         triggerCancel={() => {
           setModalState({
             visible: false

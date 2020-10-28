@@ -4,8 +4,8 @@ import { throttle } from 'lodash';
 import RestTools from '../../utils/RestTools';
 import helpServer from '../../services/help';
 
-//  currentUser: 当前行用户
-//  loginUserInfo：当前登录用户
+/*   currentUser: 当前行用户
+  loginUserInfo：当前登录用户 */
 
 function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
   const [followStatus, updateStatus] = useState(hasFollowed);

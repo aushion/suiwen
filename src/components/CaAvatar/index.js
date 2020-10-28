@@ -68,7 +68,7 @@ function CaAvatar({ userName, showFollowBtn = true }) {
                           <strong>{userInfo.followers}</strong>
                         </div>
                       </div>
-                      {showFollowBtn && loginUser.userName !== userName ? (
+                      {showFollowBtn && loginUser.userName !== userName && userInfo.hasFollowed ? (
                         <FollowButton
                           hasFollowed={userInfo.hasFollowed}
                           currentUser={userName}

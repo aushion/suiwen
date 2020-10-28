@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer } from 'antd';
+import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton } from 'antd';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -21,7 +21,7 @@ dayjs.locale('zh-cn');
 
 let timerCount = null;
 function Reply(props) {
-  const { dispatch, followed, location, userCommunityInfo, sgData } = props;
+  const { dispatch, followed, location, userCommunityInfo, sgData, answerList, loading } = props;
   const params = location.query;
   const { QID, editStatus = false } = params;
 
@@ -65,57 +65,64 @@ function Reply(props) {
       <div className={replyStyle.content}>
         <Row gutter={40}>
           <Col span={18} className={replyStyle.content_left}>
-            <div className={replyStyle.title}>
-              <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
-              <span>{params.q}</span>
-              <div className="display_flex" style={{ marginTop: 20 }}>
-                <div style={{ marginRight: 10 }}>
-                  <Button
-                    type="primary"
-                    style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
-                    onClick={followQuestion}
-                  >
-                    {isFollowQ ? '取消关注' : '关注问题'}
-                  </Button>
-                </div>
-                <div>
-                  <Button
-                    type="primary"
-                    icon="edit"
-                    ghost
-                    onClick={() => {
-                      console.log('showEditor', showEditor);
-                      switchEditor(!showEditor);
-                      if (showEditor) {
-                        dispatch({
-                          type: 'reply/saveAnswers',
-                          payload: {
-                            answerHelpData: {
-                              contents: '',
-                              resource: ''
+            <Skeleton loading={loading}>
+              <div className={replyStyle.title}>
+                <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
+                <span>{params.q}</span>
+                <div className="display_flex" style={{ marginTop: 20 }}>
+                  <div style={{ marginRight: 10 }}>
+                    <Button
+                      type="primary"
+                      style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
+                      onClick={followQuestion}
+                    >
+                      {isFollowQ ? '取消关注' : '关注问题'}
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      type="primary"
+                      icon="edit"
+                      ghost
+                      onClick={() => {
+                        console.log('showEditor', showEditor);
+                        switchEditor(!showEditor);
+                        if (showEditor) {
+                          dispatch({
+                            type: 'reply/saveAnswers',
+                            payload: {
+                              answerHelpData: {
+                                contents: '',
+                                resource: ''
+                              }
                             }
-                          }
-                        });
-                      }
-                    }}
-                  >
-                    {showEditor ? '取消回答' : '写回答'}
-                  </Button>
+                          });
+                        }
+                      }}
+                    >
+                      {showEditor && answerList.length ? '取消回答' : '写回答'}
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <Divider style={{ margin: 0 }} />
-            <div className={replyStyle.draft}>{showEditor ? <AnswerForm /> : null}</div>
-            <AnswerList qId={QID} />
+              <Divider style={{ margin: 0 }} />
+              <div className={replyStyle.draft}>
+                {showEditor || answerList.length === 0 ? <AnswerForm /> : null}
+              </div>
+              <AnswerList qId={QID} />
+            </Skeleton>
           </Col>
-          <Col span={6} style={{paddingRight: 0}}>
+          <Col span={6} style={{ paddingRight: 0 }}>
             <div>
               {userCommunityInfo ? <UserInfo /> : null}
               <WaitAnswer />
+              <Button type="primary" style={{marginTop: 10}} block href="/web/help/newHelp">
+                去社区首页
+              </Button>
             </div>
           </Col>
         </Row>
-        {sgData.length && showEditor ? (
+        {sgData.length && (showEditor || answerList.length === 0) ? (
           <Affix offsetBottom={300} style={{ position: 'absolute', right: 20, bottom: 10 }}>
             <Button
               onClick={() => {
@@ -145,7 +152,7 @@ function Reply(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.reply, loading: state.loading.models.reply };
+  return { ...state.reply, loading: state.loading.effects['reply/getAnswer'] };
 }
 
 export default connect(mapStateToProps)(Form.create()(Reply));

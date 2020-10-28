@@ -88,6 +88,8 @@ export default {
             total: response.result.total
           }
         });
+      }else{
+        router.push('/reply/error')
       }
     },
     *getComment({ payload }, { call, select }) {

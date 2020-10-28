@@ -1,11 +1,12 @@
-import React from 'react';
-import { Row, Col } from 'antd';
+import React, { useState } from 'react';
+import { Row, Col, Button } from 'antd';
 import { connect } from 'dva';
 
 import DomainTags from './DomainTags';
 import HelpList from './HelpList';
 import HelpMenu from './HelpMenu';
 import WaitAnswer from '../../../components/WaitAnswer';
+import AskModal from '../../../components/AskModal';
 import UserInfo from './UserInfo';
 import helpStyle from '../index.less';
 
@@ -30,10 +31,11 @@ function HelpPage(props) {
   ];
 
   const actionType = {
-      'newHelp': 'help/getNewQuestions',
-      'hotHelp': 'help/getHotQuestions',
-      'needHelp': 'help/getNeedHelpQuestions',
-  }
+    newHelp: 'help/getNewQuestions',
+    hotHelp: 'help/getHotQuestions',
+    needHelp: 'help/getNeedHelpQuestions'
+  };
+  const [visible, setVisible] = useState(false);
 
   //点击tag响应事件
   function handleClickTag(payload) {
@@ -80,10 +82,26 @@ function HelpPage(props) {
           </Col>
           <Col span={6}>
             {userInfo ? <UserInfo /> : null}
-             <WaitAnswer title="等我来答"  /> 
+            <WaitAnswer title="等我来答" />
+            <Button
+              // type="primary"
+              style={{ marginTop: 10 }}
+              block
+              onClick={() => {
+                setVisible(true);
+              }}
+            >
+              我要提问
+            </Button>
           </Col>
         </Row>
       </div>
+      <AskModal
+        visible={visible}
+        onTriggerCancel={() => {
+          setVisible(false);
+        }}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, DatePicker, Radio, Button, message, Descriptions } from 'antd';
+import { Form, Input, DatePicker, Radio, Button, message, Modal, Descriptions } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 
@@ -22,7 +22,7 @@ function PersonInfo(props) {
     e.preventDefault();
     validateFields((err, values) => {
       if (!err) {
-        const data = JSON.parse(
+        let data = JSON.parse(
           JSON.stringify(values, function(key, value) {
             if (value) {
               return value;
@@ -31,16 +31,21 @@ function PersonInfo(props) {
             }
           })
         );
-        const { birthday, ...rest } = data;
+        let { birthday, ...rest } = data;
+
+        birthday = birthday || null;
+        data = birthday
+          ? {
+              birthday: moment(birthday).format('YYYY-MM-DD'),
+              ...rest
+            }
+          : rest;
         dispatch({
           type: 'personCenter/editUserInfo',
-          payload: {
-            birthday: values.birthday.format('YYYY-MM-DD'),
-            ...rest
-          }
+          payload: data
         }).then((res) => {
           if (res.data.result) {
-            message.success('保存成功');
+            Modal.success({ content: '保存成功' });
           } else {
             message.error(res.data.msg);
           }
@@ -50,7 +55,7 @@ function PersonInfo(props) {
   }
 
   return (
-    <div style={{padding:'0 0 0 20%'}}>
+    <div style={{ padding: '0 0 0 20%' }}>
       {localUserInfo && localUserInfo.UserType === 'bk' ? (
         <Descriptions title="账号信息" column={1} bordered>
           <Descriptions.Item label="账号">{userInfo ? userInfo.userName : ''}</Descriptions.Item>

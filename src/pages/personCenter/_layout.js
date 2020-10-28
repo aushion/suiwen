@@ -5,6 +5,7 @@ import { Link } from 'umi';
 import PersonAvatar from './components/PersonAvatar';
 import PersonMenu from './components/PersonMenu'; //编辑个人资料菜单
 import PeopleMenu from './components/PeopleMenu'; //社区相关
+import FollowButton from '../../components/FollowButton';
 import styles from './_layout.less';
 
 function UserLayout(props) {
@@ -22,7 +23,10 @@ function UserLayout(props) {
   return (
     <div className={styles.layout}>
       <div className={styles.bg}>
-        <Link to={`/help/newHelp`} style={{verticalAlign:'middle', display: 'flex',padding: 20}}>
+        <Link
+          to={`/help/newHelp`}
+          style={{ verticalAlign: 'middle', display: 'flex', padding: 20 }}
+        >
           <svg
             t="1603347246432"
             // class="icon"
@@ -44,7 +48,7 @@ function UserLayout(props) {
               fill="#1296db"
             ></path>
           </svg>
-          <span style={{lineHeight: '32px', fontWeight: 'bold',fontSize: 16}}>社区</span>
+          <span style={{ lineHeight: '32px', fontWeight: 'bold', fontSize: 16 }}>社区</span>
         </Link>
         <div className={styles.avatar}>
           <PersonAvatar avatar={avatar} userName={query.userName} />
@@ -68,7 +72,13 @@ function UserLayout(props) {
                     编辑个人资料
                   </Link>
                 </Button>
-              ) : null}
+              ) : (
+                <FollowButton
+                  hasFollowed={userCommunityInfo.hasFollowed}
+                  loginUserInfo={userInfo}
+                  currentUser={userName}
+                />
+              )}
             </div>
           </div>
         ) : null}

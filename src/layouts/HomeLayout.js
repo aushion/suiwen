@@ -8,7 +8,7 @@ import FeedBack from '../components/FeedBack';
 import styles from './HomeLayout.less';
 import RestTools from '../utils/RestTools';
 import LoginRegister from '../components/LoginRegister';
-import MessageBox from '../components/MessageBox';
+// import MessageBox from '../components/MessageBox';
 import feedback from '../assets/feedback.png';
 
 const { Header, Footer, Content } = Layout;
@@ -50,9 +50,9 @@ function HomeLayout(props) {
         <div className={styles.login}>
           {username ? (
             <>
-              <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
+              {/* <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
                 <MessageBox userName={username} />
-              </span>
+              </span> */}
               <Link
                 style={{ color: '#fff', marginLeft: 10 }}
                 to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}

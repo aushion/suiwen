@@ -1,11 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { Modal, Radio, Input, Typography } from 'antd';
+import { Modal, Radio, Input, Typography, message } from 'antd';
+import helpServer from '../services/help';
 const { Text } = Typography;
 
-function ReasonModal({ visible, handleOk, triggerCancel, id }) {
+function ReasonModal({ visible, triggerCancel, id, entityType }) {
   const [value, setReason] = useState('');
   const [moreReason, setMoreReason] = useState('');
   const [showTips, setShowTips] = useState(false);
+  const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+
   const textRef = useRef();
   const radioStyle = {
     display: 'block',
@@ -24,11 +29,34 @@ function ReasonModal({ visible, handleOk, triggerCancel, id }) {
       visible={visible}
       onOk={() => {
         if (value) {
-          handleOk(
-            id, // 当前操作列id
-            value, // 内置的radio选择项
-            moreReason // radio选择其他项时，自己写的原因
-          );
+          const reason = value === '5' ? moreReason : '';
+          const params = reason
+            ? {
+                entityId: id,
+                entityType,
+                reason,
+                userName: userInfo.UserName,
+                reportType: value
+              }
+            : {
+                entityId: id,
+                entityType,
+                userName: userInfo.UserName,
+                reportType: value
+              };
+          helpServer
+            .communityReport(params)
+            .then((res) => {
+              if (res.data.code === 200) {
+                message.success('感谢您的反馈，共建美好社区');
+              } else {
+                message.error(res.data.msg);
+              }
+              triggerCancel();
+            })
+            .catch(() => {
+              triggerCancel();
+            });
         } else {
           setShowTips(true);
         }

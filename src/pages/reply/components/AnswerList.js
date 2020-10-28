@@ -127,7 +127,18 @@ function AnswerList(props) {
   function sendEvaluate(current, type) {
     let localAction = null; //本地action
     let effectAction = null; //异步action
-
+    if (type === 'up') {
+      if (current.isLiked === -1) {
+        message.warning('您已经点过踩了');
+        return;
+      }
+    }
+    if (type === 'down') {
+      if (current.isLiked === 1) {
+        message.warning('您已经点过赞啦');
+        return;
+      }
+    }
     switch (type) {
       case 'up':
         localAction = {
@@ -216,35 +227,6 @@ function AnswerList(props) {
     }
   }
 
-  function handleOk(id,radioValue,moreReason=''){
-    const reason = radioValue === '5' ? moreReason:radioValue;
-    dispatch({
-      type: 'reply/communityReport',
-      payload: {
-        entityId:id,
-        entityType:0,
-        reason,
-        userName: userInfo.UserName,
-        reportType:radioValue 
-
-      }
-    }).then(res => {
-      if(res.data.code === 200){
-        message.success('感谢您的反馈，共建美好社区');
-        
-      }else{
-        message.error(res.data.msg);
-      }
-      setModalState({
-        visible: false
-      })
-    }).catch(err => {
-      setModalState({
-        visible: false
-      })
-    })
-  }
-
   return (
     <div>
       <div className={replyStyle.replyCount}>
@@ -252,10 +234,8 @@ function AnswerList(props) {
           <span>
             共<strong style={{ color: '#333' }}>{total}</strong>个回答
           </span>
-        ) : (
-        //  <Alert message="暂时还没有回答" type="info" />
-        null
-        )}
+        ) : //  <Alert message="暂时还没有回答" type="info" />
+        null}
       </div>
       {answerList.map((item, index) => {
         const username = item.userName;
@@ -371,7 +351,7 @@ function AnswerList(props) {
       <ReasonModal
         visible={modalState.visible}
         id={modalState.id}
-        handleOk={handleOk}
+        entityType={0}
         triggerCancel={() => {
           setModalState({
             visible: false

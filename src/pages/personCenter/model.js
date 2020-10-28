@@ -20,7 +20,7 @@ export default {
     avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${
       RestTools.getLocalStorage('userInfo') ? RestTools.getLocalStorage('userInfo').UserName : ''
     }`,
-    userCommunityInfo: sessionStorage.getItem('userCommunityInfo') ? JSON.parse(sessionStorage.getItem('userCommunityInfo')):null,
+    userCommunityInfo: null,
     defaultKey: window.location.pathname.replace('/web/personCenter/edit', ''),
     defaultPersonKey: window.location.pathname.replace('/web/personCenter/people/', ''),
     myCommunityQuestion: null,
@@ -162,9 +162,13 @@ export default {
         const pathnameArray = current.split('/'); //获取路由信息为了渲染默认菜单选中
         if (match && userName) {
           window.document.title = `个人中心`;
-          dispatch({type: 'getUserCommunityInfo', payload:{
-            userName
-          }})
+          dispatch({
+            type: 'getUserCommunityInfo',
+            payload: {
+              userName,
+              operator: userInfo.UserName
+            }
+          });
           if (pathnameArray[2] === 'edit') {
             dispatch({
               type: 'save',
@@ -186,12 +190,12 @@ export default {
               avatar: `${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`
             }
           });
-       
+
           if (current === '/personCenter/people/ask') {
             dispatch({
               type: 'getMyCommunityQuestion',
               payload: {
-                operatorName: userInfo?userInfo.UserName:userName,
+                operatorName: userInfo ? userInfo.UserName : userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -201,7 +205,7 @@ export default {
             dispatch({
               type: 'getMyCommunityAnswer',
               payload: {
-                operatorName: userInfo?userInfo.UserName:userName,
+                operatorName: userInfo ? userInfo.UserName : userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -211,7 +215,7 @@ export default {
             dispatch({
               type: 'getUserFolloweeInfo',
               payload: {
-                operatorName: userInfo?userInfo.UserName:userName,
+                operatorName: userInfo ? userInfo.UserName : userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -221,7 +225,7 @@ export default {
             dispatch({
               type: 'getUserFollowerInfo',
               payload: {
-                operatorName: userInfo?userInfo.UserName:userName,
+                operatorName: userInfo ? userInfo.UserName : userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName
@@ -231,7 +235,7 @@ export default {
             dispatch({
               type: 'getUserFollowedQuestion',
               payload: {
-                operatorName: userInfo?userInfo.UserName:userName,
+                operatorName: userInfo ? userInfo.UserName : userName,
                 pageSize: 10,
                 pageStart: 1,
                 userName: userName

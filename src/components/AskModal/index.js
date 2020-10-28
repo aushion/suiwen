@@ -36,8 +36,8 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
   };
 
   useEffect(() => {
-    if (visible && q) {
-      setSubmitQ(q);
+    if (visible) {
+      q && setSubmitQ(q);
       request
         .post('/community/getCommunityClass')
         .then((res) => {
@@ -67,7 +67,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       setErrorTips('请至少选择一项二级标签分类');
       return;
     }
-    if(selectedTags.length > 10){
+    if (selectedTags.length > 10) {
       setErrorTips('至多选择10个标签');
       return;
     }
@@ -104,6 +104,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
     setSelectedRoot(null);
     updateCheckedTag([]);
     setSubmitQ('');
+    setErrorTips(null);
   }
 
   function handleClickRoot(item) {
@@ -133,6 +134,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
 
   return (
     <Modal
+      destroyOnClose
       visible={visible}
       onCancel={() => {
         onTriggerCancel();
@@ -201,7 +203,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
           </div>
         ) : null}
       </div>
-      {errorTips ?  <Alert message={errorTips} type="error" /> : null}
+      {errorTips ? <Alert message={errorTips} type="error" /> : null}
     </Modal>
   );
 }
