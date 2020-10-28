@@ -116,7 +116,7 @@ function Reply(props) {
             <div>
               {userCommunityInfo ? <UserInfo /> : null}
               <WaitAnswer />
-              <Button type="primary" style={{marginTop: 10}} block href="/web/help/newHelp">
+              <Button type="primary" style={{marginTop: 10}} block href={`${process.env.basePath}/help/newHelp`}>
                 去社区首页
               </Button>
             </div>
