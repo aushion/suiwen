@@ -135,12 +135,12 @@ function BasicLayout(props) {
 
           {username ? (
             <>
-              <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
-                {/* <MessageBox userName={username} /> */}
-              </span>
+              {/* <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
+                <MessageBox userName={username} />
+              </span> */}
               <Link
                 style={{ color: '#fff', marginLeft: 10 }}
-                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+                to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
                 target="_blank"
               >
                 <Avatar

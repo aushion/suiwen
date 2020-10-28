@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Upload, Icon, message } from 'antd';
 import querystring from 'querystring';
 import { connect } from 'dva';
-import RestTools from '../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
 function Avatar(props) {
   const { userName } = querystring.parse(window.location.href.split('?')[1]);
@@ -15,7 +15,7 @@ function Avatar(props) {
   function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
+      message.error('您只能上传 JPG/PNG 文件!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
@@ -69,7 +69,7 @@ function Avatar(props) {
   );
 
   return (
-    <div>
+    <div style={{ padding: '10px 0 10px 50%', marginLeft: '-100px'}}>
       <div>
         <Upload
           name="file"
@@ -83,14 +83,12 @@ function Avatar(props) {
           }}
           onChange={handleChange}
         >
-          {/* {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
           {uploadButton}
         </Upload>
       </div>
-
       <div>
         <label htmlFor="照片预览">照片预览:</label>
-        <div style={{ width: 280, height: 280 }}>
+        <div style={{ width: 200, height: 200 }}>
           <img
             style={{ width: '100%', height: '100%', borderRadius: 6 }}
             src={props.avatar}

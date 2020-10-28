@@ -1,5 +1,5 @@
-import RestTools from './utils/RestTools';
 import Cookies from 'js-cookie';
+import RestTools from './utils/RestTools';
 import request from './utils/request';
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));

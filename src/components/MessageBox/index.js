@@ -318,7 +318,7 @@ function MessageBox(props) {
   );
 
   return (
-    <div>
+    <>
       <Popover
         placement="bottom"
         content={content}
@@ -345,7 +345,7 @@ function MessageBox(props) {
         {tabKey === '1' ? <CommentPop messageDetail={messageDetail}></CommentPop> : null}
         {tabKey === '3' ? <AnswerPop messageDetail={messageDetail} /> : null}
       </Modal>
-    </div>
+    </>
   );
 }
 

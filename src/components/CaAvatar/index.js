@@ -8,13 +8,13 @@ import FollowButton from '../FollowButton';
 function CaAvatar({ userName, showFollowBtn = true }) {
   const [loading, setLoading] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const loginUser = sessionStorage.getItem('userCommunityInfo')
-    ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
+  const loginUser = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
   function fetchUser() {
     setLoading(true);
     helpServer
-      .getUserCommunityInfo({ userName, operator: loginUser.userName })
+      .getUserCommunityInfo({ userName, operator: loginUser.UserName })
       .then((res) => {
         if (res.data.code === 200) {
           setUserInfo(res.data.result);
@@ -34,7 +34,7 @@ function CaAvatar({ userName, showFollowBtn = true }) {
           <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
         </div>
       ) : (
-        <Link to={`personCenter/people/ask?userName=${userName}`} target="_blank">
+        <Link to={`/personCenter/people/ask?userName=${userName}`} target="_blank">
           <Popover
             placement="bottomLeft"
             content={
@@ -68,7 +68,7 @@ function CaAvatar({ userName, showFollowBtn = true }) {
                           <strong>{userInfo.followers}</strong>
                         </div>
                       </div>
-                      {showFollowBtn && loginUser.userName !== userName ? (
+                      {showFollowBtn && loginUser.userName !== userName && userInfo.hasFollowed ? (
                         <FollowButton
                           hasFollowed={userInfo.hasFollowed}
                           currentUser={userName}

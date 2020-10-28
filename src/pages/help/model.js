@@ -6,13 +6,18 @@ export default {
   namespace: 'help',
   state: {
     newHelpData: null,
+    hotHelpData: null,
     domainList: [],
     domain: '全部',
+    communityNode: sessionStorage.getItem('communityNode')
+      ? JSON.parse(sessionStorage.getItem('communityNode'))
+      : null,
     size: 10,
     index: 1,
     uid: JSON.parse(localStorage.getItem('userInfo'))
       ? JSON.parse(localStorage.getItem('userInfo')).UserName
-      : Cookies.get('cnki_qa_uuid')
+      : Cookies.get('cnki_qa_uuid'),
+    waitAnswer: []
   },
 
   effects: {
@@ -21,11 +26,36 @@ export default {
         ...payload
       });
       const resultData = res.data;
-      
+
       yield put({
         type: 'saveList',
-        payload: { newHelpData: resultData.result, ...payload, }
+        payload: { newHelpData: resultData.result, ...payload }
       });
+    },
+
+    *getHotQuestions({ payload }, { call, put }) {
+      const res = yield call(helpService.getHotQuestions, payload);
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
+    },
+    *getNeedHelpQuestions({ payload }, { call, put }) {
+      const res = yield call(helpService.getNeedHelpQuestions, payload);
+      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload } });
+    },
+    *getUserCommunityInfo({ payload }, { call, put }) {
+      const res = yield call(helpService.getUserCommunityInfo, {
+        ...payload
+      });
+      const resultData = res.data;
+      yield put({
+        type: 'global/save',
+        payload: {
+          ...payload,
+          userInfo: resultData.result
+        }
+      });
+ 
+        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
+      
     },
 
     *getDomain({ payload }, { call, put }) {
@@ -38,11 +68,6 @@ export default {
       const res = yield call(helpService.getPersonDomain, payload);
       const resultData = res.data;
       yield put({ type: 'saveDomainList', payload: { domainList: resultData.result } });
-    },
-
-    *getHotQuestions({ payload }, { call, put }) {
-      const res = yield call(helpService.getHotQuestions, payload);
-      yield put({ type: 'saveList', payload: { newHelpData: res.data.result, ...payload,} });
     },
 
     *getMyAnswerQuestions({ payload }, { call, put }) {
@@ -60,73 +85,75 @@ export default {
           payload: { domain: '', uid }
         });
       }
+    },
+    *waitAnswer({ payload }, { call, put }) {
+      const res = yield call(helpService.waitAnswer, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'saveList',
+          payload: {
+            waitAnswer: res.data.result
+          }
+        });
+      }
     }
   },
   subscriptions: {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const match = pathname.match(/Help/i);
-        const { username } = query;
         if (match) {
-          const uid = RestTools.getLocalStorage('userInfo')
-            ? RestTools.getLocalStorage('userInfo').UserName
-            : Cookies.get('cnki_qa_uuid');
+          const userInfo = RestTools.getLocalStorage('userInfo')
+            ? RestTools.getLocalStorage('userInfo')
+            : null;
+
+          const communityNode = sessionStorage.getItem('communityNode')
+            ? JSON.parse(sessionStorage.getItem('communityNode'))
+            : null;
           const current = pathname;
-          dispatch({ type: 'saveList', payload: { newHelpData: null, index: 1, size: 10 } }); //重置状态
+          window.document.title = `知网随问-社区`;
+          sessionStorage.removeItem('q');
+          dispatch({
+            type: 'saveList',
+            payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 }
+          }); //重置状态
+         
+
+          dispatch({ type: 'getDomain' });
+          userInfo &&
+            dispatch({ type: 'getUserCommunityInfo', payload: { userName: userInfo.UserName } }); //获取社区个人信息
           if (current === '/help/newHelp') {
             dispatch({
-              type: 'getDomain'
-            });
-
-            dispatch({
               type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent('') }
+              payload: {
+                domain: communityNode
+                  ? communityNode.secondNode
+                    ? communityNode.secondNode.cId
+                    : communityNode.firstNode.cId
+                  : ''
+              }
             });
           } else if (current === '/help/hotHelp') {
             dispatch({
-              type: 'getDomain'
-            });
-
-            dispatch({
               type: 'getHotQuestions',
-              payload: { domain: encodeURIComponent('') }
+              payload: {
+                domain: communityNode
+                  ? communityNode.secondNode
+                    ? communityNode.secondNode.cId
+                    : communityNode.firstNode.cId
+                  : ''
+              }
             });
-          } else if (current === '/help/myHelp') {
+          } else if (current === '/help/needHelp') {
             dispatch({
-              type: 'getDomain',
-              payload: { uId: uid }
-            });
-            dispatch({
-              type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent(''), uid }
-            });
-          } else if (current === '/help/myReply') {
-            dispatch({
-              type: 'getMyAnswerQuestions',
-              payload: { domain: encodeURIComponent(''), uid }
-            });
-
-            dispatch({
-              type: 'getPersonDomain',
-              payload: { uId: uid }
-            });
-          } else if (current === '/help/otherHelp') {
-            dispatch({
-              type: 'getDomain',
-              payload: { uId: username }
-            });
-            dispatch({
-              type: 'getNewQuestions',
-              payload: { domain: encodeURIComponent(''), uid: username }
-            });
-          } else if (current === '/help/otherReply') {
-            dispatch({
-              type: 'getDomain',
-              payload: { uId: username }
-            });
-            dispatch({
-              type: 'getMyAnswerQuestions',
-              payload: { domain: encodeURIComponent(''), uid: username }
+              type: 'getNeedHelpQuestions',
+              payload: {
+                domain: communityNode
+                  ? communityNode.secondNode
+                    ? communityNode.secondNode.cId
+                    : communityNode.firstNode.cId
+                  : ''
+              }
             });
           }
         }

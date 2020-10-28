@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button, Input, message } from 'antd';
 import { connect } from 'dva';
-import RestTools from '../../utils/RestTools';
+import RestTools from 'Utils/RestTools';
 
 function UpdatePassword(props) {
   const userInfo = RestTools.getLocalStorage('userInfo');
@@ -52,7 +52,7 @@ function UpdatePassword(props) {
   }
 
   return (
-    <div>
+    <div style={{padding: '20px 0 0 20%'}}>
       <Form {...formItemLayout} onSubmit={handleSubmit}>
         <Form.Item label="账号">
           {getFieldDecorator('username', {
@@ -97,7 +97,7 @@ function UpdatePassword(props) {
             ]
           })(<Input.Password style={{ width: '60%' }} placeholder="确认新密码" />)}
         </Form.Item>
-        <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
+        <Form.Item wrapperCol={{ span: 12, offset: 14 }}>
           <Button type="primary" htmlType="submit">
             保存
           </Button>

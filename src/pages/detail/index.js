@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Anchor, Layout, Spin, Empty } from 'antd';
 import querystring from 'querystring';
+import router from 'umi/router';
 import styles from './index.less';
 import RestTools from '../../utils/RestTools';
 import request from '../../utils/request';
-import router from 'umi/router';
 
 const { Link } = Anchor;
 const { Footer} = Layout;

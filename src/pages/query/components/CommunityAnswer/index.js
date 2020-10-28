@@ -53,7 +53,7 @@ const CommunityAnswer = (props) => {
           fontSize: 17,
           paddingBottom: 10,
           fontWeight: '400',
-          // textIndent: '1em'
+          textIndent: '1em'
         }}
       >
         <Icon type="question-circle" style={{ color: '#1890ff', marginRight: 4 }} />

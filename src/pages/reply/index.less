@@ -1,28 +1,77 @@
-.reply{
-  .content{
-    width: 62.5%;
+.reply {
+  padding-top: 20px;
+  .content {
+    width: 1000px;
     margin: auto;
-    .title{
-      font-size: 24px;
-      color: #666;
-      padding: 10px 10px 20px;
-      margin-bottom: 20px;
+    .content_left {
+      background: #fff;
+      border-radius: 4px;
     }
-    .replyCount{
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #636363;
+      padding: 10px 10px 20px;
+    }
+    .replyCount {
       color: #999;
     }
-    .answerItem{
+    .answerItem {
       background-color: #fff;
-      border-bottom: 1px solid #ccc;
-      padding: 20px;
-      border-radius: 4px;
-      .itemTitle{
-        font-size: 14px;
+      border-bottom: 1px solid #eee;
+      padding: 16px;
+      overflow: hidden;
+
+      :global(.ant-list-vertical .ant-list-item-meta){
+        margin-bottom: 0;
+      }
+
+      .followBtn{
+        padding-top: 10px;
+      }
+    
+      .answerAvatar {
+        padding: 10px 0;
+      }
+      .itemTitle {
+        font-size: 15px;
         color: #333;
+        letter-spacing: 2px;
+        line-height: 27.2px;
+      }
+      .operation {
+        color: #8590a6;
+        margin: 10px 0;
+        .likeBtn {
+          cursor: pointer;
+          background: #ebf7ff;
+          color: #0095ff;
+          outline: none;
+          border: none;
+          padding: 4px 8px;
+          &:focus{
+            border:none;
+            outline: none;
+          }
+        }
+        .action {
+          margin-left: 20px;
+          cursor: pointer;
+          &:hover{
+            color:orange;
+          }
+        }
+      }
+
+      .commentList {
+        // width: 80%;
+        padding: 20px;
+        background: #fafafa;
+        box-shadow: rgba(216, 216, 216, 0.76) 0px 0px 5px 0px;
       }
     }
 
-    .draft{
+    .draft {
       margin: 20px 0;
       font-size: 14px;
     }
@@ -40,27 +89,25 @@
       letter-spacing: 2px;
       line-height: 27.2px;
       text-indent: 2em;
-      p{
+      p {
         margin: 0;
       }
     }
-   
   }
-  :global(.bf-container .public-DraftEditorPlaceholder-root){
+  :global(.bf-container .public-DraftEditorPlaceholder-root) {
     font-size: 13px;
   }
-  :global(.bf-dropdown .dropdown-content .dropdown-arrow){
+  :global(.bf-dropdown .dropdown-content .dropdown-arrow) {
     background-color: #fff;
   }
-  :global(.bf-dropdown .dropdown-content-inner){
+  :global(.bf-dropdown .dropdown-content-inner) {
     background-color: #fff;
     color: #666;
-   
   }
-  :global(.bf-font-sizes){
-    background-color:rgba(0, 0, 0, .5);
+  :global(.bf-font-sizes) {
+    background-color: rgba(0, 0, 0, 0.5);
   }
-  :global(.bf-link-editor .input-group input){
+  :global(.bf-link-editor .input-group input) {
     border: 1px solid #cecece;
     color: #666;
   }

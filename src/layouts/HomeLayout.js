@@ -48,15 +48,15 @@ function HomeLayout(props) {
         <div className={styles.logo1}></div>
         <div className={styles.logo2}></div>
         <div className={styles.login}>
-          {/* <a href="http://qa.cnki.net/old" style={{ color: '#fac500', marginRight: 20 }}>
-            回到旧版
-          </a> */}
-          <span className={styles.tips}>
-            您好，
-            {username ? (
+          {username ? (
+            <>
+              {/* <span style={{ cursor: 'pointer', marginRight: 20, verticalAlign: 'middle' }}>
+                <MessageBox userName={username} />
+              </span> */}
               <Link
                 style={{ color: '#fff', marginLeft: 10 }}
-                to={`/personCenter/personInfo?userName=${userInfo ? userInfo.UserName : ''}`}
+                to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                target="_blank"
               >
                 <Avatar
                   size="small"
@@ -69,10 +69,12 @@ function HomeLayout(props) {
                 />
                 <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
               </Link>
-            ) : (
-              '游客'
-            )}
-          </span>
+              <Button onClick={logout} className={styles.login_btn}>
+                退出
+              </Button>
+            </>
+          ) : null}
+
           {username ? null : (
             <Button
               className={styles.login_btn}
@@ -81,10 +83,6 @@ function HomeLayout(props) {
                 setShowLogin(true);
                 setShowRegister(false);
               }}
-              // href="https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=http://qa.cnki.net/sw.web"
-              // href={`https://login.cnki.net/login/?platform=kns&ForceReLogin=1&ReturnURL=${encodeURIComponent(
-              //   window.location.href
-              // )}`}
             >
               登录
             </Button>
@@ -97,20 +95,11 @@ function HomeLayout(props) {
                 setShowLogin(false);
                 setShowRegister(true);
               }}
-              // href={`http://my.cnki.net/elibregister/commonRegister.aspx?autoreturn=1&returnurl=${encodeURIComponent(
-              //   window.location.href
-              // )}`}
             >
               注册
             </Button>
           )}
-          {username ? (
-            <button onClick={logout} className={styles.login_btn}>
-              退出
-            </button>
-          ) : null}
         </div>
-
 
         <div className={styles.inputWrap}>
           <SmartInput

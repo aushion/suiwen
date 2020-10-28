@@ -8,7 +8,6 @@ function Concept({ data, intentJson }) {
   const [result] = results;
   const { 概念 = '' } = result.fields;
 
-  console.log('data', Array.isArray(data));
   const conceptTypes = Array.isArray(data) ? [] : data.Classifys;
   const conceptContent = Array.isArray(data) ? data : null;
   const basicContent = Array.isArray(data) ?  null : find(data.Terms, { 属性类型: '基本定义' });
