@@ -12,7 +12,8 @@ import {
   getCustomView,
   collectQuestion,
   submitQa,
-  getConcept
+  getConcept,
+  getConceptAttrs
 } from './service/result';
 import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
@@ -35,7 +36,8 @@ export default {
     relaventQuestions: [], //相关问题
     communityAnswer: null,
     specialQuestions: [],
-    conceptData: null //知识元数据
+    conceptData: null, //知识元数据
+    conceptDataAttrs: null//知识元概念属性
   },
   reducers: {
     save(state, { payload }) {
@@ -79,6 +81,10 @@ export default {
             type: 'getConcept',
             payload
           });
+          yield put({
+            type: 'getConceptAttrs',
+            payload
+          });
         }
       }
 
@@ -110,6 +116,7 @@ export default {
         }
       }
     },
+    //获取知识元概念库属性句
     *getConcept({ payload }, { call, put }) {
       const res = yield call(getConcept, payload);
 
@@ -126,6 +133,34 @@ export default {
           });
         }
       }
+    },
+
+    *getConceptAttrs({ payload }, { call, put }) {
+      const res = yield call(getConceptAttrs, payload);
+      if(res){
+        if (res.data.Code === 0) {
+          if (
+            (Array.isArray(res.data.Data) && res.data.Data.length) ||
+            !Array.isArray(res.data.Data)
+          ) {
+            yield put({
+              type: 'save',
+              payload: {
+                conceptDataAttrs: res.data.Data
+              }
+            });
+          }
+        }
+      }else{
+        console.log("111")
+        yield put({
+          type: 'save',
+          payload: {
+            conceptDataAttrs: null
+          }
+        });
+      }
+      
     },
 
     *submitQa({ payload }, { call }) {

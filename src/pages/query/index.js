@@ -59,7 +59,8 @@ function ResultPage(props) {
     fetchSg,
     fetchSemanticData,
     answerData,
-    conceptData
+    conceptData,
+    conceptDataAttrs
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -257,8 +258,10 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  {conceptData ? (
-                    <Concept data={conceptData} intentJson={conceptInfo[0].intentJson} />
+                  
+                  {conceptData && (conceptInfo[0].intentJson.results[0].fields.focus==='基本定义'?conceptDataAttrs:true) ? (
+                    //console.log(conceptInfo[0].intentJson.results[0].fields.focus)
+                    <Concept data={conceptData} attrs={conceptDataAttrs} intentJson={conceptInfo[0].intentJson} />
                   ) : null}
 
                   {yearbookData.length

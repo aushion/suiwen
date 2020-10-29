@@ -126,3 +126,16 @@ export function getConcept(payload) {
     });
   }
 }
+
+//获取知识元概念属性
+export function getConceptAttrs(payload) {
+  const { 概念, focus } = payload;
+  console.log('focus',focus)
+  if (focus === '基本定义') {
+    return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptAttrsByTerm`, null, {
+      data: {
+        termName: 概念,
+      }
+    });
+  }
+}
