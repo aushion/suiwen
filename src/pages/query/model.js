@@ -13,7 +13,9 @@ import {
   collectQuestion,
   submitQa,
   getConcept,
-  getConceptAttrs
+  getConceptAttrs,
+  getMethod,
+  getMethodAttrs
 } from './service/result';
 import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
@@ -36,8 +38,10 @@ export default {
     relaventQuestions: [], //相关问题
     communityAnswer: null,
     specialQuestions: [],
-    conceptData: null, //知识元数据
-    conceptDataAttrs: null//知识元概念属性
+    conceptData: null, //知识元概念数据
+    conceptDataAttrs: null,//知识元概念属性
+    methodData: null, //知识元方法数据
+    methodDataAttrs: null//知识元方法属性
   },
   reducers: {
     save(state, { payload }) {
@@ -56,7 +60,8 @@ export default {
       if (data.result) {
         const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
         let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
-        const conceptData = repositoryData.filter((item) => item.template === 'concept'); //知识元
+        const conceptData = repositoryData.filter((item) => item.template === 'concept'); //知识元概念
+        const methodData = repositoryData.filter((item) => item.template === 'method'); //知识元方法
 
         yield put({
           type: 'save',
@@ -75,6 +80,7 @@ export default {
           source: 'getAnswer'
         });
 
+        //知识元概念库意图
         if (conceptData[0]?.intentJson?.results[0]?.fields) {
           const payload = conceptData[0].intentJson.results[0].fields;
           yield put({
@@ -83,6 +89,19 @@ export default {
           });
           yield put({
             type: 'getConceptAttrs',
+            payload
+          });
+        }
+
+        //知识元方法库意图
+        if (methodData[0]?.intentJson?.results[0]?.fields) {
+          const payload = methodData[0].intentJson.results[0].fields;
+          yield put({
+            type: 'getMethod',
+            payload
+          });
+          yield put({
+            type: 'getMethodAttrs',
             payload
           });
         }
@@ -116,7 +135,8 @@ export default {
         }
       }
     },
-    //获取知识元概念库属性句
+
+    //获取知识元概念库属性句子
     *getConcept({ payload }, { call, put }) {
       const res = yield call(getConcept, payload);
 
@@ -134,7 +154,7 @@ export default {
         }
       }
     },
-
+    //获取知识元概念基本属性
     *getConceptAttrs({ payload }, { call, put }) {
       const res = yield call(getConceptAttrs, payload);
       if(res){
@@ -152,7 +172,6 @@ export default {
           }
         }
       }else{
-        console.log("111")
         yield put({
           type: 'save',
           payload: {
@@ -160,7 +179,42 @@ export default {
           }
         });
       }
-      
+    },
+
+    //获取知识元方法库属性句子
+    *getMethod({ payload }, { call, put }) {
+      const res = yield call(getMethod, payload);
+
+      if (res.data.Code === 0) {
+        if (
+          (Array.isArray(res.data.Data) && res.data.Data.length) ||
+          !Array.isArray(res.data.Data)
+        ) {
+          yield put({
+            type: 'save',
+            payload: {
+              methodData: res.data.Data
+            }
+          });
+        }
+      }
+    },
+    //获取知识元方法基本属性
+    *getMethodAttrs({ payload }, { call, put }) {
+      const res = yield call(getMethodAttrs, payload);
+      if (res.data.Code === 0) {
+        if (
+          (Array.isArray(res.data.Data) && res.data.Data.length) ||
+          !Array.isArray(res.data.Data)
+        ) {
+          yield put({
+            type: 'save',
+            payload: {
+              methodDataAttrs: res.data.Data
+            }
+          });
+        }
+      } 
     },
 
     *submitQa({ payload }, { call }) {
@@ -412,7 +466,10 @@ export default {
                 helpList: [],
                 communityAnswer: null,
                 relaventQuestions: [],
-                conceptData: null
+                conceptData: null,
+                conceptDataAttrs: null,//知识元概念属性
+                methodData: null, //知识元方法数据
+                methodDataAttrs: null//知识元方法属性
               }
             });
             dispatch({ type: 'collectQuestion', payload: { q, userId } });

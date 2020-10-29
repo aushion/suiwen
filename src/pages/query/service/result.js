@@ -110,32 +110,41 @@ export function submitQa(payload) {
 
 export function getConcept(payload) {
   const { 概念, focus } = payload;
-  if (focus === '基本定义') {
-    return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
-      data: {
-        termName: 概念,
-        attrType: ''
-      }
-    });
-  } else {
-    return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
-      data: {
-        termName: 概念,
-        attrType: focus
-      }
-    });
-  }
+  return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
+    data: {
+      termName: 概念,
+      attrType: focus === '基本定义'?'':focus
+    }
+  });
 }
 
 //获取知识元概念属性
 export function getConceptAttrs(payload) {
   const { 概念, focus } = payload;
-  console.log('focus',focus)
-  if (focus === '基本定义') {
-    return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptAttrsByTerm`, null, {
+  return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptAttrsByTerm`, null, {
+    data: {
+      termName: 概念,
+    }
+  });
+}
+
+//获取知识元方法数据
+export function getMethod(payload) {
+  const { 方法, focus } = payload;
+    return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodDataList`, null, {
       data: {
-        termName: 概念,
+        termName: 方法,
+        attrType: ""
       }
     });
-  }
+}
+
+//获取知识元方法属性
+export function getMethodAttrs(payload) {
+  const { 方法, focus } = payload;
+  return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodAttrsByTerm`, null, {
+    data: {
+      termName: 方法,
+    }
+  });
 }

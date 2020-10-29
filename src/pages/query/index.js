@@ -32,6 +32,7 @@ import Translate from './components/Translate';
 import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
 import Concept from './components/Concept';
+import Method from './components/Concept/method';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -60,7 +61,9 @@ function ResultPage(props) {
     fetchSemanticData,
     answerData,
     conceptData,
-    conceptDataAttrs
+    conceptDataAttrs,
+    methodData, //知识元方法数据
+    methodDataAttrs//知识元方法属性
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -138,8 +141,8 @@ function ResultPage(props) {
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
-  const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元数据
-
+  const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元概念数据
+  const methodInfo = repositoryData.filter((item) => item.template === 'method'); //知识元方法数据
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
@@ -259,9 +262,12 @@ function ResultPage(props) {
                     : null}
 
                   
-                  {conceptData && (conceptInfo[0].intentJson.results[0].fields.focus==='基本定义'?conceptDataAttrs:true) ? (
-                    //console.log(conceptInfo[0].intentJson.results[0].fields.focus)
+                  {(conceptData && conceptDataAttrs) ? (
                     <Concept data={conceptData} attrs={conceptDataAttrs} intentJson={conceptInfo[0].intentJson} />
+                  ) : null}
+
+                  {(methodData && methodDataAttrs) ? (
+                    <Method data={methodData} attrs={methodDataAttrs} intentJson={methodInfo[0].intentJson} />
                   ) : null}
 
                   {yearbookData.length
