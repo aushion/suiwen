@@ -303,7 +303,7 @@ function Home(props) {
                             </Link>
 
                             <span style={{ display: 'inline-block', overflow: 'hidden' }}>
-                              回答数:{item.checkCount}
+                              回答数:{item.answerCount}
                             </span>
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link

@@ -275,7 +275,7 @@ function AnswerList(props) {
 
                 {item.resource && item.resource.includes('<a') ? (
                   <>
-                    <div style={{ padding: '6px 0' }}>引用文献：</div>
+                    <div style={{ padding: '6px 0' }}>参考文献：</div>
                     <div dangerouslySetInnerHTML={{ __html: item.resource }} />
                   </>
                 ) : null}

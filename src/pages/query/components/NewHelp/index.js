@@ -38,7 +38,7 @@ function NewHelp(props) {
                   lineHeight: '25px'
                 }}
               >
-                回答数：{item.checkCount}
+                回答数：{item.answerCount}
               </div>
             </div>
           </List.Item>
