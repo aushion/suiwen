@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button, message } from 'antd';
 import { throttle } from 'lodash';
 import RestTools from '../../utils/RestTools';
@@ -8,8 +8,13 @@ import helpServer from '../../services/help';
   loginUserInfo：当前登录用户 */
 
 function FollowButton({ hasFollowed, currentUser, loginUserInfo }) {
-  const [followStatus, updateStatus] = useState(hasFollowed);
+  const [followStatus, updateStatus] = useState('');
   const userInfo  = localStorage.getItem('userInfo') ? localStorage.getItem('userInfo') :null;
+  
+  useEffect(()=>{
+    updateStatus(hasFollowed);
+  },[currentUser])
+  
   const followedStyle = {
     backgroundColor: '#8C97AC',
     color: '#fff',
