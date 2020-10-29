@@ -12,12 +12,12 @@ function CaAvatar({ userName, showFollowBtn = true }) {
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
   function fetchUser() {
-    if(!loginUser){
-      return;
-    }
+    // if(!loginUser){
+    //   return;
+    // }
     setLoading(true);
     helpServer
-      .getUserCommunityInfo({ userName, operator: loginUser.UserName })
+      .getUserCommunityInfo({ userName, operator: loginUser?loginUser.UserName:"" })
       .then((res) => {
         if (res.data.code === 200) {
           setUserInfo(res.data.result);
@@ -71,13 +71,18 @@ function CaAvatar({ userName, showFollowBtn = true }) {
                           <strong>{userInfo.followers}</strong>
                         </div>
                       </div>
-                      {showFollowBtn && loginUser.userName !== userName && userInfo.hasFollowed ? (
-                        <FollowButton
-                          hasFollowed={userInfo.hasFollowed}
-                          currentUser={userName}
-                          loginUserInfo={loginUser}
-                        />
-                      ) : null}
+                      {
+                        !loginUser?null:(
+                          showFollowBtn && loginUser.userName !== userName && userInfo.hasFollowed ? (
+                            <FollowButton
+                              hasFollowed={userInfo.hasFollowed}
+                              currentUser={userName}
+                              loginUserInfo={loginUser}
+                            />
+                          ) : null
+                        )
+                      }
+                      
                     </>
                   ) : null}
                 </div>
