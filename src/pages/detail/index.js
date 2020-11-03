@@ -5,9 +5,10 @@ import router from 'umi/router';
 import styles from './index.less';
 import RestTools from '../../utils/RestTools';
 import request from '../../utils/request';
+import logo from '../../assets/logo1.png';
 
 const { Link } = Anchor;
-const { Footer } = Layout;
+const { Header, Footer, Content } = Layout;
 
 function Detail() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -51,10 +52,23 @@ function Detail() {
     localStorage.removeItem('userInfo');
     setUsername(null);
   }
+
+  function goHome() {
+    router.push('/');
+  }
+
   return (
-    <Layout className={styles.detail}>
-      <div className={styles.header}>
+    <div className={styles.detail}>
+      <Header className={styles.header}>
         {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
+        <div className={styles.wrapper}>
+          <div onClick={goHome.bind(this)} className={styles.logo} id="logo">
+            <img src={logo} alt="logo" />
+          </div>
+          </div>
+          <div className={styles.wrapper}>
+          <div className={styles.title}>医药知识库</div>
+        </div>
         <div className={styles.user}>
           <span className={styles.tips}>
             您好! {username ? RestTools.formatPhoneNumber(username) : '游客'}
@@ -85,16 +99,7 @@ function Detail() {
             </button>
           ) : null}
         </div>
-        <div className={styles.wrapper}>
-          <div
-            className={styles.logo}
-            onClick={() => {
-              router.push('/');
-            }}
-          />
-          <div className={styles.title}>医药知识库</div>
-        </div>
-      </div>
+      </Header>
       <Spin spinning={!medicalData} style={{ height: 'calc(100vh - 150px)' }}>
         {medicalData && typeof medicalData === 'object' ? (
           <div className={styles.main}>
@@ -131,7 +136,7 @@ function Detail() {
         ) : null}
       </Spin>
       <Footer className={styles.footer}>Footer</Footer>
-    </Layout>
+    </div>
   );
 }
 
