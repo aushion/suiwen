@@ -7,7 +7,7 @@ import RestTools from '../../utils/RestTools';
 import request from '../../utils/request';
 
 const { Link } = Anchor;
-const { Footer} = Layout;
+const { Footer } = Layout;
 
 function Detail() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -16,10 +16,13 @@ function Detail() {
 
   useEffect(() => {
     let searchword = window.location.href.split('?')[1]; //获取参数字符串
+    console.log('searchword', querystring.parse(searchword));
     searchword = searchword.includes('#') ? searchword.split('#')[0] : searchword; //截取锚点之前的参数
     const query = querystring.parse(searchword);
     const { name, id } = query;
     if (name && id) {
+      console.log('name', name);
+      console.log('id', id);
       request
         .get(`/getMedicineDetailInfo`, {
           params: {
@@ -29,6 +32,7 @@ function Detail() {
         })
         .then((res) => {
           if (res.data.code === 200) {
+            console.log('medicalData', res.data.result[0]);
             setMedicalData(res.data.result[0]);
           } else {
             setMedicalData(true);
@@ -95,14 +99,20 @@ function Detail() {
         {medicalData && typeof medicalData === 'object' ? (
           <div className={styles.main}>
             <div className={styles.wrapper}>
-              <Anchor affix targetOffset={50}>
-                {Object.keys(medicalData).map((item) => (
-                  <Link key={item} href={`#${item}`} title={item} />
-                ))}
-              </Anchor>
+              <div className={styles.wrapper_item}>
+                <Anchor affix targetOffset={50}>
+                  {Object.keys(medicalData).map((item) => (
+                    <Link
+                      key={item}
+                      href={`#${item}`}
+                      title={<div className={styles.title}>{item}</div>}
+                    />
+                  ))}
+                </Anchor>
+              </div>
             </div>
 
-            <div className={styles.content} id="content"> 
+            <div className={styles.content} id="content">
               {Object.keys(medicalData).map((item) => (
                 <div key={item} id={item} className={styles.content_item}>
                   <div className={styles.title}>{item}</div>
