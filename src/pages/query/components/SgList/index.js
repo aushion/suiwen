@@ -21,7 +21,7 @@ function SgList(props) {
           target="_blank"
         >
           <span>知网期刊</span>
-        </a> - 片段优选汇聚</h2>
+        </a> - 片段重组</h2>
       {keys.map((item, keyIndex) => {
         const year = (sgData[item][0].sgAdditionInfo && sgData[item][0].sgAdditionInfo.年) || '';
         // const qikan = sgData[item][0].Data.additional_info && sgData[item][0].Data.additional_info.来源数据库 || '';
