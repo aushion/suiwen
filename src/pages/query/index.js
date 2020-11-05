@@ -468,7 +468,7 @@ function ResultPage(props) {
                 {topicData.length ? (
                   <div className="display_flex">
                     {topicData
-                      .filter((item) => item.name !== topicName && item.name !== '阅读理解')
+                      .filter((item) => item.name !== topicName && item.name !== '细粒度知识问答')
                       .map((item) => {
                         return (
                           <div className={styles.item} key={item.topicId}>

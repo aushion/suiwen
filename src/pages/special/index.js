@@ -212,7 +212,7 @@ function Special(props) {
 
           <div className={styles.title}>
             <img src={topicLogo} alt={name} style={{ width: '120px', marginRight: 20 }} />
-            {name === '阅读理解' ? (
+            {name === '细粒度知识问答' ? (
               <>
                 {name + '专题'}
                 <Badge
