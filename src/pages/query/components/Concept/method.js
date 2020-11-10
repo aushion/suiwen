@@ -40,7 +40,7 @@ function Concept({ data, attrs, intentJson }) {
                     {item.中英文篇名 ? <span>{item.中英文篇名}</span> : null}
 
                     {item.中文刊名 ? <span>.{item.中文刊名}</span> : null}
-                    {item.更新日期 ? <span>.{item.更新日期}</span> : null}
+                    {item.出版日期 ? <span>.{item.出版日期}</span> : null}
                   </a>
                 </div>
               </li>
