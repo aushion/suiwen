@@ -44,7 +44,7 @@ function ToolsBookList(props) {
                         rel="noopener noreferrer"
                         href={`https://gongjushu.cnki.net/RBook/${item.工具书编号}.html`}
                         dangerouslySetInnerHTML={{
-                            __html: "<font size=\"3\"><b>"+RestTools.translateToRed(item.书目介绍)+"</b></font>"
+                            __html: "<font size=\"3\"><b>"+RestTools.translateToRed(item.书目介绍)+(item.分辑名?"·"+item.分辑名:"")+"</b></font>"
                         }}
                     />
                   </div>
@@ -63,6 +63,10 @@ function ToolsBookList(props) {
                   <div className={styles.Journal_right_item}>
                     <label htmlFor="">出版时间：</label>
                     <span>{item.出版日期}</span>
+                  </div>
+                  <div className={styles.Journal_right_item}>
+                    <label htmlFor="">简介：</label>
+                    <span>{item.简介}</span>
                   </div>
                 </div>
               </div>
