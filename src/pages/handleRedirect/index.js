@@ -7,7 +7,7 @@ function HandleRedirect() {
     if (!h) return undefined;
     let search = window.location.search;
     search = search.indexOf('?') === 0 ? search.substr(1) : search;
-    let query = querystring.parse(search);
+    let query = querystring.parse(search,"&uid=");
   
     let redirectURL = decodeURIComponent(query['Redirect']);
     h.parent.postMessage(
