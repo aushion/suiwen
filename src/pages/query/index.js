@@ -238,7 +238,7 @@ function ResultPage(props) {
                   {referenceBookListData.length ? 
                     <ToolsBookList 
                       id={referenceBookListData[0].id}
-                      title={referenceBookListData[0].intentJson.results[0].fields.TITLE}
+                      title={referenceBookListData[0].intentJson.results[0].fields.Title||referenceBookListData[0].intentJson.results[0].fields.TITLE}
                       evaluate={referenceBookListData[0].evaluate} 
                       data={referenceBookListData[0].dataNode} /> : null}
                   {statisticsData.length
