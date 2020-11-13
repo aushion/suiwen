@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge } from 'antd';
+import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge, Button } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -11,6 +11,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import RestTools from '../../utils/RestTools';
 import 医学 from '../../assets/医学.png';
 import rd from '../../assets/rd.png';
+import docGen from '../../assets/docGen.png';
 
 let skillSlider = null;
 let specialSlider = null;
@@ -27,7 +28,7 @@ function Home(props) {
   const special_questions = specialQuestions.filter((item) => item.name !== '细粒度知识问答');
   const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
 
-  const PrevArrow = function(props) {
+  const PrevArrow = function (props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -36,7 +37,7 @@ function Home(props) {
     );
   };
 
-  const NextArrow = function(props) {
+  const NextArrow = function (props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -168,9 +169,13 @@ function Home(props) {
                 return (
                   <Link
                     className={homeStyles.questions_item}
-                    to={`/query`+(item.name === '法律' ? `/law`:``)+`?topic=${item.info.topic}&topicName=${encodeURIComponent(
-                      item.name
-                    )}&q=${encodeURIComponent(child.question)}`}
+                    to={
+                      `/query` +
+                      (item.name === '法律' ? `/law` : ``) +
+                      `?topic=${item.info.topic}&topicName=${encodeURIComponent(
+                        item.name
+                      )}&q=${encodeURIComponent(child.question)}`
+                    }
                     key={child.qId}
                     target="_blank"
                   >
@@ -196,6 +201,34 @@ function Home(props) {
         </div>
       ))
     : null;
+
+  //取设定最大值与最小值之间的随机数
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  //初始化文档（辅助生成文档模块）
+  // function initializeDocument(docId, docName, userName) {
+  //   console.log('docId', docId)
+  //   // props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
+  //   props.dispatch({
+  //     type: 'Doc/addUserDoc',
+  //     payload: {
+  //       docId: docId,
+  //       docName: docName,
+  //       userName: userName
+  //     }
+  //   })
+  //   .then(res=>{
+  //     if(res.code == 200){
+  //       router.push({
+  //         pathname: '/doc/outlineConfig/',
+  //         query: {
+  //           docId: docId
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
   return (
     <div className={homeStyles.home}>
@@ -379,6 +412,64 @@ function Home(props) {
                       );
                     })
                   : null}
+              </div>
+            </div>
+          </div>
+
+          <div className={homeStyles.content}>
+            <div className={homeStyles.left}>
+              <img src={docGen} alt="文档生成" />
+            </div>
+            <div className={homeStyles.right}>
+              {/* <Link to={`/doc}`} target="_blank"> */}
+              <div className={homeStyles.cnTitle}>文档辅助生成</div>
+              <div className={homeStyles.enTitle}>在线撰写文档</div>
+              {/* </Link> */}
+
+              <div>
+                <p>
+                  <font color="red" size="2">
+                    便捷、高效
+                  </font>
+                  的文档
+                  <font color="red" size="2">
+                    撰写助手
+                  </font>{' '}
+                  面向系列问题的内容动态生成重组 自定义章节标题要点、内容自动生成重组
+                  来源知网权威、海量学术期刊 文档在线
+                  <font color="blue" size="2">
+                    定制、生成、预览、下载
+                  </font>
+                </p>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <Button
+                  type="primary"
+                  ghost
+                  style={{ border: 0 }}
+                  onClick={() => {
+                    var timestamp = new Date().getTime();
+                    let docId = timestamp + random(1000, 9999);
+                    let docName = '自定义文档标题';
+                    //初始化一个个人文档
+                    const loginUser = localStorage.getItem('userInfo')
+                      ? JSON.parse(localStorage.getItem('userInfo'))
+                      : null;
+                    if (loginUser == null) {
+                      message.warn('请您登录后再操作');
+                      return;
+                    }
+                    //initializeDocument(docId, docName, loginUser);
+                    router.push({
+                      pathname: '/doc/outlineConfig/',
+                      query: {
+                        docId: docId
+                      }
+                    });
+                  }}
+                >
+                  试用>>
+                </Button>
               </div>
             </div>
           </div>

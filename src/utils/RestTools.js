@@ -146,6 +146,14 @@ export default {
       : '';
   },
 
+  translateDocToRed(str) {
+    return str
+      ? str
+          .replace(/###/g, '<span style="color:red">')
+          .replace(/\$\$\$/g, '</span>')
+      : '';
+  },
+
   superMarkRed(str) {
     return str
       .replace(/###/g, '<span style="color:red">')

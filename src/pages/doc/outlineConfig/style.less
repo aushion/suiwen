@@ -1,0 +1,111 @@
+@import '~antd/es/style/themes/default.less';
+
+.topic {
+  button {
+    margin-bottom: 20px;
+  }
+}
+
+.new {
+  display: flex;
+  align-items: center;
+  span {
+    margin-right: 20px;
+  }
+}
+
+.Img {
+  display: flex;
+}
+
+.list {
+  display: flex;
+  .right {
+    min-width: 350px;
+    margin-right: 10px;
+    button {
+      margin-bottom: 20px;
+    }
+  }
+  .left {
+    .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      span {
+        margin-right: 20px;
+      }
+      button {
+        margin-left: 20px;
+        span {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.domain {
+  background-color: #fff;
+  .item {
+    padding: 10px;
+    .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .headleft {
+        display: flex;
+        align-items: center;
+        .header {
+          cursor: pointer;
+        }
+        .active {
+          color: #000000 ;
+        }
+      }
+      .headright {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .text {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .content {
+        margin-left: 20px;
+        cursor: pointer;
+      }
+      .active {
+        color: #000000 ;
+      }
+    }
+  }
+}
+
+.uploadstyle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 102px;
+  height: 102px;
+  font-size: 0;
+  color: #fff;
+  text-align: center;
+  line-height: 100px;
+}
+.uploadstyle:hover {
+  font-size: 20px;
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.demoInfiniteContainer {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 24px;
+  height: 700px;
+}
