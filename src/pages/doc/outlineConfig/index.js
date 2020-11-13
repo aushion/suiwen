@@ -167,6 +167,8 @@ const OutlineConfig = (props) => {
         setChapterData('');
         setNodeData('');
         setChapterId('');
+        //刷新文章内容
+        getDocContentByDocId();
         message.success('编辑文档标题成功');
       } else {
         message.error(res.msg);

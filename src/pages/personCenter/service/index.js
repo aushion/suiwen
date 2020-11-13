@@ -53,4 +53,9 @@ export function getUserDoc(payload) {
   });
 }
 
+export function delUserDoc(payload) {
+  return request.post(`/doc/delUserDoc`, null, {
+    params: { ...payload }
+  });
+}
 

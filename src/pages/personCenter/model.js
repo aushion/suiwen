@@ -8,6 +8,7 @@ import {
   getUserFollowerInfo,
   getUserFollowedQuestion,
   getUserDoc,
+  delUserDoc,
 } from './service';
 import helpServer from '../../services/help';
 import helpService from '../../services/help';
@@ -44,6 +45,12 @@ export default {
         });
       }
     },
+
+    *delUserDoc({ payload }, { call, put }) {
+      const res = yield call(delUserDoc, payload);
+      return res.data;
+    },
+
     *getUserCommunityInfo({ payload }, { call, put }) {
       const res = yield call(helpService.getUserCommunityInfo, {
         ...payload

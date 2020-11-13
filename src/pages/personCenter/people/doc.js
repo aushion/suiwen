@@ -1,9 +1,10 @@
 import React from 'react';
-import { Divider, List } from 'antd';
+import { Divider, List, Modal, message, Row, Col } from 'antd';
 import { connect } from 'dva';
 import { Link } from 'umi';
 import styles from './people.less';
 import RestTools from '../../../utils/RestTools';
+import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 
 function Doc(props) {
   console.log(props);
@@ -13,6 +14,47 @@ function Doc(props) {
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
+  const { confirm } = Modal;
+
+  //删除个人文档
+  function delUserDoc(docItem) {
+    confirm({
+      title: '确定删除?',
+      icon: <ExclamationCircleOutlined />,
+      centered: true,
+      onOk() {
+        dispatch({
+          type: 'personCenter/delUserDoc',
+          payload: {
+            docId: docItem.docId,
+            userName: userName
+          }
+        }).then((res) => {
+          if (res.code === 200) {
+            //刷新个人文档
+            getUserDoc();
+            message.success('文档已删除');
+          } else {
+            message.error(res.msg);
+          }
+        });
+      },
+      onCancel() {}
+    });
+  }
+
+  //获取个人文档
+  function getUserDoc() {
+    dispatch({
+      type: 'personCenter/getUserDoc',
+      payload: {
+        operatorName: userInfo.UserName,
+        pageSize: 10,
+        pageStart: 1,
+        userName: userName
+      }
+    });
+  }
 
   return (
     <div className={styles.people}>
@@ -47,23 +89,39 @@ function Doc(props) {
             renderItem={(item) => {
               return (
                 <List.Item>
-                  <Link
-                    to={`/doc/outlineConfig?docId=${item.docId}`}
-                    style={{ fontSize: 16, fontWeight: 'bold', color: '#38393C' }}
-                  >
-                    {item.docName}
-                  </Link>
-                  <div
-                    style={{
-                      color: '#B3B3B3',
-                      fontSize: 14,
-                      paddingTop: 10
-                    }}
-                  >
-                    {/* <span style={{ marginRight: 14 }}>{item.total}个回答</span>
-                    <span style={{ marginRight: 14 }}>{item.followers}个关注</span> */}
-                    <span>创建于{item.createTime}</span>
-                  </div>
+                  <Row gutter={[24, 24]}>
+                    <Col span={20}>
+                      <Link
+                        to={`/doc/outlineConfig?docId=${item.docId}`}
+                        style={{ fontSize: 16, fontWeight: 'bold', color: '#38393C' }}
+                      >
+                        {item.docName}
+                      </Link>
+                    </Col>
+                    <Col span={4}>
+                      <div style={{ textAlign: 'right' }}>
+                        <DeleteOutlined
+                          onClick={() => {
+                            delUserDoc(item);
+                          }}
+                          title="删除文档"
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row gutter={[24, 24]}>
+                    <Col span={24}>
+                      <div
+                        style={{
+                          color: '#B3B3B3',
+                          fontSize: 14,
+                          paddingTop: 0
+                        }}
+                      >
+                        <span>创建于{item.createTime}</span>
+                      </div>
+                    </Col>
+                  </Row>
                 </List.Item>
               );
             }}
