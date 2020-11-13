@@ -99,7 +99,7 @@ class OutlineList extends Component {
                 title={<div className={[styles.header, id === docItem.id ? styles.active : null].join(' ')}>{docItem.label}</div>}
               />
             </div>
-            <div className={styles.headright}>
+            <div className={styles.titleheadright}>
               <PlusOutlined onClick={(() => { this.props.onChapterNew(docItem) })} title="新增章标题" />
               <Divider type="vertical" />
               <EditOutlined onClick={(() => { this.props.onDocEdit(docItem) })} title="编辑文档标题" />

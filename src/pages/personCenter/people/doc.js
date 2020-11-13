@@ -20,7 +20,7 @@ function Doc(props) {
         <div className={styles.title}>
           {userInfo?.UserName === userName
             ? '我的文档'
-            : `${RestTools.formatPhoneNumber(userName)}生成的文档`}
+            : `${RestTools.formatPhoneNumber(userName)}的文档`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
