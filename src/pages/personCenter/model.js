@@ -6,7 +6,8 @@ import {
   getMyCommunityAnswer,
   getUserFolloweeInfo,
   getUserFollowerInfo,
-  getUserFollowedQuestion
+  getUserFollowedQuestion,
+  getUserDoc,
 } from './service';
 import helpServer from '../../services/help';
 import helpService from '../../services/help';
@@ -28,9 +29,21 @@ export default {
     myCommunityAnswer: null,
     userFolloweeInfo: [],
     fans: [],
-    userFollowQuestion: []
+    userFollowQuestion: [],
+    userDoc: [],
   },
   effects: {
+    *getUserDoc({ payload }, { call, put }) {
+      const res = yield call(getUserDoc, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            userDoc: res.data.result
+          }
+        });
+      }
+    },
     *getUserCommunityInfo({ payload }, { call, put }) {
       const res = yield call(helpService.getUserCommunityInfo, {
         ...payload
@@ -235,6 +248,16 @@ export default {
           } else if (current === '/personCenter/people/followQuestion') {
             dispatch({
               type: 'getUserFollowedQuestion',
+              payload: {
+                operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
+                pageSize: 10,
+                pageStart: 1,
+                userName: userName
+              }
+            });
+          }else if (current === '/personCenter/people/doc') {
+            dispatch({
+              type: 'getUserDoc',
               payload: {
                 operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
                 pageSize: 10,

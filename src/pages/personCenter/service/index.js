@@ -47,3 +47,10 @@ export function getUserFollowedQuestion(payload) {
   })
 }
 
+export function getUserDoc(payload) {
+  return request.post(`/doc/getUserDoc`, null, {
+    params: { ...payload }
+  });
+}
+
+

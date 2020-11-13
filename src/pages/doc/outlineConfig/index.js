@@ -33,7 +33,7 @@ import request from '@/utils/request';
 const { confirm } = Modal;
 
 const OutlineConfig = (props) => {
-  const { docId } = querystring.parse(window.location.href.split('?')[1],"#");
+  const { docId } = querystring.parse(window.location.href.split('?')[1], '#');
   // const docId = '1';
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
@@ -190,7 +190,7 @@ const OutlineConfig = (props) => {
         //路径名称
         routeName: values.label,
         //节标题对应的问题或关键字
-        question: values.question === undefined ? null : encodeURIComponent(values.question),
+        question: values.question === undefined ? null : encodeURIComponent(values.question)
       }
     }).then((res) => {
       if (res.code == 200) {
@@ -305,7 +305,7 @@ const OutlineConfig = (props) => {
       method: 'post',
       data: form
     }).then((res) => {
-      console.log(res)
+      console.log(res);
       const downlaodFileName = decodeURIComponent(res.headers.filename);
       // 创建隐藏的可下载链接
       var eleLink = document.createElement('a');
@@ -401,7 +401,6 @@ const OutlineConfig = (props) => {
       },
       onCancel() {}
     });
-    
   }
 
   return (
@@ -499,103 +498,112 @@ const OutlineConfig = (props) => {
               loadMore={handleInfiniteOnLoad}
               useWindow={false}
             >
-              <div
-                key={'docTitle' + props.docContentData.docName}
-                id={'docTitle' + props.docContentData.docName}
-                dangerouslySetInnerHTML={{
-                  __html: '<h1 align="center">' + props.docContentData.docName + '</h1>'
-                }}
-              />
-              <List
-                split={false}
-                itemLayout="horizontal"
-                dataSource={props.docContentData.routeList}
-                renderItem={(chapterItem) => (
+              {props.docContentData ? (
+                <>
                   <div
-                    key={'chapterTitle' + chapterItem.routeName}
-                    id={'chapterTitle' + chapterItem.routeName}
-                  >
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
-                      }}
-                    />
-                    <List.Item>
-                      {chapterItem.sectionList ? (
-                        <List
-                          split={false}
-                          dataSource={chapterItem.sectionList}
-                          renderItem={(nodeItem) => (
-                            <div
-                              key={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
-                              id={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
-                            >
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html: '<h3 >' + nodeItem.routeName + '</h3>'
-                                }}
-                              />
-                              <List.Item>
-                                {nodeItem.contentList ? (
-                                  <List
-                                    split={false}
-                                    dataSource={nodeItem.contentList}
-                                    renderItem={(contentItem) => (
-                                      <List.Item>
-                                        <Col>
-                                          <Row>
-                                            <div
-                                              dangerouslySetInnerHTML={{
-                                                __html:
-                                                  '<p style="text-indent:2em">' +
-                                                  RestTools.translateDocToRed(contentItem.content) +
-                                                  '</p>'
-                                              }}
-                                            />
-                                          </Row>
-                                          <Row>
-                                            <div
-                                              dangerouslySetInnerHTML={{
-                                                __html:
-                                                  '<p style="text-align: right">' +
-                                  
-                                                  '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename='+contentItem.resourceId+'>' +
-                                                  contentItem.resource +
-                                                  '</a>' +
-                                                  '</p>'
-                                              }}
-                                            />
-                                          </Row>
-                                        </Col>
-
-                                        <div>
-                                          <Row gutter={10}>
-                                            <Col span={10}>
-                                              <Button
-                                                style={{ border: '0px', color: ' #FF0000   ' }}
-                                                icon={'close-circle'}
-                                                title={'删除片段'}
-                                                onClick={() => {
-                                                  //去除原文
-                                                  deleteContent(contentItem);
-                                                }}
-                                              ></Button>
-                                            </Col>
-                                          </Row>
-                                        </div>
-                                      </List.Item>
-                                    )}
-                                  />
-                                ) : null}
-                              </List.Item>
-                            </div>
-                          )}
+                    key={'docTitle' + props.docContentData.docName}
+                    id={'docTitle' + props.docContentData.docName}
+                    dangerouslySetInnerHTML={{
+                      __html: '<h1 align="center">' + [props.docContentData.docName?props.docContentData.docName:''] + '</h1>'
+                    }}
+                  />
+                  <List
+                    split={false}
+                    itemLayout="horizontal"
+                    dataSource={props.docContentData.routeList}
+                    renderItem={(chapterItem) => (
+                      <div
+                        key={'chapterTitle' + chapterItem.routeName}
+                        id={'chapterTitle' + chapterItem.routeName}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
+                          }}
                         />
-                      ) : null}
-                    </List.Item>
-                  </div>
-                )}
-              />
+                        <List.Item>
+                          {chapterItem.sectionList ? (
+                            <List
+                              split={false}
+                              dataSource={chapterItem.sectionList}
+                              renderItem={(nodeItem) => (
+                                <div
+                                  key={
+                                    'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName
+                                  }
+                                  id={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
+                                >
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: '<h3 >' + nodeItem.routeName + '</h3>'
+                                    }}
+                                  />
+                                  <List.Item>
+                                    {nodeItem.contentList ? (
+                                      <List
+                                        split={false}
+                                        dataSource={nodeItem.contentList}
+                                        renderItem={(contentItem) => (
+                                          <List.Item>
+                                            <Col>
+                                              <Row>
+                                                <div
+                                                  dangerouslySetInnerHTML={{
+                                                    __html:
+                                                      '<p style="text-indent:2em">' +
+                                                      RestTools.translateDocToRed(
+                                                        contentItem.content
+                                                      ) +
+                                                      '</p>'
+                                                  }}
+                                                />
+                                              </Row>
+                                              <Row>
+                                                <div
+                                                  dangerouslySetInnerHTML={{
+                                                    __html:
+                                                      '<p style="text-align: right">' +
+                                                      '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                                      contentItem.resourceId +
+                                                      '>' +
+                                                      contentItem.resource +
+                                                      '</a>' +
+                                                      '</p>'
+                                                  }}
+                                                />
+                                              </Row>
+                                            </Col>
+
+                                            <div>
+                                              <Row gutter={10}>
+                                                <Col span={10}>
+                                                  <Button
+                                                    style={{ border: '0px', color: ' #FF0000   ' }}
+                                                    icon={'close-circle'}
+                                                    title={'删除片段'}
+                                                    onClick={() => {
+                                                      //去除原文
+                                                      deleteContent(contentItem);
+                                                    }}
+                                                  ></Button>
+                                                </Col>
+                                              </Row>
+                                            </div>
+                                          </List.Item>
+                                        )}
+                                      />
+                                    ) : null}
+                                  </List.Item>
+                                </div>
+                              )}
+                            />
+                          ) : null}
+                        </List.Item>
+                      </div>
+                    )}
+                  />
+                </>
+              ) : null}
             </InfiniteScroll>
           </Spin>
         </Col>

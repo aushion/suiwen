@@ -6,7 +6,7 @@ import { connect } from 'dva';
 function PeopleMenu(props) {
   const { defaultPersonKey, dispatch, userName } = props;
   const menuItemStyle = {
-    width: 150,
+    width: 120,
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 800
@@ -43,6 +43,9 @@ function PeopleMenu(props) {
       </Menu.Item>
       <Menu.Item style={menuItemStyle} key="followQuestion">
         关注问题
+      </Menu.Item>
+      <Menu.Item style={menuItemStyle} key="doc">
+        文档
       </Menu.Item>
     </Menu>
   );
