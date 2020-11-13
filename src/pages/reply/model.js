@@ -319,9 +319,10 @@ export default {
           }
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
-          } else {
-            dispatch({ type: 'getUserFAQ', payload: params });
-          }
+          } 
+          // else {
+          //   dispatch({ type: 'getUserFAQ', payload: params });
+          // }
           dispatch({
             type: 'getSG',
             payload: {

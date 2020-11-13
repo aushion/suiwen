@@ -26,6 +26,7 @@ import Poem from './components/Poem';
 import RestTools from '../../utils/RestTools';
 import Sentence from './components/Sentence';
 import ToolsBook from './components/ToolsBook';
+import ToolsBookList from './components/ToolsBookList';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
@@ -124,6 +125,7 @@ function ResultPage(props) {
   }, []);
 
   const referenceBookData = repositoryData.filter((item) => item.template === 'referencebook'); //工具书数据
+  const referenceBookListData = repositoryData.filter((item) => item.template === 'booklist'); //工具书书目数据
   const JournalData = repositoryData.filter((item) => item.template === 'journal'); //期刊数据
   const literatureData = repositoryData.filter((item) => item.template === 'literature'); //文献数据
   const scholarData = repositoryData.filter((item) => item.template === 'scholar'); //学者数据
@@ -158,6 +160,7 @@ function ResultPage(props) {
     semanticData.length +
     faqData.length +
     referenceBookData.length +
+    referenceBookListData.length +
     JournalData.length +
     literatureData.length +
     scholarData.length +
@@ -232,6 +235,12 @@ function ResultPage(props) {
                       ))
                     : null}
                   {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
+                  {referenceBookListData.length ? 
+                    <ToolsBookList 
+                      id={referenceBookListData[0].id}
+                      title={referenceBookListData[0].intentJson.results[0].fields.TITLE}
+                      evaluate={referenceBookListData[0].evaluate} 
+                      data={referenceBookListData[0].dataNode} /> : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
