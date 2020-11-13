@@ -421,35 +421,37 @@ function Home(props) {
               <img src={docGen} alt="文档生成" />
             </div>
             <div className={homeStyles.right}>
-              {/* <Link to={`/doc}`} target="_blank"> */}
-              <div className={homeStyles.cnTitle}>文档辅助生成</div>
-              <div className={homeStyles.enTitle}>在线撰写文档</div>
+              {/* <Link to={`/doc/outlineConfig?docId=`+(10000*(new Date().getTime())+random(1000, 9999))+``} target="_blank"> */}
+                <div className={homeStyles.cnTitle}>文档辅助生成</div>
+                <div className={homeStyles.enTitle}>在线撰写文档</div>
               {/* </Link> */}
 
               <div>
                 <p>
-                  <font color="red" size="2">
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <font color="red" size="3">
                     便捷、高效
                   </font>
                   的文档
-                  <font color="red" size="2">
+                  <font color="red" size="3">
                     撰写助手
                   </font>{' '}
                   面向系列问题的内容动态生成重组 自定义章节标题要点、内容自动生成重组
                   来源知网权威、海量学术期刊 文档在线
-                  <font color="blue" size="2">
+                  <font color="blue" size="3">
                     定制、生成、预览、下载
                   </font>
                 </p>
               </div>
-              <div style={{ textAlign: 'center' }}>
+
+              <div style={{ textAlign: 'center', paddingTop: 50 }}>
                 <Button
                   type="primary"
                   ghost
                   style={{ border: 0 }}
                   onClick={() => {
                     var timestamp = new Date().getTime();
-                    let docId = timestamp + random(1000, 9999);
+                    let docId = 10000*timestamp + random(1000, 9999);
                     let docName = '自定义文档标题';
                     //初始化一个个人文档
                     const loginUser = localStorage.getItem('userInfo')
@@ -468,7 +470,9 @@ function Home(props) {
                     });
                   }}
                 >
-                  试用>>
+                  <font color="blue" size="5">
+                    试用>>
+                  </font>
                 </Button>
               </div>
             </div>

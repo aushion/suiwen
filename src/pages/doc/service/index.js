@@ -62,6 +62,7 @@ export async function editUserDoc(params) {
 export async function generateDoc(params) {
   return request({
     url: '/doc/generateDoc',
+    timeout: 60000,
     method: 'post',
     params
   });
@@ -107,6 +108,7 @@ export async function queryForRouteQuestion(params) {
 export async function refreshDocContent(params) {
   return request({
     url: '/doc/refreshDocContent',
+    timeout: 60000,
     method: 'post',
     params
   });
