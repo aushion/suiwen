@@ -60,19 +60,27 @@
           cursor: pointer;
         }
         .active {
-          color: #000000 ;
+          color: #000000;
         }
       }
       .headright {
-        display: flex;
+        display: none;
         align-items: center;
       }
+
       .titleheadright {
         padding: 10px;
-        display: flex;
+        display: none;
         align-items: center;
       }
     }
+    .head:hover .headright {
+      display: block; /*显示*/
+    }
+    .head:hover .titleheadright {
+      display: block; /*显示*/
+    }
+
     .text {
       margin-top: 5px;
       display: flex;
@@ -83,8 +91,15 @@
         cursor: pointer;
       }
       .active {
-        color: #000000 ;
+        color: #000000;
       }
+      .headright {
+        display: none;
+        align-items: center;
+      }
+    }
+    .text:hover .headright {
+      display: block; /*显示*/
     }
   }
 }

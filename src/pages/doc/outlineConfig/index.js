@@ -418,7 +418,7 @@ const OutlineConfig = (props) => {
         ></Button>
       </div>
       <Row gutter={[24, 24]}>
-        <Col span={6}>
+        <Col span={4}>
           <div className={styles.list}>
             <div className={styles.right}>
               {/* <Button type="primary" onClick={onEditOutLine}>

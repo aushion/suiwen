@@ -9,9 +9,8 @@ class OutlineList extends Component {
   constructor(props) {
     super(props);
     let list = this.props.data;
-    // console.log("list",list);
+
     list.forEach((item, index) => {
-      // console.log('item',item)
       if (item.children) {
         item.children.forEach((i, iIndex) => {
           if (iIndex === 0) {
@@ -33,20 +32,16 @@ class OutlineList extends Component {
       data: list,
       id: this.props.id
     }
-    // console.log(list)
+
   }
 
   
   componentWillReceiveProps(nextProps) {
     let list = nextProps.data
-    // console.log('list componentWillReceiveProps', list)
+
     list.forEach((item, index) => {
       if (item.children) {
-        // if (index === 0) {
-        //   item.flag = true
-        // } else {
-        //   item.flag = false
-        // }
+      
         item.flag = true;
       }
     })
@@ -57,7 +52,7 @@ class OutlineList extends Component {
   }
 
   changeClick = (item, index, flag) => {
-    // console.log('list', this.state.data)
+  
     let list = this.state.data
     list[index] = {
       ...item,
@@ -70,7 +65,7 @@ class OutlineList extends Component {
 
   changeClick2 = (item, index, flag) => {
     let list = this.state.data
-    // console.log('list', list[0].children[index])
+  
     list[0].children[index] = {
       ...item,
       flag: flag
@@ -82,8 +77,7 @@ class OutlineList extends Component {
 
   render() {
     const { data, id } = this.state;
-    // console.log('data',data)
-    // data =='undefined'
+
     const List = data.map((docItem, docIndex) => {
       return (
         <div className={styles.item} key={docIndex}>
@@ -141,7 +135,7 @@ class OutlineList extends Component {
                             href={`#${'nodeTitle' + chapterItem.label + '' + nodeItem.label}`}
                             title={<div className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>{nodeItem.label}</div>}
                           />
-                          <div>
+                          <div className={styles.headright}>
                             <SettingOutlined onClick={(() => { this.props.onNewQuestion(chapterItem, nodeItem) })} title="配置问题/关键字" />
                             <Divider type="vertical" />
                             <EditOutlined onClick={(() => { this.props.onSEdit(chapterItem, nodeItem) })} title="编辑节标题" />
