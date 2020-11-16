@@ -8,7 +8,7 @@ import request from '../../utils/request';
 import logo from '../../assets/logo1.png';
 
 const { Link } = Anchor;
-const { Header, Footer, Content } = Layout;
+const { Header, Footer, } = Layout;
 
 function Detail() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -17,13 +17,12 @@ function Detail() {
 
   useEffect(() => {
     let searchword = window.location.href.split('?')[1]; //获取参数字符串
-    console.log('searchword', querystring.parse(searchword));
+  
     searchword = searchword.includes('#') ? searchword.split('#')[0] : searchword; //截取锚点之前的参数
     const query = querystring.parse(searchword);
     const { name, id } = query;
     if (name && id) {
-      console.log('name', name);
-      console.log('id', id);
+    
       request
         .get(`/getMedicineDetailInfo`, {
           params: {

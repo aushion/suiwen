@@ -30,6 +30,7 @@ function AnswerForm(props) {
   }, [answerHelpData]);
 
   useEffect(() => {
+ 
     if(editStatus && editStatus.answer){
       setFieldsValue({
         contents: BraftEditor.createEditorState(editStatus.answer)

@@ -146,7 +146,7 @@ function ToolsBook(props) {
           ? initData.map((item, index) => {
               const redReg = /###(.*)\$\$\$/;
               const intentFocus = item.intentFocus;
-              const domain = item.domain;
+              // const domain = item.domain;
               let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
 
               const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;

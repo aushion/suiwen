@@ -1,5 +1,6 @@
 import { List, Icon } from 'antd';
 import Link from 'umi/link';
+import router from 'umi/router';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
@@ -14,6 +15,11 @@ function NewHelp(props) {
       <List
         itemLayout="vertical"
         dataSource={data}
+        footer={
+          <div onClick={() => {
+            router.push('/help/newHelp')
+          }} className={styles.more}>{'更多>>'} </div>
+        }
         renderItem={(item) => (
           <List.Item>
             <div
