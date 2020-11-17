@@ -1,8 +1,44 @@
-.lawTabs{
-    box-shadow: #cecece 0 0 6px 0;
+.lawTabs {
+  width: 100%;
+  padding: 20px 0;
+  :global(.ant-tabs-bar) {
+    margin: 0;
+  }
+  :global(.ant-tabs-nav-scroll){
     background-color: #fff;
-    margin-bottom: 20px;
-    :global(.ant-tabs-bar){
-        margin-bottom: 0;
+  }
+  .topicWrap {
+    margin-top: 20px;
+    :global(.ant-card-head) {
+      padding: 0 14px;
     }
+    :global(.ant-card-body) {
+      padding: 10px 0px;
+    }
+    .item {
+      font-size: 10px;
+      font-weight: bold;
+      margin: 10px 0;
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      &:hover {
+        transform: scale(1.2);
+      }
+      .imgWrap {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        line-height: 48px;
+        text-align: center;
+        margin-bottom: 5px;
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
 }

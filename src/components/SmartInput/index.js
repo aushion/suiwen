@@ -131,7 +131,7 @@ const SmartInput = (props) => {
         }
       />
 
-      <input type="text" style={{ height: 0, opacity: 0, border: 'none', padding: 0 }}></input>
+      <input type="text" style={{ height: 0, display:'none', opacity: 0, border: 'none', padding: 0 }} />
 
       {showRecord && inputRecords.length ? (
         <div className={'record-wrap'}>

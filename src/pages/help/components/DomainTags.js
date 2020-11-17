@@ -77,9 +77,9 @@ function DomainTags(props) {
 
   return (
     <div>
-      <div style={{ fontSize: 16, paddingBottom: '20px', paddingLeft: '10px', color: '#2B2C2E' }}>
+      {/* <div style={{ fontSize: 16, paddingBottom: '20px', paddingLeft: '10px', color: '#2B2C2E' }}>
         标签分类
-      </div>
+      </div> */}
       <Tag
         style={checked === -1 ? { ...normalStyle, ...checkedStyle } : normalStyle}
         onClick={handleClick.bind(this, -1, '')}

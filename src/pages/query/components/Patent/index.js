@@ -10,7 +10,7 @@ function Patent(props) {
   const name = intentJson && intentJson.results[0].fields['专利名'];
   return (
     <div className={styles.Patent}>
-      <div className={styles.Patent_title}>{name ? `${name}_相关专利` : title}</div>
+      <h2 >{name ? `${name} - 相关专利` : title}</h2>
       <Table
         rowKey={'文件名'}
         dataSource={dataNode}

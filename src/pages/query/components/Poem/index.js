@@ -54,6 +54,16 @@ function Poem(props) {
 
   return (
     <div className={styles.poem}>
+      <h2>
+        <a
+         target="_blank"
+         rel="noopener noreferrer"
+         href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
+           more
+         )}`}
+        >知网诗词 </a>
+          - 精选
+      </h2>
       {data.length
         ? data.map((item, index) => {
             const { 诗词名称 = '', 作者 = '', 年代 = '', 诗词名 = '', 原文 = '' } = item;

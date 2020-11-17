@@ -92,23 +92,7 @@ export default function Statistics(props) {
                 // size="value"
                 size={18}
               >
-                {/* <Label
-                content="value"
-                offset={20} // 设置坐标轴文本 label 距离坐标轴线的距离
-                textStyle={{
-                  textAlign: 'center', // 文本对齐方向，可取值为： start middle end
-                  fill: '#696969', // 文本的颜色
-                  fontSize: '12', // 文本大小
-                  textBaseline: 'top' // 文本基准线，可取 top middle bottom，默认为middle
-                }}
-                //textStyle={()=>{}}// 支持回调
-                rotate={15}
-                autoRotate={true} // 是否需要自动旋转，默认为 true
-                formatter={(text, item, index) => {
-                  return `${item.point.value}${item.point.unit}`;
-                }} // 回调函数，用于格式化坐标轴上显示的文本信息
-                // htmlTemplate= {()=>{}}, // 使用 html 自定义 label
-              /> */}
+               
               </Interval>
             </Chart>
           </div>
@@ -147,6 +131,7 @@ export default function Statistics(props) {
 
   return (
     <div className={styles.Statistics}>
+      <h2>{title} - 统计数据</h2>
       {intentDomain === '数值问答' ? shuzhuwenda : null}
 
       <a

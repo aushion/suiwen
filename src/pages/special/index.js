@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, List, Carousel, Spin, Popover, Icon, Button, Badge } from 'antd';
+import { Layout, Menu, List, Carousel, Spin, Popover, Icon, Button, Badge, Avatar } from 'antd';
 import router from 'umi/router';
+import Link from 'umi/link';
 import find from 'lodash/find';
 import SmartInput from '../../components/SmartInput';
 import querystring from 'querystring';
@@ -64,19 +65,19 @@ function Special(props) {
         logo: logoUrl
       }
     });
-    if (topic === 'law') {
-      router.push(
-        `/query/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
-          question
-        )}`
-      );
-    } else {
-      router.push(
-        `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
-          question
-        )}`
-      );
-    }
+    // if (topic === 'law') {
+    //   router.push(
+    //     `/query/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
+    //       question
+    //     )}`
+    //   );
+    // } else {
+    router.push(
+      `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(
+        question
+      )}`
+    );
+    // }
 
     RestTools.setSession('q', question);
     RestTools.setStorageInput(RestTools.HISTORYKEY, question);
@@ -86,15 +87,9 @@ function Special(props) {
     const q = value.trim();
     dispatch({ type: 'global/setQuestion', payload: { q: q } });
     if (q) {
-      if (topic === 'law') {
-        router.push(
-          `/query/law?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
-        );
-      } else {
-        router.push(
-          `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
-        );
-      }
+      router.push(
+        `/query?topic=${topic}&topicName=${encodeURIComponent(name)}&q=${encodeURIComponent(q)}`
+      );
     }
     RestTools.setSession('q', q);
   }
@@ -119,7 +114,6 @@ function Special(props) {
     <div style={{ color: '#fff' }}>
       <div style={{ cursor: 'pointer', borderBottom: '1px solid #fff' }}>
         <span
-         
           onClick={() => {
             setShowLoginAndRegister(true);
             setShowLogin(true);
@@ -238,7 +232,21 @@ function Special(props) {
           <div className={styles.user}>
             {username ? (
               <div>
-                {`您好！ ${username}`}
+                {
+                  <Link
+                    style={{ color: '#fff', marginLeft: 10 }}
+                    to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                    target="_blank"
+                  >
+                    <Avatar
+                      size="small"
+                      src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${
+                        userInfo ? userInfo.UserName : ''
+                      }`}
+                    />
+                    <span className={styles.links}>{RestTools.formatPhoneNumber(username)}</span>
+                  </Link>
+                }
                 <Button
                   style={{
                     background: 'transparent',

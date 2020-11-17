@@ -447,6 +447,13 @@ export default function Literature(props) {
         boxShadow: '#a5a5a5 0 0 10.8px 0'
       }}
     >
+      <h2>
+    <a 
+     href={linkMap[linkName].url(keyword)}
+     target="_blank"
+     rel="noopener noreferrer"
+    >{keyword} </a>
+         - 知网论文</h2>
       {intentId === '43' || intentId === '71' || intentId === '77' ? (
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}

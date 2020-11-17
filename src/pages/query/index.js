@@ -64,7 +64,7 @@ function ResultPage(props) {
     conceptData,
     conceptDataAttrs,
     methodData, //知识元方法数据
-    methodDataAttrs//知识元方法属性
+    methodDataAttrs //知识元方法属性
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -220,6 +220,7 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
+                  {lawData.length ? <LawTabs data={lawData} /> : null}
                   {medicalData.length
                     ? medicalData.map((item) => (
                         <Medical
@@ -235,12 +236,17 @@ function ResultPage(props) {
                       ))
                     : null}
                   {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
-                  {referenceBookListData.length ? 
-                    <ToolsBookList 
+                  {referenceBookListData.length ? (
+                    <ToolsBookList
                       id={referenceBookListData[0].id}
-                      title={referenceBookListData[0].intentJson.results[0].fields.Title||referenceBookListData[0].intentJson.results[0].fields.TITLE}
-                      evaluate={referenceBookListData[0].evaluate} 
-                      data={referenceBookListData[0].dataNode} /> : null}
+                      title={
+                        referenceBookListData[0].intentJson.results[0].fields.Title ||
+                        referenceBookListData[0].intentJson.results[0].fields.TITLE
+                      }
+                      evaluate={referenceBookListData[0].evaluate}
+                      data={referenceBookListData[0].dataNode}
+                    />
+                  ) : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
@@ -270,13 +276,20 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  
-                  {(conceptData && conceptDataAttrs) ? (
-                    <Concept data={conceptData} attrs={conceptDataAttrs} intentJson={conceptInfo[0].intentJson} />
+                  {conceptData && conceptDataAttrs ? (
+                    <Concept
+                      data={conceptData}
+                      attrs={conceptDataAttrs}
+                      intentJson={conceptInfo[0].intentJson}
+                    />
                   ) : null}
 
-                  {(methodData && methodDataAttrs) ? (
-                    <Method data={methodData} attrs={methodDataAttrs} intentJson={methodInfo[0].intentJson} />
+                  {methodData && methodDataAttrs ? (
+                    <Method
+                      data={methodData}
+                      attrs={methodDataAttrs}
+                      intentJson={methodInfo[0].intentJson}
+                    />
                   ) : null}
 
                   {yearbookData.length
@@ -297,6 +310,7 @@ function ResultPage(props) {
                   {literatureData.length &&
                   (literatureData.length === 1 || literatureData.length === 3) ? (
                     <Literature
+                      q={q}
                       literatureData={literatureData}
                       dispatch={dispatch}
                       loading={fetchLiterature}
@@ -315,6 +329,7 @@ function ResultPage(props) {
                   {scholarData.length
                     ? scholarData.map((item) => (
                         <Scholar
+                        q={q}
                           key={item.id}
                           id={item.id}
                           evaluate={item.evaluate}
@@ -330,6 +345,7 @@ function ResultPage(props) {
                         <Journal
                           key={item.id}
                           id={item.id}
+                          q={item.title}
                           evaluate={item.evaluate}
                           data={item.dataNode}
                         />
@@ -338,17 +354,17 @@ function ResultPage(props) {
 
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
-                  {lawData.length ? <LawTabs data={lawData} /> : null}
-
                   {kaifangyuData.length
                     ? kaifangyuData.map((item) => (
                         <Graphic
                           key={item.id}
                           id={item.id}
                           q={q}
+                          topic={topic}
                           data={item.dataNode}
                           intentJson={item.intentJson}
                           intentDomain={item.intentDomain}
+                          intentId={item.intentId}
                           domain={item.domain}
                           pagination={item.pagination}
                           title={item.title}

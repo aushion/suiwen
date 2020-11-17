@@ -3,10 +3,20 @@ import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
 
 function Journal(props) {
-  const { data, id, evaluate } = props;
+  const { data, id, evaluate , q} = props;
   const { good, bad, isevalute } = evaluate;
   return (
     <div className={styles.Journal}>
+      <h2>
+        <a
+          href={`https://navi.cnki.net/KNavi/All.html`}
+          rel="noreferrer"
+          target="_blank"
+        >
+          <span>{q} </span>
+        </a>
+        - 知网期刊
+      </h2>
       {data.length
         ? data.map((item, index) => {
             const size = item.核心期刊版次 ? 'mid' : 'mid';
