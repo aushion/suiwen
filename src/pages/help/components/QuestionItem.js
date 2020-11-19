@@ -6,6 +6,7 @@ import ReasonModal from '../../../components/ReasonModal';
 // import FoldText from '../../../components/FoldText';
 
 import styles from './QuestionItem.less';
+import RestTools from '../../../utils/RestTools';
 
 function QuestionItem({ item }) {
   const [modalState, setModalState] = useState({ visible: false });
@@ -42,12 +43,11 @@ function QuestionItem({ item }) {
           {item.content.length <= 50 ? (
             <span title={item.content}>{item.content}</span>
           ) : (
-            <span title={item.content}>{`${item.content.substring(0,50)}...`}</span>
+            <span title={item.content}>{`${item.content.substring(0, 50)}...`}</span>
           )}
-         
         </Link>
         <div>
-        <span>
+          <span>
             {item.tag
               ? item.tag.split(',').map((item, index) => (
                   <Tag color="volcano" key={index}>
@@ -58,21 +58,23 @@ function QuestionItem({ item }) {
           </span>
         </div>
       </div>
-      <div style={{ paddingTop: 6 }}>
-        <div style={{ textAlign: 'right' }}>
-          <Button
-            icon="edit"
-            size="small"
-            ghost
-            type="primary"
-            href={`/web/reply?q=${encodeURIComponent(item.content)}&QID=${
-              item.qid
-            }&editStatus=true`}
-            target="_blank"
-          >
-            写回答
-          </Button>
-        </div>
+      <div style={{display: 'flex', justifyContent: 'flex-end', flexDirection: 'column', }}>
+        {RestTools.getLocalUserInfo() ? (
+          <div style={{ textAlign: 'right' }}>
+            <Button
+              icon="edit"
+              size="small"
+              ghost
+              type="primary"
+              href={`/web/reply?q=${encodeURIComponent(item.content)}&QID=${
+                item.qid
+              }&editStatus=true`}
+              target="_blank"
+            >
+              写回答
+            </Button>
+          </div>
+        ) : <div></div>}
         <div style={{ color: '#8590A6', lineHeight: '40px' }}>
           <span
             className={styles.report}

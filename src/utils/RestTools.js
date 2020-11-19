@@ -353,6 +353,13 @@ export default {
     }
   },
 
+  getLocalUserInfo(){
+    const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+    return userInfo;
+  },
+
   topicInfo: {
     法律: { enText: 'Law', topic: 'FL' },
     医学: { enText: 'Medical', topic: 'YX' },
