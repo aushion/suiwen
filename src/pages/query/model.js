@@ -527,7 +527,7 @@ export default {
                   payload: {
                     q: encodeURIComponent(q),
                     pageStart: 1,
-                    pageCount: 10,
+                    pageCount: 50,
                     userId,
                     domain: topic
                   }
@@ -564,7 +564,7 @@ export default {
               });
               dispatch({
                 type: 'getSG',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 50, userId }
               });
 
               dispatch({

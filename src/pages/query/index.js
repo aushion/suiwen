@@ -154,9 +154,10 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
+  const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
+
   const resultLength =
-    // cnkizhishi.length +
-    sgData.length +
+    sgCount +
     semanticData.length +
     faqData.length +
     referenceBookData.length +

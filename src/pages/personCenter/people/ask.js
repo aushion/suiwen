@@ -12,6 +12,18 @@ function People(props) {
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
+
+  function handleDelete(item){
+    if(userInfo){
+      dispatch({
+        type: 'personCenter/delPersonQuestion',
+        payload:{
+          qId: item.qid,
+          userName: userInfo.UserName,
+        }
+      })
+    }
+  }  
   return (
     <div className={styles.people}>
       <div className={styles.main}>
@@ -47,7 +59,7 @@ function People(props) {
             }
             renderItem={(item) => {
               return (
-                <List.Item>
+                <List.Item className={styles.item}>
                   <Link
                     to={`/reply?q=${item.question}&QID=${item.qid}`}
                     style={{ fontSize: 16, fontWeight: 'bold', color: '#38393C' }}
@@ -63,7 +75,12 @@ function People(props) {
                   >
                     <span style={{ marginRight: 14 }}>{item.total}个回答</span>
                     <span style={{ marginRight: 14 }}>{item.followers}个关注</span>
-                    <span>发布于{item.commitTime}</span>
+                    <span style={{ marginRight: 14 }}>发布于{item.commitTime}</span>
+                    {item.total === 0 ?  <span className={styles.delete} 
+                      onClick={() =>{
+                        handleDelete(item)
+                      }}
+                    >删除</span>:null}
                   </div>
                 </List.Item>
               );
