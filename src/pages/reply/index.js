@@ -29,6 +29,10 @@ function Reply(props) {
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
   const [showDrawer, setDrawer] = useState(false); //展示抽屉
 
+  const userInfo = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null;
+
   useEffect(() => {
     switchFollowQ(followed);
   }, [followed]);
@@ -73,6 +77,7 @@ function Reply(props) {
               <div className={replyStyle.title}>
                 <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
                 <span>{params.q}</span>
+                {userInfo ? 
                 <div className="display_flex" style={{ marginTop: 20 }}>
                   <div style={{ marginRight: 10 }}>
                     <Button
@@ -108,7 +113,7 @@ function Reply(props) {
                       {showEditor && answerList.length ? '取消回答' : '写回答'}
                     </Button>
                   </div>
-                </div>
+                </div>:null}
               </div>
               <Divider style={{ margin: 0 }} />
               <div className={replyStyle.draft}>
