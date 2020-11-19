@@ -174,6 +174,12 @@ function ResultPage(props) {
     kaifangyuData.length;
 
   function showModal() {
+    dispatch({
+      type: 'result/save',
+      payload: {
+        visible: true
+      }
+    });
     if (Cookies.get('Ecp_LoginStuts')) {
       dispatch({
         type: 'result/save',

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Divider, List } from 'antd';
+import { Divider, List, Modal } from 'antd';
 import { Link } from 'umi';
 import { connect } from 'dva';
 import styles from './people.less';
 import RestTools from '../../../utils/RestTools';
-
+const { confirm } = Modal;
 function People(props) {
   const { myCommunityQuestion, loading, location, dispatch } = props;
   const { query } = location;
@@ -13,22 +13,33 @@ function People(props) {
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
 
-  function handleDelete(item){
-    if(userInfo){
-      dispatch({
-        type: 'personCenter/delPersonQuestion',
-        payload:{
-          qId: item.qid,
-          userName: userInfo.UserName,
+  function handleDelete(item) {
+    if (userInfo) {
+      confirm({
+        title: '是否删除此问题?',
+        content: item.question,
+        okText: '是',
+        okType: 'danger',
+        cancelText: '否',
+        onOk() {
+          dispatch({
+            type: 'personCenter/delPersonQuestion',
+            payload: {
+              qId: item.qid,
+              userName: userInfo.UserName
+            }
+          });
         }
-      })
+      });
     }
-  }  
+  }
   return (
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? `我的提问` : `${RestTools.formatPhoneNumber(userName)}的提问`}
+          {userInfo?.UserName === userName
+            ? `我的提问`
+            : `${RestTools.formatPhoneNumber(userName)}的提问`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
@@ -43,16 +54,16 @@ function People(props) {
                     pageSize: myCommunityQuestion?.pageCount,
                     size: myCommunityQuestion?.pageNum,
                     total: myCommunityQuestion?.total,
-                    onChange:(page)=>{
+                    onChange: (page) => {
                       dispatch({
                         type: 'personCenter/getMyCommunityQuestion',
-                        payload:{
+                        payload: {
                           operatorName: userInfo.UserName,
                           pageSize: 10,
-                          pageStart:page,
+                          pageStart: page,
                           userName
                         }
-                      })
+                      });
                     }
                   }
                 : null
@@ -76,11 +87,16 @@ function People(props) {
                     <span style={{ marginRight: 14 }}>{item.total}个回答</span>
                     <span style={{ marginRight: 14 }}>{item.followers}个关注</span>
                     <span style={{ marginRight: 14 }}>发布于{item.commitTime}</span>
-                    {item.total === 0 ?  <span className={styles.delete} 
-                      onClick={() =>{
-                        handleDelete(item)
-                      }}
-                    >删除</span>:null}
+                    {item.total === 0 && userInfo.UserName === userName ? (
+                      <span
+                        className={styles.delete}
+                        onClick={() => {
+                          handleDelete(item);
+                        }}
+                      >
+                        删除
+                      </span>
+                    ) : null}
                   </div>
                 </List.Item>
               );
