@@ -264,12 +264,12 @@ export default {
     return intentDomain === '植物栽培'
       ? str
           .replace(/<img/g, '<img class="imgpreview" style="width:70%"')
-          .replace(/src="/g, 'src="http://refbook.img.cnki.net')
-          .replace(/src='/g, "src='http://refbook.img.cnki.net")
+          .replace(/src="/g, 'src="https://refbookimg.cnki.net')
+          .replace(/src='/g, "src='https://refbookimg.cnki.net")
       : str
           .replace(/<img/g, '<img class="imgpreview"')
-          .replace(/src="/g, 'src="http://refbook.img.cnki.net')
-          .replace(/src='/g, "src='http://refbook.img.cnki.net");
+          .replace(/src="/g, 'src="https://refbookimg.cnki.net')
+          .replace(/src='/g, "src='https://refbookimg.cnki.net");
   },
 
   formatPhoneNumber(str) {
@@ -351,6 +351,13 @@ export default {
     if (str) {
       return redReg.test(str) ? str.match(redReg)[1] : str;
     }
+  },
+
+  getLocalUserInfo(){
+    const userInfo = localStorage.getItem('userInfo')
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
+    return userInfo;
   },
 
   topicInfo: {

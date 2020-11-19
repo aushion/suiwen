@@ -15,6 +15,8 @@ function Graphic(props) {
     id,
     domain,
     q,
+    topic,
+    intentId,
     intentJson,
     intentDomain,
     dispatch
@@ -132,17 +134,21 @@ function Graphic(props) {
     }
   }
 
-  function changePage(pageIndex, pageSize) {
+  function changePage(pageIndex,pageSize = 10) {
     const userId = RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
       : Cookies.get('cnki_qa_uuid');
     dispatch({
-      type: 'result/getAnswer',
+      type: 'result/getAnswerByPage',
       payload: {
         q: encodeURIComponent(q),
         pageStart: pageIndex,
-        pageCount: 10,
-        userId
+        pageCount: pageSize,
+        domain,
+        intentDomain,
+        intentId,
+        userId,
+        topic
       }
     });
   }

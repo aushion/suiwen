@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton } from 'antd';
+import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton, message } from 'antd';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -29,6 +29,10 @@ function Reply(props) {
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
   const [showDrawer, setDrawer] = useState(false); //展示抽屉
 
+  const userInfo = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null;
+
   useEffect(() => {
     switchFollowQ(followed);
   }, [followed]);
@@ -38,6 +42,10 @@ function Reply(props) {
   }, [editStatus]);
 
   function followQuestion() {
+    if(!userCommunityInfo){
+      message.warning('请您先登录')
+      return;
+    }
     clearTimeout(timerCount);
     setTimeout(() => {
       switchFollowQ(!isFollowQ);
@@ -69,14 +77,16 @@ function Reply(props) {
               <div className={replyStyle.title}>
                 <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
                 <span>{params.q}</span>
+                {userInfo ? 
                 <div className="display_flex" style={{ marginTop: 20 }}>
                   <div style={{ marginRight: 10 }}>
                     <Button
                       type="primary"
                       style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
                       onClick={followQuestion}
+                      disabled={!userCommunityInfo}
                     >
-                      {isFollowQ ? '取消关注' : '关注问题'}
+                      {isFollowQ  ? '取消关注' : '关注问题'}
                     </Button>
                   </div>
                   <div>
@@ -103,7 +113,7 @@ function Reply(props) {
                       {showEditor && answerList.length ? '取消回答' : '写回答'}
                     </Button>
                   </div>
-                </div>
+                </div>:null}
               </div>
               <Divider style={{ margin: 0 }} />
               <div className={replyStyle.draft}>

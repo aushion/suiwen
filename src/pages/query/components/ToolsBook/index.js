@@ -102,7 +102,17 @@ function ToolsBook(props) {
   return (
     <div className={styles.ToolsBook}>
       <h2>
+      {(data[0].tagName === '汉英词典' || data[0].tagName === '英汉词典')?(
         <a
+          href={`http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
+            RestTools.getKeyword(data[0].dataNode[0].Title)
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
+        </a>):
+        (<a
           href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
             RestTools.getKeyword(data[0].dataNode[0].Title)
           )}&c=crfdsearch`}
@@ -110,7 +120,7 @@ function ToolsBook(props) {
           rel="noopener noreferrer"
         >
           <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
-        </a>
+        </a>)}
         - 知网工具书
       </h2>
       <div className={styles.tags}>
@@ -136,7 +146,7 @@ function ToolsBook(props) {
           ? initData.map((item, index) => {
               const redReg = /###(.*)\$\$\$/;
               const intentFocus = item.intentFocus;
-              const domain = item.domain;
+              // const domain = item.domain;
               let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
 
               const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;
@@ -216,9 +226,9 @@ function ToolsBook(props) {
                     <a
                       className={styles.ReferenceBook_more}
                       href={
-                        domain === '翻译'
-                          ? `http://dict.cnki.net/dict_result.aspx?searchword=${encodeURIComponent(
-                              RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
+                        (tagName === '汉英词典' || tagName === '英汉词典')
+                          ? `http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
+                              RestTools.removeFlag(item.dataNode[0].TITLE || item.dataNode[0].Title || '-')
                             )}`
                           : intentFocus === '成语'
                           ? `http://gongjushu.cnki.net/rbook/`
@@ -229,7 +239,7 @@ function ToolsBook(props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       dangerouslySetInnerHTML={{
-                        __html: domain === '翻译' ? 'CNKI翻译助手' : `查看更多`
+                        __html: (tagName === '汉英词典' || tagName === '英汉词典') ? 'CNKI翻译助手' : `查看更多`
                       }}
                     />
                   </div>

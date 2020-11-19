@@ -62,6 +62,10 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
     const loginUser = localStorage.getItem('userInfo')
       ? JSON.parse(localStorage.getItem('userInfo'))
       : null;
+    if(loginUser == null){
+      message.warn('请您登录后再操作');
+      return;
+    }
     const domain = selectedTags.length ? selectedTags.map((item) => item.cId).join(',') : '';
     if (selectedTags.length === 0 && selectedRoot) {
       setErrorTips('请至少选择一项二级标签分类');
@@ -71,14 +75,14 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       setErrorTips('至多选择10个标签');
       return;
     }
-    if (submitQ && loginUser) {
+    if (submitQ) {
       setLoading(true);
       request
         .post(process.env.apiUrl + '/community/commitQuestion', null, {
           params: {
             q: submitQ,
             uId: loginUser.UserName,
-            domain
+            domain,
           }
         })
         .then((res) => {
@@ -138,7 +142,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       visible={visible}
       onCancel={() => {
         onTriggerCancel();
-        reset();
+        // reset();
       }}
       title="问题求助"
       onOk={submitQuestion}

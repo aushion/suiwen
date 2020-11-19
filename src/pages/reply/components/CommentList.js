@@ -6,8 +6,9 @@ import replyStyle from '../index.less';
 import CommentItem from './CommentItem';
 
 function CommentList(props) {
-  const { data = null, dispatch, entityId, answerList, qId, fetchCommentList, inputId } = props;
+  const { data = null, dispatch, entityId, answerList, qId, inputId } = props;
   const [newComment, addComment] = useState(''); //评论
+  const [loading, setLoading] = useState(false);
 
   const userCommunityInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
@@ -18,7 +19,12 @@ function CommentList(props) {
   }
 
   function sendComment(item) {
+    if(!userCommunityInfo){
+      message.warning('请您先登录')
+      return;
+    }
     if (newComment && userCommunityInfo) {
+      setLoading(true);
       dispatch({
         type: 'reply/addComment',
         payload: {
@@ -26,28 +32,33 @@ function CommentList(props) {
           content: newComment,
           userName: userCommunityInfo.userName
         }
-      }).then((res) => {
-        if (res.code === 200) {
-          dispatch({
-            type: 'reply/getComment',
-            payload: {
-              aId: item.aid,
-              pageSize: 10,
-              sort: 'time',
-              pageStart: 1,
-              userName: userCommunityInfo.userName
-            }
-          }).then((res) => {
-            addComment('');
+      })
+        .then((res) => {
+          if (res.code === 200) {
             dispatch({
-              type: 'reply/saveAnswers',
-              payload: { answerList: res }
+              type: 'reply/getComment',
+              payload: {
+                aId: item.aid,
+                pageSize: 10,
+                sort: 'time',
+                pageStart: 1,
+                userName: userCommunityInfo.userName
+              }
+            }).then((res) => {
+              addComment('');
+              dispatch({
+                type: 'reply/saveAnswers',
+                payload: { answerList: res }
+              });
             });
-          });
-        } else {
-          message.warning(res.msg);
-        }
-      });
+          } else {
+            message.warning(res.msg);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     }
   }
 
@@ -58,8 +69,8 @@ function CommentList(props) {
         aId: entityId,
         pageSize: 10,
         pageStart: page,
-        sort: 'hot',
-        userName: userCommunityInfo.userName
+        sort: 'time',
+        userName: userCommunityInfo?userCommunityInfo.userName:''
       }
     }).then((res) => {
       dispatch({
@@ -83,32 +94,32 @@ function CommentList(props) {
                 <span>暂时还没有评论</span>
               )}
             </div>
+            {userCommunityInfo ? (
+              <div style={{ padding: '20px 0' }}>
+                <Avatar
+                  src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${userCommunityInfo.userName}`}
+                />
 
-            <div style={{ padding: '20px 0' }}>
-              <Avatar
-                src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${userCommunityInfo.userName}`}
-              />
-
-              <SwTextArea
-                id={data.aid}
-                autoSize
-                
-                maxLength={200}
-                value={newComment}
-                placeholder="输入评论"
-                style={{ width: 500, marginLeft: 10 }}
-                onChange={(e) => {
-                  editComment(e, data.aid);
-                }}
-                disabled={!newComment}
-                onClick={sendComment.bind(this, data)}
-              />
-            </div>
-
+                <SwTextArea
+                  id={data.aid}
+                  autoSize
+                  loading={loading}
+                  maxLength={200}
+                  value={newComment}
+                  placeholder="输入评论"
+                  style={{ width: 500, marginLeft: 10 }}
+                  onChange={(e) => {
+                    editComment(e, data.aid);
+                  }}
+                  disabled={!newComment}
+                  onClick={sendComment.bind(this, data)}
+                />
+              </div>
+            ) : null}
             {data.commentList && data.commentList.length ? (
               <List
                 itemLayout="vertical"
-                loading={fetchCommentList}
+              
                 dataSource={data.commentList || []}
                 pagination={{
                   size: 'small',
@@ -131,7 +142,6 @@ function CommentList(props) {
                       entityId={entityId}
                       qId={qId}
                       inputId={inputId}
-
                     />
                   );
                 }}

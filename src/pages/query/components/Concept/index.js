@@ -3,12 +3,12 @@ import { find } from 'lodash';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
 
-function Concept({ data, intentJson }) {
+function Concept({ data, attrs, intentJson }) {
   const { results } = intentJson;
   const [result] = results;
   const { 概念 = '' } = result.fields;
 
-  const conceptTypes = Array.isArray(data) ? [] : data.Classifys;
+  const conceptTypes = attrs ? attrs.AttrTypes : [];
   const conceptContent = Array.isArray(data) ? data : null;
   const basicContent = Array.isArray(data) ?  null : find(data.Terms, { 属性类型: '基本定义' });
   return (
@@ -21,7 +21,7 @@ function Concept({ data, intentJson }) {
         >
           <span>{概念} </span>
         </a>
-        - 知网知识元库
+        - 知网知识元概念库
       </h2>
       <div className={styles.card}>
         {basicContent ? (
@@ -46,21 +46,7 @@ function Concept({ data, intentJson }) {
             </div>
           </div>
         ) : null}
-        {conceptTypes.length ? (
-          <div>
-            {conceptTypes.map((item) => (
-              <a
-                className={styles.item}
-                key={item}
-                href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}`}
-                rel="noreferrer"
-                target="_blank"
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-        ) : null}
+        
         {conceptContent ? (
           <ol>
             {conceptContent.map((item, index) => (
@@ -86,6 +72,21 @@ function Concept({ data, intentJson }) {
           </ol>
         ) : null}
 
+        {conceptTypes.length ? (
+          <div className={styles.types}>
+            {conceptTypes.map((item) => (
+              <a
+                className={styles.item}
+                key={item}
+                href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}`}
+                rel="noreferrer"
+                target="_blank"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        ) : null}
         <a
           className={styles.more}
           rel="noreferrer"

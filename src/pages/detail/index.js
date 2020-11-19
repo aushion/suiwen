@@ -5,9 +5,10 @@ import router from 'umi/router';
 import styles from './index.less';
 import RestTools from '../../utils/RestTools';
 import request from '../../utils/request';
+import logo from '../../assets/logo1.png';
 
 const { Link } = Anchor;
-const { Footer} = Layout;
+const { Header, Footer, } = Layout;
 
 function Detail() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -16,10 +17,12 @@ function Detail() {
 
   useEffect(() => {
     let searchword = window.location.href.split('?')[1]; //获取参数字符串
+  
     searchword = searchword.includes('#') ? searchword.split('#')[0] : searchword; //截取锚点之前的参数
     const query = querystring.parse(searchword);
     const { name, id } = query;
     if (name && id) {
+    
       request
         .get(`/getMedicineDetailInfo`, {
           params: {
@@ -29,6 +32,7 @@ function Detail() {
         })
         .then((res) => {
           if (res.data.code === 200) {
+            console.log('medicalData', res.data.result[0]);
             setMedicalData(res.data.result[0]);
           } else {
             setMedicalData(true);
@@ -47,10 +51,23 @@ function Detail() {
     localStorage.removeItem('userInfo');
     setUsername(null);
   }
+
+  function goHome() {
+    router.push('/');
+  }
+
   return (
-    <Layout className={styles.detail}>
-      <div className={styles.header}>
+    <div className={styles.detail}>
+      <Header className={styles.header}>
         {/* <a href="http://qa.cnki.net/web" style={{color: '#fac500',marginRight: 20}}>回到旧版</a> */}
+        <div className={styles.wrapper}>
+          <div onClick={goHome.bind(this)} className={styles.logo} id="logo">
+            <img src={logo} alt="logo" />
+          </div>
+          </div>
+          <div className={styles.wrapper}>
+          <div className={styles.title}>医药知识库</div>
+        </div>
         <div className={styles.user}>
           <span className={styles.tips}>
             您好! {username ? RestTools.formatPhoneNumber(username) : '游客'}
@@ -81,28 +98,25 @@ function Detail() {
             </button>
           ) : null}
         </div>
-        <div className={styles.wrapper}>
-          <div
-            className={styles.logo}
-            onClick={() => {
-              router.push('/');
-            }}
-          />
-          <div className={styles.title}>医药知识库</div>
-        </div>
-      </div>
+      </Header>
       <Spin spinning={!medicalData} style={{ height: 'calc(100vh - 150px)' }}>
         {medicalData && typeof medicalData === 'object' ? (
           <div className={styles.main}>
             <div className={styles.wrapper}>
-              <Anchor affix targetOffset={50}>
-                {Object.keys(medicalData).map((item) => (
-                  <Link key={item} href={`#${item}`} title={item} />
-                ))}
-              </Anchor>
+              <div className={styles.wrapper_item}>
+                <Anchor affix targetOffset={50}>
+                  {Object.keys(medicalData).map((item) => (
+                    <Link
+                      key={item}
+                      href={`#${item}`}
+                      title={<div className={styles.title}>{item}</div>}
+                    />
+                  ))}
+                </Anchor>
+              </div>
             </div>
 
-            <div className={styles.content} id="content"> 
+            <div className={styles.content} id="content">
               {Object.keys(medicalData).map((item) => (
                 <div key={item} id={item} className={styles.content_item}>
                   <div className={styles.title}>{item}</div>
@@ -121,7 +135,7 @@ function Detail() {
         ) : null}
       </Spin>
       <Footer className={styles.footer}>Footer</Footer>
-    </Layout>
+    </div>
   );
 }
 

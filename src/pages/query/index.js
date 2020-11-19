@@ -26,12 +26,14 @@ import Poem from './components/Poem';
 import RestTools from '../../utils/RestTools';
 import Sentence from './components/Sentence';
 import ToolsBook from './components/ToolsBook';
+import ToolsBookList from './components/ToolsBookList';
 import Weather from './components/Weather';
 import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
 import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
 import Concept from './components/Concept';
+import Method from './components/Concept/method';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -59,7 +61,10 @@ function ResultPage(props) {
     fetchSg,
     fetchSemanticData,
     answerData,
-    conceptData
+    conceptData,
+    conceptDataAttrs,
+    methodData, //知识元方法数据
+    methodDataAttrs //知识元方法属性
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -120,6 +125,7 @@ function ResultPage(props) {
   }, []);
 
   const referenceBookData = repositoryData.filter((item) => item.template === 'referencebook'); //工具书数据
+  const referenceBookListData = repositoryData.filter((item) => item.template === 'booklist'); //工具书书目数据
   const JournalData = repositoryData.filter((item) => item.template === 'journal'); //期刊数据
   const literatureData = repositoryData.filter((item) => item.template === 'literature'); //文献数据
   const scholarData = repositoryData.filter((item) => item.template === 'scholar'); //学者数据
@@ -137,8 +143,8 @@ function ResultPage(props) {
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
 
-  const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元数据
-
+  const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元概念数据
+  const methodInfo = repositoryData.filter((item) => item.template === 'method'); //知识元方法数据
   const relatedLiterature = relatedData.length
     ? relatedData.filter((item) => /文献/g.test(item.domain))
     : []; //相关文献
@@ -148,12 +154,14 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
+  const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
+
   const resultLength =
-    // cnkizhishi.length +
-    sgData.length +
+    sgCount +
     semanticData.length +
     faqData.length +
     referenceBookData.length +
+    referenceBookListData.length +
     JournalData.length +
     literatureData.length +
     scholarData.length +
@@ -166,6 +174,12 @@ function ResultPage(props) {
     kaifangyuData.length;
 
   function showModal() {
+    dispatch({
+      type: 'result/save',
+      payload: {
+        visible: true
+      }
+    });
     if (Cookies.get('Ecp_LoginStuts')) {
       dispatch({
         type: 'result/save',
@@ -213,6 +227,7 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
+                  {lawData.length ? <LawTabs data={lawData} /> : null}
                   {medicalData.length
                     ? medicalData.map((item) => (
                         <Medical
@@ -228,6 +243,17 @@ function ResultPage(props) {
                       ))
                     : null}
                   {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
+                  {referenceBookListData.length ? (
+                    <ToolsBookList
+                      id={referenceBookListData[0].id}
+                      title={
+                        referenceBookListData[0].intentJson.results[0].fields.Title ||
+                        referenceBookListData[0].intentJson.results[0].fields.TITLE
+                      }
+                      evaluate={referenceBookListData[0].evaluate}
+                      data={referenceBookListData[0].dataNode}
+                    />
+                  ) : null}
                   {statisticsData.length
                     ? statisticsData.map((item) => (
                         <Statistics
@@ -257,8 +283,20 @@ function ResultPage(props) {
                       ))
                     : null}
 
-                  {conceptData ? (
-                    <Concept data={conceptData} intentJson={conceptInfo[0].intentJson} />
+                  {conceptData && conceptDataAttrs ? (
+                    <Concept
+                      data={conceptData}
+                      attrs={conceptDataAttrs}
+                      intentJson={conceptInfo[0].intentJson}
+                    />
+                  ) : null}
+
+                  {methodData && methodDataAttrs ? (
+                    <Method
+                      data={methodData}
+                      attrs={methodDataAttrs}
+                      intentJson={methodInfo[0].intentJson}
+                    />
                   ) : null}
 
                   {yearbookData.length
@@ -279,6 +317,7 @@ function ResultPage(props) {
                   {literatureData.length &&
                   (literatureData.length === 1 || literatureData.length === 3) ? (
                     <Literature
+                      q={q}
                       literatureData={literatureData}
                       dispatch={dispatch}
                       loading={fetchLiterature}
@@ -297,6 +336,7 @@ function ResultPage(props) {
                   {scholarData.length
                     ? scholarData.map((item) => (
                         <Scholar
+                        q={q}
                           key={item.id}
                           id={item.id}
                           evaluate={item.evaluate}
@@ -312,6 +352,7 @@ function ResultPage(props) {
                         <Journal
                           key={item.id}
                           id={item.id}
+                          q={item.title}
                           evaluate={item.evaluate}
                           data={item.dataNode}
                         />
@@ -320,17 +361,17 @@ function ResultPage(props) {
 
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
 
-                  {lawData.length ? <LawTabs data={lawData} /> : null}
-
                   {kaifangyuData.length
                     ? kaifangyuData.map((item) => (
                         <Graphic
                           key={item.id}
                           id={item.id}
                           q={q}
+                          topic={topic}
                           data={item.dataNode}
                           intentJson={item.intentJson}
                           intentDomain={item.intentDomain}
+                          intentId={item.intentId}
                           domain={item.domain}
                           pagination={item.pagination}
                           title={item.title}
@@ -459,7 +500,7 @@ function ResultPage(props) {
                 {topicData.length ? (
                   <div className="display_flex">
                     {topicData
-                      .filter((item) => item.name !== topicName && item.name !== '阅读理解')
+                      .filter((item) => item.name !== topicName && item.name !== '细粒度知识问答')
                       .map((item) => {
                         return (
                           <div className={styles.item} key={item.topicId}>

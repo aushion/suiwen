@@ -47,3 +47,9 @@ export function getUserFollowedQuestion(payload) {
   })
 }
 
+
+export function delPersonQuestion(payload) {
+  return request.post(`/community/delPersonQuestion`, null, {
+    params: payload
+  })
+}

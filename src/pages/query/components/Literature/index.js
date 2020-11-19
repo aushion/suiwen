@@ -98,7 +98,7 @@ export default function Literature(props) {
         yearSql,
         subjectSql,
         intent,
-        keyword: '',
+        keyword,
         fieldWord,
         replaceSql,
         searchword: '',
@@ -248,8 +248,8 @@ export default function Literature(props) {
       subjectSql,
       fieldWord,
       replaceSql,
-      keyword: '',
-      searchword: '',
+      keyword: searchValue || keyword,
+      searchword:'',
       intent,
       SN,
       orderSql:  orderBy
@@ -447,6 +447,13 @@ export default function Literature(props) {
         boxShadow: '#a5a5a5 0 0 10.8px 0'
       }}
     >
+      <h2>
+    <a 
+     href={linkMap[linkName].url(keyword)}
+     target="_blank"
+     rel="noopener noreferrer"
+    >{keyword} </a>
+         - 知网论文</h2>
       {intentId === '43' || intentId === '71' || intentId === '77' ? (
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}
@@ -630,7 +637,7 @@ export default function Literature(props) {
           const randomKey =
             fieldWord === '题名' || fieldWord === '主题' || fieldWord === '作者'
               ? item['来源数据库']
-              : item[fieldWord];
+              : item[fieldWord] || item.学位授予单位;
 
           return (
             <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>

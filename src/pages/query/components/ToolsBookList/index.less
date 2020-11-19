@@ -1,0 +1,49 @@
+.Journal {
+  box-shadow: #cecece 0 0 6px 0;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fff;
+  .ToolsBook {
+    //box-shadow: #cecece 0 0 6px 0;
+    //margin-bottom: 20px;
+    //padding: 20px;
+    background: #fff;
+    h2 {
+      padding-bottom: 10px;
+      color: lightslategray;
+      font-size: 18px;
+    }
+  }
+  .Journal_wrapper {
+    overflow: hidden;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ccc;
+    color: #333;
+
+    .Journal_left {
+      float: left;
+      margin-right: 20px;
+      overflow: hidden;
+      img {
+        // width: 180px;
+        height: 240px;
+        height: auto;
+      }
+    }
+    .Journal_right {
+      min-height: 220px;
+      overflow: hidden;
+      display: -ms-flexbox;
+      display: flex;
+      flex-direction: column;
+      -ms-flex-direction: column;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-around;
+      -ms-flex-pack: justify;
+      justify-content: space-around;
+      .Journal_right_item {
+        line-height: 24px;
+      }
+    }
+  }
+}

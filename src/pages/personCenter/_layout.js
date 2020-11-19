@@ -66,7 +66,7 @@ function UserLayout(props) {
               </Col>
             </Row>
             <div style={{ float: 'right', marginTop: 10 }}>
-              {userInfo.UserName === userName ? (
+              {userInfo && userInfo.UserName === userName ? (
                 <Button type="primary" ghost>
                   <Link to={`/personCenter/edit/personInfo?userName=${userCommunityInfo.userName}`}>
                     编辑个人资料

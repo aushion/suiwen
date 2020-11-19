@@ -110,18 +110,41 @@ export function submitQa(payload) {
 
 export function getConcept(payload) {
   const { 概念, focus } = payload;
-  if (focus === '基本定义') {
-    return axios.post(`http://sxzsy.cnki-shanxi.net:8044/api/Concept/GetTermDataList`, null, {
-      params: {
-        term: 概念
+  return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
+    data: {
+      termName: 概念,
+      attrType: focus === '基本定义'?'':focus
+    }
+  });
+}
+
+//获取知识元概念属性
+export function getConceptAttrs(payload) {
+  const { 概念 } = payload;
+  return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptAttrsByTerm`, null, {
+    data: {
+      termName: 概念,
+    }
+  });
+}
+
+//获取知识元方法数据
+export function getMethod(payload) {
+  const { 方法 } = payload;
+    return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodDataList`, null, {
+      data: {
+        termName: 方法,
+        attrType: ""
       }
     });
-  } else {
-    return axios.post(`http://sxzsy.cnki-shanxi.net:8044/api/Concept/GetConceptDataList`, null, {
-      params: {
-        termName: 概念,
-        attrType: focus
-      }
-    });
-  }
+}
+
+//获取知识元方法属性
+export function getMethodAttrs(payload) {
+  const { 方法 } = payload;
+  return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodAttrsByTerm`, null, {
+    data: {
+      termName: 方法,
+    }
+  });
 }

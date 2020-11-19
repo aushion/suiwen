@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { connect } from 'dva';
 import { Icon, message, Spin } from 'antd';
 import dayjs from 'dayjs';
+import Cookies from 'js-cookie';
+
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
@@ -61,7 +63,7 @@ function AnswerList(props) {
           pageSize: 10,
           pageStart: 1,
           sort: 'time',
-          userName: userInfo?.UserName
+          userName: userInfo ? userInfo.UserName : ''
         }
       }).then((res) => {
         //这个res就是answerList由model中传过来的
@@ -118,6 +120,10 @@ function AnswerList(props) {
   }
 
   function handleLike(current, type) {
+    if (!userInfo) {
+      message.warning('请您先登录');
+      return;
+    }
     clearTimeout(timerCount);
     timerCount = setTimeout(() => {
       sendEvaluate(current, type);
@@ -161,7 +167,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo?.UserName
+            userId: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid')
           }
         };
         dispatch(localAction); //本地页面先修改点赞信息
@@ -190,7 +196,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo?.UserName
+            userId: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid')
           }
         });
         break;
@@ -217,7 +223,7 @@ function AnswerList(props) {
           payload: {
             answerId: current.aid,
             type,
-            userId: userInfo?.UserName
+            userId: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid')
           }
         };
         dispatch(effectAction);
@@ -269,32 +275,44 @@ function AnswerList(props) {
 
                 {item.resource && item.resource.includes('<a') ? (
                   <>
-                    <div style={{ padding: '6px 0' }}>引用文献：</div>
+                    <div style={{ padding: '6px 0' }}>参考文献：</div>
                     <div dangerouslySetInnerHTML={{ __html: item.resource }} />
                   </>
                 ) : null}
 
                 <div className={replyStyle.operation}>
-                  <button
-                    className={replyStyle.likeBtn}
-                    style={item.isLiked > 0 ? { background: '#1890ff', color: '#fff' } : null}
-                    onClick={handleLike.bind(this, item, item.isLiked === 1 ? 'neutral' : 'up')}
-                  >
-                    <Icon type="caret-up" />
-                    赞同
-                    {item.likeCount ? item.likeCount : null}
-                  </button>
-                  <button
-                    className={replyStyle.likeBtn}
-                    style={
-                      item.isLiked < 0
-                        ? { background: '#1890ff', color: '#fff', marginLeft: 10 }
-                        : { marginLeft: 10 }
-                    }
-                    onClick={handleLike.bind(this, item, item.isLiked === -1 ? 'neutral' : 'down')}
-                  >
-                    <Icon type="caret-down" />
-                  </button>
+                  {userInfo ? (
+                    <button
+                      className={replyStyle.likeBtn}
+                      style={
+                        item.isLiked > 0
+                          ? { background: '#1890ff', color: '#fff', marginRight: 10 }
+                          : { marginRight: 10 }
+                      }
+                      onClick={handleLike.bind(this, item, item.isLiked === 1 ? 'neutral' : 'up')}
+                    >
+                      <Icon type="caret-up" />
+                      赞同
+                      {item.likeCount ? item.likeCount : null}
+                    </button>
+                  ) : null}
+                  {userInfo ? (
+                    <button
+                      className={replyStyle.likeBtn}
+                      style={
+                        item.isLiked < 0
+                          ? { background: '#1890ff', color: '#fff', marginRight: 10 }
+                          : { marginRight: 10 }
+                      }
+                      onClick={handleLike.bind(
+                        this,
+                        item,
+                        item.isLiked === -1 ? 'neutral' : 'down'
+                      )}
+                    >
+                      <Icon type="caret-down" />
+                    </button>
+                  ) : null}
                   {userInfo && userInfo.UserName === username ? (
                     <span
                       className={replyStyle.action}
@@ -302,20 +320,18 @@ function AnswerList(props) {
                       onClick={editAnswer.bind(this, item, index)}
                     >
                       <Icon type="edit" />
-                      <span style={{ paddingLeft: 4 }}>编辑</span>
+                      <span style={{ paddingRight: 4 }}>编辑</span>
                     </span>
                   ) : null}
-
-                  <span
-                    className={replyStyle.action}
-                    onClick={handleComment.bind(this, item, index)}
-                  >
-                    <Icon type="message" />
-                    <span style={{ paddingLeft: 4 }}>
-                      {item.commentNum > 0 ? `${item.commentNum}条评论` : '添加评论'}
+                  {userInfo ? (
+                    <span
+                      className={replyStyle.action}
+                      onClick={handleComment.bind(this, item, index)}
+                    >
+                      <Icon type="message" />
+                      <span>{item.commentNum > 0 ? `${item.commentNum}条评论` : '添加评论'}</span>
                     </span>
-                  </span>
-
+                  ) : null}
                   {/* <span className={replyStyle.action}>
                     <Icon type="share-alt" />
                     <span style={{ paddingLeft: 4 }}>分享</span>
@@ -331,10 +347,10 @@ function AnswerList(props) {
                     }}
                   >
                     <Icon type="warning" />
-                    <span style={{ paddingLeft: 4 }}>举报</span>
+                    <span>举报</span>
                   </span>
 
-                  <span style={{ marginLeft: 20 }}>发布于{dayjs(item.replyTime).fromNow()}</span>
+                  <span>发布于{dayjs(item.replyTime).fromNow()}</span>
                 </div>
               </>
             )}

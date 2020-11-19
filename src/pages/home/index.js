@@ -24,8 +24,8 @@ message.config({
 function Home(props) {
   let { skillExamples, specialQuestions, newHelpList, loading, skillPicture, helpPicture } = props;
   const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
-  const special_questions = specialQuestions.filter((item) => item.name !== '阅读理解');
-  const experience_questions = specialQuestions.filter((item) => item.name === '阅读理解');
+  const special_questions = specialQuestions.filter((item) => item.name !== '细粒度知识问答');
+  const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -145,7 +145,7 @@ function Home(props) {
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
             >
-              {item.name === '阅读理解' ? (
+              {item.name === '细粒度知识问答' ? (
                 <Badge
                   count={
                     <div style={{ backgroundColor: '#f50', color: '#fff', padding: '2px 4px' }}>
@@ -303,7 +303,7 @@ function Home(props) {
                             </Link>
 
                             <span style={{ display: 'inline-block', overflow: 'hidden' }}>
-                              回答数:{item.checkCount}
+                              回答数:{item.answerCount}
                             </span>
                             <Divider type="vertical" style={{ top: '-5px' }}></Divider>
                             <Link
@@ -356,8 +356,8 @@ function Home(props) {
             <div className={homeStyles.right}>
               {experience_questions.length ? (
                 <Link to={`/special?topicId=${experience_questions[0].topicId}`} target="_blank">
-                  <div className={homeStyles.cnTitle}>阅读理解</div>
-                  <div className={homeStyles.enTitle}>Reading comprehension</div>
+                  <div className={homeStyles.cnTitle}>细粒度知识问答</div>
+                  <div className={homeStyles.enTitle}>期刊全文</div>
                 </Link>
               ) : null}
               <div className={homeStyles.questions}>
