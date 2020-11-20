@@ -325,7 +325,7 @@ function ResultPage(props) {
                   ) : null}
 
                   {lawLiteratureData.length ? (
-                    <Literature law literatureData={lawLiteratureData} dispatch={dispatch} />
+                    <Literature law q={q} literatureData={lawLiteratureData} dispatch={dispatch} />
                   ) : null}
 
                   {patentData.length
