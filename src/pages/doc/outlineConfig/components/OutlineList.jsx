@@ -35,13 +35,13 @@ class OutlineList extends Component {
 
   }
 
-  
+
   componentWillReceiveProps(nextProps) {
     let list = nextProps.data
 
     list.forEach((item, index) => {
       if (item.children) {
-      
+
         item.flag = true;
       }
     })
@@ -52,7 +52,7 @@ class OutlineList extends Component {
   }
 
   changeClick = (item, index, flag) => {
-  
+
     let list = this.state.data
     list[index] = {
       ...item,
@@ -65,7 +65,7 @@ class OutlineList extends Component {
 
   changeClick2 = (item, index, flag) => {
     let list = this.state.data
-  
+
     list[0].children[index] = {
       ...item,
       flag: flag

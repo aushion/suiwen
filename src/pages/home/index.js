@@ -422,8 +422,8 @@ function Home(props) {
             </div>
             <div className={homeStyles.right}>
               {/* <Link to={`/doc/outlineConfig?docId=`+(10000*(new Date().getTime())+random(1000, 9999))+``} target="_blank"> */}
-                <div className={homeStyles.cnTitle}>文档辅助生成</div>
-                <div className={homeStyles.enTitle}>在线撰写文档</div>
+              <div className={homeStyles.cnTitle}>文档辅助生成</div>
+              <div className={homeStyles.enTitle}>在线撰写文档</div>
               {/* </Link> */}
 
               <div>
@@ -451,7 +451,7 @@ function Home(props) {
                   style={{ border: 0 }}
                   onClick={() => {
                     var timestamp = new Date().getTime();
-                    let docId = 10000*timestamp + random(1000, 9999);
+                    let docId = 10000 * timestamp + random(1000, 9999);
                     let docName = '自定义文档标题';
                     //初始化一个个人文档
                     const loginUser = localStorage.getItem('userInfo')

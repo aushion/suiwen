@@ -406,7 +406,7 @@ const OutlineConfig = (props) => {
   }
 
   return (
-    <Card>
+    <Card style={{ height: '80vh' }}>
       <div style={{ textAlign: 'right' }}>
         <Button
           style={{ marginLeft: 10, border: '0px' }}
@@ -421,9 +421,6 @@ const OutlineConfig = (props) => {
         <Col span={4}>
           <div className={styles.list}>
             <div className={styles.right}>
-              {/* <Button type="primary" onClick={onEditOutLine}>
-                新增章标题
-              </Button> */}
               <Button
                 onClick={generateDoc}
                 loading={props.loading}
@@ -438,18 +435,23 @@ const OutlineConfig = (props) => {
               >
                 内容刷新
               </Button>
-              <OutlineList
-                data={props.outlineData}
-                id={classID}
-                onEdit={onEditChapter}
-                onDelete={onDeleteChapter}
-                onNew={onNewNode}
-                onSEdit={onEditNode}
-                onClick={onClassChange}
-                onNewQuestion={onNewNodeQuestion}
-                onChapterNew={onEditOutLine}
-                onDocEdit={onEditDoc}
-              />
+              {/* <div style={{overflowY:'auto',overflowY:'hidden',height: 'calc(100vh - 297px)',}}> */}
+              <div className={styles.outlineArea}>
+                <div>
+                  <OutlineList
+                    data={props.outlineData}
+                    id={classID}
+                    onEdit={onEditChapter}
+                    onDelete={onDeleteChapter}
+                    onNew={onNewNode}
+                    onSEdit={onEditNode}
+                    onClick={onClassChange}
+                    onNewQuestion={onNewNodeQuestion}
+                    onChapterNew={onEditOutLine}
+                    onDocEdit={onEditDoc}
+                  />
+                </div>
+              </div>
             </div>
             {docVisible ? (
               <DocModel
@@ -506,7 +508,10 @@ const OutlineConfig = (props) => {
                     key={'docTitle' + props.docContentData.docName}
                     id={'docTitle' + props.docContentData.docName}
                     dangerouslySetInnerHTML={{
-                      __html: '<h1 align="center">' + [props.docContentData.docName?props.docContentData.docName:''] + '</h1>'
+                      __html:
+                        '<h1 align="center">' +
+                        [props.docContentData.docName ? props.docContentData.docName : ''] +
+                        '</h1>'
                     }}
                   />
                   <List

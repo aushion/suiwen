@@ -43,6 +43,13 @@
       }
     }
   }
+  .outlineArea {
+    overflow-y: auto;
+    height: calc(100vh - 297px);
+  }
+  .outlineArea::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .domain {
@@ -69,7 +76,6 @@
       }
 
       .titleheadright {
-        padding: 10px;
         display: none;
         align-items: center;
       }
@@ -127,5 +133,5 @@
   border-radius: 4px;
   overflow: auto;
   padding: 8px 24px;
-  height: 700px;
+  height: calc(80vh - 58px);
 }
