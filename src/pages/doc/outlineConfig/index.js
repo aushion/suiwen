@@ -406,7 +406,7 @@ const OutlineConfig = (props) => {
   }
 
   return (
-    <Card style={{ height: '80vh' }}>
+    <Card>
       <div style={{ textAlign: 'right' }}>
         <Button
           style={{ marginLeft: 10, border: '0px' }}
