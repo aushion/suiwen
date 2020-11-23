@@ -424,14 +424,14 @@ const OutlineConfig = (props) => {
               <Button
                 onClick={generateDoc}
                 loading={props.loading}
-                style={{ marginLeft: 10, color: ' blue' }}
+                style={{ marginLeft: 10, background: '#2ae' ,color:'#FFFFFF'}}
               >
                 文档下载
               </Button>
               <Button
                 onClick={refreshDocContent}
                 loading={props.loading}
-                style={{ marginLeft: 10, color: ' blue' }}
+                style={{ marginLeft: 10, background: ' #2ae' ,color:'#FFFFFF'}}
               >
                 内容刷新
               </Button>
