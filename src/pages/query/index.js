@@ -154,7 +154,8 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
-  const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
+  // const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
+  const sgCount = sgData.length;
 
   const resultLength =
     sgCount +

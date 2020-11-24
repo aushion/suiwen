@@ -27,11 +27,11 @@ function NewHelp(props) {
               onClick={() => {
                 RestTools.setSession('q', item.Content);
               }}
-              title={item.Content}
+              title={item.content}
             >
               <Link
                 className={styles.question}
-                title={item.Content}
+                title={item.content}
                 to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}`}
               >
                 {item.content}

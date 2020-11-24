@@ -5,6 +5,11 @@ import Evaluate from '../Evaluate';
 function Journal(props) {
   const { data, id, evaluate , q} = props;
   const { good, bad, isevalute } = evaluate;
+  function handleError(e) {
+    var img = e.target;
+    img.src = 'https://navi.cnki.net/knavi/images/noPic1.GIF';
+    img.onerror = null;
+  }
   return (
     <div className={styles.Journal}>
       <h2>
@@ -28,9 +33,11 @@ function Journal(props) {
               >
                 <div className={styles.Journal_left}>
                   <img
+                    style={{minWidth: 180}}
                     src={`http://c61.cnki.net/CJFD/${size}/${RestTools.removeFlag(
                       item.拼音刊名
                     )}.jpg`}
+                    onError={handleError.bind(this)}
                     alt={RestTools.removeFlag(item.拼音刊名)}
                   />
                 </div>
