@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Modal, Form, Button } from 'antd';
 
-const DocEdit = Form.create({
+const EditDocModel = Form.create({
   mapPropsToFields(props) {
     if (props.data != undefined) {
       return {
@@ -59,8 +59,8 @@ const DocEdit = Form.create({
       <Form {...formItemLayout} >
         <Form.Item label="文档标题">
           {form.getFieldDecorator('label', {
-            rules: [{ required: true, message: '请输入文档标题!' }],
-          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} />)}
+            rules: [{ pattern: /^(.{1,30})$/,required: true, message: '文档标题不可超过30位字符!' }],
+          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30}/>)}
         </Form.Item>
         {/* <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
           {form.getFieldDecorator('orderNum', {
@@ -72,4 +72,4 @@ const DocEdit = Form.create({
     </Modal>
   );
 });
-export default DocEdit;
+export default EditDocModel;

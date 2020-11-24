@@ -1,10 +1,10 @@
 @import '~antd/es/style/themes/default.less';
 
-.topic {
-  button {
-    margin-bottom: 20px;
-  }
-}
+// .topic {
+//   // button {
+//   //   margin-bottom: 20px;
+//   // }
+// }
 
 .new {
   display: flex;
@@ -23,9 +23,9 @@
   .right {
     min-width: 350px;
     margin-right: 10px;
-    button {
-      margin-bottom: 20px;
-    }
+    // button {
+    //   margin-bottom: 20px;
+    // }
   }
   .left {
     .title {
@@ -45,11 +45,19 @@
   }
   .outlineArea {
     overflow-y: auto;
-    height: calc(100vh - 297px);
+    height: 72vh;
   }
   .outlineArea::-webkit-scrollbar {
     display: none;
   }
+}
+
+.scrollContent {
+  height: 72vh;
+  // width: calc(65vw - 30px);
+  overflow-y: auto;
+  border-style: outset;
+  // border: 1px solid #ccc;
 }
 
 .domain {
@@ -64,9 +72,17 @@
         display: flex;
         align-items: center;
         .header {
+          width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           cursor: pointer;
         }
         .active {
+          width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           color: #000000;
         }
       }
@@ -76,6 +92,7 @@
       }
 
       .titleheadright {
+        margin-right: 10px;
         display: none;
         align-items: center;
       }
@@ -95,9 +112,17 @@
       .content {
         margin-left: 20px;
         cursor: pointer;
+        width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .active {
         color: #000000;
+        width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .headright {
         display: none;
@@ -134,4 +159,10 @@
   overflow: auto;
   padding: 8px 24px;
   height: calc(80vh - 0px);
+}
+
+.anchor {
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

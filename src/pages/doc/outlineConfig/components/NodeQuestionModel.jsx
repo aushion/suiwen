@@ -36,7 +36,7 @@ const NodeQuestionModel = props => {
                 },
             })
             .then(res => {
-                if (res.code == 200) {
+                if (res.code === 200) {
                     setQuestionSourceData(res.result.dataList);
                 } else {
                     message.error(res.msg);
@@ -85,6 +85,10 @@ const NodeQuestionModel = props => {
                             editFlag = true;
 
                         }}
+                        onBlur={() => {
+                            //调用更新保存函数
+                            editNodeQuestion(record);
+                        }}
 
                     />
                 </>
@@ -99,7 +103,7 @@ const NodeQuestionModel = props => {
             render: (text, record, index) => (
 
                 <span>
-                    {editFlag == true ?
+                    {editFlag === true ?
                         (index === inputIndex ? <CheckOutlined onClick={(() => { editNodeQuestion(record) })} title="保存" />
                             : <EditOutlined onClick={(() => { document.getElementById("queInput" + record.qId).focus() })} title="编辑" />)
                         : <EditOutlined onClick={(() => { document.getElementById("queInput" + record.qId).focus() })} title="编辑" />}
@@ -141,14 +145,14 @@ const NodeQuestionModel = props => {
                     qid: record.qId,
                     routeId: record.routeId,
                     parentId: record.parentId,
-                    question: tableEditedQuestion == '' ? encodeURIComponent(record.question) : encodeURIComponent(tableEditedQuestion),
+                    question: tableEditedQuestion === '' ? encodeURIComponent(record.question) : encodeURIComponent(tableEditedQuestion),
                     // question: record.question,
                     orderNum: record.orderNum,
 
                 },
             })
             .then(res => {
-                if (res.code == 200) {
+                if (res.code === 200) {
                     //去除文本框里的焦点
                     document.getElementById("queInput" + record.qId).blur();
                     setTableEditedQuestion('');
@@ -176,7 +180,7 @@ const NodeQuestionModel = props => {
                         payload,
                     })
                     .then(res => {
-                        if (res.code == 200) {
+                        if (res.code === 200) {
                             search();
                             message.success("删除成功");
                         } else {
@@ -212,7 +216,7 @@ const NodeQuestionModel = props => {
                 }
             })
             .then((res) => {
-                if (res.code == 200) {
+                if (res.code === 200) {
                     search();
                     message.success("保存成功");
                     setNewNodeQuestions('');
@@ -230,7 +234,7 @@ const NodeQuestionModel = props => {
 
     //批量删除操作触发事件
     function batchDeleteNodeQuestion() {
-        if (selectedRows == '' || selectedRows.length == 0) {
+        if (selectedRows === '' || selectedRows.length === 0) {
             message.warning('请选择一条记录!');
             return;
         }
@@ -254,9 +258,9 @@ const NodeQuestionModel = props => {
                         },
                     })
                         .then(res => {
-                            if (res.code == 200) {
+                            if (res.code === 200) {
                                 search();
-                                if (i == (qIds.length - 1)) {
+                                if (i === (qIds.length - 1)) {
                                     message.success('删除成功');
                                 }
 
@@ -315,7 +319,7 @@ const NodeQuestionModel = props => {
                 orderNum: previousLine.orderNum,
             },
         }).then(res => {
-            if (res.code == 200) {
+            if (res.code === 200) {
                 props.dispatch({
                     type: 'Doc/saveRouteQuestion',
                     payload: {
@@ -326,7 +330,7 @@ const NodeQuestionModel = props => {
                         orderNum: record.orderNum,
                     },
                 }).then(res => {
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         //交换完排序号，进行重新加载问题
                         search();
                     } else {
@@ -369,7 +373,7 @@ const NodeQuestionModel = props => {
                 orderNum: nextLine.orderNum,
             },
         }).then(res => {
-            if (res.code == 200) {
+            if (res.code === 200) {
                 props.dispatch({
                     type: 'Doc/saveRouteQuestion',
                     payload: {
@@ -380,7 +384,7 @@ const NodeQuestionModel = props => {
                         orderNum: record.orderNum,
                     },
                 }).then(res => {
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         //交换完排序号，进行重新加载问题
                         search();
                     } else {

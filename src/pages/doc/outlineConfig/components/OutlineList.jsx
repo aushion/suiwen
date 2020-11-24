@@ -90,7 +90,7 @@ class OutlineList extends Component {
               <Link
                 key={docItem}
                 href={`#${'docTitle' + docItem.label}`}
-                title={<div className={[styles.header, id === docItem.id ? styles.active : null].join(' ')}>{docItem.label}</div>}
+                title={<div title={docItem.label} className={[styles.header, id === docItem.id ? styles.active : null].join(' ')}>{docItem.label}</div>}
               />
             </div>
             <div className={styles.titleheadright}>
@@ -114,7 +114,7 @@ class OutlineList extends Component {
                       <Link
                         key={chapterItem}
                         href={`#${'chapterTitle' + chapterItem.label}`}
-                        title={<div className={[styles.header, id === chapterItem.id ? styles.active : null].join(' ')}>{chapterItem.label}</div>}
+                        title={<div title={chapterItem.label} className={[styles.header, id === chapterItem.id ? styles.active : null].join(' ')}>{chapterItem.label}</div>}
                       />
                     </div>
                     <div className={styles.headright}>
@@ -133,7 +133,7 @@ class OutlineList extends Component {
                           <Link
                             key={nodeItem}
                             href={`#${'nodeTitle' + chapterItem.label + '' + nodeItem.label}`}
-                            title={<div className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>{nodeItem.label}</div>}
+                            title={<div title={nodeItem.label} className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>{nodeItem.label}</div>}
                           />
                           <div className={styles.headright}>
                             <SettingOutlined onClick={(() => { this.props.onNewQuestion(chapterItem, nodeItem) })} title="配置问题/关键字" />
@@ -160,11 +160,12 @@ class OutlineList extends Component {
       )
     })
     return (
-      <div className={styles.domain}>
-        <Anchor affix targetOffset={50}>
-          {List}
-        </Anchor>
-      </div>
+      // <div className={styles.domain}>
+      //   <Anchor affix targetOffset={50} getContainer={()=> <div id="container"></div>}>
+      //     {List}
+      //   </Anchor>
+      // </div>
+      List
     )
   }
 

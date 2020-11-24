@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Modal, Form, Button } from 'antd';
 
-const ChapterEdit = Form.create({
+const AddDocModel = Form.create({
   mapPropsToFields(props) {
     if (props.data != undefined) {
       return {
@@ -11,7 +11,7 @@ const ChapterEdit = Form.create({
     }
   },
 })(props => {
-  const { data, modalVisible, form } = props
+  const { modalVisible, form } = props
 
   const formItemLayout = {
     labelCol: {
@@ -30,13 +30,12 @@ const ChapterEdit = Form.create({
 
   //新建章，提交按钮事件
   const onHandleOk = () => {
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
-         ...fieldsValue,
-        'parentId': '0',
-        'routeId': data.id,
+        ...fieldsValue,
+        // 'parentId': '0',
+        // 'routeId': data.id,
       }
       props.onHandleOk(values);
     });
@@ -48,7 +47,7 @@ const ChapterEdit = Form.create({
       destroyOnClose
       //是否支持键盘 esc 关闭 ， 默认true
       keyboard
-      title={data.id === undefined ? '新增章标题' : '编辑章标题'}
+      title={'新增文档'}
       centered={true}
       visible={modalVisible}
       width={600}
@@ -57,19 +56,19 @@ const ChapterEdit = Form.create({
 
     >
       <Form {...formItemLayout} >
-        <Form.Item label="章标题">
+        <Form.Item label="文档标题">
           {form.getFieldDecorator('label', {
             rules: [{ pattern: /^(.{1,30})$/,required: true, message: '文档标题不可超过30位字符!' }],
           })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30}/>)}
         </Form.Item>
-        <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
+        {/* <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
           {form.getFieldDecorator('orderNum', {
            
           })(<Input placeholder='建议纯数字' style={{ width: 400 }} />)}
-        </Form.Item>
+        </Form.Item> */}
 
       </Form>
     </Modal>
   );
 });
-export default ChapterEdit;
+export default AddDocModel;

@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  message,
-  Modal,
-  Card,
-  Form,
-  Col,
-  Row,
-  Divider,
-  Spin,
-  Select,
-  List,
-  Tag,
-  Dropdown
-} from 'antd';
-import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import InfiniteScroll from 'react-infinite-scroller';
+import { Button, message, Modal, Card, Form, Col, Row, Spin, List, Anchor } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
 import RestTools from '../../../utils/RestTools';
 
 import OutlineList from './components/OutlineList';
-import DocModel from './components/DocModel';
+import AddDocModel from './components/AddDocModel';
+import EditDocModel from './components/EditDocModel';
 import ChapterModel from './components/ChapterModel';
 import NodeModel from './components/NodeModel';
 import NodeQuestionModel from './components/NodeQuestionModel';
@@ -41,7 +27,8 @@ const OutlineConfig = (props) => {
   //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
   //控制文档标题、章、节、问题模态框
-  const [docVisible, setDocVisible] = useState(false);
+  const [addDocVisible, setAddDocVisible] = useState(false);
+  const [editDocVisible, setEditDocVisible] = useState(false);
   const [chapterVisible, setChapterVisible] = useState(false);
   const [nodeVisible, setNodeVisible] = useState(false);
   const [addNodeQuestionVisible, setAddNodeQuestionVisible] = useState(false);
@@ -55,6 +42,7 @@ const OutlineConfig = (props) => {
   const [nodeData, setNodeData] = useState('');
 
   const [classID, setID] = useState(true);
+  const [loadFlag,setLoadFlag] = useState(0);
 
   // outlineData = [
   //   {
@@ -81,12 +69,18 @@ const OutlineConfig = (props) => {
   // ];
 
   useEffect(() => {
-    //加载该文档id下的提纲目录
 
-    initializeDocument(docId, null, username);
-
-    setID(docId);
-  }, []);
+    if (docId) {
+      //加载该文档id下的提纲目录
+      queryForRoute();
+      //加载文档内容
+      getDocContentByDocId();
+      setID(docId);
+    }else{
+      //不加载文档内容
+      setDocContentResultLoading(false);
+    }
+  }, [loadFlag]);
 
   //初始化文档（辅助生成文档模块）
   function initializeDocument(docId, docName, userName) {
@@ -119,6 +113,22 @@ const OutlineConfig = (props) => {
     });
   }
 
+  //取设定最大值与最小值之间的随机数
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  //新建文档触发事件
+  function addNewDoc() {
+    setAddDocVisible(true);
+  }
+
+  //重命名文档标题
+  function renameDoc() {
+    let docItem = props.outlineData ? props.outlineData[0] : '';
+    onEditDoc(docItem);
+  }
+
   //获取该文档id下的文档内容
   function getDocContentByDocId() {
     dispatch({
@@ -135,9 +145,13 @@ const OutlineConfig = (props) => {
     });
   }
 
+  //新增文档题目，取消按钮事件
+  const onHandleCancelAddDoc = () => {
+    setAddDocVisible(false);
+  };
   //编辑文档题目，取消按钮事件
   const onHandleCancelDoc = () => {
-    setDocVisible(false);
+    setEditDocVisible(false);
   };
   //新建章，取消按钮事件
   const onHandleCancelChapter = () => {
@@ -146,6 +160,52 @@ const OutlineConfig = (props) => {
   //新建节，取消按钮事件
   const onHandleCancelNode = () => {
     setNodeVisible(false);
+  };
+
+  //新增文档题目，提交按钮事件
+  const onHandleOkAddDoc = (values) => {
+    console.log('开始调用新增文档提交事件');
+    var timestamp = new Date().getTime();
+    let docId = 10000 * timestamp + random(1000, 9999);
+    //初始化一个个人文档
+    const loginUser = localStorage.getItem('userInfo')
+      ? JSON.parse(localStorage.getItem('userInfo'))
+      : null;
+    if (loginUser == null) {
+      message.warn('请您登录后再操作');
+      return;
+    }
+    //新增文档
+    props
+      .dispatch({
+        type: 'Doc/addUserDoc',
+        payload: {
+          docId: docId,
+          docName: values.label,
+          userName: username
+        }
+      })
+      .then((res) => {
+        if (res.code == 200) {
+          setAddDocVisible(false);
+          //清除文档标题、章标题、节标题、章标题id
+          setDocData('');
+          setChapterData('');
+          setNodeData('');
+          setChapterId('');
+          message.success('新增文档标题成功');
+          //跳转刚才新创建的文档
+          router.push({
+            pathname: '/doc/outlineConfig',
+            query: {
+              docId: docId
+            }
+          });
+          setLoadFlag(docId);
+        } else {
+          message.error(res.msg);
+        }
+      });
   };
 
   //编辑文档题目，提交按钮事件
@@ -159,7 +219,7 @@ const OutlineConfig = (props) => {
       }
     }).then((res) => {
       if (res.code == 200) {
-        setDocVisible(false);
+        setEditDocVisible(false);
         //重新加载提纲数据，展示最新目录
         queryForRoute();
         //清除文档标题、章标题、节标题、章标题id
@@ -225,7 +285,7 @@ const OutlineConfig = (props) => {
 
   //编辑文档题目
   const onEditDoc = (item) => {
-    setDocVisible(true);
+    setEditDocVisible(true);
     setDocData(item);
   };
   //编辑章标题
@@ -417,49 +477,65 @@ const OutlineConfig = (props) => {
           }}
         ></Button>
       </div>
-      <Row gutter={[24, 24]}>
-        <Col span={4}>
+      <Row gutter={48}>
+        <Col span={4} style={{ minWidth: 350 }}>
           <div className={styles.list}>
             <div className={styles.right}>
-              <Button
-                onClick={generateDoc}
-                loading={props.loading}
-                style={{ marginLeft: 10, background: '#2ae' ,color:'#FFFFFF'}}
-              >
-                文档下载
-              </Button>
-              <Button
-                onClick={refreshDocContent}
-                loading={props.loading}
-                style={{ marginLeft: 10, background: ' #2ae' ,color:'#FFFFFF'}}
-              >
-                内容刷新
-              </Button>
-              {/* <div style={{overflowY:'auto',overflowY:'hidden',height: 'calc(100vh - 297px)',}}> */}
+              <div style={{ position: 'absolute', top: '-42px', background: '#fff', zIndex: 999 }}>
+                <Button
+                  onClick={addNewDoc}
+                  loading={props.loading}
+                  style={{ marginLeft: 10, background: '#2ae', color: '#FFFFFF' }}
+                >
+                  新建文档
+                </Button>
+                <Button
+                  onClick={renameDoc}
+                  loading={props.loading}
+                  style={{ marginLeft: 10, background: ' #2ae', color: '#FFFFFF' }}
+                >
+                  重命名
+                </Button>
+              </div>
               <div className={styles.outlineArea}>
-                <div>
-                  <OutlineList
-                    data={props.outlineData}
-                    id={classID}
-                    onEdit={onEditChapter}
-                    onDelete={onDeleteChapter}
-                    onNew={onNewNode}
-                    onSEdit={onEditNode}
-                    onClick={onClassChange}
-                    onNewQuestion={onNewNodeQuestion}
-                    onChapterNew={onEditOutLine}
-                    onDocEdit={onEditDoc}
-                  />
+                <div className={styles.domain}>
+                  <Anchor
+                    // affix
+                    // targetOffset={50}
+                    className={styles.anchor}
+                    style={{ maxHeight: '72vh' }}
+                    getContainer={() => document.getElementById('scrollContent')}
+                  >
+                    <OutlineList
+                      data={props.outlineData}
+                      id={classID}
+                      onEdit={onEditChapter}
+                      onDelete={onDeleteChapter}
+                      onNew={onNewNode}
+                      onSEdit={onEditNode}
+                      onClick={onClassChange}
+                      onNewQuestion={onNewNodeQuestion}
+                      onChapterNew={onEditOutLine}
+                      onDocEdit={onEditDoc}
+                    />
+                  </Anchor>
                 </div>
               </div>
             </div>
-            {docVisible ? (
-              <DocModel
+            {addDocVisible ? (
+              <AddDocModel
+                onHandleCancel={onHandleCancelAddDoc}
+                onHandleOk={onHandleOkAddDoc}
+                modalVisible={addDocVisible}
+              />
+            ) : null}
+            {editDocVisible ? (
+              <EditDocModel
                 onHandleCancel={onHandleCancelDoc}
                 onHandleOk={onHandleOkDoc}
                 data={docData}
                 docId={docId}
-                modalVisible={docVisible}
+                modalVisible={editDocVisible}
               />
             ) : null}
             {chapterVisible ? (
@@ -492,16 +568,29 @@ const OutlineConfig = (props) => {
             ) : null}
           </div>
         </Col>
-        <Col span={1}></Col>
+        {/* <Col span={1}></Col> */}
         <Col span={16}>
           <Spin spinning={docContentResultLoading}>
-            <InfiniteScroll
-              className={styles.demoInfiniteContainer}
-              initialLoad={false}
-              pageStart={0}
-              loadMore={handleInfiniteOnLoad}
-              useWindow={false}
-            >
+            {/* <div id="scrollContent" style={{ height: 800,overflowY: 'auto' }}> */}
+
+            <div id="scrollContent" className={styles.scrollContent}>
+              <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
+                <Button
+                  onClick={generateDoc}
+                  loading={props.loading}
+                  style={{ marginBottom: 10, background: '#2ae', color: '#FFFFFF' }}
+                >
+                  文档下载
+                </Button>
+                <Button
+                  onClick={refreshDocContent}
+                  loading={props.loading}
+                  style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
+                >
+                  内容刷新
+                </Button>
+              </div>
+
               {props.docContentData ? (
                 <>
                   <div
@@ -585,7 +674,10 @@ const OutlineConfig = (props) => {
                                               <Row gutter={10}>
                                                 <Col span={10}>
                                                   <Button
-                                                    style={{ border: '0px', color: ' #FF0000   ' }}
+                                                    style={{
+                                                      border: '0px',
+                                                      color: ' #FF0000   '
+                                                    }}
                                                     icon={'close-circle'}
                                                     title={'删除片段'}
                                                     onClick={() => {
@@ -611,7 +703,7 @@ const OutlineConfig = (props) => {
                   />
                 </>
               ) : null}
-            </InfiniteScroll>
+            </div>
           </Spin>
         </Col>
       </Row>

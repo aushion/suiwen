@@ -60,8 +60,8 @@ const NodeModel = Form.create({
       <Form {...formItemLayout} >
         <Form.Item label="节标题">
           {form.getFieldDecorator('label', {
-            rules: [{ required: true, message: '请输入节标题!' }],
-          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} />)}
+            rules: [{ pattern: /^(.{1,30})$/,required: true, message: '文档标题不可超过30位字符!' }],
+          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }}  maxLength={30}/>)}
         </Form.Item>
         <Form.Item label="问题/关键字" hidden={data.id === undefined ? false : true}>
           {form.getFieldDecorator('question', {})(

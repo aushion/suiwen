@@ -450,23 +450,23 @@ function Home(props) {
                   ghost
                   style={{ border: 0 }}
                   onClick={() => {
-                    var timestamp = new Date().getTime();
-                    let docId = 10000 * timestamp + random(1000, 9999);
-                    let docName = '自定义文档标题';
-                    //初始化一个个人文档
-                    const loginUser = localStorage.getItem('userInfo')
-                      ? JSON.parse(localStorage.getItem('userInfo'))
-                      : null;
-                    if (loginUser == null) {
-                      message.warn('请您登录后再操作');
-                      return;
-                    }
+                    // var timestamp = new Date().getTime();
+                    // let docId = 10000 * timestamp + random(1000, 9999);
+                    // let docName = '自定义文档标题';
+                    // //初始化一个个人文档
+                    // const loginUser = localStorage.getItem('userInfo')
+                    //   ? JSON.parse(localStorage.getItem('userInfo'))
+                    //   : null;
+                    // if (loginUser == null) {
+                    //   message.warn('请您登录后再操作');
+                    //   return;
+                    // }
                     //initializeDocument(docId, docName, loginUser);
                     router.push({
                       pathname: '/doc/outlineConfig/',
-                      query: {
-                        docId: docId
-                      }
+                      // query: {
+                      //   docId: docId
+                      // }
                     });
                   }}
                 >
