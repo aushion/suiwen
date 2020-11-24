@@ -516,7 +516,7 @@ export default {
                   payload: {
                     q: encodeURIComponent(q),
                     pageStart: 1,
-                    pageCount: 10,
+                    pageCount: 5,
                     userId,
                     topic,
                     topicName
@@ -554,7 +554,7 @@ export default {
             } else {
               dispatch({
                 type: 'getAnswer',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 5, userId }
               });
               dispatch({
                 type: 'getRelavent',

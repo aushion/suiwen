@@ -38,8 +38,8 @@ export default function Literature(props) {
     id,
     evaluate = { good: 0, bad: 0, isevaluate: false },
     intentId,
-    pagination,
-    intentJson: intent
+    pagination = {},
+    intentJson,
   } = works;
   const relevant = orderBy && orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
@@ -65,86 +65,6 @@ export default function Literature(props) {
   });
 
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    RestTools.setSession('preSearchValue', searchValue);
-  }, []);
-
-  useEffect(() => {
-    setSearchValue(searchword || keyword || '');
-  }, [keyword, searchword]);
-
-  useUpdateEffect(() => {
-    const sortMap = {
-      发表时间: 'TIME',
-      被引频次: 'integer',
-      下载频次: 'integer',
-      ffd: 'rank'
-    };
-    let order = '';
-    if (sortKey === 'ffd') {
-      order = " ORDER BY (ffd,'rank') DESC";
-    } else {
-      order =
-        count % 2 === 0
-          ? ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) desc `
-          : ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) asc `;
-    }
-    const { yearSql } = yearInfo;
-    const { subjectSql } = subjectInfo;
-    fetchData({
-      pageStart,
-        whereSql: sql,
-        yearSql,
-        subjectSql,
-        intent,
-        keyword,
-        fieldWord,
-        replaceSql,
-        searchword: '',
-        SN,
-        orderSql: order
-    })
-    // dispatch({
-    //   type: 'result/getCustomView',
-    //   payload: {
-    //     pageStart,
-    //     whereSql: sql,
-    //     yearSql,
-    //     subjectSql,
-    //     intent,
-    //     keyword: '',
-    //     fieldWord,
-    //     replaceSql,
-    //     searchword: '',
-    //     SN,
-    //     orderSql: order
-    //   }
-    // });
-  }, [count, sortKey]);
-
-  useEffect(() => {
-    if (year.length) {
-      setYearInfo({
-        ...yearInfo,
-        year: yearInfo.index > 10 ? year : year.slice(0, 10) //当索引大于初始值是，去所有
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [year]);
-
-  useEffect(() => {
-    if (subject.length) {
-      setSubjectInfo({
-        ...subjectInfo,
-        index: subjectInfo.item ? findIndex(subjectValid, subjectInfo.item) + 1 : subjectInfo.index,
-        subject: subjectValid ? subjectValid.slice(0, 8) : []
-      });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subject]);
 
   const linkMap = {
     法律期刊: {
@@ -223,6 +143,7 @@ export default function Literature(props) {
     getCustomView(params)
       .then((res) => {
         if (res.data.code === 200) {
+         
           setLoading(false);
           updateResource({
             ...resource,
@@ -237,6 +158,88 @@ export default function Literature(props) {
       });
   }
 
+  useEffect(() => {
+    RestTools.setSession('preSearchValue', searchValue);
+  }, []);
+
+  useEffect(() => {
+    setSearchValue(searchword || keyword || '');
+  }, [keyword, searchword]);
+
+  useUpdateEffect(() => {
+    const sortMap = {
+      发表时间: 'TIME',
+      被引频次: 'integer',
+      下载频次: 'integer',
+      ffd: 'rank'
+    };
+    let order = '';
+    if (sortKey === 'ffd') {
+      order = " ORDER BY (ffd,'rank') DESC";
+    } else {
+      order =
+        count % 2 === 0
+          ? ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) desc `
+          : ` ORDER BY (${sortKey}, ${sortMap[sortKey]}) asc `;
+    }
+    const { yearSql } = yearInfo;
+    const { subjectSql } = subjectInfo;
+    fetchData({
+      pageStart,
+      whereSql: sql,
+      yearSql,
+      linkName,
+      subjectSql,
+      korderValue,
+      intent: intentJson,
+      keyword: searchValue || keyword,
+      fieldWord,
+      replaceSql,
+      searchword: '',
+      SN,
+      orderSql: order
+    });
+    // dispatch({
+    //   type: 'result/getCustomView',
+    //   payload: {
+    //     pageStart,
+    //     whereSql: sql,
+    //     yearSql,
+    //     subjectSql,
+    //     intent,
+    //     keyword: '',
+    //     fieldWord,
+    //     replaceSql,
+    //     searchword: '',
+    //     SN,
+    //     orderSql: order
+    //   }
+    // });
+  }, [count, sortKey]);
+
+  useEffect(() => {
+    if (year.length) {
+      setYearInfo({
+        ...yearInfo,
+        year: yearInfo.index > 10 ? year : year.slice(0, 10) //当索引大于初始值是，去所有
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year]);
+
+  useEffect(() => {
+    if (subject.length) {
+      setSubjectInfo({
+        ...subjectInfo,
+        index: subjectInfo.item ? findIndex(subjectValid, subjectInfo.item) + 1 : subjectInfo.index,
+        subject: subjectValid ? subjectValid.slice(0, 8) : []
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subject]);
+
   function handleChangePage(page) {
     const { yearSql } = yearInfo;
     const { subjectSql } = subjectInfo;
@@ -246,13 +249,15 @@ export default function Literature(props) {
       whereSql: sql,
       yearSql,
       subjectSql,
+      linkName,
+      korderValue,
       fieldWord,
       replaceSql,
       keyword: searchValue || keyword,
-      searchword:'',
-      intent,
+      searchword: '',
+      intent: intentJson,
       SN,
-      orderSql:  orderBy
+      orderSql: orderBy
     });
 
     // dispatch({
@@ -296,11 +301,13 @@ export default function Literature(props) {
       pageStart: 1,
       whereSql: sql,
       yearSql: yearSql,
-      intent,
+      intent: intentJson,
       subjectSql,
+      linkName,
+      korderValue,
       fieldWord,
       replaceSql,
-      keyword: '',
+      keyword: searchValue || keyword,
       searchword: '',
       SN,
       orderSql: orderBy
@@ -339,12 +346,14 @@ export default function Literature(props) {
       pageStart: 1,
       whereSql: sql,
       yearSql: '',
-      intent,
+      intent: intentJson,
       subjectSql,
+      linkName,
+      korderValue,
       fieldWord,
       replaceSql,
       searchword: '',
-      keyword: '',
+      keyword: searchValue || keyword,
       SN,
       orderSql: orderBy
     });
@@ -394,8 +403,10 @@ export default function Literature(props) {
       pageStart: 1,
       whereSql: sql,
       yearSql: '',
-      intent,
+      intent: intentJson,
       subjectSql: '',
+      linkName,
+      korderValue,
       fieldWord,
       replaceSql,
       keyword,
@@ -448,12 +459,11 @@ export default function Literature(props) {
       }}
     >
       <h2>
-    <a 
-     href={linkMap[linkName].url(keyword)}
-     target="_blank"
-     rel="noopener noreferrer"
-    >{keyword} </a>
-         - 知网论文</h2>
+        <a href={linkMap[linkName].url(keyword)} target="_blank" rel="noopener noreferrer">
+          {searchword || props.q}
+        </a>
+        <span> - 知网文献</span>
+      </h2>
       {intentId === '43' || intentId === '71' || intentId === '77' ? (
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}
@@ -625,7 +635,7 @@ export default function Literature(props) {
         }
         dataSource={data}
         renderItem={(item) => {
-          const author = intent.results[0].fields['作者'];
+          const author = intentJson.results[0].fields['作者'];
           const name = item.作者名称
             ? item.作者名称
                 .replace(/\$\$\$/g, '')

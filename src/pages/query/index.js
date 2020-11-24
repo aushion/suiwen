@@ -154,7 +154,8 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
-  const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
+  // const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
+  const sgCount = sgData.length;
 
   const resultLength =
     sgCount +
@@ -325,7 +326,7 @@ function ResultPage(props) {
                   ) : null}
 
                   {lawLiteratureData.length ? (
-                    <Literature law literatureData={lawLiteratureData} dispatch={dispatch} />
+                    <Literature law q={q} literatureData={lawLiteratureData} dispatch={dispatch} />
                   ) : null}
 
                   {patentData.length

@@ -66,6 +66,7 @@ function RelatedLiteraure(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
                   }}
+                  title={item[focus]}
                   to={
                     topic
                       ? `/query?q=${encodeURIComponent(item[focus])}&topic=${topic}`
@@ -84,7 +85,7 @@ function RelatedLiteraure(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
                   }}
-                  title={RestTools.removeFlag(item[focus])}
+                  title={  RestTools.removeFlag(item[focus])}
                   target="_blank"
                   rel="noopener noreferrer"
                   href={outLink(title, item.文件名, item.来源数据库)}

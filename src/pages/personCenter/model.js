@@ -181,7 +181,7 @@ export default {
           : null;
         const current = pathname;
         const pathnameArray = current.split('/'); //获取路由信息为了渲染默认菜单选中
-        if (match && userName) {
+        if (match && userName && userInfo) {
           window.document.title = `个人中心`;
           dispatch({
             type: 'getUserCommunityInfo',
