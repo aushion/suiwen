@@ -6,6 +6,8 @@ import {
   delUserDoc,
   editUserDoc,
   generateDoc,
+  getRouteTemplate,
+  getTemplateList,
   getRouteContent,
   getUserDoc,
   queryForRoute,
@@ -13,7 +15,8 @@ import {
   refreshDocContent,
   saveRoute,
   saveRouteQuestion,
-
+  chooseTemplateRoute,
+  getQuestionTemplate,
 } from './service/index';
 const Doc = {
   namespace: 'Doc',
@@ -22,11 +25,18 @@ const Doc = {
     outlineData : [],
     //文档内容
     docContentData : [],
+    //文档模版
+    docTemplateData : [],
 
   },
   effects: {
     *addUserDoc({ payload }, { call, put }) {
       const response = yield call(addUserDoc, payload);
+      return response.data;
+    },
+
+    *chooseTemplateRoute({ payload }, { call, put }) {
+      const response = yield call(chooseTemplateRoute, payload);
       return response.data;
     },
 
@@ -58,6 +68,27 @@ const Doc = {
     *generateDoc({ payload }, { call, put }) {
       const response = yield call(generateDoc, payload);
       return response.data;
+    },
+
+    *getRouteTemplate({ payload }, { call, put }) {
+      const response = yield call(getRouteTemplate, payload);
+      return response.data;
+    },
+
+    *getTemplateList({ payload }, { call, put }) {
+      const response = yield call(getTemplateList, payload);
+      let data = response.data;
+      if (data.code === 200) {
+        console.log("docTemplateData",data.result);
+        yield put({
+          type: 'save',
+          payload: {
+            docTemplateData: data.result,      
+          },
+        });
+      }
+
+      return data;
     },
 
     *getRouteContent({ payload }, { call, put }) {
@@ -115,6 +146,13 @@ const Doc = {
       const response = yield call(saveRouteQuestion, payload);
       return response.data;
     },
+
+    *getQuestionTemplate({ payload }, { call, put }) {
+      const response = yield call(getQuestionTemplate, payload);
+      let data = response.data;
+      return data;
+    },
+    
 
   },
   reducers: {

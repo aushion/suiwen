@@ -1,4 +1,4 @@
-import { Modal, Input, Card, Table, Button, message, Col, Row, Divider } from 'antd';
+import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { EditOutlined, DeleteOutlined, CheckOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
@@ -8,6 +8,8 @@ const NodeQuestionModel = props => {
     const { modalVisible, onCancle, data, chapterId } = props;
     const [questionSourceData, setQuestionSourceData] = useState([]);
     //新增问题/关键字相关
+    const [questionTemplateData, setQuestionTemplateData] = useState([]);
+    const [selectedQuestionTemplate, setSeletedQuestionTemplate] = useState('');
     const [newNodeQuestions, setNewNodeQuestions] = useState('');
     const { TextArea } = Input;
     //多选框参数
@@ -19,9 +21,26 @@ const NodeQuestionModel = props => {
 
 
     useEffect(() => {
+        //加载问题模版
+        getQuestionTemplate();
         search();
 
     }, [editFlag]);
+
+    //获取所有的问题、关键字模版
+    function getQuestionTemplate() {
+        props
+            .dispatch({
+                type: 'Doc/getQuestionTemplate',
+            })
+            .then(res => {
+                if (res.code === 200) {
+                    setQuestionTemplateData(res.result);
+                } else {
+                    message.error(res.msg);
+                }
+            });
+    }
 
     //根据节id加载对应的问题/关键字信息
     function search() {
@@ -412,10 +431,32 @@ const NodeQuestionModel = props => {
 
     };
 
+    let questionTemplateOptions = [];
+    if (questionTemplateData.length) {
+        for (let i = 0; i < questionTemplateData.length; i++) {
+            questionTemplateOptions.push(
+                <Select.Option value={questionTemplateData[i]['question']} key={i}>
+                    {questionTemplateData[i]['question']}
+                </Select.Option>
+            );
+        }
+    }
+
+    //选择问题模版改变事件
+    const onQuestionSelectChange = (v) => {
+        setSeletedQuestionTemplate(v);
+        if (v === '') {
+            return;
+        }
+        //将选择的问题模版 填充到文本域里
+        let newNodeQuestionsStr = newNodeQuestions + '\n' + v;
+        setNewNodeQuestions(newNodeQuestionsStr);
+    }
+
     return (
         <Modal
             destroyOnClose
-            title={"配置问题或关键字"}
+            title={"配置章节系列问题或关键字"}
             visible={modalVisible}
             width={850}
             centered={true}
@@ -427,8 +468,26 @@ const NodeQuestionModel = props => {
                 <Row gutter={[24, 24]} >
                     <Col span={24}>
                         <div style={{ textAlign: 'center', marginTop: 0 }}>
-                            <font face="楷体" size="4"><b>问题输入</b></font>
+                            <font face="楷体" size="4"><b>问题新增</b></font>
                         </div>
+                    </Col>
+                </Row>
+                <Row gutter={[24, 24]} >
+                    <Col span={24}>
+                        <div style={{ textAlign: 'left', marginTop: 0 }}>
+                            <font face="宋体" size="2"><b>模版选择：</b></font>
+                            <Select
+                                style={{ width: 300 }}
+                                value={selectedQuestionTemplate}
+                                onChange={(v) => onQuestionSelectChange(v)}
+                            >
+                                <Select.Option value={''} >
+                                    {'无'}
+                                </Select.Option>
+                                {questionTemplateOptions}
+                            </Select>
+                        </div>
+
                     </Col>
                 </Row>
 
@@ -478,7 +537,7 @@ const NodeQuestionModel = props => {
                     <Col span={24}>
                         <Card>
                             <div style={{ textAlign: 'center', marginTop: 0 }}>
-                                <font face="楷体" size="4"><b>问题管理</b></font>
+                                <font face="楷体" size="4"><b>问题展示</b></font>
                             </div>
                             <div style={{ textAlign: 'right', marginBottom: 20, marginTop: 10 }}>
                                 <Button onClick={refreshNodeQuestionData} loading={props.loading} style={{ marginLeft: 10, color: '#000000' }} >

@@ -118,6 +118,8 @@ class OutlineList extends Component {
                       />
                     </div>
                     <div className={styles.headright}>
+                      <SettingOutlined onClick={(() => { this.props.onNewQuestion(docItem, chapterItem) })} title="配置问题/关键字" />
+                      <Divider type="vertical" />
                       <PlusOutlined onClick={(() => { this.props.onNew(chapterItem) })} title="新增节标题" />
                       <Divider type="vertical" />
                       <EditOutlined onClick={(() => { this.props.onEdit(chapterItem) })} title="编辑章标题" />

@@ -1,17 +1,21 @@
-import React from 'react';
-import { Input, Modal, Form, Button } from 'antd';
+import React,{useState} from 'react';
+import { Input, Modal, Form, Button,Select } from 'antd';
 
 const AddDocModel = Form.create({
   mapPropsToFields(props) {
     if (props.data != undefined) {
       return {
         label: Form.createFormField({ value: props.data.label }),
-        orderNum: Form.createFormField({ value: props.data.orderNum }),
+        docTemplateId: Form.createFormField({ value: props.data.docTemplateId }),
       };
     }
   },
 })(props => {
-  const { modalVisible, form } = props
+
+  
+  const { modalVisible, form ,docTemplateOptions} = props;
+  const [selectedTemplate, setSeletedTemplate] = useState([]);
+  
 
   const formItemLayout = {
     labelCol: {
@@ -26,6 +30,10 @@ const AddDocModel = Form.create({
 
   const onHandleCancel = () => {
     props.onHandleCancel();
+  }
+
+  const onTemplateSelectChange =(v) => {
+    setSeletedTemplate(v);
   }
 
   //新建章，提交按钮事件
@@ -61,11 +69,20 @@ const AddDocModel = Form.create({
             rules: [{ pattern: /^(.{1,30})$/,required: true, message: '文档标题不可超过30位字符!' }],
           })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30}/>)}
         </Form.Item>
-        {/* <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
-          {form.getFieldDecorator('orderNum', {
+        <Form.Item label="文档模版" >
+          {form.getFieldDecorator('docTemplateId', {
            
-          })(<Input placeholder='建议纯数字' style={{ width: 400 }} />)}
-        </Form.Item> */}
+          })(
+            <Select
+            style={{ width: 400 }}
+            value={selectedTemplate}
+            onChange={(v) => onTemplateSelectChange(v)}
+          >
+            {docTemplateOptions}
+          </Select>
+
+          )}
+        </Form.Item>
 
       </Form>
     </Modal>

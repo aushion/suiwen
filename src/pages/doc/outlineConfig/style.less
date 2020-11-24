@@ -58,6 +58,8 @@
   overflow-y: auto;
   border-style: outset;
   // border: 1px solid #ccc;
+  word-break:break-all;
+  
 }
 
 .domain {
@@ -72,14 +74,14 @@
         display: flex;
         align-items: center;
         .header {
-          width: 200px;
+          width: 160px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
           cursor: pointer;
         }
         .active {
-          width: 200px;
+          width: 160px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -87,6 +89,7 @@
         }
       }
       .headright {
+        
         display: none;
         align-items: center;
       }

@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, message, Modal, Card, Form, Col, Row, Spin, List, Anchor } from 'antd';
+import {
+  Button,
+  message,
+  Modal,
+  Card,
+  Form,
+  Col,
+  Row,
+  Spin,
+  List,
+  Anchor,
+  Tree,
+  Select
+} from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
@@ -17,7 +30,7 @@ import styles from './style.less';
 import request from '@/utils/request';
 
 const { confirm } = Modal;
-
+const { TreeNode } = Tree;
 const OutlineConfig = (props) => {
   const { docId } = querystring.parse(window.location.href.split('?')[1], '#');
   // const docId = '1';
@@ -42,33 +55,15 @@ const OutlineConfig = (props) => {
   const [nodeData, setNodeData] = useState('');
 
   const [classID, setID] = useState(true);
-  const [loadFlag,setLoadFlag] = useState(0);
+  const [loadFlag, setLoadFlag] = useState(0);
 
-  // outlineData = [
-  //   {
-  //     children: [
-  //       { children: [], id: 46, label: '第一节' },
-  //       { children: [], id: 47, label: '第二节' },
-  //       { children: [], id: 48, label: '第三节' },
-  //       { children: [], id: 49, label: '第四节' },
-  //       { children: [], id: 50, label: '第五节' }
-  //     ],
-  //     id: 45,
-  //     label: '第一章'
-  //   },
-  //   {
-  //     children: [
-  //       { children: [], id: 52, label: '第一节' },
-  //       { children: [], id: 53, label: '第二节' },
-  //       { children: [], id: 54, label: '第三节' },
-  //       { children: [], id: 55, label: '第四节' }
-  //     ],
-  //     id: 51,
-  //     label: '第二章'
-  //   }
-  // ];
+  //文档模版选择
+  const docTemplateList = props.docTemplateData;
+  // const [selectedTemplate, setSeletedTemplate] = useState([]);
 
   useEffect(() => {
+    //加载文档模版数据
+    getDocTemplate();
 
     if (docId) {
       //加载该文档id下的提纲目录
@@ -76,8 +71,19 @@ const OutlineConfig = (props) => {
       //加载文档内容
       getDocContentByDocId();
       setID(docId);
-    }else{
+    } else {
+      console.log('docId为空');
       //不加载文档内容
+      setDocData('');
+      setChapterId('');
+      setChapterData('');
+      setNodeData('');
+      dispatch({
+        type: 'Doc/save',
+        payload: {
+          docContentData: [],
+        },
+      });
       setDocContentResultLoading(false);
     }
   }, [loadFlag]);
@@ -103,6 +109,13 @@ const OutlineConfig = (props) => {
       });
   }
 
+  //获取所有的文档模版
+  function getDocTemplate() {
+    props.dispatch({
+      type: 'Doc/getTemplateList'
+    });
+  }
+
   //获取该文档id下的提纲目录
   function queryForRoute() {
     dispatch({
@@ -120,6 +133,10 @@ const OutlineConfig = (props) => {
 
   //新建文档触发事件
   function addNewDoc() {
+    if(docId){
+      message.warn('当前文档已存在，不可重复创建');
+      return;
+    }
     setAddDocVisible(true);
   }
 
@@ -182,7 +199,8 @@ const OutlineConfig = (props) => {
         payload: {
           docId: docId,
           docName: values.label,
-          userName: username
+          userName: username,
+          templateId:values.docTemplateId,
         }
       })
       .then((res) => {
@@ -465,6 +483,41 @@ const OutlineConfig = (props) => {
     });
   }
 
+  let docTemplateOptions = [];
+  if (docTemplateList.length) {
+    for (let i = 0; i < docTemplateList.length; i++) {
+      docTemplateOptions.push(
+        <Select.Option value={docTemplateList[i]['id']} key={i}>
+          {docTemplateList[i]['name']}
+        </Select.Option>
+      );
+    }
+  }
+
+  //选择文档模版改变时 触发事件
+  // function onTemplateSelectChange(value) {
+  //   console.log('value',value)
+  //   setSeletedTemplate(value.docTemplateId);
+  //   props
+  //     .dispatch({
+  //       type: 'Doc/chooseTemplateRoute',
+  //       payload: {
+  //         docId: docId,
+  //         templateId: value.docTemplateId,
+  //       }
+  //     })
+  //     .then((res) => {
+  //       if (res.code == 200) {
+  //         message.success(res.msg);
+  //         queryForRoute();
+  //         //加载文档内容
+  //         getDocContentByDocId();
+  //       } else {
+  //         message.error(res.msg);
+  //       }
+  //     });
+  // }
+
   return (
     <Card>
       <div style={{ textAlign: 'right' }}>
@@ -496,29 +549,51 @@ const OutlineConfig = (props) => {
                 >
                   重命名
                 </Button>
+           
               </div>
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>
-                  <Anchor
-                    // affix
-                    // targetOffset={50}
-                    className={styles.anchor}
-                    style={{ maxHeight: '72vh' }}
-                    getContainer={() => document.getElementById('scrollContent')}
-                  >
-                    <OutlineList
-                      data={props.outlineData}
-                      id={classID}
-                      onEdit={onEditChapter}
-                      onDelete={onDeleteChapter}
-                      onNew={onNewNode}
-                      onSEdit={onEditNode}
-                      onClick={onClassChange}
-                      onNewQuestion={onNewNodeQuestion}
-                      onChapterNew={onEditOutLine}
-                      onDocEdit={onEditDoc}
-                    />
-                  </Anchor>
+                  {docId ? (
+                    <Anchor
+                      // affix
+                      // targetOffset={50}
+                      className={styles.anchor}
+                      style={{ maxHeight: '72vh' }}
+                      getContainer={() => document.getElementById('scrollContent')}
+                    >
+                      <OutlineList
+                        data={props.outlineData}
+                        id={classID}
+                        onEdit={onEditChapter}
+                        onDelete={onDeleteChapter}
+                        onNew={onNewNode}
+                        onSEdit={onEditNode}
+                        onClick={onClassChange}
+                        onNewQuestion={onNewNodeQuestion}
+                        onChapterNew={onEditOutLine}
+                        onDocEdit={onEditDoc}
+                      />
+                    </Anchor>
+                  ) : (
+                    <Tree disabled defaultExpandAll>
+                      <TreeNode title="文档标题：XXX" key="0-0">
+                        <TreeNode title="第一章：XXX" key="0-0-0">
+                          <TreeNode title="第一节：XXX" key="0-0-0-0" />
+                          <TreeNode title="第二节：XXX" key="0-0-0-1" />
+                        </TreeNode>
+                        <TreeNode title="第二章：XXX" key="0-0-1">
+                          <TreeNode title="第一节：XXX" key="0-0-1-0" />
+                          <TreeNode title="第二节：XXX" key="0-0-1-1" />
+                          <TreeNode title="第三节：XXX" key="0-0-1-2" />
+                        </TreeNode>
+                        {/* <TreeNode title="第三章：XXX" key="0-0-2">
+                          <TreeNode title="第一节：XXX" key="0-0-2-0" />
+                          <TreeNode title="第二节：XXX" key="0-0-2-1" />
+                          <TreeNode title="第三节：XXX" key="0-0-2-2" />
+                        </TreeNode> */}
+                      </TreeNode>
+                    </Tree>
+                  )}
                 </div>
               </div>
             </div>
@@ -527,6 +602,11 @@ const OutlineConfig = (props) => {
                 onHandleCancel={onHandleCancelAddDoc}
                 onHandleOk={onHandleOkAddDoc}
                 modalVisible={addDocVisible}
+                dispatch={dispatch}
+                loading={props.loading}
+                docTemplateOptions={docTemplateOptions}
+                // onTemplateSelectChange={onTemplateSelectChange}
+                
               />
             ) : null}
             {editDocVisible ? (
@@ -534,6 +614,8 @@ const OutlineConfig = (props) => {
                 onHandleCancel={onHandleCancelDoc}
                 onHandleOk={onHandleOkDoc}
                 data={docData}
+                dispatch={dispatch}
+                loading={props.loading}
                 docId={docId}
                 modalVisible={editDocVisible}
               />
@@ -543,6 +625,8 @@ const OutlineConfig = (props) => {
                 onHandleCancel={onHandleCancelChapter}
                 onHandleOk={onHandleOk}
                 data={chapterData}
+                dispatch={dispatch}
+                loading={props.loading}
                 modalVisible={chapterVisible}
               />
             ) : null}
@@ -551,6 +635,8 @@ const OutlineConfig = (props) => {
                 onHandleCancel={onHandleCancelNode}
                 onHandleOk={onHandleOk}
                 data={nodeData}
+                dispatch={dispatch}
+                loading={props.loading}
                 chapterId={chapterId}
                 modalVisible={nodeVisible}
               />
@@ -631,7 +717,7 @@ const OutlineConfig = (props) => {
                                 >
                                   <div
                                     dangerouslySetInnerHTML={{
-                                      __html: '<h3 >' + nodeItem.routeName + '</h3>'
+                                      __html: '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' + nodeItem.routeName + '</h3>'
                                     }}
                                   />
                                   <List.Item>
@@ -712,5 +798,6 @@ const OutlineConfig = (props) => {
 };
 export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
-  docContentData: Doc.docContentData
+  docContentData: Doc.docContentData,
+  docTemplateData: Doc.docTemplateData
 }))(Form.create()(OutlineConfig));

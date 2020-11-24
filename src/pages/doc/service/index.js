@@ -11,6 +11,17 @@ export async function addUserDoc(params) {
   });
 }
 
+//选择模版提纲
+export async function chooseTemplateRoute(params) {
+  return request({
+    url: '/doc/chooseTemplateRoute',
+    method: 'post',
+    data: {
+      ...params
+    }
+  });
+}
+
 //删除文档片段
 export async function delContent(params) {
   return request({
@@ -67,6 +78,25 @@ export async function generateDoc(params) {
     params
   });
 }
+
+//获取模版路径提纲
+export async function getRouteTemplate(params) {
+  return request({
+    url: '/doc/getRouteTemplate',
+    method: 'post',
+    params
+  });
+}
+
+//获取模版路径提纲
+export async function getTemplateList(params) {
+  return request({
+    url: '/doc/getTemplateList',
+    method: 'post',
+    params
+  });
+}
+
 
 //获取路径下的内容信息
 export async function getRouteContent(params) {
@@ -135,3 +165,14 @@ export async function saveRouteQuestion(params) {
     }
   });
 }
+
+//获取问题模版
+export async function getQuestionTemplate(params) {
+  return request({
+    url: '/doc/getQuestionTemplate',
+    method: 'post',
+    params
+  });
+}
+
+
