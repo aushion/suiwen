@@ -567,7 +567,7 @@ const OutlineConfig = (props) => {
       let docTemplateSigData = docTemplateList[i]['routeTemplate'];
       docTemplateOptions.push(
         <Select.Option value={docTemplateList[i]['id']} key={i}>
-          <Tooltip
+          <Tooltip placement="left"
             title={
               <div>
                 {docTemplateSigData.map((docItem, docIndex) => {
