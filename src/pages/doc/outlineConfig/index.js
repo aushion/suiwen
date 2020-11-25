@@ -14,7 +14,7 @@ import {
   Select,
   Tooltip
 } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined ,SettingOutlined} from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
 import RestTools from '../../../utils/RestTools';
@@ -25,6 +25,7 @@ import EditDocModel from './components/EditDocModel';
 import ChapterModel from './components/ChapterModel';
 import NodeModel from './components/NodeModel';
 import NodeQuestionModel from './components/NodeQuestionModel';
+import TemplateManagementModel from './components/TemplateManagementModel';
 import querystring from 'querystring';
 import styles from './style.less';
 
@@ -46,6 +47,7 @@ const OutlineConfig = (props) => {
   const [chapterVisible, setChapterVisible] = useState(false);
   const [nodeVisible, setNodeVisible] = useState(false);
   const [addNodeQuestionVisible, setAddNodeQuestionVisible] = useState(false);
+  const [templateManagementVisible, setTemplateManagementVisible] = useState(false);
   //保存章标题id
   const [chapterId, setChapterId] = useState('');
   //保存选中的文档数据组
@@ -592,20 +594,18 @@ const OutlineConfig = (props) => {
                           ? null
                           : docItem.children.map((chapterItem, chapterIndex) => {
                               return (
-                                <div  key={chapterIndex}>
-                                
-                                      <div
-                                        title={chapterItem.label}
-                                        style={{
-                                          display: 'flex',
-                                          justifyContent: 'space-between',
-                                          width: '170px',
-                                          marginLeft: '20px',
-                                          alignItems: 'center'
-                                        }}
-                                      >
-                                        {chapterItem.label}
-                                   
+                                <div key={chapterIndex}>
+                                  <div
+                                    title={chapterItem.label}
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      width: '170px',
+                                      marginLeft: '20px',
+                                      alignItems: 'center'
+                                    }}
+                                  >
+                                    {chapterItem.label}
                                   </div>
 
                                   {chapterItem.children &&
@@ -716,13 +716,14 @@ const OutlineConfig = (props) => {
                 </Button>
                 <Select
                   disabled={docId ? false : true}
-                  style={{ width: 130, marginLeft: 10 }}
+                  style={{ width: 120, marginLeft: 10 }}
                   value={selectedDocTemplate}
                   onChange={(v) => onDocTemplateSelectChange(v)}
                 >
-                  <Select.Option value={''}>{'文档模板选择'}</Select.Option>
+                  <Select.Option value={''}>{'模板选择'}</Select.Option>
                   {docTemplateOptions}
                 </Select>
+                <SettingOutlined disabled={docId ? false : true} style={{ width: 5, marginLeft: 5 , visibility: 'hidden'}} onClick={(() => { setTemplateManagementVisible(true); })} title="模板管理" />
               </div>
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>
@@ -818,6 +819,15 @@ const OutlineConfig = (props) => {
                 chapterId={chapterId}
                 onCancle={() => setAddNodeQuestionVisible(false)}
                 handleOk={addNodeQuestion}
+              />
+            ) : null}
+            {templateManagementVisible ? (
+              <TemplateManagementModel
+                modalVisible={templateManagementVisible}
+                dispatch={dispatch}
+                loading={props.loading}
+                onCancle={() => setTemplateManagementVisible(false)}
+                handleOk={() => setTemplateManagementVisible(false)}
               />
             ) : null}
           </div>
