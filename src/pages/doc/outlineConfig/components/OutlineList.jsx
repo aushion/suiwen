@@ -97,6 +97,8 @@ class OutlineList extends Component {
               <PlusOutlined onClick={(() => { this.props.onChapterNew(docItem) })} title="新增章标题" />
               <Divider type="vertical" />
               <EditOutlined onClick={(() => { this.props.onDocEdit(docItem) })} title="编辑文档标题" />
+              <Divider type="vertical" />
+              <DeleteOutlined onClick={(() => { this.props.onDocDelete(docItem) })} title="删除章标题" />
             </div>
           </div>
 

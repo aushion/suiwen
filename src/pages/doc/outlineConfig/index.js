@@ -342,6 +342,47 @@ const OutlineConfig = (props) => {
     setEditDocVisible(true);
     setDocData(item);
   };
+
+  //删除个人文档
+  function onDocDelete(docItem) {
+    console.log('docItem', docItem);
+    confirm({
+      title: '确定删除?',
+      icon: <ExclamationCircleOutlined />,
+      centered: true,
+      onOk() {
+        dispatch({
+          type: 'Doc/delUserDoc',
+          payload: {
+            docId: docItem.id,
+            userName: username
+          }
+        }).then((res) => {
+          if (res.code === 200) {
+            //重新加载提纲数据，展示最新目录
+            queryForRoute();
+            getDocContent();
+            //清除章标题、节标题、章标题id
+            setChapterData('');
+            setNodeData('');
+            setChapterId('');
+            message.success('文档已删除');
+            //跳转空白文档
+            router.push({
+              pathname: '/doc/outlineConfig'
+            });
+            var timestamp = new Date().getTime();
+            let docId = 10000 * timestamp + random(1000, 9999);
+            setLoadFlag(docId);
+          } else {
+            message.error(res.msg);
+          }
+        });
+      },
+      onCancel() {}
+    });
+  }
+
   //编辑章标题
   const onEditChapter = (item) => {
     setChapterVisible(true);
@@ -523,84 +564,68 @@ const OutlineConfig = (props) => {
   let docTemplateOptions = [];
   if (docTemplateList.length) {
     for (let i = 0; i < docTemplateList.length; i++) {
-      let docTemplateSigData = [];
-      //根据文档模板id 获取对应的模板数据
-      props
-        .dispatch({
-          type: 'Doc/getRouteTemplate',
-          payload: {
-            templateId: docTemplateList[i]['id']
-          }
-        })
-        .then((res) => {
-          if (res.code === 200) {
-            docTemplateSigData = res.result;
-
-            docTemplateOptions.push(
-              <Select.Option value={docTemplateList[i]['id']} key={i}>
-                <Tooltip
-                  title={
-                    <div>
-                      {docTemplateSigData.map((docItem, docIndex) => {
-                        return (
-                          <div className={styles.item} key={docIndex}>
-                            <div className={styles.head}>
-                              <div className={styles.headleft}>
-                                <div title={docItem.label} className={[styles.header]}>
-                                  {docItem.label}
-                                </div>
-                              </div>
-                            </div>
-
-                            {docItem.children &&
-                              (docItem.flag === false
-                                ? null
-                                : docItem.children.map((chapterItem, chapterIndex) => {
-                                    return (
-                                      <div className={styles.item} key={chapterIndex}>
-                                        <div className={styles.head}>
-                                          <div className={styles.headleft}>
-                                            <div
-                                              title={chapterItem.label}
-                                              className={[styles.header].join(' ')}
-                                            >
-                                              {chapterItem.label}
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        {chapterItem.children &&
-                                          (chapterItem.flag === false
-                                            ? null
-                                            : chapterItem.children.map((nodeItem, nodeIndex) => {
-                                                return (
-                                                  <div key={nodeIndex} className={styles.text}>
-                                                    <div
-                                                      title={nodeItem.label}
-                                                      className={[styles.content].join(' ')}
-                                                    >
-                                                      {nodeItem.label}
-                                                    </div>
-                                                  </div>
-                                                );
-                                              }))}
-                                      </div>
-                                    );
-                                  }))}
+      let docTemplateSigData = docTemplateList[i]['routeTemplate'];
+      docTemplateOptions.push(
+        <Select.Option value={docTemplateList[i]['id']} key={i}>
+          <Tooltip
+            title={
+              <div>
+                {docTemplateSigData.map((docItem, docIndex) => {
+                  return (
+                    <div className={styles.item} key={docIndex}>
+                      <div className={styles.head}>
+                        <div className={styles.headleft}>
+                          <div title={docItem.label} className={[styles.header]}>
+                            {docItem.label}
                           </div>
-                        );
-                      })}
+                        </div>
+                      </div>
+
+                      {docItem.children &&
+                        (docItem.flag === false
+                          ? null
+                          : docItem.children.map((chapterItem, chapterIndex) => {
+                              return (
+                                <div className={styles.item} key={chapterIndex}>
+                                  <div className={styles.head}>
+                                    <div className={styles.headleft}>
+                                      <div
+                                        title={chapterItem.label}
+                                        className={[styles.header].join(' ')}
+                                      >
+                                        {chapterItem.label}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {chapterItem.children &&
+                                    (chapterItem.flag === false
+                                      ? null
+                                      : chapterItem.children.map((nodeItem, nodeIndex) => {
+                                          return (
+                                            <div key={nodeIndex} className={styles.text}>
+                                              <div
+                                                title={nodeItem.label}
+                                                className={[styles.content].join(' ')}
+                                              >
+                                                {nodeItem.label}
+                                              </div>
+                                            </div>
+                                          );
+                                        }))}
+                                </div>
+                              );
+                            }))}
                     </div>
-                  }
-                >
-                  {docTemplateList[i]['name']}
-                </Tooltip>
-              </Select.Option>
-            );
-          } else {
-            message.error(res.msg);
-          }
-        });
+                  );
+                })}
+              </div>
+            }
+          >
+            {docTemplateList[i]['name']}
+          </Tooltip>
+        </Select.Option>
+      );
     }
   }
 
@@ -645,7 +670,7 @@ const OutlineConfig = (props) => {
     <Card>
       <div style={{ textAlign: 'right' }}>
         <Button
-          style={{ marginLeft: 10, border: '0px' }}
+          style={{ marginLeft: 10, border: '0px', visibility:'hidden' }}
           icon={'rollback'}
           title="返回到上一个页面"
           onClick={() => {
@@ -704,6 +729,7 @@ const OutlineConfig = (props) => {
                         onNewQuestion={onNewNodeQuestion}
                         onChapterNew={onEditOutLine}
                         onDocEdit={onEditDoc}
+                        onDocDelete={onDocDelete}
                       />
                     </Anchor>
                   ) : (
@@ -826,11 +852,13 @@ const OutlineConfig = (props) => {
                         key={'chapterTitle' + chapterItem.routeName}
                         id={'chapterTitle' + chapterItem.routeName}
                       >
-                        {chapterItem.routeName?<div
-                          dangerouslySetInnerHTML={{
-                            __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
-                          }}
-                        />:null}
+                        {chapterItem.routeName ? (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
+                            }}
+                          />
+                        ) : null}
                         <List.Item>
                           {chapterItem.sectionList ? (
                             <List
@@ -843,14 +871,16 @@ const OutlineConfig = (props) => {
                                   }
                                   id={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
                                 >
-                                  {nodeItem.routeName?<div
-                                    dangerouslySetInnerHTML={{
-                                      __html:
-                                        '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' +
-                                        nodeItem.routeName +
-                                        '</h3>'
-                                    }}
-                                  />:null}
+                                  {nodeItem.routeName ? (
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html:
+                                          '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' +
+                                          nodeItem.routeName +
+                                          '</h3>'
+                                      }}
+                                    />
+                                  ) : null}
                                   <List.Item>
                                     {nodeItem.contentList ? (
                                       <List
