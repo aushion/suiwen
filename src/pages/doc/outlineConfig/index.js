@@ -567,18 +567,24 @@ const OutlineConfig = (props) => {
       let docTemplateSigData = docTemplateList[i]['routeTemplate'];
       docTemplateOptions.push(
         <Select.Option value={docTemplateList[i]['id']} key={i}>
-          <Tooltip placement="left"
+          <Tooltip
+            placement="leftTop"
             title={
               <div>
                 {docTemplateSigData.map((docItem, docIndex) => {
                   return (
-                    <div className={styles.item} key={docIndex}>
-                      <div className={styles.head}>
-                        <div className={styles.headleft}>
-                          <div title={docItem.label} className={[styles.header]}>
-                            {docItem.label}
-                          </div>
-                        </div>
+                    <div key={docIndex}>
+                      <div
+                        title={docItem.label}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          width: '170px',
+                          // padding: '10px',
+                          alignItems: 'center'
+                        }}
+                      >
+                        {docItem.label}
                       </div>
 
                       {docItem.children &&
@@ -586,16 +592,20 @@ const OutlineConfig = (props) => {
                           ? null
                           : docItem.children.map((chapterItem, chapterIndex) => {
                               return (
-                                <div className={styles.item} key={chapterIndex}>
-                                  <div className={styles.head}>
-                                    <div className={styles.headleft}>
+                                <div  key={chapterIndex}>
+                                
                                       <div
                                         title={chapterItem.label}
-                                        className={[styles.header].join(' ')}
+                                        style={{
+                                          display: 'flex',
+                                          justifyContent: 'space-between',
+                                          width: '170px',
+                                          marginLeft: '20px',
+                                          alignItems: 'center'
+                                        }}
                                       >
                                         {chapterItem.label}
-                                      </div>
-                                    </div>
+                                   
                                   </div>
 
                                   {chapterItem.children &&
@@ -603,10 +613,16 @@ const OutlineConfig = (props) => {
                                       ? null
                                       : chapterItem.children.map((nodeItem, nodeIndex) => {
                                           return (
-                                            <div key={nodeIndex} className={styles.text}>
+                                            <div key={nodeIndex}>
                                               <div
                                                 title={nodeItem.label}
-                                                className={[styles.content].join(' ')}
+                                                style={{
+                                                  display: 'flex',
+                                                  justifyContent: 'space-between',
+                                                  width: '170px',
+                                                  marginLeft: '40px',
+                                                  alignItems: 'center'
+                                                }}
                                               >
                                                 {nodeItem.label}
                                               </div>
@@ -670,7 +686,7 @@ const OutlineConfig = (props) => {
     <Card>
       <div style={{ textAlign: 'right' }}>
         <Button
-          style={{ marginLeft: 10, border: '0px', visibility:'hidden' }}
+          style={{ marginLeft: 10, border: '0px', visibility: 'hidden' }}
           icon={'rollback'}
           title="返回到上一个页面"
           onClick={() => {
