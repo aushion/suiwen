@@ -11,7 +11,8 @@ import {
   List,
   Anchor,
   Tree,
-  Select
+  Select,
+  Tooltip
 } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
@@ -59,7 +60,7 @@ const OutlineConfig = (props) => {
 
   //文档模版选择
   const docTemplateList = props.docTemplateData;
-  // const [selectedTemplate, setSeletedTemplate] = useState([]);
+  const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
 
   useEffect(() => {
     //加载文档模版数据
@@ -69,7 +70,7 @@ const OutlineConfig = (props) => {
       //加载该文档id下的提纲目录
       queryForRoute();
       //加载文档内容
-      getDocContentByDocId();
+      getDocContent();
       setID(docId);
     } else {
       console.log('docId为空');
@@ -81,8 +82,8 @@ const OutlineConfig = (props) => {
       dispatch({
         type: 'Doc/save',
         payload: {
-          docContentData: [],
-        },
+          docContentData: []
+        }
       });
       setDocContentResultLoading(false);
     }
@@ -104,7 +105,7 @@ const OutlineConfig = (props) => {
         if (res.code == 200) {
           queryForRoute();
           //加载文档内容
-          getDocContentByDocId();
+          getDocContent();
         }
       });
   }
@@ -133,11 +134,18 @@ const OutlineConfig = (props) => {
 
   //新建文档触发事件
   function addNewDoc() {
-    if(docId){
-      message.warn('当前文档已存在，不可重复创建');
-      return;
+    if (docId) {
+      Modal.confirm({
+        title:
+          '当前文档已实时保存到"个人中心-文档"里，新建文档操作最终跳转新的文档界面，确定继续执行新建操作？',
+        centered: true,
+        onOk() {
+          setAddDocVisible(true);
+        }
+      });
+    } else {
+      setAddDocVisible(true);
     }
-    setAddDocVisible(true);
   }
 
   //重命名文档标题
@@ -147,19 +155,39 @@ const OutlineConfig = (props) => {
   }
 
   //获取该文档id下的文档内容
+  function getDocContent() {
+    props
+      .dispatch({
+        type: 'Doc/getDocContent',
+        payload: {
+          docId: docId
+        }
+      })
+      .then((res) => {
+        if (res.code == 200) {
+          setDocContentResultLoading(false);
+        } else {
+          message.error(res.msg);
+        }
+      });
+  }
+
+  //获取该文档id下的文档内容
   function getDocContentByDocId() {
-    dispatch({
-      type: 'Doc/refreshDocContent',
-      payload: {
-        docId: docId
-      }
-    }).then((res) => {
-      if (res.code == 200) {
-        setDocContentResultLoading(false);
-      } else {
-        message.error(res.msg);
-      }
-    });
+    props
+      .dispatch({
+        type: 'Doc/refreshDocContent',
+        payload: {
+          docId: docId
+        }
+      })
+      .then((res) => {
+        if (res.code == 200) {
+          setDocContentResultLoading(false);
+        } else {
+          message.error(res.msg);
+        }
+      });
   }
 
   //新增文档题目，取消按钮事件
@@ -200,7 +228,7 @@ const OutlineConfig = (props) => {
           docId: docId,
           docName: values.label,
           userName: username,
-          templateId:values.docTemplateId,
+          templateId: values.docTemplateId
         }
       })
       .then((res) => {
@@ -246,7 +274,7 @@ const OutlineConfig = (props) => {
         setNodeData('');
         setChapterId('');
         //刷新文章内容
-        getDocContentByDocId();
+        getDocContent();
         message.success('编辑文档标题成功');
       } else {
         message.error(res.msg);
@@ -278,15 +306,23 @@ const OutlineConfig = (props) => {
           setChapterVisible(false);
           if (values.routeId === undefined) {
             message.success('新建章标题成功');
+            //刷新文档预览区
+            getDocContent();
           } else {
             message.success('编辑章标题成功');
+            //刷新文档预览区
+            getDocContent();
           }
         } else {
           setNodeVisible(false);
           if (values.routeId === undefined) {
             message.success('新建节标题成功');
+            //刷新文档预览区
+            getDocContent();
           } else {
             message.success('编辑节标题成功');
+            //刷新文档预览区
+            getDocContent();
           }
         }
         //重新加载提纲数据，展示最新目录
@@ -332,6 +368,7 @@ const OutlineConfig = (props) => {
             message.success(res.msg);
             //重新加载提纲数据，展示最新目录
             queryForRoute();
+            getDocContent();
           } else {
             message.error(res.msg);
           }
@@ -472,7 +509,7 @@ const OutlineConfig = (props) => {
         }).then((res) => {
           if (res.code === 200) {
             //刷新
-            getDocContentByDocId();
+            getDocContent();
             message.success('片段已删除');
           } else {
             message.error(res.msg);
@@ -486,37 +523,123 @@ const OutlineConfig = (props) => {
   let docTemplateOptions = [];
   if (docTemplateList.length) {
     for (let i = 0; i < docTemplateList.length; i++) {
-      docTemplateOptions.push(
-        <Select.Option value={docTemplateList[i]['id']} key={i}>
-          {docTemplateList[i]['name']}
-        </Select.Option>
-      );
+      let docTemplateSigData = [];
+      //根据文档模板id 获取对应的模板数据
+      props
+        .dispatch({
+          type: 'Doc/getRouteTemplate',
+          payload: {
+            templateId: docTemplateList[i]['id']
+          }
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            docTemplateSigData = res.result;
+
+            docTemplateOptions.push(
+              <Select.Option value={docTemplateList[i]['id']} key={i}>
+                <Tooltip
+                  title={
+                    <div>
+                      {docTemplateSigData.map((docItem, docIndex) => {
+                        return (
+                          <div className={styles.item} key={docIndex}>
+                            <div className={styles.head}>
+                              <div className={styles.headleft}>
+                                <div title={docItem.label} className={[styles.header]}>
+                                  {docItem.label}
+                                </div>
+                              </div>
+                            </div>
+
+                            {docItem.children &&
+                              (docItem.flag === false
+                                ? null
+                                : docItem.children.map((chapterItem, chapterIndex) => {
+                                    return (
+                                      <div className={styles.item} key={chapterIndex}>
+                                        <div className={styles.head}>
+                                          <div className={styles.headleft}>
+                                            <div
+                                              title={chapterItem.label}
+                                              className={[styles.header].join(' ')}
+                                            >
+                                              {chapterItem.label}
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        {chapterItem.children &&
+                                          (chapterItem.flag === false
+                                            ? null
+                                            : chapterItem.children.map((nodeItem, nodeIndex) => {
+                                                return (
+                                                  <div key={nodeIndex} className={styles.text}>
+                                                    <div
+                                                      title={nodeItem.label}
+                                                      className={[styles.content].join(' ')}
+                                                    >
+                                                      {nodeItem.label}
+                                                    </div>
+                                                  </div>
+                                                );
+                                              }))}
+                                      </div>
+                                    );
+                                  }))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  }
+                >
+                  {docTemplateList[i]['name']}
+                </Tooltip>
+              </Select.Option>
+            );
+          } else {
+            message.error(res.msg);
+          }
+        });
     }
   }
 
   //选择文档模版改变时 触发事件
-  // function onTemplateSelectChange(value) {
-  //   console.log('value',value)
-  //   setSeletedTemplate(value.docTemplateId);
-  //   props
-  //     .dispatch({
-  //       type: 'Doc/chooseTemplateRoute',
-  //       payload: {
-  //         docId: docId,
-  //         templateId: value.docTemplateId,
-  //       }
-  //     })
-  //     .then((res) => {
-  //       if (res.code == 200) {
-  //         message.success(res.msg);
-  //         queryForRoute();
-  //         //加载文档内容
-  //         getDocContentByDocId();
-  //       } else {
-  //         message.error(res.msg);
-  //       }
-  //     });
-  // }
+  function onDocTemplateSelectChange(value) {
+    setSeletedDocTemplate(value);
+    if (value === '') {
+      return;
+    }
+
+    Modal.confirm({
+      title: '确定应用此文档模板吗?此操作将会使之前编辑的提纲内容被覆盖掉！',
+      centered: true,
+      onOk() {
+        props
+          .dispatch({
+            type: 'Doc/chooseTemplateRoute',
+            payload: {
+              docId: docId,
+              templateId: value
+            }
+          })
+          .then((res) => {
+            if (res.code == 200) {
+              //清除文档标题、章标题、节标题、章标题id
+              setDocData('');
+              setChapterData('');
+              setNodeData('');
+              setChapterId('');
+              queryForRoute();
+              getDocContent();
+              message.success('文档模板应用完毕');
+            } else {
+              message.error(res.msg);
+            }
+          });
+      }
+    });
+  }
 
   return (
     <Card>
@@ -543,13 +666,22 @@ const OutlineConfig = (props) => {
                   新建文档
                 </Button>
                 <Button
+                  disabled={docId ? false : true}
                   onClick={renameDoc}
                   loading={props.loading}
                   style={{ marginLeft: 10, background: ' #2ae', color: '#FFFFFF' }}
                 >
                   重命名
                 </Button>
-           
+                <Select
+                  disabled={docId ? false : true}
+                  style={{ width: 130, marginLeft: 10 }}
+                  value={selectedDocTemplate}
+                  onChange={(v) => onDocTemplateSelectChange(v)}
+                >
+                  <Select.Option value={''}>{'文档模板选择'}</Select.Option>
+                  {docTemplateOptions}
+                </Select>
               </div>
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>
@@ -586,11 +718,6 @@ const OutlineConfig = (props) => {
                           <TreeNode title="第二节：XXX" key="0-0-1-1" />
                           <TreeNode title="第三节：XXX" key="0-0-1-2" />
                         </TreeNode>
-                        {/* <TreeNode title="第三章：XXX" key="0-0-2">
-                          <TreeNode title="第一节：XXX" key="0-0-2-0" />
-                          <TreeNode title="第二节：XXX" key="0-0-2-1" />
-                          <TreeNode title="第三节：XXX" key="0-0-2-2" />
-                        </TreeNode> */}
                       </TreeNode>
                     </Tree>
                   )}
@@ -606,7 +733,6 @@ const OutlineConfig = (props) => {
                 loading={props.loading}
                 docTemplateOptions={docTemplateOptions}
                 // onTemplateSelectChange={onTemplateSelectChange}
-                
               />
             ) : null}
             {editDocVisible ? (
@@ -662,6 +788,7 @@ const OutlineConfig = (props) => {
             <div id="scrollContent" className={styles.scrollContent}>
               <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
                 <Button
+                  disabled={docId ? false : true}
                   onClick={generateDoc}
                   loading={props.loading}
                   style={{ marginBottom: 10, background: '#2ae', color: '#FFFFFF' }}
@@ -669,6 +796,7 @@ const OutlineConfig = (props) => {
                   文档下载
                 </Button>
                 <Button
+                  disabled={docId ? false : true}
                   onClick={refreshDocContent}
                   loading={props.loading}
                   style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
@@ -698,11 +826,11 @@ const OutlineConfig = (props) => {
                         key={'chapterTitle' + chapterItem.routeName}
                         id={'chapterTitle' + chapterItem.routeName}
                       >
-                        <div
+                        {chapterItem.routeName?<div
                           dangerouslySetInnerHTML={{
                             __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
                           }}
-                        />
+                        />:null}
                         <List.Item>
                           {chapterItem.sectionList ? (
                             <List
@@ -715,11 +843,14 @@ const OutlineConfig = (props) => {
                                   }
                                   id={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
                                 >
-                                  <div
+                                  {nodeItem.routeName?<div
                                     dangerouslySetInnerHTML={{
-                                      __html: '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' + nodeItem.routeName + '</h3>'
+                                      __html:
+                                        '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' +
+                                        nodeItem.routeName +
+                                        '</h3>'
                                     }}
-                                  />
+                                  />:null}
                                   <List.Item>
                                     {nodeItem.contentList ? (
                                       <List

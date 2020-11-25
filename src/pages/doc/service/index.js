@@ -16,9 +16,8 @@ export async function chooseTemplateRoute(params) {
   return request({
     url: '/doc/chooseTemplateRoute',
     method: 'post',
-    data: {
-      ...params
-    }
+    params
+  
   });
 }
 
@@ -74,6 +73,15 @@ export async function generateDoc(params) {
   return request({
     url: '/doc/generateDoc',
     timeout: 60000,
+    method: 'post',
+    params
+  });
+}
+
+//获取文档内容
+export async function getDocContent(params) {
+  return request({
+    url: '/doc/getDocContent',
     method: 'post',
     params
   });

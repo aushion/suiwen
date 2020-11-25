@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import { Input, Modal, Form, Button,Select } from 'antd';
+import React, { useState } from 'react';
+import { Input, Modal, Form, Button, Select } from 'antd';
 
 const AddDocModel = Form.create({
   mapPropsToFields(props) {
@@ -12,10 +12,11 @@ const AddDocModel = Form.create({
   },
 })(props => {
 
-  
-  const { modalVisible, form ,docTemplateOptions} = props;
-  const [selectedTemplate, setSeletedTemplate] = useState([]);
-  
+
+  const { modalVisible, form, docTemplateOptions } = props;
+  //文档模版选择
+  const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
+
 
   const formItemLayout = {
     labelCol: {
@@ -32,8 +33,11 @@ const AddDocModel = Form.create({
     props.onHandleCancel();
   }
 
-  const onTemplateSelectChange =(v) => {
-    setSeletedTemplate(v);
+  const onDocTemplateSelectChange = (v) => {
+    setSeletedDocTemplate(v);
+    if (v === '') {
+      return;
+    }
   }
 
   //新建章，提交按钮事件
@@ -42,7 +46,7 @@ const AddDocModel = Form.create({
       if (err) return;
       const values = {
         ...fieldsValue,
-        // 'parentId': '0',
+        'docTemplateId': selectedDocTemplate,
         // 'routeId': data.id,
       }
       props.onHandleOk(values);
@@ -66,22 +70,21 @@ const AddDocModel = Form.create({
       <Form {...formItemLayout} >
         <Form.Item label="文档标题">
           {form.getFieldDecorator('label', {
-            rules: [{ pattern: /^(.{1,30})$/,required: true, message: '文档标题不可超过30位字符!' }],
-          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30}/>)}
+            rules: [{ pattern: /^(.{1,30})$/, required: true, message: '文档标题不可超过30位字符!' }],
+          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)}
         </Form.Item>
         <Form.Item label="文档模版" >
-          {form.getFieldDecorator('docTemplateId', {
-           
-          })(
-            <Select
+
+          <Select
             style={{ width: 400 }}
-            value={selectedTemplate}
-            onChange={(v) => onTemplateSelectChange(v)}
+            value={selectedDocTemplate}
+            onChange={(v) => onDocTemplateSelectChange(v)}
           >
-            {docTemplateOptions}
+            <Select.Option value={''}>{'无'}</Select.Option>
+              {docTemplateOptions}
           </Select>
 
-          )}
+
         </Form.Item>
 
       </Form>

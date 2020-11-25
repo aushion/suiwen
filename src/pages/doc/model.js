@@ -6,6 +6,7 @@ import {
   delUserDoc,
   editUserDoc,
   generateDoc,
+  getDocContent,
   getRouteTemplate,
   getTemplateList,
   getRouteContent,
@@ -68,6 +69,21 @@ const Doc = {
     *generateDoc({ payload }, { call, put }) {
       const response = yield call(generateDoc, payload);
       return response.data;
+    },
+
+    *getDocContent({ payload }, { call, put }) {
+      const response = yield call(getDocContent, payload);
+      let data = response.data;
+      if (data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            docContentData: data.result,      
+          },
+        });
+      }
+
+      return data;
     },
 
     *getRouteTemplate({ payload }, { call, put }) {

@@ -1,9 +1,9 @@
-import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select } from 'antd';
+import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select, Tree } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { EditOutlined, DeleteOutlined, CheckOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 let editFlag = false;
-
+const { TreeNode } = Tree;
 const NodeQuestionModel = props => {
     const { modalVisible, onCancle, data, chapterId } = props;
     const [questionSourceData, setQuestionSourceData] = useState([]);
@@ -434,8 +434,9 @@ const NodeQuestionModel = props => {
     let questionTemplateOptions = [];
     if (questionTemplateData.length) {
         for (let i = 0; i < questionTemplateData.length; i++) {
+           
             questionTemplateOptions.push(
-                <Select.Option value={questionTemplateData[i]['question']} key={i}>
+                <Select.Option value={questionTemplateData[i]['question']} key={i} title={questionTemplateData[i]['question']}>
                     {questionTemplateData[i]['question']}
                 </Select.Option>
             );
