@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge, Button  } from 'antd';
+import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge, Button } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -355,11 +355,11 @@ function Home(props) {
           <div className={homeStyles.title}>
             <BlockTitle enTitle="Experience" cnTitle="体验" />
           </div>
-          <Carousel  autoplaySpeed={3000} hoverPause>
+          <Carousel autoplay autoplaySpeed={4000} hoverPause>
             <div className={homeStyles.content}>
               <div className={homeStyles.left}>
-              <img src={rd} alt="阅读" />
-            </div>
+                <img src={rd} alt="阅读" />
+              </div>
               <div className={homeStyles.right}>
                 {experience_questions.length ? (
                   <Link to={`/special?topicId=${experience_questions[0].topicId}`} target="_blank">
@@ -392,8 +392,8 @@ function Home(props) {
 
             <div className={homeStyles.content}>
               <div className={homeStyles.left}>
-              <img src={docGen} alt="文档生成" />
-            </div>
+                <img src={docGen} alt="文档生成" />
+              </div>
               <div className={homeStyles.right}>
                 <Link to={`/doc/outlineConfig`} target="_blank">
                   <div className={homeStyles.cnTitle}>文档辅助生成</div>
@@ -436,7 +436,7 @@ function Home(props) {
                 </div>
               </div>
             </div>
-          </Carousel >
+          </Carousel>
         </div>
       </Spin>
     </div>
