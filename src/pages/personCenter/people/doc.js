@@ -7,7 +7,6 @@ import RestTools from '../../../utils/RestTools';
 import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 
 function Doc(props) {
-  console.log(props);
   const { userDoc, loading, location, dispatch } = props;
   const { query } = location;
   const { userName } = query;
@@ -133,7 +132,6 @@ function Doc(props) {
 }
 
 function mapStateToProps(state) {
-  console.log('mapStateToProps', state);
   return {
     ...state.personCenter,
     loading: state.loading.effects['personCenter/getUserDoc']

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Input, Modal, Form, Button } from 'antd';
+import { Input, Modal, Form } from 'antd';
 
 const ChapterEdit = Form.create({
   mapPropsToFields(props) {
-    if (props.data != undefined) {
+    if (props.data !== undefined) {
       return {
         label: Form.createFormField({ value: props.data.label }),
         orderNum: Form.createFormField({ value: props.data.orderNum }),
@@ -34,7 +34,7 @@ const ChapterEdit = Form.create({
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
-         ...fieldsValue,
+        ...fieldsValue,
         'parentId': '0',
         'routeId': data.id,
       }
@@ -59,12 +59,12 @@ const ChapterEdit = Form.create({
       <Form {...formItemLayout} >
         <Form.Item label="章标题">
           {form.getFieldDecorator('label', {
-            rules: [{ pattern: /^(.{1,30})$/,required: true, message: '文档标题不可超过30位字符!' }],
-          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30}/>)}
+            rules: [{ pattern: /^(.{1,30})$/, required: true, message: '文档标题不可超过30位字符!' }],
+          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)}
         </Form.Item>
         <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
           {form.getFieldDecorator('orderNum', {
-           
+
           })(<Input placeholder='建议纯数字' style={{ width: 400 }} />)}
         </Form.Item>
 

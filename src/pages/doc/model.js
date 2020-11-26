@@ -94,7 +94,6 @@ const Doc = {
       const response = yield call(getTemplateList, payload);
       let data = response.data;
       if (data.code === 200) {
-        console.log('docTemplateData', data.result);
         yield put({
           type: 'save',
           payload: {
@@ -120,7 +119,6 @@ const Doc = {
       const response = yield call(queryForRoute, payload);
       let data = response.data;
       if (data.code === 200) {
-        console.log('outlineData', data.result);
         yield put({
           type: 'save',
           payload: {

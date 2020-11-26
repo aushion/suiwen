@@ -17,7 +17,6 @@ export async function chooseTemplateRoute(params) {
     url: '/doc/chooseTemplateRoute',
     method: 'post',
     params
-  
   });
 }
 
@@ -105,7 +104,6 @@ export async function getTemplateList(params) {
   });
 }
 
-
 //获取路径下的内容信息
 export async function getRouteContent(params) {
   return request({
@@ -182,5 +180,3 @@ export async function getQuestionTemplate(params) {
     params
   });
 }
-
-

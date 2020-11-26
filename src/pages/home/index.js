@@ -198,11 +198,6 @@ function Home(props) {
       ))
     : null;
 
-  //取设定最大值与最小值之间的随机数
-  function random(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
   return (
     <div className={homeStyles.home}>
       <Spin spinning={loading}>
@@ -395,8 +390,8 @@ function Home(props) {
             </div>
             <div className={homeStyles.right}>
               <Link to={`/doc/outlineConfig`} target="_blank">
-              <div className={homeStyles.cnTitle}>文档辅助生成</div>
-              <div className={homeStyles.enTitle}>在线撰写文档</div>
+                <div className={homeStyles.cnTitle}>文档辅助生成</div>
+                <div className={homeStyles.enTitle}>在线撰写文档</div>
               </Link>
 
               <div>
@@ -424,7 +419,7 @@ function Home(props) {
                   style={{ border: 0 }}
                   onClick={() => {
                     router.push({
-                      pathname: '/doc/outlineConfig',
+                      pathname: '/doc/outlineConfig'
                     });
                   }}
                 >

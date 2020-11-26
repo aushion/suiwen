@@ -6,7 +6,7 @@ import { EditOutlined, DeleteOutlined, CheckOutlined, PlusOutlined } from '@ant-
 let editFlag = false;
 const { TreeNode } = Tree;
 const TemplateManagementModel = props => {
-    const { modalVisible, onCancle,  } = props;
+    const { modalVisible, onCancle } = props;
 
     const { TextArea } = Input;
     //多选框参数
@@ -16,7 +16,6 @@ const TemplateManagementModel = props => {
     const [tableEditedname, setTableEditedname] = useState('');
     const [inputIndex, setInputIndex] = useState(-1);
     const [treeData, setTreeData] = useState([]);
-    const [expandedKeys, setExpandedKeys] = useState([]);
 
     useEffect(() => {
         //加载文档模版数据
@@ -118,9 +117,7 @@ const TemplateManagementModel = props => {
     //定义数据数组并为其填充数据
     let docTemplateData = [];
     if (props.docTemplateData) {
-        // console.log('nameSourceData', nameSourceData);
         for (let i = 0; i < props.docTemplateData.length; i++) {
-            // console.log(nameSourceData[i].orderNum);
             docTemplateData.push({
                 key: i + 1,
                 id: props.docTemplateData[i].id,
