@@ -31,8 +31,9 @@ const NodeModel = Form.create({
 
   useEffect(() => {
     //加载问题模版
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     getQuestionTemplate();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //获取所有的问题、关键字模版

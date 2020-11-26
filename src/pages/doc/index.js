@@ -21,6 +21,7 @@ export default connect(({ Doc }) => ({
   useEffect(() => {
     //加载该文档id下的提纲目录
     queryForRoute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //获取该文档id下的提纲目录

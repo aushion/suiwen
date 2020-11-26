@@ -35,9 +35,8 @@ const { confirm } = Modal;
 const { TreeNode } = Tree;
 const OutlineConfig = (props) => {
   const { docId } = querystring.parse(window.location.href.split('?')[1], '#');
-  // const docId = '1';
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const username= userInfo ? userInfo.UserName : '';
+  const username = userInfo ? userInfo.UserName : '';
   const { dispatch } = props;
   //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
@@ -66,8 +65,9 @@ const OutlineConfig = (props) => {
 
   useEffect(() => {
     //加载文档模版数据
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     getDocTemplate();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     if (docId) {
       //加载该文档id下的提纲目录
       queryForRoute();
@@ -88,8 +88,8 @@ const OutlineConfig = (props) => {
       });
       setDocContentResultLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFlag]);
-
 
   //获取所有的文档模版
   function getDocTemplate() {
@@ -345,6 +345,7 @@ const OutlineConfig = (props) => {
             setChapterData('');
             setNodeData('');
             setChapterId('');
+            setSeletedDocTemplate('');
             message.success('文档已删除');
             //跳转空白文档
             router.push({
