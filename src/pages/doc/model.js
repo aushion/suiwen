@@ -17,18 +17,17 @@ import {
   saveRoute,
   saveRouteQuestion,
   chooseTemplateRoute,
-  getQuestionTemplate,
+  getQuestionTemplate
 } from './service/index';
 const Doc = {
   namespace: 'Doc',
   state: {
     //提纲目录
-    outlineData : [],
+    outlineData: [],
     //文档内容
-    docContentData : [],
+    docContentData: [],
     //文档模版
-    docTemplateData : [],
-
+    docTemplateData: []
   },
   effects: {
     *addUserDoc({ payload }, { call, put }) {
@@ -78,8 +77,8 @@ const Doc = {
         yield put({
           type: 'save',
           payload: {
-            docContentData: data.result,      
-          },
+            docContentData: data.result
+          }
         });
       }
 
@@ -95,12 +94,11 @@ const Doc = {
       const response = yield call(getTemplateList, payload);
       let data = response.data;
       if (data.code === 200) {
-        console.log("docTemplateData",data.result);
         yield put({
           type: 'save',
           payload: {
-            docTemplateData: data.result,      
-          },
+            docTemplateData: data.result
+          }
         });
       }
 
@@ -121,12 +119,11 @@ const Doc = {
       const response = yield call(queryForRoute, payload);
       let data = response.data;
       if (data.code === 200) {
-        console.log("outlineData",data.result);
         yield put({
           type: 'save',
           payload: {
-            outlineData: data.result,      
-          },
+            outlineData: data.result
+          }
         });
       }
 
@@ -145,8 +142,8 @@ const Doc = {
         yield put({
           type: 'save',
           payload: {
-            docContentData: data.result,      
-          },
+            docContentData: data.result
+          }
         });
       }
 
@@ -167,17 +164,30 @@ const Doc = {
       const response = yield call(getQuestionTemplate, payload);
       let data = response.data;
       return data;
-    },
-    
-
+    }
   },
   reducers: {
     save(state, action) {
       return {
         ...state,
-        ...action.payload,
+        ...action.payload
       };
-    },
+    }
   },
+
+  subscriptions: {
+    listenHistory({ dispatch, history }) {
+      return history.listen(({ pathname, query }) => {
+        const match = pathname.match(/Doc/i);
+        const userInfo = localStorage.getItem('userInfo')
+          ? JSON.parse(localStorage.getItem('userInfo'))
+          : null;
+        if (match && userInfo) {
+          window.document.title = `文档辅助生成`;
+        }
+      });
+    }
+  }
 };
+
 export default Doc;

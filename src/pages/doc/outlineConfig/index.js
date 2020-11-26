@@ -14,7 +14,7 @@ import {
   Select,
   Tooltip
 } from 'antd';
-import { ExclamationCircleOutlined ,SettingOutlined} from '@ant-design/icons';
+import { ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
 import RestTools from '../../../utils/RestTools';
@@ -35,10 +35,9 @@ const { confirm } = Modal;
 const { TreeNode } = Tree;
 const OutlineConfig = (props) => {
   const { docId } = querystring.parse(window.location.href.split('?')[1], '#');
-  // const docId = '1';
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  const { form, dispatch } = props;
+  const username = userInfo ? userInfo.UserName : '';
+  const { dispatch } = props;
   //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
   //控制文档标题、章、节、问题模态框
@@ -66,8 +65,9 @@ const OutlineConfig = (props) => {
 
   useEffect(() => {
     //加载文档模版数据
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     getDocTemplate();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     if (docId) {
       //加载该文档id下的提纲目录
       queryForRoute();
@@ -75,7 +75,6 @@ const OutlineConfig = (props) => {
       getDocContent();
       setID(docId);
     } else {
-      console.log('docId为空');
       //不加载文档内容
       setDocData('');
       setChapterId('');
@@ -89,28 +88,8 @@ const OutlineConfig = (props) => {
       });
       setDocContentResultLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFlag]);
-
-  //初始化文档（辅助生成文档模块）
-  function initializeDocument(docId, docName, userName) {
-    console.log('docId', docId);
-    props
-      .dispatch({
-        type: 'Doc/addUserDoc',
-        payload: {
-          docId: docId,
-          docName: docName,
-          userName: userName
-        }
-      })
-      .then((res) => {
-        if (res.code == 200) {
-          queryForRoute();
-          //加载文档内容
-          getDocContent();
-        }
-      });
-  }
 
   //获取所有的文档模版
   function getDocTemplate() {
@@ -166,7 +145,7 @@ const OutlineConfig = (props) => {
         }
       })
       .then((res) => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           setDocContentResultLoading(false);
         } else {
           message.error(res.msg);
@@ -175,22 +154,22 @@ const OutlineConfig = (props) => {
   }
 
   //获取该文档id下的文档内容
-  function getDocContentByDocId() {
-    props
-      .dispatch({
-        type: 'Doc/refreshDocContent',
-        payload: {
-          docId: docId
-        }
-      })
-      .then((res) => {
-        if (res.code == 200) {
-          setDocContentResultLoading(false);
-        } else {
-          message.error(res.msg);
-        }
-      });
-  }
+  // function getDocContentByDocId() {
+  //   props
+  //     .dispatch({
+  //       type: 'Doc/refreshDocContent',
+  //       payload: {
+  //         docId: docId
+  //       }
+  //     })
+  //     .then((res) => {
+  //       if (res.code === 200) {
+  //         setDocContentResultLoading(false);
+  //       } else {
+  //         message.error(res.msg);
+  //       }
+  //     });
+  // }
 
   //新增文档题目，取消按钮事件
   const onHandleCancelAddDoc = () => {
@@ -211,14 +190,13 @@ const OutlineConfig = (props) => {
 
   //新增文档题目，提交按钮事件
   const onHandleOkAddDoc = (values) => {
-    console.log('开始调用新增文档提交事件');
     var timestamp = new Date().getTime();
     let docId = 10000 * timestamp + random(1000, 9999);
     //初始化一个个人文档
     const loginUser = localStorage.getItem('userInfo')
       ? JSON.parse(localStorage.getItem('userInfo'))
       : null;
-    if (loginUser == null) {
+    if (loginUser === null) {
       message.warn('请您登录后再操作');
       return;
     }
@@ -234,7 +212,7 @@ const OutlineConfig = (props) => {
         }
       })
       .then((res) => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           setAddDocVisible(false);
           //清除文档标题、章标题、节标题、章标题id
           setDocData('');
@@ -266,7 +244,7 @@ const OutlineConfig = (props) => {
         userName: username
       }
     }).then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         setEditDocVisible(false);
         //重新加载提纲数据，展示最新目录
         queryForRoute();
@@ -303,7 +281,7 @@ const OutlineConfig = (props) => {
         question: values.question === undefined ? null : encodeURIComponent(values.question)
       }
     }).then((res) => {
-      if (res.code == 200) {
+      if (res.code === 200) {
         if (values.parentId === '0') {
           setChapterVisible(false);
           if (values.routeId === undefined) {
@@ -347,7 +325,6 @@ const OutlineConfig = (props) => {
 
   //删除个人文档
   function onDocDelete(docItem) {
-    console.log('docItem', docItem);
     confirm({
       title: '确定删除?',
       icon: <ExclamationCircleOutlined />,
@@ -368,6 +345,7 @@ const OutlineConfig = (props) => {
             setChapterData('');
             setNodeData('');
             setChapterId('');
+            setSeletedDocTemplate('');
             message.success('文档已删除');
             //跳转空白文档
             router.push({
@@ -393,7 +371,6 @@ const OutlineConfig = (props) => {
 
   //删除章标题
   const onDeleteChapter = (item) => {
-    console.log(item);
     confirm({
       title: '确定删除?',
       icon: <ExclamationCircleOutlined />,
@@ -465,7 +442,6 @@ const OutlineConfig = (props) => {
       method: 'post',
       data: form
     }).then((res) => {
-      console.log(res);
       const downlaodFileName = decodeURIComponent(res.headers.filename);
       // 创建隐藏的可下载链接
       var eleLink = document.createElement('a');
@@ -495,7 +471,7 @@ const OutlineConfig = (props) => {
         }
       })
       .then((res) => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           setDocContentResultLoading(false);
         } else {
           message.error(res.msg);
@@ -522,7 +498,7 @@ const OutlineConfig = (props) => {
         }
       })
       .then((res) => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           message.success(res.msg);
           setAddNodeQuestionVisible(false);
           queryForRoute();
@@ -533,9 +509,7 @@ const OutlineConfig = (props) => {
   }
 
   //滚动条初始化方法
-  function handleInfiniteOnLoad() {
-    console.log(props.docContentData);
-  }
+  // function handleInfiniteOnLoad() {}
 
   //删除指定的片段
   function deleteContent(contentItem) {
@@ -665,7 +639,7 @@ const OutlineConfig = (props) => {
             }
           })
           .then((res) => {
-            if (res.code == 200) {
+            if (res.code === 200) {
               //清除文档标题、章标题、节标题、章标题id
               setDocData('');
               setChapterData('');
@@ -698,7 +672,7 @@ const OutlineConfig = (props) => {
         <Col span={4} style={{ minWidth: 350 }}>
           <div className={styles.list}>
             <div className={styles.right}>
-              <div style={{ position: 'absolute', top: '-42px', background: '#fff'}}>
+              <div style={{ position: 'absolute', top: '-42px', background: '#fff' }}>
                 <Button
                   onClick={addNewDoc}
                   loading={props.loading}
@@ -723,7 +697,14 @@ const OutlineConfig = (props) => {
                   <Select.Option value={''}>{'模板选择'}</Select.Option>
                   {docTemplateOptions}
                 </Select>
-                <SettingOutlined disabled={docId ? false : true} style={{ width: 5, marginLeft: 5 , visibility: 'hidden'}} onClick={(() => { setTemplateManagementVisible(true); })} title="模板管理" />
+                <SettingOutlined
+                  disabled={docId ? false : true}
+                  style={{ width: 5, marginLeft: 5, visibility: 'hidden' }}
+                  onClick={() => {
+                    setTemplateManagementVisible(true);
+                  }}
+                  title="模板管理"
+                />
               </div>
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>

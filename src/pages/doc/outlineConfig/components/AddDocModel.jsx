@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Input, Modal, Form, Button, Select } from 'antd';
+import { Input, Modal, Form, Select } from 'antd';
 
 const AddDocModel = Form.create({
   mapPropsToFields(props) {
-    if (props.data != undefined) {
+    if (props.data !== undefined) {
       return {
         label: Form.createFormField({ value: props.data.label }),
         docTemplateId: Form.createFormField({ value: props.data.docTemplateId }),
@@ -47,7 +47,6 @@ const AddDocModel = Form.create({
       const values = {
         ...fieldsValue,
         'docTemplateId': selectedDocTemplate,
-        // 'routeId': data.id,
       }
       props.onHandleOk(values);
     });
@@ -81,7 +80,7 @@ const AddDocModel = Form.create({
             onChange={(v) => onDocTemplateSelectChange(v)}
           >
             <Select.Option value={''}>{'无'}</Select.Option>
-              {docTemplateOptions}
+            {docTemplateOptions}
           </Select>
 
 

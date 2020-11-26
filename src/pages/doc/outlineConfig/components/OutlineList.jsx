@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Divider, Anchor } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, CaretRightOutlined, CaretDownOutlined, FormOutlined, SettingOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, CaretRightOutlined, CaretDownOutlined, SettingOutlined } from '@ant-design/icons';
 
 import styles from '../style.less';
 

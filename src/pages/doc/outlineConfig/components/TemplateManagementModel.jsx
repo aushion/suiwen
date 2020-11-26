@@ -3,11 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import { EditOutlined, DeleteOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons';
 
-let editFlag = false;
 const { TreeNode } = Tree;
 const TemplateManagementModel = props => {
-    const { modalVisible, onCancle,  } = props;
-
+    const { modalVisible, onCancle } = props;
     const { TextArea } = Input;
     //多选框参数
     const [selectedRows, setSelectedRows] = useState('');
@@ -16,13 +14,13 @@ const TemplateManagementModel = props => {
     const [tableEditedname, setTableEditedname] = useState('');
     const [inputIndex, setInputIndex] = useState(-1);
     const [treeData, setTreeData] = useState([]);
-    const [expandedKeys, setExpandedKeys] = useState([]);
+    const [editFlag, setEditFlag] = useState(false);
 
     useEffect(() => {
         //加载文档模版数据
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         getDocTemplate();
-
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editFlag]);
 
     //获取所有的文档模版
@@ -72,7 +70,7 @@ const TemplateManagementModel = props => {
                         onChange={e => {
                             setTableEditedname(e.target.value.trim());
                             setInputIndex(index);
-                            editFlag = true;
+                            setEditFlag(true);
 
                         }}
                         onBlur={() => {
@@ -118,9 +116,7 @@ const TemplateManagementModel = props => {
     //定义数据数组并为其填充数据
     let docTemplateData = [];
     if (props.docTemplateData) {
-        // console.log('nameSourceData', nameSourceData);
         for (let i = 0; i < props.docTemplateData.length; i++) {
-            // console.log(nameSourceData[i].orderNum);
             docTemplateData.push({
                 key: i + 1,
                 id: props.docTemplateData[i].id,
@@ -145,7 +141,7 @@ const TemplateManagementModel = props => {
             message.warning('请选择一条记录!');
             return;
         }
-        var ids = new Array();
+        var ids = [];
         selectedRows.forEach(value => ids.push(value.id));
         batchDeleteTemplateByids({ ids: ids });
     }

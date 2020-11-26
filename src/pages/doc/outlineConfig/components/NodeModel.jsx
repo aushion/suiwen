@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Modal, Form, Button, message, Select } from 'antd';
-
-const { Option } = Select;
-
+import { Input, Modal, Form, message, Select } from 'antd';
 
 const NodeModel = Form.create({
   mapPropsToFields(props) {
-    if (props.data != undefined) {
+    if (props.data !== undefined) {
       return {
         label: Form.createFormField({ value: props.data.label }),
         orderNum: Form.createFormField({ value: props.data.orderNum }),
@@ -21,11 +18,6 @@ const NodeModel = Form.create({
   const [selectedQuestionTemplate, setSeletedQuestionTemplate] = useState('');
   const [newNodeQuestions, setNewNodeQuestions] = useState('');
 
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
-
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -39,8 +31,9 @@ const NodeModel = Form.create({
 
   useEffect(() => {
     //加载问题模版
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     getQuestionTemplate();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //获取所有的问题、关键字模版
@@ -92,15 +85,14 @@ const NodeModel = Form.create({
   //选择问题模版改变事件
   const onQuestionSelectChange = (v) => {
     setSeletedQuestionTemplate(v);
-    if(v === ''){
+    if (v === '') {
       return;
     }
 
     //将选择的问题模版 填充到文本域里
-    console.log(v);
     let newNodeQuestionsStr = newNodeQuestions + '\n' + v;
     setNewNodeQuestions(newNodeQuestionsStr);
-    
+
   }
 
   return (

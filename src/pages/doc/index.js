@@ -1,64 +1,16 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import {
-  Layout,
-  Menu,
-  Card,
-  List,
-  Row,
-  Col,
-  Carousel,
-  Spin,
-  Popover,
-  Icon,
-  Button,
-  Badge,
-  Tree
-} from 'antd';
+import React, { useEffect, Fragment } from 'react';
+import { Card, Row, Col, Icon, Button, Tree } from 'antd';
 import router from 'umi/router';
-import find from 'lodash/find';
 import querystring from 'querystring';
 import { connect } from 'dva';
-import styles from './index.less';
 
-const { TreeNode, DirectoryTree } = Tree;
-const { SubMenu } = Menu;
-const { Header, Sider, Content, Footer } = Layout;
+const { TreeNode } = Tree;
 export default connect(({ Doc }) => ({
-  outlineData: Doc.outlineData,
+  outlineData: Doc.outlineData
 }))(function (props) {
+  const { dispatch } = props;
 
-  const { form, dispatch } = props;
-
-  // const { docId } = querystring.parse(window.location.href.split('?')[1]);
-  const  docId  = '1';
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-
-  const [visible, setVisible] = useState(false);
-
-    // outlineData = [
-  //   {
-  //     children: [
-  //       { children: [], id: 46, label: '第一节' },
-  //       { children: [], id: 47, label: '第二节' },
-  //       { children: [], id: 48, label: '第三节' },
-  //       { children: [], id: 49, label: '第四节' },
-  //       { children: [], id: 50, label: '第五节' }
-  //     ],
-  //     id: 45,
-  //     label: '第一章'
-  //   },
-  //   {
-  //     children: [
-  //       { children: [], id: 52, label: '第一节' },
-  //       { children: [], id: 53, label: '第二节' },
-  //       { children: [], id: 54, label: '第三节' },
-  //       { children: [], id: 55, label: '第四节' }
-  //     ],
-  //     id: 51,
-  //     label: '第二章'
-  //   }
-  // ];
+  const { docId } = querystring.parse(window.location.href.split('?')[1]);
 
   const outlineData = [
     { title: 'Expand to load', key: '0' },
@@ -69,21 +21,20 @@ export default connect(({ Doc }) => ({
   useEffect(() => {
     //加载该文档id下的提纲目录
     queryForRoute();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //获取该文档id下的提纲目录
-  function queryForRoute () {
+  function queryForRoute() {
     dispatch({
       type: 'Doc/queryForRoute',
       payload: {
-        docId: docId,
+        docId: docId
       }
     });
-  };
+  }
 
-  const onSelect = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
-  };
+  const onSelect = (selectedKeys, info) => {};
 
   return (
     <>

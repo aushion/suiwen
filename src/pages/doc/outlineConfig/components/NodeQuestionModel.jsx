@@ -1,9 +1,7 @@
-import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select, Tree } from 'antd';
+import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { EditOutlined, DeleteOutlined, CheckOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
-let editFlag = false;
-const { TreeNode } = Tree;
 const NodeQuestionModel = props => {
     const { modalVisible, onCancle, data, chapterId } = props;
     const [questionSourceData, setQuestionSourceData] = useState([]);
@@ -18,13 +16,14 @@ const NodeQuestionModel = props => {
     //编辑行数据相关
     const [tableEditedQuestion, setTableEditedQuestion] = useState('');
     const [inputIndex, setInputIndex] = useState(-1);
+    const [editFlag, setEditFlag] = useState(false);
 
 
     useEffect(() => {
         //加载问题模版
         getQuestionTemplate();
         search();
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editFlag]);
 
     //获取所有的问题、关键字模版
@@ -101,7 +100,7 @@ const NodeQuestionModel = props => {
                         onChange={e => {
                             setTableEditedQuestion(e.target.value.trim());
                             setInputIndex(index);
-                            editFlag = true;
+                            setEditFlag(true);
 
                         }}
                         onBlur={() => {
@@ -141,9 +140,7 @@ const NodeQuestionModel = props => {
     //定义数据数组并为其填充数据
     let questionData = [];
     if (questionSourceData) {
-        // console.log('questionSourceData', questionSourceData);
         for (let i = 0; i < questionSourceData.length; i++) {
-            // console.log(questionSourceData[i].orderNum);
             questionData.push({
                 key: i + 1,
                 qId: questionSourceData[i].qid,
@@ -176,7 +173,7 @@ const NodeQuestionModel = props => {
                     document.getElementById("queInput" + record.qId).blur();
                     setTableEditedQuestion('');
                     setInputIndex('');
-                    editFlag = false;
+                    setEditFlag(false);
                     search();
                     message.success('更新成功');
                 } else {
@@ -257,7 +254,7 @@ const NodeQuestionModel = props => {
             message.warning('请选择一条记录!');
             return;
         }
-        var qIds = new Array();
+        var qIds = [];
         selectedRows.forEach(value => qIds.push(value.qId));
         batchDeleteNodeQuestionByQIds({ qIds: qIds });
     }
@@ -304,7 +301,7 @@ const NodeQuestionModel = props => {
         setTableEditedQuestion('');
         setInputIndex('');
         //推出编辑状态
-        editFlag = false;
+        setEditFlag(false);
         search();
         message.success('最新数据刷新完毕');
     }
@@ -434,7 +431,7 @@ const NodeQuestionModel = props => {
     let questionTemplateOptions = [];
     if (questionTemplateData.length) {
         for (let i = 0; i < questionTemplateData.length; i++) {
-           
+
             questionTemplateOptions.push(
                 <Select.Option value={questionTemplateData[i]['question']} key={i} title={questionTemplateData[i]['question']}>
                     {questionTemplateData[i]['question']}
