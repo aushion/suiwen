@@ -64,7 +64,7 @@ function Sentence(props) {
 
   return (
     <div className={styles.Sentence}>
-      <div className={styles.Sentence_title}>{data[0].title || ''}</div>
+      <h2 >{data[0].title || ''} - 知网百科问答</h2>
       <div className={styles.Sentence_answer}>
         <Tabs defaultActiveKey="0">
           {sData.length

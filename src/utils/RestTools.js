@@ -198,10 +198,10 @@ export default {
     期刊: 'CJFD',
     法律_期刊: 'CJFD',
     中国会议: 'CPFD',
-    报纸: 'CCND',
+    报纸: 'CCND'
   },
-  isUUid(str){
-    return /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(str)
+  isUUid(str) {
+    return /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(str);
   },
   formatText(sgText) {
     sgText = sgText.replace(/<\sp>/g, '');
@@ -359,6 +359,13 @@ export default {
     if (str) {
       return redReg.test(str) ? str.match(redReg)[1] : str;
     }
+  },
+
+  getLocalUserInfo() {
+    const userInfo = localStorage.getItem('userInfo')
+      ? JSON.parse(localStorage.getItem('userInfo'))
+      : null;
+    return userInfo;
   },
 
   topicInfo: {

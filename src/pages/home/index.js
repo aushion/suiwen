@@ -169,13 +169,9 @@ function Home(props) {
                 return (
                   <Link
                     className={homeStyles.questions_item}
-                    to={
-                      `/query` +
-                      (item.name === '法律' ? `/law` : ``) +
-                      `?topic=${item.info.topic}&topicName=${encodeURIComponent(
-                        item.name
-                      )}&q=${encodeURIComponent(child.question)}`
-                    }
+                    to={`/query?topic=${item.info.topic}&topicName=${encodeURIComponent(
+                      item.name
+                    )}&q=${encodeURIComponent(child.question)}`}
                     key={child.qId}
                     target="_blank"
                   >
@@ -206,29 +202,6 @@ function Home(props) {
   function random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
-  //初始化文档（辅助生成文档模块）
-  // function initializeDocument(docId, docName, userName) {
-  //   console.log('docId', docId)
-  //   // props.dispatch({ type: 'global/setQuestion', payload: { q: item } });
-  //   props.dispatch({
-  //     type: 'Doc/addUserDoc',
-  //     payload: {
-  //       docId: docId,
-  //       docName: docName,
-  //       userName: userName
-  //     }
-  //   })
-  //   .then(res=>{
-  //     if(res.code == 200){
-  //       router.push({
-  //         pathname: '/doc/outlineConfig/',
-  //         query: {
-  //           docId: docId
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
 
   return (
     <div className={homeStyles.home}>
@@ -421,10 +394,10 @@ function Home(props) {
               <img src={docGen} alt="文档生成" />
             </div>
             <div className={homeStyles.right}>
-              {/* <Link to={`/doc/outlineConfig?docId=`+(10000*(new Date().getTime())+random(1000, 9999))+``} target="_blank"> */}
+              <Link to={`/doc/outlineConfig/`} target="_blank">
               <div className={homeStyles.cnTitle}>文档辅助生成</div>
               <div className={homeStyles.enTitle}>在线撰写文档</div>
-              {/* </Link> */}
+              </Link>
 
               <div>
                 <p>
@@ -450,23 +423,8 @@ function Home(props) {
                   ghost
                   style={{ border: 0 }}
                   onClick={() => {
-                    // var timestamp = new Date().getTime();
-                    // let docId = 10000 * timestamp + random(1000, 9999);
-                    // let docName = '自定义文档标题';
-                    // //初始化一个个人文档
-                    // const loginUser = localStorage.getItem('userInfo')
-                    //   ? JSON.parse(localStorage.getItem('userInfo'))
-                    //   : null;
-                    // if (loginUser == null) {
-                    //   message.warn('请您登录后再操作');
-                    //   return;
-                    // }
-                    //initializeDocument(docId, docName, loginUser);
                     router.push({
                       pathname: '/doc/outlineConfig/',
-                      // query: {
-                      //   docId: docId
-                      // }
                     });
                   }}
                 >

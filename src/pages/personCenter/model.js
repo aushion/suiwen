@@ -9,6 +9,7 @@ import {
   getUserFollowedQuestion,
   getUserDoc,
   delUserDoc,
+  delPersonQuestion
 } from './service';
 import helpServer from '../../services/help';
 import helpService from '../../services/help';
@@ -161,6 +162,25 @@ export default {
     *updatePassword({ payload }, { call }) {
       const res = yield call(updatePassword, payload);
       return res;
+    },
+    *delPersonQuestion({ payload }, { call, put }) {
+      const userInfo = localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo'))
+        : null;
+
+      const res = yield call(delPersonQuestion, payload);
+
+      if (res.data.code === 200) {
+        yield put({
+          type: 'getMyCommunityQuestion',
+          payload: {
+            operatorName: userInfo ? userInfo.UserName : Cookies.get('cnki_qa_uuid'),
+            pageSize: 10,
+            pageStart: 1,
+            userName: payload.userName
+          }
+        });
+      }
     }
   },
   reducers: {
@@ -181,13 +201,13 @@ export default {
           : null;
         const current = pathname;
         const pathnameArray = current.split('/'); //获取路由信息为了渲染默认菜单选中
-        if (match && userName) {
+        if (match && userName && userInfo) {
           window.document.title = `个人中心`;
           dispatch({
             type: 'getUserCommunityInfo',
             payload: {
               userName,
-              operator: userInfo?userInfo.UserName:''
+              operator: userInfo ? userInfo.UserName : ''
             }
           });
           if (pathnameArray[2] === 'edit') {

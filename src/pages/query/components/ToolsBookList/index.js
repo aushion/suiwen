@@ -4,7 +4,6 @@ import Evaluate from '../Evaluate';
 
 function ToolsBookList(props) {
   const { data, id, title, evaluate } = props;
-  console.log('title',title)
   const { good, bad, isevalute } = evaluate;
   return (
     <div className={styles.Journal}>

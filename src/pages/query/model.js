@@ -15,7 +15,8 @@ import {
   getConcept,
   getConceptAttrs,
   getMethod,
-  getMethodAttrs
+  getMethodAttrs,
+  getAnswerByPage
 } from './service/result';
 import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
@@ -39,9 +40,9 @@ export default {
     communityAnswer: null,
     specialQuestions: [],
     conceptData: null, //知识元概念数据
-    conceptDataAttrs: null,//知识元概念属性
+    conceptDataAttrs: null, //知识元概念属性
     methodData: null, //知识元方法数据
-    methodDataAttrs: null//知识元方法属性
+    methodDataAttrs: null //知识元方法属性
   },
   reducers: {
     save(state, { payload }) {
@@ -136,6 +137,33 @@ export default {
       }
     },
 
+    *getAnswerByPage({ payload }, { call, put }) {
+      const res = yield call(getAnswerByPage, payload);
+      const { data } = res;
+
+      if (data.result) {
+        const faqData = data.result.metaList.filter((item) => item.dataType === 0); //faq类的答案
+        let repositoryData = data.result.metaList.filter((item) => item.dataType === 3); //知识库答案
+
+        yield put({
+          type: 'save',
+          payload: {
+            answerData: data.result.metaList,
+            faqData: faqData,
+            repositoryData: repositoryData
+          }
+        });
+
+        //数据持久化
+        RestTools.setSession('answer', {
+          answerData: data.result.metaList,
+          faqData: faqData,
+          repositoryData: repositoryData,
+          source: 'getAnswer'
+        });
+      }
+    },
+
     //获取知识元概念库属性句子
     *getConcept({ payload }, { call, put }) {
       const res = yield call(getConcept, payload);
@@ -157,7 +185,7 @@ export default {
     //获取知识元概念基本属性
     *getConceptAttrs({ payload }, { call, put }) {
       const res = yield call(getConceptAttrs, payload);
-      if(res){
+      if (res) {
         if (res.data.Code === 0) {
           if (
             (Array.isArray(res.data.Data) && res.data.Data.length) ||
@@ -171,7 +199,7 @@ export default {
             });
           }
         }
-      }else{
+      } else {
         yield put({
           type: 'save',
           payload: {
@@ -214,7 +242,7 @@ export default {
             }
           });
         }
-      } 
+      }
     },
 
     *submitQa({ payload }, { call }) {
@@ -444,7 +472,7 @@ export default {
               }
             });
           }
-         
+
           if (q && q.trim()) {
             //重置问题
             dispatch({
@@ -467,9 +495,9 @@ export default {
                 communityAnswer: null,
                 relaventQuestions: [],
                 conceptData: null,
-                conceptDataAttrs: null,//知识元概念属性
+                conceptDataAttrs: null, //知识元概念属性
                 methodData: null, //知识元方法数据
-                methodDataAttrs: null//知识元方法属性
+                methodDataAttrs: null //知识元方法属性
               }
             });
             dispatch({ type: 'collectQuestion', payload: { q, userId } });
@@ -488,7 +516,7 @@ export default {
                   payload: {
                     q: encodeURIComponent(q),
                     pageStart: 1,
-                    pageCount: 10,
+                    pageCount: 5,
                     userId,
                     topic,
                     topicName
@@ -499,7 +527,7 @@ export default {
                   payload: {
                     q: encodeURIComponent(q),
                     pageStart: 1,
-                    pageCount: 10,
+                    pageCount: 50,
                     userId,
                     domain: topic
                   }
@@ -526,7 +554,7 @@ export default {
             } else {
               dispatch({
                 type: 'getAnswer',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 5, userId }
               });
               dispatch({
                 type: 'getRelavent',
@@ -536,7 +564,7 @@ export default {
               });
               dispatch({
                 type: 'getSG',
-                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 50, userId }
               });
 
               dispatch({

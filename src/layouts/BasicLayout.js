@@ -61,20 +61,11 @@ function BasicLayout(props) {
     if (q && q.trim()) {
       //如果topic有值判断是专题
       if (topic) {
-        //如果是法律专题则单独处理
-        if (topic === 'law') {
-          router.replace(
-            `/query/law?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
-              topicName
-            )}`
-          );
-        } else {
-          router.replace(
-            `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
-              topicName
-            )}`
-          );
-        }
+        router.replace(
+          `/query?q=${encodeURIComponent(q)}&topic=${topic}&topicName=${encodeURIComponent(
+            topicName
+          )}`
+        );
       } else {
         //不是专题的话就直接进入普通详情页
         router.replace(`/query?q=${encodeURIComponent(q)}`);

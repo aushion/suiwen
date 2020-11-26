@@ -120,7 +120,7 @@ export function getConcept(payload) {
 
 //获取知识元概念属性
 export function getConceptAttrs(payload) {
-  const { 概念, focus } = payload;
+  const { 概念 } = payload;
   return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptAttrsByTerm`, null, {
     data: {
       termName: 概念,
@@ -130,7 +130,7 @@ export function getConceptAttrs(payload) {
 
 //获取知识元方法数据
 export function getMethod(payload) {
-  const { 方法, focus } = payload;
+  const { 方法 } = payload;
     return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodDataList`, null, {
       data: {
         termName: 方法,
@@ -141,7 +141,7 @@ export function getMethod(payload) {
 
 //获取知识元方法属性
 export function getMethodAttrs(payload) {
-  const { 方法, focus } = payload;
+  const { 方法 } = payload;
   return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodAttrsByTerm`, null, {
     data: {
       termName: 方法,

@@ -26,7 +26,7 @@ const SmartInput = (props) => {
 
   function handleChange(e) {
     const currentValue = e.target.value;
-    setValue(e.target.value.replace('  摘自【知网随问】', ''));//如果粘贴到输入框直接去掉知网随问提示
+    setValue(e.target.value.replace('  摘自【知网随问】', '')); //如果粘贴到输入框直接去掉知网随问提示
     setRecord(e.target.value ? false : true);
     setTips([]);
     if (needTip) {
@@ -44,12 +44,20 @@ const SmartInput = (props) => {
     }
   }
 
+  function openWindow(q) {
+    if (window.location.pathname === '/web/doc/outlineConfig') {
+      window.open(`/web/query?q=${encodeURIComponent(q)}`);
+      return;
+    }
+  }
+
   function handleClickItem(item) {
     setRecord(false);
     setTips([]);
     setValue(item);
     if (item) {
       RestTools.setStorageInput(HISTORYKEY, item.trim());
+      openWindow(item);
       props.onClickItem(item);
     } else {
       message.warning('请输入您的问题');
@@ -58,6 +66,7 @@ const SmartInput = (props) => {
 
   function handleEnter(e) {
     // e.preventDefault();   //ie不兼容
+
     if (e && e.preventDefault) {
       e.preventDefault();
     } else {
@@ -80,6 +89,7 @@ const SmartInput = (props) => {
         newStr = newStr.substring(0, maxLength);
       }
       RestTools.setStorageInput(HISTORYKEY, newStr.trim()); //存储输入
+      openWindow(newStr); //判断特定路由打开新窗口
       props.onClickEnter(newStr);
     } else {
       message.warning('请输入您的问题');
@@ -131,7 +141,7 @@ const SmartInput = (props) => {
         }
       />
 
-      <input type="text" style={{ height: 0, opacity: 0, border: 'none', padding: 0 }}></input>
+      <input type="text" style={{ height: 0, opacity: 0, border: 'none', padding: 0 }} />
 
       {showRecord && inputRecords.length ? (
         <div className={'record-wrap'}>

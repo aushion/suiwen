@@ -310,7 +310,11 @@ export default {
               answerList: [],
               total: 0,
               domains: [],
-              followed: false
+              followed: false,
+              answerHelpData: {
+                contents: '',
+                resource: ''
+              }
             }
           });
 

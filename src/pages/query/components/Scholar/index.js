@@ -6,7 +6,7 @@ import Evaluate from '../Evaluate';
 import querystring from 'querystring';
 
 export default function Scholar(props) {
-  const { data, id, evaluate, intentJson } = props;
+  const { data, id, evaluate, intentJson, q } = props;
   const { good, bad, isevalute } = evaluate;
   const { fields } = intentJson.results[0];
   const linkKey = {
@@ -25,6 +25,16 @@ export default function Scholar(props) {
   const paramString = querystring.stringify(paramObj);
   return (
     <div className={styles.Scholar}>
+      <h2>
+        <a 
+          target="_blank"
+          rel="noopener noreferrer"
+          href={`http://expert.cnki.net/Search/Find?${paramString}`}
+          style={{paddingRight: 4}}
+        >
+          {fields['学者名'] || fields['学者单位'] || q} 
+        </a>
+        - 知网学者库</h2>
       <List
         dataSource={data}
         itemLayout="vertical"
