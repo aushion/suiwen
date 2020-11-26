@@ -94,7 +94,7 @@ export default connect(({ Doc }) => ({
             style={{ marginLeft: 10 }}
             onClick={() => {
               router.push({
-                pathname: '/doc/outlineConfig/',
+                pathname: '/doc/outlineConfig',
                 query: {
                   docId: docId
                 }
