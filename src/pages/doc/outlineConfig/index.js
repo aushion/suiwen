@@ -698,7 +698,7 @@ const OutlineConfig = (props) => {
         <Col span={4} style={{ minWidth: 350 }}>
           <div className={styles.list}>
             <div className={styles.right}>
-              <div style={{ position: 'absolute', top: '-42px', background: '#fff', zIndex: 999 }}>
+              <div style={{ position: 'absolute', top: '-42px', background: '#fff'}}>
                 <Button
                   onClick={addNewDoc}
                   loading={props.loading}

@@ -394,7 +394,7 @@ function Home(props) {
               <img src={docGen} alt="文档生成" />
             </div>
             <div className={homeStyles.right}>
-              <Link to={`/doc/outlineConfig/`} target="_blank">
+              <Link to={`/doc/outlineConfig`} target="_blank">
               <div className={homeStyles.cnTitle}>文档辅助生成</div>
               <div className={homeStyles.enTitle}>在线撰写文档</div>
               </Link>
@@ -424,7 +424,7 @@ function Home(props) {
                   style={{ border: 0 }}
                   onClick={() => {
                     router.push({
-                      pathname: '/doc/outlineConfig/',
+                      pathname: '/doc/outlineConfig',
                     });
                   }}
                 >
