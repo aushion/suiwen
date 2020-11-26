@@ -45,10 +45,7 @@ const SmartInput = (props) => {
   }
 
   function openWindow(q) {
-    if (window.location.pathname === '/web/doc/outlineConfig') {
-      window.open(`/web/query?q=${encodeURIComponent(q)}`);
-      return;
-    }
+    window.open(`/web/query?q=${encodeURIComponent(q)}`);
   }
 
   function handleClickItem(item) {
@@ -57,8 +54,11 @@ const SmartInput = (props) => {
     setValue(item);
     if (item) {
       RestTools.setStorageInput(HISTORYKEY, item.trim());
-      openWindow(item);
-      props.onClickItem(item);
+      if (window.location.pathname === '/web/doc/outlineConfig') {
+        openWindow(item);
+      } else {
+        props.onClickItem(item);
+      }
     } else {
       message.warning('请输入您的问题');
     }
@@ -66,7 +66,6 @@ const SmartInput = (props) => {
 
   function handleEnter(e) {
     // e.preventDefault();   //ie不兼容
-
     if (e && e.preventDefault) {
       e.preventDefault();
     } else {
@@ -89,8 +88,11 @@ const SmartInput = (props) => {
         newStr = newStr.substring(0, maxLength);
       }
       RestTools.setStorageInput(HISTORYKEY, newStr.trim()); //存储输入
-      openWindow(newStr); //判断特定路由打开新窗口
-      props.onClickEnter(newStr);
+      if (window.location.pathname === '/web/doc/outlineConfig') {
+        openWindow(newStr); //判断特定路由打开新窗口
+      } else {
+        props.onClickEnter(newStr);
+      }
     } else {
       message.warning('请输入您的问题');
       return;
