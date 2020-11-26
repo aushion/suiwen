@@ -26,6 +26,7 @@ import ChapterModel from './components/ChapterModel';
 import NodeModel from './components/NodeModel';
 import NodeQuestionModel from './components/NodeQuestionModel';
 import TemplateManagementModel from './components/TemplateManagementModel';
+import DownloadDocModel from './components/DownloadDocModel';
 import querystring from 'querystring';
 import styles from './style.less';
 
@@ -47,6 +48,7 @@ const OutlineConfig = (props) => {
   const [nodeVisible, setNodeVisible] = useState(false);
   const [addNodeQuestionVisible, setAddNodeQuestionVisible] = useState(false);
   const [templateManagementVisible, setTemplateManagementVisible] = useState(false);
+  const [downloadDocVisible, setDownloadDocVisible] = useState(false);
   //保存章标题id
   const [chapterId, setChapterId] = useState('');
   //保存选中的文档数据组
@@ -431,11 +433,17 @@ const OutlineConfig = (props) => {
     setChapterVisible(true);
   };
 
-  //生成文档
-  const generateDoc = () => {
+  //选择文档下载方式
+  function selectDocDownloadMethod() {
+    setDownloadDocVisible(true);
+  }
+
+  //下载文档
+  const generateDoc = (values) => {
     const form = new FormData();
     // 文件对象
     form.append('docId', docId);
+    form.append('isResource', values.isResource);
     request({
       url: '/doc/generateDoc',
       responseType: 'blob',
@@ -457,6 +465,8 @@ const OutlineConfig = (props) => {
       eleLink.click();
       // 然后移除
       document.body.removeChild(eleLink);
+      //文档下载方式选择框设置消失
+      setDownloadDocVisible(false);
     });
   };
 
@@ -811,6 +821,13 @@ const OutlineConfig = (props) => {
                 handleOk={() => setTemplateManagementVisible(false)}
               />
             ) : null}
+            {downloadDocVisible ? (
+              <DownloadDocModel
+                modalVisible={downloadDocVisible}
+                onCancle={() => setDownloadDocVisible(false)}
+                handleOk={generateDoc}
+              />
+            ) : null}
           </div>
         </Col>
         {/* <Col span={1}></Col> */}
@@ -822,7 +839,7 @@ const OutlineConfig = (props) => {
               <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
                 <Button
                   disabled={docId ? false : true}
-                  onClick={generateDoc}
+                  onClick={selectDocDownloadMethod}
                   loading={props.loading}
                   style={{ marginBottom: 10, background: '#2ae', color: '#FFFFFF' }}
                 >
