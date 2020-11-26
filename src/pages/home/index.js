@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge, Button } from 'antd';
+import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge, Button  } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -28,7 +28,7 @@ function Home(props) {
   const special_questions = specialQuestions.filter((item) => item.name !== '细粒度知识问答');
   const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
 
-  const PrevArrow = function (props) {
+  const PrevArrow = function(props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -37,7 +37,7 @@ function Home(props) {
     );
   };
 
-  const NextArrow = function (props) {
+  const NextArrow = function(props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -199,9 +199,9 @@ function Home(props) {
     : null;
 
   //取设定最大值与最小值之间的随机数
-  function random(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+  // function random(min, max) {
+  //   return Math.floor(Math.random() * (max - min)) + min;
+  // }
 
   return (
     <div className={homeStyles.home}>
@@ -355,86 +355,88 @@ function Home(props) {
           <div className={homeStyles.title}>
             <BlockTitle enTitle="Experience" cnTitle="体验" />
           </div>
-          <div className={homeStyles.content}>
-            <div className={homeStyles.left}>
+          <Carousel  autoplaySpeed={3000} hoverPause>
+            <div className={homeStyles.content}>
+              <div className={homeStyles.left}>
               <img src={rd} alt="阅读" />
             </div>
-            <div className={homeStyles.right}>
-              {experience_questions.length ? (
-                <Link to={`/special?topicId=${experience_questions[0].topicId}`} target="_blank">
-                  <div className={homeStyles.cnTitle}>细粒度知识问答</div>
-                  <div className={homeStyles.enTitle}>期刊全文</div>
-                </Link>
-              ) : null}
-              <div className={homeStyles.questions}>
-                {experience_questions.length
-                  ? experience_questions[0].data.map((item) => {
-                      const topic = experience_questions[0].info.topic;
-                      const topicName = experience_questions[0].name;
-                      return (
-                        <Link
-                          className={homeStyles.questions_item}
-                          to={`/query?topic=${topic}&topicName=${encodeURIComponent(
-                            topicName
-                          )}&q=${encodeURIComponent(item.question)}`}
-                          key={item.qId}
-                          target="_blank"
-                        >
-                          {item.question}
-                        </Link>
-                      );
-                    })
-                  : null}
+              <div className={homeStyles.right}>
+                {experience_questions.length ? (
+                  <Link to={`/special?topicId=${experience_questions[0].topicId}`} target="_blank">
+                    <div className={homeStyles.cnTitle}>细粒度知识问答</div>
+                    <div className={homeStyles.enTitle}>期刊全文</div>
+                  </Link>
+                ) : null}
+                <div className={homeStyles.questions}>
+                  {experience_questions.length
+                    ? experience_questions[0].data.map((item) => {
+                        const topic = experience_questions[0].info.topic;
+                        const topicName = experience_questions[0].name;
+                        return (
+                          <Link
+                            className={homeStyles.questions_item}
+                            to={`/query?topic=${topic}&topicName=${encodeURIComponent(
+                              topicName
+                            )}&q=${encodeURIComponent(item.question)}`}
+                            key={item.qId}
+                            target="_blank"
+                          >
+                            {item.question}
+                          </Link>
+                        );
+                      })
+                    : null}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className={homeStyles.content}>
-            <div className={homeStyles.left}>
+            <div className={homeStyles.content}>
+              <div className={homeStyles.left}>
               <img src={docGen} alt="文档生成" />
             </div>
-            <div className={homeStyles.right}>
-              <Link to={`/doc/outlineConfig`} target="_blank">
-              <div className={homeStyles.cnTitle}>文档辅助生成</div>
-              <div className={homeStyles.enTitle}>在线撰写文档</div>
-              </Link>
+              <div className={homeStyles.right}>
+                <Link to={`/doc/outlineConfig`} target="_blank">
+                  <div className={homeStyles.cnTitle}>文档辅助生成</div>
+                  <div className={homeStyles.enTitle}>在线撰写文档</div>
+                </Link>
 
-              <div>
-                <p>
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  <font color="red" size="3">
-                    便捷、高效
-                  </font>
-                  的文档
-                  <font color="red" size="3">
-                    撰写助手
-                  </font>{' '}
-                  面向系列问题的内容动态生成重组 自定义章节标题要点、内容自动生成重组
-                  来源知网权威、海量学术期刊 文档在线
-                  <font color="blue" size="3">
-                    定制、生成、预览、下载
-                  </font>
-                </p>
-              </div>
+                <div>
+                  <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <font color="red" size="3">
+                      便捷、高效
+                    </font>
+                    的文档
+                    <font color="red" size="3">
+                      撰写助手
+                    </font>{' '}
+                    面向系列问题的内容动态生成重组 自定义章节标题要点、内容自动生成重组
+                    来源知网权威、海量学术期刊 文档在线
+                    <font color="blue" size="3">
+                      定制、生成、预览、下载
+                    </font>
+                  </p>
+                </div>
 
-              <div style={{ textAlign: 'center', paddingTop: 50 }}>
-                <Button
-                  type="primary"
-                  ghost
-                  style={{ border: 0 }}
-                  onClick={() => {
-                    router.push({
-                      pathname: '/doc/outlineConfig',
-                    });
-                  }}
-                >
-                  <font color="blue" size="5">
-                    试用>>
-                  </font>
-                </Button>
+                <div style={{ textAlign: 'center', paddingTop: 50 }}>
+                  <Button
+                    type="primary"
+                    ghost
+                    style={{ border: 0 }}
+                    onClick={() => {
+                      router.push({
+                        pathname: '/doc/outlineConfig'
+                      });
+                    }}
+                  >
+                    <font color="blue" size="5">
+                      {'试用>>'}
+                    </font>
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          </Carousel >
         </div>
       </Spin>
     </div>
