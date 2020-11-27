@@ -679,7 +679,7 @@ const OutlineConfig = (props) => {
         ></Button>
       </div>
       <Row gutter={48}>
-        <Col span={4} style={{ minWidth: 350 }}>
+        <Col span={4} style={{ minWidth: 380 }}>
           <div className={styles.list}>
             <div className={styles.right}>
               <div style={{ position: 'absolute', top: '-42px', background: '#fff' }}>
