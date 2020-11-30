@@ -831,7 +831,7 @@ const OutlineConfig = (props) => {
           </div>
         </div>
         <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
-          <div style={{ position: 'absolute', right: 0, top: '-32px' }}>
+          <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
             <Button
               disabled={docId ? false : true}
               onClick={selectDocDownloadMethod}
@@ -849,8 +849,8 @@ const OutlineConfig = (props) => {
               内容刷新
             </Button>
           </div>
-          <Spin spinning={docContentResultLoading}>
-            <div id="scrollContent" className={styles.scrollContent}>
+          <div id="scrollContent" className={styles.scrollContent}>
+            <Spin spinning={docContentResultLoading}>
               {props.docContentData ? (
                 <>
                   <div
@@ -970,8 +970,8 @@ const OutlineConfig = (props) => {
                   />
                 </>
               ) : null}
-            </div>
-          </Spin>
+            </Spin>
+          </div>
         </div>
       </div>
     </Card>
