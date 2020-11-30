@@ -678,7 +678,7 @@ const OutlineConfig = (props) => {
           }}
         ></Button>
       </div>
-      <div>
+      <div style={{ paddingRight: '10%' }}>
         <div style={{ width: 350, float: 'left' }}>
           <div className={styles.list}>
             <div className={styles.right}>
