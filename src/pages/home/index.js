@@ -12,6 +12,7 @@ import RestTools from '../../utils/RestTools';
 import 医学 from '../../assets/医学.png';
 import rd from '../../assets/rd.png';
 import docGen from '../../assets/docGen.png';
+import tech from '../../assets/tech.png';
 
 let skillSlider = null;
 let specialSlider = null;
@@ -27,6 +28,7 @@ function Home(props) {
   const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
   const special_questions = specialQuestions.filter((item) => item.name !== '细粒度知识问答');
   const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
+  const [activeTagName, setActiveTag] = useState(sessionStorage.getItem('tagName') || '');
 
   const PrevArrow = function(props) {
     const { className, style, onClick } = props;
@@ -82,9 +84,11 @@ function Home(props) {
     }
   }
 
-  function clickTag(i) {
+  function clickTag(i, name) {
     setActive(i);
+    setActiveTag(name);
     RestTools.setSession('tagIndex', i); //存储索引，解决页面回退，索引丢失的问题
+    RestTools.setSession('tagName', name); //存储索引，解决页面回退，索引丢失的问题
     skillSlider.slickGoTo(i, true);
   }
 
@@ -188,7 +192,7 @@ function Home(props) {
   const tagList = skillExamples.length
     ? skillExamples.map((item, index) => (
         <div
-          onClick={clickTag.bind(this, index)}
+          onClick={clickTag.bind(this, index, item.name)}
           // style={activeTag === index ? activeStyle : null}
           key={item.name}
           className={activeTag === index ? homeStyles.active_tag : homeStyles.tag}
@@ -213,15 +217,25 @@ function Home(props) {
             </div>
             <div className={homeStyles.bg}>
               <Carousel dotPosition="bottom" autoplay={skillPicture.length > 1} dots>
-                {skillPicture.map((item) => (
-                  <div style={{ width: 400 }} key={item}>
+                {activeTagName === '核心技术' ? (
+                  <div style={{ width: 400 }}>
                     <img
                       style={{ width: '100%', height: 320, borderRadius: 10 }}
-                      src={item}
-                      alt={item}
+                      src={tech}
+                      alt="核心技术"
                     />
                   </div>
-                ))}
+                ) : (
+                  skillPicture.map((item) => (
+                    <div style={{ width: 400 }} key={item}>
+                      <img
+                        style={{ width: '100%', height: 320, borderRadius: 10 }}
+                        src={item}
+                        alt={item}
+                      />
+                    </div>
+                  ))
+                )}
               </Carousel>
             </div>
           </div>
