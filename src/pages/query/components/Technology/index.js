@@ -67,29 +67,32 @@ function Technology({ data, q }) {
         <span>{q}</span>
         <span> - 随问知识库</span>
       </h2>
+
       <div>
-        <div className={styles.desc}>
-          <span>{subject || q}核心技术包括：</span>
-          {fieldData.dataNode.data.map((item, index) =>
-            index === fieldData.dataNode.data.length - 1 ? (
-              <Link
-                to={`/query?q=${encodeURIComponent(item.TERM)}`}
-                className={styles.cara}
-                key={item.TERM}
-              >
-                {RestTools.translateToRed(item.TERM)}。
-              </Link>
-            ) : (
-              <Link
-                to={`/query?q=${encodeURIComponent(item.TERM)}`}
-                className={styles.cara}
-                key={item.TERM}
-              >
-                {RestTools.translateToRed(item.TERM)}、
-              </Link>
-            )
-          )}
-        </div>
+        {fieldData ? (
+          <div className={styles.desc}>
+            <span>{subject || q}核心技术包括：</span>
+            {fieldData.dataNode.data.map((item, index) =>
+              index === fieldData.dataNode.data.length - 1 ? (
+                <Link
+                  to={`/query?q=${encodeURIComponent(item.TERM)}`}
+                  className={styles.cara}
+                  key={item.TERM}
+                >
+                  {RestTools.translateToRed(item.TERM)}。
+                </Link>
+              ) : (
+                <Link
+                  to={`/query?q=${encodeURIComponent(item.TERM)}`}
+                  className={styles.cara}
+                  key={item.TERM}
+                >
+                  {RestTools.translateToRed(item.TERM)}、
+                </Link>
+              )
+            )}
+          </div>
+        ) : null}
 
         <div className={styles.list}>
           <List
@@ -142,7 +145,7 @@ function Technology({ data, q }) {
                     <span
                       style={{
                         display: 'inline-block',
-                        maxWidth: 350,
+                        maxWidth: 300,
                         marginRight: 10,
                         overflow: 'hidden',
                         whiteSpace: 'nowrap',
@@ -156,7 +159,7 @@ function Technology({ data, q }) {
                     <span style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}>
                       {sourceType === '全部' ? '期刊' : sourceType}
                     </span>
-                    <span style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}>
+                    <span style={{ display: 'inline-block', overflow: 'hidden' }}>
                       {item.addition.发表时间}
                     </span>
                   </div>
