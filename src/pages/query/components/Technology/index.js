@@ -1,6 +1,9 @@
+import React, { useState } from 'react';
 import styles from './index.less';
 import { Button, List } from 'antd';
+import request from '../../../../utils/request';
 import RestTools from '../../../../utils/RestTools';
+import { Link } from 'umi';
 
 function Technology({ data, q }) {
   let journalData = null;
@@ -16,7 +19,48 @@ function Technology({ data, q }) {
       ? fieldData.intentJson.results[0].fields
       : null
     : null;
+
   const subject = fields ? fields[fields['focus']] : null;
+
+  const sql = journalData ? journalData.dataNode.sql : null;
+
+  const [journal, setJournal] = useState(journalData);
+  const [sourceType, setSourceType] = useState('全部');
+  const [loading, setLoading] = useState(false);
+
+  function fetchData(page, sourceType) {
+    setLoading(true);
+    request
+      .post(`${process.env.apiUrl}/getTechnologyPage`, null, {
+        data: {
+          pageStart: page,
+          sql,
+          sourceType: sourceType === '全部' ? '' : sourceType
+        }
+      })
+      .then((res) => {
+        if (res.data.code === 200) {
+          setLoading(false);
+          setJournal({
+            ...journalData,
+            ...res.data.result
+          });
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log('err', err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  function fetchDataBySourceType(sourceType) {
+    console.log('sourceType', sourceType);
+    setSourceType(sourceType);
+    fetchData(1, sourceType);
+  }
 
   return (
     <div className={styles.technology}>
@@ -29,13 +73,21 @@ function Technology({ data, q }) {
           <span>{subject || q}核心技术包括：</span>
           {fieldData.dataNode.data.map((item, index) =>
             index === fieldData.dataNode.data.length - 1 ? (
-              <span className={styles.cara} key={item.TERM}>
+              <Link
+                to={`/query?q=${encodeURIComponent(item.TERM)}`}
+                className={styles.cara}
+                key={item.TERM}
+              >
                 {RestTools.translateToRed(item.TERM)}。
-              </span>
+              </Link>
             ) : (
-              <span className={styles.cara} key={item.TERM}>
+              <Link
+                to={`/query?q=${encodeURIComponent(item.TERM)}`}
+                className={styles.cara}
+                key={item.TERM}
+              >
                 {RestTools.translateToRed(item.TERM)}、
-              </span>
+              </Link>
             )
           )}
         </div>
@@ -43,13 +95,25 @@ function Technology({ data, q }) {
         <div className={styles.list}>
           <List
             bordered
+            loading={loading}
             header={
               <div className={styles.btn}>
-                {journalData.dataNode.groupList.length ? (
+                {journal.dataNode.groupList.length ? (
                   <div>
-                    <span>全部：</span>
-                    {journalData.dataNode.groupList.map((item) => (
-                      <Button type="primary" size="small" key={item.SOURE_TYPE}>
+                    <Button
+                      type={sourceType === '全部' ? 'primary' : 'default'}
+                      style={{ marginRight: 10 }}
+                      onClick={fetchDataBySourceType.bind(this, '全部')}
+                    >
+                      全部
+                    </Button>
+                    {journal.dataNode.groupList.map((item) => (
+                      <Button
+                        style={{ marginRight: 10 }}
+                        type={item.SOURE_TYPE === sourceType ? 'primary' : 'default'}
+                        key={item.SOURE_TYPE}
+                        onClick={fetchDataBySourceType.bind(this, item.SOURE_TYPE)}
+                      >
                         {item.SOURE_TYPE}（{item.cnt}）
                       </Button>
                     ))}
@@ -57,12 +121,15 @@ function Technology({ data, q }) {
                 ) : null}
               </div>
             }
-            dataSource={journalData.dataNode.data}
+            dataSource={journal.dataNode.data}
             pagination={{
-              pageSize: journalData.pagination.pageCount,
-              current: journalData.pagination.pageStart,
-              total: journalData.pagination.total,
-              hideOnSinglePage: true
+              pageSize: journal.pagination.pageCount,
+              current: journal.pagination.pageStart,
+              total: journal.pagination.total,
+              hideOnSinglePage: true,
+              onChange: (page) => {
+                fetchData(page, sourceType);
+              }
             }}
             renderItem={(item, index) => (
               <div className={styles.item}>
@@ -72,10 +139,27 @@ function Technology({ data, q }) {
                   />
                 </div>
                 {item.addition ? (
-                  <div style={{ color: '#999' }}>
-                    <span>{item.addition.中文刊名}</span>
-                    <span>{item.addition.发表时间}</span>
-                    <span>{item.addition.篇名}</span>
+                  <div style={{ color: '#999', paddingTop: 10, fontSize: 12, fontWeight: 400 }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        maxWidth: 350,
+                        marginRight: 10,
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis'
+                      }}
+                      title={item.addition.篇名}
+                    >{`《${item.addition.篇名}》`}</span>
+                    <span
+                      style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}
+                    >{`《${item.addition.中文刊名}》`}</span>
+                    <span style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}>
+                      {sourceType === '全部' ? '期刊' : sourceType}
+                    </span>
+                    <span style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}>
+                      {item.addition.发表时间}
+                    </span>
                   </div>
                 ) : null}
               </div>

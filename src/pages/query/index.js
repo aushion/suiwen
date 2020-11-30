@@ -290,7 +290,7 @@ function ResultPage(props) {
                     <Concept
                       data={conceptData}
                       attrs={conceptDataAttrs}
-                      intentJson={conceptInfo[0].intentJson}
+                      intentJson={conceptInfo[0]?.intentJson}
                     />
                   ) : null}
 
