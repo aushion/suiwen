@@ -830,28 +830,27 @@ const OutlineConfig = (props) => {
             ) : null}
           </div>
         </div>
-        <div style={{ marginLeft: 370, minWidth:185 }}>
+        <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
+          <div style={{ position: 'absolute', right: 0, top: '-32px' }}>
+            <Button
+              disabled={docId ? false : true}
+              onClick={selectDocDownloadMethod}
+              loading={props.loading}
+              style={{ marginBottom: 10, background: '#2ae', color: '#FFFFFF' }}
+            >
+              文档下载
+            </Button>
+            <Button
+              disabled={docId ? false : true}
+              onClick={refreshDocContent}
+              loading={props.loading}
+              style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
+            >
+              内容刷新
+            </Button>
+          </div>
           <Spin spinning={docContentResultLoading}>
             <div id="scrollContent" className={styles.scrollContent}>
-              <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
-                <Button
-                  disabled={docId ? false : true}
-                  onClick={selectDocDownloadMethod}
-                  loading={props.loading}
-                  style={{ marginBottom: 10, background: '#2ae', color: '#FFFFFF' }}
-                >
-                  文档下载
-                </Button>
-                <Button
-                  disabled={docId ? false : true}
-                  onClick={refreshDocContent}
-                  loading={props.loading}
-                  style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
-                >
-                  内容刷新
-                </Button>
-              </div>
-
               {props.docContentData ? (
                 <>
                   <div
