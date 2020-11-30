@@ -68,15 +68,13 @@ function ResultPage(props) {
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
-  //const historyQuestions = RestTools.getLocalStorage('SUIWEN_RECORD');
+
   let { topic = '', topicName = '' } = query;
 
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
 
-  // const topicindex = findIndex(topicData, { info: { topic: topic } }); //查找当前专题索引
-  // const [topicIndex, setTopicIndex] = useState(-1); //设置索引渲染专题tag
   const [imgVisible, setVisible] = useState(false); //图片状态
   const [previewImgSrc, setPreviewImgSrc] = useState('');
   function handleCopy(event) {
@@ -112,9 +110,7 @@ function ResultPage(props) {
     document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 
-  // useEffect(() => {
-  //   setTopicIndex(topicindex);
-  // }, [topicindex]);
+ 
 
   useEffect(() => {
     document.addEventListener('copy', handleCopy);
@@ -154,7 +150,6 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
-  // const sgCount = [ ...new Set(sgData.map(item => item.id)) ].length;
   const sgCount = sgData.length;
 
   const resultLength =
