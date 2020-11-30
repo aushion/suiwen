@@ -30,14 +30,13 @@ function AnswerForm(props) {
   }, [answerHelpData]);
 
   useEffect(() => {
- 
-    if(editStatus && editStatus.answer){
+    if (editStatus && editStatus.answer) {
       setFieldsValue({
         contents: BraftEditor.createEditorState(editStatus.answer)
-      })
+      });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[editStatus])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editStatus]);
 
   function submitContent(e) {
     if (userInfo) {
@@ -54,7 +53,7 @@ function AnswerForm(props) {
       if (!error) {
         const submitData = {
           contents: values.contents.toHTML(), // or values.content.toHTML()
-          resource: answerHelpData.resource
+          resource: answerHelpData.resource || editStatus.resource
           // domain: values.domain,
         };
         const QID = props.QID || params.QID;
