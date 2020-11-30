@@ -400,25 +400,27 @@ function Home(props) {
                   <div className={homeStyles.enTitle}>在线撰写文档</div>
                 </Link>
 
-                <div>
-                  <p>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
+                <div className={homeStyles.desc}>
+                  <div>
                     <font color="red" size="3">
                       便捷、高效
                     </font>
                     的文档
                     <font color="red" size="3">
                       撰写助手
-                    </font>{' '}
-                    面向系列问题的内容动态生成重组 自定义章节标题要点、内容自动生成重组
-                    来源知网权威、海量学术期刊 文档在线
+                    </font>
+                  </div>
+                  <div>面向系列问题的内容动态生成重组</div>
+                  <div> 自定义章节标题要点、内容自动生成重组</div>
+                  <div>来源知网权威、海量学术期刊 文档在线</div>
+                  <div>
                     <font color="blue" size="3">
                       定制、生成、预览、下载
                     </font>
-                  </p>
+                  </div>
                 </div>
 
-                <div style={{ textAlign: 'center', paddingTop: 50 }}>
+                <div style={{ textAlign: 'center' }}>
                   <Button
                     type="primary"
                     ghost

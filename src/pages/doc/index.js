@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Icon, Button, Tree } from 'antd';
 import router from 'umi/router';
 import querystring from 'querystring';
@@ -7,7 +7,7 @@ import { connect } from 'dva';
 const { TreeNode } = Tree;
 export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData
-}))(function (props) {
+}))(function(props) {
   const { dispatch } = props;
 
   const { docId } = querystring.parse(window.location.href.split('?')[1]);
@@ -38,46 +38,44 @@ export default connect(({ Doc }) => ({
 
   return (
     <>
-      <Fragment>
-        <Card>
-          <Button
-            type="primary"
-            style={{ marginLeft: 10 }}
-            onClick={() => {
-              router.push({
-                pathname: '/doc/outlineConfig',
-                query: {
-                  docId: docId
-                }
-              });
-            }}
-          >
-            文档章节-自定义
-          </Button>
-        </Card>
+      <Card>
+        <Button
+          type="primary"
+          style={{ marginLeft: 10 }}
+          onClick={() => {
+            router.push({
+              pathname: '/doc/outlineConfig',
+              query: {
+                docId: docId
+              }
+            });
+          }}
+        >
+          文档章节-自定义
+        </Button>
+      </Card>
 
-        <Card>
-          <Row>
-            <Col span={12}>
-              <Card>
-                <Tree
-                  showLine
-                  switcherIcon={<Icon type="down" />}
-                  defaultExpandedKeys={['0-0-0']}
-                  onSelect={onSelect}
-                >
-                  {outlineData.map((data) => (
-                    <TreeNode />
-                  ))}
-                </Tree>
-              </Card>
-            </Col>
-            <Col span={12}>
-              <div style={{ height: 350, overflowY: 'scroll' }}></div>
-            </Col>
-          </Row>
-        </Card>
-      </Fragment>
+      <Card>
+        <Row>
+          <Col span={12}>
+            <Card>
+              <Tree
+                showLine
+                switcherIcon={<Icon type="down" />}
+                defaultExpandedKeys={['0-0-0']}
+                onSelect={onSelect}
+              >
+                {outlineData.map((data) => (
+                  <TreeNode />
+                ))}
+              </Tree>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <div style={{ height: 350, overflowY: 'scroll' }}></div>
+          </Col>
+        </Row>
+      </Card>
     </>
   );
 });

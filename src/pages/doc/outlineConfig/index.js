@@ -678,7 +678,306 @@ const OutlineConfig = (props) => {
           }}
         ></Button>
       </div>
-      <Row gutter={48}>
+      <div>
+        <div style={{ width: 350, float: 'left' }}>
+          <div className={styles.list}>
+            <div className={styles.right}>
+              <div style={{ background: '#fff' }}>
+                <Button
+                  onClick={addNewDoc}
+                  loading={props.loading}
+                  style={{ marginLeft: 10, background: '#2ae', color: '#FFFFFF' }}
+                >
+                  新建文档
+                </Button>
+                <Button
+                  disabled={docId ? false : true}
+                  onClick={renameDoc}
+                  loading={props.loading}
+                  style={{ marginLeft: 10, background: ' #2ae', color: '#FFFFFF' }}
+                >
+                  重命名
+                </Button>
+                <Select
+                  disabled={docId ? false : true}
+                  style={{ width: 120, marginLeft: 10 }}
+                  value={selectedDocTemplate}
+                  onChange={(v) => onDocTemplateSelectChange(v)}
+                >
+                  <Select.Option value={''}>{'模板选择'}</Select.Option>
+                  {docTemplateOptions}
+                </Select>
+                <SettingOutlined
+                  disabled={docId ? false : true}
+                  style={{ width: 5, marginLeft: 5, visibility: 'hidden' }}
+                  onClick={() => {
+                    setTemplateManagementVisible(true);
+                  }}
+                  title="模板管理"
+                />
+              </div>
+              <div className={styles.outlineArea}>
+                <div className={styles.domain}>
+                  {docId ? (
+                    <Anchor
+                      // affix
+                      // targetOffset={50}
+                      className={styles.anchor}
+                      style={{ maxHeight: '72vh' }}
+                      getContainer={() => document.getElementById('scrollContent')}
+                    >
+                      <OutlineList
+                        data={props.outlineData}
+                        id={classID}
+                        onEdit={onEditChapter}
+                        onDelete={onDeleteChapter}
+                        onNew={onNewNode}
+                        onSEdit={onEditNode}
+                        onClick={onClassChange}
+                        onNewQuestion={onNewNodeQuestion}
+                        onChapterNew={onEditOutLine}
+                        onDocEdit={onEditDoc}
+                        onDocDelete={onDocDelete}
+                      />
+                    </Anchor>
+                  ) : (
+                    <Tree disabled defaultExpandAll>
+                      <TreeNode title="文档标题：XXX" key="0-0">
+                        <TreeNode title="第一章：XXX" key="0-0-0">
+                          <TreeNode title="第一节：XXX" key="0-0-0-0" />
+                          <TreeNode title="第二节：XXX" key="0-0-0-1" />
+                        </TreeNode>
+                        <TreeNode title="第二章：XXX" key="0-0-1">
+                          <TreeNode title="第一节：XXX" key="0-0-1-0" />
+                          <TreeNode title="第二节：XXX" key="0-0-1-1" />
+                          <TreeNode title="第三节：XXX" key="0-0-1-2" />
+                        </TreeNode>
+                      </TreeNode>
+                    </Tree>
+                  )}
+                </div>
+              </div>
+            </div>
+            {addDocVisible ? (
+              <AddDocModel
+                onHandleCancel={onHandleCancelAddDoc}
+                onHandleOk={onHandleOkAddDoc}
+                modalVisible={addDocVisible}
+                dispatch={dispatch}
+                loading={props.loading}
+                docTemplateOptions={docTemplateOptions}
+                // onTemplateSelectChange={onTemplateSelectChange}
+              />
+            ) : null}
+            {editDocVisible ? (
+              <EditDocModel
+                onHandleCancel={onHandleCancelDoc}
+                onHandleOk={onHandleOkDoc}
+                data={docData}
+                dispatch={dispatch}
+                loading={props.loading}
+                docId={docId}
+                modalVisible={editDocVisible}
+              />
+            ) : null}
+            {chapterVisible ? (
+              <ChapterModel
+                onHandleCancel={onHandleCancelChapter}
+                onHandleOk={onHandleOk}
+                data={chapterData}
+                dispatch={dispatch}
+                loading={props.loading}
+                modalVisible={chapterVisible}
+              />
+            ) : null}
+            {nodeVisible ? (
+              <NodeModel
+                onHandleCancel={onHandleCancelNode}
+                onHandleOk={onHandleOk}
+                data={nodeData}
+                dispatch={dispatch}
+                loading={props.loading}
+                chapterId={chapterId}
+                modalVisible={nodeVisible}
+              />
+            ) : null}
+            {addNodeQuestionVisible ? (
+              <NodeQuestionModel
+                modalVisible={addNodeQuestionVisible}
+                data={nodeData}
+                dispatch={dispatch}
+                loading={props.loading}
+                chapterId={chapterId}
+                onCancle={() => setAddNodeQuestionVisible(false)}
+                handleOk={addNodeQuestion}
+              />
+            ) : null}
+            {templateManagementVisible ? (
+              <TemplateManagementModel
+                modalVisible={templateManagementVisible}
+                dispatch={dispatch}
+                loading={props.loading}
+                onCancle={() => setTemplateManagementVisible(false)}
+                handleOk={() => setTemplateManagementVisible(false)}
+              />
+            ) : null}
+            {downloadDocVisible ? (
+              <DownloadDocModel
+                modalVisible={downloadDocVisible}
+                onCancle={() => setDownloadDocVisible(false)}
+                handleOk={generateDoc}
+              />
+            ) : null}
+          </div>
+        </div>
+        <div style={{ marginLeft: 350 }}>
+          <Spin spinning={docContentResultLoading}>
+            {/* <div id="scrollContent" style={{ height: 800,overflowY: 'auto' }}> */}
+
+            <div id="scrollContent" className={styles.scrollContent}>
+              <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
+                <Button
+                  disabled={docId ? false : true}
+                  onClick={selectDocDownloadMethod}
+                  loading={props.loading}
+                  style={{ marginBottom: 10, background: '#2ae', color: '#FFFFFF' }}
+                >
+                  文档下载
+                </Button>
+                <Button
+                  disabled={docId ? false : true}
+                  onClick={refreshDocContent}
+                  loading={props.loading}
+                  style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
+                >
+                  内容刷新
+                </Button>
+              </div>
+
+              {props.docContentData ? (
+                <>
+                  <div
+                    key={'docTitle' + props.docContentData.docName}
+                    id={'docTitle' + props.docContentData.docName}
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        '<h1 align="center">' +
+                        [props.docContentData.docName ? props.docContentData.docName : ''] +
+                        '</h1>'
+                    }}
+                  />
+                  <List
+                    split={false}
+                    itemLayout="horizontal"
+                    dataSource={props.docContentData.routeList}
+                    renderItem={(chapterItem) => (
+                      <div
+                        key={'chapterTitle' + chapterItem.routeName}
+                        id={'chapterTitle' + chapterItem.routeName}
+                      >
+                        {chapterItem.routeName ? (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
+                            }}
+                          />
+                        ) : null}
+                        <List.Item>
+                          {chapterItem.sectionList ? (
+                            <List
+                              split={false}
+                              dataSource={chapterItem.sectionList}
+                              renderItem={(nodeItem) => (
+                                <div
+                                  key={
+                                    'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName
+                                  }
+                                  id={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
+                                >
+                                  {nodeItem.routeName ? (
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html:
+                                          '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' +
+                                          nodeItem.routeName +
+                                          '</h3>'
+                                      }}
+                                    />
+                                  ) : null}
+                                  <List.Item>
+                                    {nodeItem.contentList ? (
+                                      <List
+                                        split={false}
+                                        dataSource={nodeItem.contentList}
+                                        renderItem={(contentItem) => (
+                                          <List.Item>
+                                            <Col>
+                                              <Row>
+                                                <div
+                                                  dangerouslySetInnerHTML={{
+                                                    __html:
+                                                      '<p style="text-indent:2em">' +
+                                                      RestTools.translateDocToRed(
+                                                        contentItem.content
+                                                      ) +
+                                                      '</p>'
+                                                  }}
+                                                />
+                                              </Row>
+                                              <Row>
+                                                <div
+                                                  dangerouslySetInnerHTML={{
+                                                    __html:
+                                                      '<p style="text-align: right">' +
+                                                      '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                                      contentItem.resourceId +
+                                                      '>' +
+                                                      contentItem.resource +
+                                                      '</a>' +
+                                                      '</p>'
+                                                  }}
+                                                />
+                                              </Row>
+                                            </Col>
+
+                                            <div>
+                                              <Row gutter={10}>
+                                                <Col span={10}>
+                                                  <Button
+                                                    style={{
+                                                      border: '0px',
+                                                      color: ' #FF0000   '
+                                                    }}
+                                                    icon={'close-circle'}
+                                                    title={'删除片段'}
+                                                    onClick={() => {
+                                                      //去除原文
+                                                      deleteContent(contentItem);
+                                                    }}
+                                                  ></Button>
+                                                </Col>
+                                              </Row>
+                                            </div>
+                                          </List.Item>
+                                        )}
+                                      />
+                                    ) : null}
+                                  </List.Item>
+                                </div>
+                              )}
+                            />
+                          ) : null}
+                        </List.Item>
+                      </div>
+                    )}
+                  />
+                </>
+              ) : null}
+            </div>
+          </Spin>
+        </div>
+      </div>
+      {/* <Row gutter={48}>
         <Col span={4} style={{ minWidth: 380 }}>
           <div className={styles.list}>
             <div className={styles.right}>
@@ -830,10 +1129,10 @@ const OutlineConfig = (props) => {
             ) : null}
           </div>
         </Col>
-        {/* <Col span={1}></Col> */}
+
         <Col span={16}>
           <Spin spinning={docContentResultLoading}>
-            {/* <div id="scrollContent" style={{ height: 800,overflowY: 'auto' }}> */}
+         
 
             <div id="scrollContent" className={styles.scrollContent}>
               <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
@@ -977,7 +1276,7 @@ const OutlineConfig = (props) => {
             </div>
           </Spin>
         </Col>
-      </Row>
+      </Row> */}
     </Card>
   );
 };
