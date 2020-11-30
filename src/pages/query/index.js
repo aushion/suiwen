@@ -34,6 +34,7 @@ import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
 import Concept from './components/Concept';
 import Method from './components/Concept/method';
+import Technology from './components/Technology';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -142,6 +143,7 @@ function ResultPage(props) {
 
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
+  const technologyData = repositoryData.filter((item) => item.template === 'technology'); //核心技术数据
 
   const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元概念数据
   const methodInfo = repositoryData.filter((item) => item.template === 'method'); //知识元方法数据
@@ -288,7 +290,7 @@ function ResultPage(props) {
                     <Concept
                       data={conceptData}
                       attrs={conceptDataAttrs}
-                      intentJson={conceptInfo[0].intentJson}
+                      intentJson={conceptInfo[0]?.intentJson}
                     />
                   ) : null}
 
@@ -337,7 +339,7 @@ function ResultPage(props) {
                   {scholarData.length
                     ? scholarData.map((item) => (
                         <Scholar
-                        q={q}
+                          q={q}
                           key={item.id}
                           id={item.id}
                           evaluate={item.evaluate}
@@ -361,7 +363,7 @@ function ResultPage(props) {
                     : null}
 
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
-
+                  {technologyData.length ? <Technology data={technologyData} q={q} /> : null}
                   {kaifangyuData.length
                     ? kaifangyuData.map((item) => (
                         <Graphic
