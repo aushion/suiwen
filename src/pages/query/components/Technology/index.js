@@ -65,7 +65,7 @@ function Technology({ data, q }) {
   return (
     <div className={styles.technology}>
       <h2>
-        <span>{q}</span>
+        <span>{subject || q}</span>
         <span> - 随问知识库</span>
       </h2>
 
@@ -96,34 +96,32 @@ function Technology({ data, q }) {
         ) : null}
 
         <div className={styles.list}>
+          <div className={styles.btn}>
+            {journal.dataNode.groupList && journal.dataNode.groupList.length ? (
+              <div>
+                <Button
+                  type={sourceType === '全部' ? 'primary' : 'default'}
+                  style={{ marginRight: 10 }}
+                  onClick={fetchDataBySourceType.bind(this, '全部')}
+                >
+                  全部
+                </Button>
+                {journal.dataNode.groupList.map((item) => (
+                  <Button
+                    style={{ marginRight: 10 }}
+                    type={item.SOURE_TYPE === sourceType ? 'primary' : 'default'}
+                    key={item.SOURE_TYPE}
+                    onClick={fetchDataBySourceType.bind(this, item.SOURE_TYPE)}
+                  >
+                    {item.SOURE_TYPE}（{item.cnt}）
+                  </Button>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <List
             bordered
             loading={loading}
-            header={
-              <div className={styles.btn}>
-                {journal.dataNode.groupList.length ? (
-                  <div>
-                    <Button
-                      type={sourceType === '全部' ? 'primary' : 'default'}
-                      style={{ marginRight: 10 }}
-                      onClick={fetchDataBySourceType.bind(this, '全部')}
-                    >
-                      全部
-                    </Button>
-                    {journal.dataNode.groupList.map((item) => (
-                      <Button
-                        style={{ marginRight: 10 }}
-                        type={item.SOURE_TYPE === sourceType ? 'primary' : 'default'}
-                        key={item.SOURE_TYPE}
-                        onClick={fetchDataBySourceType.bind(this, item.SOURE_TYPE)}
-                      >
-                        {item.SOURE_TYPE}（{item.cnt}）
-                      </Button>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            }
             dataSource={journal.dataNode.data}
             pagination={{
               pageSize: journal.pagination.pageCount,
@@ -143,20 +141,25 @@ function Technology({ data, q }) {
                 </div>
                 {item.addition ? (
                   <div style={{ color: '#999', paddingTop: 10, fontSize: 12, fontWeight: 400 }}>
-                    <span
+                    <a
                       style={{
                         display: 'inline-block',
+                        color: '#999',
                         maxWidth: 300,
                         marginRight: 10,
+                        cursor: 'pointer',
                         overflow: 'hidden',
                         whiteSpace: 'nowrap',
                         textOverflow: 'ellipsis'
                       }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.addition.文件名}`}
                       title={item.addition.篇名}
-                    >{`《${item.addition.篇名}》`}</span>
+                    >{`${item.addition.篇名}`}</a>
                     <span
                       style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}
-                    >{`《${item.addition.中文刊名}》`}</span>
+                    >{`${item.addition.中文刊名}`}</span>
                     <span style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}>
                       {sourceType === '全部' ? '期刊' : sourceType}
                     </span>
