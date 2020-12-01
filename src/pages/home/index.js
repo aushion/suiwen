@@ -410,8 +410,8 @@ function Home(props) {
               </div>
               <div className={homeStyles.right}>
                 <Link to={`/doc/outlineConfig`} target="_blank">
-                  <div className={homeStyles.cnTitle}>文档辅助生成</div>
-                  <div className={homeStyles.enTitle}>在线撰写文档</div>
+                  <div className={homeStyles.cnTitle}>文档生成助手</div>
+                  <div className={homeStyles.enTitle}>内容动态重组</div>
                 </Link>
 
                 <div className={homeStyles.desc}>
@@ -426,10 +426,10 @@ function Home(props) {
                   </div>
                   <div>面向系列问题的内容动态生成重组</div>
                   <div> 自定义章节标题要点、内容自动生成重组</div>
-                  <div>来源知网权威、海量学术期刊 文档在线</div>
+                  <div>来源知网权威、海量学术期刊 </div>
                   <div>
                     <font color="blue" size="3">
-                      定制、生成、预览、下载
+                      文档在线、定制、生成、预览、下载
                     </font>
                   </div>
                 </div>
