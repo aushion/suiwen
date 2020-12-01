@@ -57,7 +57,6 @@ function Technology({ data, q }) {
   }
 
   function fetchDataBySourceType(sourceType) {
-    console.log('sourceType', sourceType);
     setSourceType(sourceType);
     fetchData(1, sourceType);
   }
@@ -123,15 +122,18 @@ function Technology({ data, q }) {
             bordered
             loading={loading}
             dataSource={journal.dataNode.data}
-            pagination={{
-              pageSize: journal.pagination.pageCount,
-              current: journal.pagination.pageStart,
-              total: journal.pagination.total,
-              hideOnSinglePage: true,
-              onChange: (page) => {
-                fetchData(page, sourceType);
-              }
-            }}
+            pagination={
+              journal.pagination.pageCount >= journal.pagination.total
+                ? false
+                : {
+                    pageSize: journal.pagination.pageCount,
+                    current: journal.pagination.pageStart,
+                    total: journal.pagination.total,
+                    onChange: (page) => {
+                      fetchData(page, sourceType);
+                    }
+                  }
+            }
             renderItem={(item, index) => (
               <div className={styles.item}>
                 <div>
