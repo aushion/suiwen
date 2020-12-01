@@ -301,7 +301,7 @@ function ResultPage(props) {
                       intentJson={methodInfo[0].intentJson}
                     />
                   ) : null}
-
+                  {technologyData.length ? <Technology data={technologyData} q={q} /> : null}
                   {yearbookData.length
                     ? yearbookData.map((item) => (
                         <Yearbook
@@ -363,7 +363,7 @@ function ResultPage(props) {
                     : null}
 
                   {sentenceData.length ? <Sentence data={sentenceData} /> : null}
-                  {technologyData.length ? <Technology data={technologyData} q={q} /> : null}
+
                   {kaifangyuData.length
                     ? kaifangyuData.map((item) => (
                         <Graphic
