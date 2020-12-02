@@ -161,6 +161,11 @@ function LoginRegister(props) {
       })
       .catch((err) => {
         message.error('网络出了点小问题，请稍后再试');
+        setLoading(false);
+      })
+      .finally((err) => {
+        console.log('err', err);
+        setLoading(false);
       });
   }
 

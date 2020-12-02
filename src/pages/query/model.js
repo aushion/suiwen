@@ -474,6 +474,7 @@ export default {
           }
 
           if (q && q.trim()) {
+            RestTools.setStorageInput('SUIWEN_RECORD', q);
             //重置问题
             dispatch({
               type: 'global/setQuestion',
