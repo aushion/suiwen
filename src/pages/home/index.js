@@ -391,12 +391,12 @@ function Home(props) {
                     </font>
                   </div>
                   <div>面向系列问题的内容动态生成重组</div>
-                  <div> 自定义章节标题要点、内容自动生成重组</div>
+                  <div> 文档章节标题要点自定义</div>
                   <div>知网权威、海量学术期刊来源</div>
                   <div>
                     文档
                     <font color="red" size="3">
-                      在线、定制、生成、预览、下载
+                      在线定制、生成、预览、下载
                     </font>
                   </div>
                 </div>

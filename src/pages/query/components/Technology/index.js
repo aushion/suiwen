@@ -121,7 +121,7 @@ function Technology({ data, q }) {
                   style={{ marginRight: 10 }}
                   onClick={fetchDataBySourceType.bind(this, '全部')}
                 >
-                  相关来源
+                  相关来源（全部）
                 </Button>
                 {journal.dataNode.groupList.map((item) => (
                   <Button
