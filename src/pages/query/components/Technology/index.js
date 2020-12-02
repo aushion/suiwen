@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './index.less';
-import { Button, List } from 'antd';
+import { Button, List, Popover } from 'antd';
 import request from '../../../../utils/request';
 import RestTools from '../../../../utils/RestTools';
 import { Link } from 'umi';
@@ -61,6 +61,21 @@ function Technology({ data, q }) {
     fetchData(1, sourceType);
   }
 
+  const Atom = function({ text }) {
+    return (
+      <Popover
+        content={
+          <>
+            <div style={{ paddingBottom: 10 }}> 您可以试试：</div>
+            <Link to={`/query?q=${encodeURIComponent(text + '的核心技术')}`}>{text}的核心技术</Link>
+          </>
+        }
+      >
+        <Link to={`/query?q=${encodeURIComponent(text)}`}>{RestTools.translateToRed(text)}</Link>
+      </Popover>
+    );
+  };
+
   return (
     <div className={styles.technology}>
       <h2>
@@ -71,24 +86,18 @@ function Technology({ data, q }) {
       <div>
         {fieldData ? (
           <div className={styles.desc}>
-            <span>{subject || q}核心技术包括：</span>
+            <span>
+              <span style={{ color: 'red' }}>{subject || q}</span>核心技术：
+            </span>
             {fieldData.dataNode.data.map((item, index) =>
               index === fieldData.dataNode.data.length - 1 ? (
-                <Link
-                  to={`/query?q=${encodeURIComponent(item.TERM)}`}
-                  className={styles.cara}
-                  key={item.TERM}
-                >
-                  {RestTools.translateToRed(item.TERM)}。
-                </Link>
+                <>
+                  <Atom text={item.TERM} />。
+                </>
               ) : (
-                <Link
-                  to={`/query?q=${encodeURIComponent(item.TERM)}`}
-                  className={styles.cara}
-                  key={item.TERM}
-                >
-                  {RestTools.translateToRed(item.TERM)}、
-                </Link>
+                <>
+                  <Atom text={item.TERM} />、
+                </>
               )
             )}
           </div>
