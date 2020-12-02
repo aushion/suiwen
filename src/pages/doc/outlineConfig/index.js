@@ -41,6 +41,8 @@ const OutlineConfig = (props) => {
   const { dispatch } = props;
   //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
+  //下载文档确定按钮loading
+  const [downloadDocHandleOkLoading, setDownloadDocHandleOkLoading] = useState(false);
   //控制文档标题、章、节、问题模态框
   const [addDocVisible, setAddDocVisible] = useState(false);
   const [editDocVisible, setEditDocVisible] = useState(false);
@@ -440,6 +442,7 @@ const OutlineConfig = (props) => {
 
   //下载文档
   const generateDoc = (values) => {
+    setDownloadDocHandleOkLoading(true);
     const form = new FormData();
     // 文件对象
     form.append('docId', docId);
@@ -466,7 +469,8 @@ const OutlineConfig = (props) => {
       // 然后移除
       document.body.removeChild(eleLink);
       //文档下载方式选择框设置消失
-      setDownloadDocVisible(false);
+      setDownloadDocHandleOkLoading(false);
+      setDownloadDocVisible(false); 
     });
   };
 
@@ -824,6 +828,7 @@ const OutlineConfig = (props) => {
             {downloadDocVisible ? (
               <DownloadDocModel
                 modalVisible={downloadDocVisible}
+                loading={downloadDocHandleOkLoading}
                 onCancle={() => setDownloadDocVisible(false)}
                 handleOk={generateDoc}
               />

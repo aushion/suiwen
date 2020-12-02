@@ -7,7 +7,7 @@ const DownloadDocModel = Form.create({
   },
 })(props => {
 
-  const { modalVisible } = props;
+  const { modalVisible,loading } = props;
   const [isResource, setIsResource] = useState(true);
 
   const handleChange = (e) => {
@@ -39,10 +39,15 @@ const DownloadDocModel = Form.create({
       visible={modalVisible}
       width={400}
       height={300}
-      okText={'下载'}
-      cancelText={'放弃'}
-      onOk={onHandleOk}
+      // okText={'下载'}
+      // cancelText={'放弃'}
+      // onOk={onHandleOk}
       onCancel={() => onHandleCancel()}
+      footer={[
+        <Button key="放弃" onClick={onHandleCancel}>放弃</Button>,
+        <Button key="下载" type="primary" loading={loading} onClick={onHandleOk}>
+          下载
+        </Button>,]}
     >
       <div>
         <span>包含来源 :</span>
