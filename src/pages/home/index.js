@@ -372,6 +372,55 @@ function Home(props) {
           <Carousel autoplay autoplaySpeed={4000} hoverPause>
             <div className={homeStyles.content}>
               <div className={homeStyles.left}>
+                <img src={docGen} alt="文档生成" />
+              </div>
+              <div className={homeStyles.right}>
+                <Link to={`/doc/outlineConfig`} target="_blank">
+                  <div className={homeStyles.cnTitle}>文档速成助手</div>
+                  <div className={homeStyles.enTitle}>内容动态重组</div>
+                </Link>
+
+                <div className={homeStyles.desc}>
+                  <div>
+                    <font color="red" size="3">
+                      便捷、高效
+                    </font>
+                    的文档
+                    <font color="red" size="3">
+                      撰写助手
+                    </font>
+                  </div>
+                  <div>面向系列问题的内容动态生成重组</div>
+                  <div> 自定义章节标题要点、内容自动生成重组</div>
+                  <div>知网权威、海量学术期刊来源</div>
+                  <div>
+                    文档
+                    <font color="red" size="3">
+                      在线、定制、生成、预览、下载
+                    </font>
+                  </div>
+                </div>
+
+                <div style={{ textAlign: 'center' }}>
+                  <Button
+                    type="primary"
+                    ghost
+                    style={{ border: 0 }}
+                    onClick={() => {
+                      router.push({
+                        pathname: '/doc/outlineConfig'
+                      });
+                    }}
+                  >
+                    <font color="blue" size="5">
+                      {'试用>>'}
+                    </font>
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className={homeStyles.content}>
+              <div className={homeStyles.left}>
                 <img src={rd} alt="阅读" />
               </div>
               <div className={homeStyles.right}>
@@ -400,55 +449,6 @@ function Home(props) {
                         );
                       })
                     : null}
-                </div>
-              </div>
-            </div>
-
-            <div className={homeStyles.content}>
-              <div className={homeStyles.left}>
-                <img src={docGen} alt="文档生成" />
-              </div>
-              <div className={homeStyles.right}>
-                <Link to={`/doc/outlineConfig`} target="_blank">
-                  <div className={homeStyles.cnTitle}>文档生成助手</div>
-                  <div className={homeStyles.enTitle}>内容动态重组</div>
-                </Link>
-
-                <div className={homeStyles.desc}>
-                  <div>
-                    <font color="red" size="3">
-                      便捷、高效
-                    </font>
-                    的文档
-                    <font color="red" size="3">
-                      撰写助手
-                    </font>
-                  </div>
-                  <div>面向系列问题的内容动态生成重组</div>
-                  <div> 自定义章节标题要点、内容自动生成重组</div>
-                  <div>来源知网权威、海量学术期刊 </div>
-                  <div>
-                    <font color="blue" size="3">
-                      文档在线、定制、生成、预览、下载
-                    </font>
-                  </div>
-                </div>
-
-                <div style={{ textAlign: 'center' }}>
-                  <Button
-                    type="primary"
-                    ghost
-                    style={{ border: 0 }}
-                    onClick={() => {
-                      router.push({
-                        pathname: '/doc/outlineConfig'
-                      });
-                    }}
-                  >
-                    <font color="blue" size="5">
-                      {'试用>>'}
-                    </font>
-                  </Button>
                 </div>
               </div>
             </div>
