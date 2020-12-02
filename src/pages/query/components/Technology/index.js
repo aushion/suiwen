@@ -40,10 +40,19 @@ function Technology({ data, q }) {
       })
       .then((res) => {
         if (res.data.code === 200) {
+          const newData = {
+            dataNode: {
+              data: res.data.result.dataNode.data,
+              sql: res.data.result.dataNode.sql,
+              groupList: journalData.dataNode.groupList
+            },
+            pagination: res.data.result.pagination
+          };
+
           setLoading(false);
           setJournal({
             ...journalData,
-            ...res.data.result
+            ...newData
           });
         }
       })
@@ -91,13 +100,13 @@ function Technology({ data, q }) {
             </span>
             {fieldData.dataNode.data.map((item, index) =>
               index === fieldData.dataNode.data.length - 1 ? (
-                <>
-                  <Atom text={item.TERM} />。
-                </>
+                <span key={index}>
+                  <Atom text={item.名称} />。
+                </span>
               ) : (
-                <>
-                  <Atom text={item.TERM} />、
-                </>
+                <span key={index}>
+                  <Atom text={item.名称} />、
+                </span>
               )
             )}
           </div>
@@ -105,14 +114,14 @@ function Technology({ data, q }) {
 
         <div className={styles.list}>
           <div className={styles.btn}>
-            {journal.dataNode.groupList && journal.dataNode.groupList.length ? (
+            {journalData.dataNode.groupList && journalData.dataNode.groupList.length ? (
               <div>
                 <Button
                   type={sourceType === '全部' ? 'primary' : 'default'}
                   style={{ marginRight: 10 }}
                   onClick={fetchDataBySourceType.bind(this, '全部')}
                 >
-                  全部
+                  相关来源
                 </Button>
                 {journal.dataNode.groupList.map((item) => (
                   <Button

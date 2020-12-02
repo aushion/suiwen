@@ -421,7 +421,7 @@ function ResultPage(props) {
                 !sgData.length &&
                 !semanticData.length ? (
                   <Result
-                    style={{ width: 600, margin: 'auto' }}
+                    style={{ width: 600, background: '#fff' }}
                     icon={<Icon type="frown" theme="twoTone" />}
                     subTitle={
                       <div style={{ textAlign: 'center' }}>
