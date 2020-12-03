@@ -80,7 +80,9 @@ function Technology({ data, q }) {
           </>
         }
       >
-        <Link to={`/query?q=${encodeURIComponent(text)}`}>{RestTools.translateToRed(text)}</Link>
+        <Link style={{ whiteSpace: 'nowrap' }} to={`/query?q=${encodeURIComponent(text)}`}>
+          {RestTools.translateToRed(text)}
+        </Link>
       </Popover>
     );
   };
@@ -121,7 +123,7 @@ function Technology({ data, q }) {
                   style={{ marginRight: 10 }}
                   onClick={fetchDataBySourceType.bind(this, '全部')}
                 >
-                  相关来源
+                  相关来源（全部）
                 </Button>
                 {journal.dataNode.groupList.map((item) => (
                   <Button
