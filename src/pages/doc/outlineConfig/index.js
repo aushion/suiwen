@@ -97,9 +97,12 @@ const OutlineConfig = (props) => {
 
   //获取所有的文档模版
   function getDocTemplate() {
-    props.dispatch({
-      type: 'Doc/getTemplateList'
-    });
+    if((!docTemplateList) || (docTemplateList && docTemplateList.length === 0)){
+      props.dispatch({
+        type: 'Doc/getTemplateList'
+      });
+    }
+    
   }
 
   //获取该文档id下的提纲目录
@@ -178,18 +181,26 @@ const OutlineConfig = (props) => {
   //新增文档题目，取消按钮事件
   const onHandleCancelAddDoc = () => {
     setAddDocVisible(false);
+    setChapterId('');
+    setChapterData('');
   };
   //编辑文档题目，取消按钮事件
   const onHandleCancelDoc = () => {
     setEditDocVisible(false);
+    setChapterId('');
+    setChapterData('');
   };
   //新建章，取消按钮事件
   const onHandleCancelChapter = () => {
     setChapterVisible(false);
+    setChapterId('');
+    setChapterData('');
   };
   //新建节，取消按钮事件
   const onHandleCancelNode = () => {
     setNodeVisible(false);
+    setChapterId('');
+    setChapterData('');
   };
 
   //新增文档题目，提交按钮事件
