@@ -812,7 +812,7 @@ const OutlineConfig = (props) => {
                 dispatch={dispatch}
                 loading={props.loading}
                 chapterId={chapterId}
-                onCancle={() => setAddNodeQuestionVisible(false)}
+                onCancle={() => {setAddNodeQuestionVisible(false);queryForRoute();}}
                 handleOk={addNodeQuestion}
               />
             ) : null}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Divider, Anchor } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, CaretRightOutlined, CaretDownOutlined, SettingOutlined } from '@ant-design/icons';
+import { Divider, Anchor, Tooltip } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, CaretRightOutlined, CaretDownOutlined, SettingOutlined, WarningTwoTone } from '@ant-design/icons';
 
 import styles from '../style.less';
 
@@ -116,7 +116,47 @@ class OutlineList extends Component {
                       <Link
                         key={chapterItem}
                         href={`#${'chapterTitle' + chapterItem.label}`}
-                        title={<div title={chapterItem.label} className={[styles.header, id === chapterItem.id ? styles.active : null].join(' ')}>{chapterItem.label}</div>}
+                        title={
+                          <Tooltip
+                            placement="top"
+                            title={
+                              <div>
+                                <div
+                                  title={docItem.label}
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    width: '170px',
+                                    alignItems: 'center'
+                                  }}
+                                >
+                                  {chapterItem.label}
+                                </div>
+                                {chapterItem.questionList && chapterItem.questionList.length !== 0 ? <Divider style={{ color: 'white' }}>配置问题</Divider> : null}
+                                {chapterItem.questionList && chapterItem.questionList.length !== 0 ? chapterItem.questionList.map((questionListItem, questionListIndex) => {
+                                  return (
+                                    <div key={questionListIndex}>
+                                      <div
+
+                                        style={{
+                                          display: 'flex',
+                                          justifyContent: 'space-between',
+                                          width: '170px',
+                                          alignItems: 'center',
+                                          marginLeft: '20px',
+                                        }}
+                                      >
+                                        {questionListItem.question}
+                                      </div>
+                                    </div>)
+                                }) : null}
+                              </div>
+                            }
+                          >
+                            <div className={[styles.header, id === chapterItem.id ? styles.active : null].join(' ')}>
+                              {chapterItem.label}
+                            </div>
+                          </Tooltip>}
                       />
                     </div>
                     <div className={styles.headright}>
@@ -128,6 +168,12 @@ class OutlineList extends Component {
                       <Divider type="vertical" />
                       <DeleteOutlined onClick={(() => { this.props.onDelete(chapterItem) })} title="删除章标题" />
                     </div>
+                    {(chapterItem.questionList && chapterItem.questionList.length !== 0) ||
+                      (chapterItem.children && chapterItem.children.length !== 0) ? null :
+                      <div className={styles.headrightReverse}>
+                        <WarningTwoTone twoToneColor='orange' title="未配置问题" />
+                      </div>
+                    }
                   </div>
 
                   {chapterItem.children && (chapterItem.flag === false ? null :
@@ -137,7 +183,47 @@ class OutlineList extends Component {
                           <Link
                             key={nodeItem}
                             href={`#${'nodeTitle' + chapterItem.label + '' + nodeItem.label}`}
-                            title={<div title={nodeItem.label} className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>{nodeItem.label}</div>}
+                            title={
+                              <Tooltip
+                                placement="top"
+                                title={
+                                  <div>
+                                    <div
+                                      title={nodeItem.label}
+                                      style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        width: '170px',
+                                        alignItems: 'center'
+                                      }}
+                                    >
+                                      {nodeItem.label}
+                                    </div>
+                                    {nodeItem.questionList && nodeItem.questionList.length !== 0 ? <Divider style={{ color: 'white' }}>配置问题</Divider> : null}
+                                    {nodeItem.questionList && nodeItem.questionList.length !== 0 ? nodeItem.questionList.map((questionListItem, questionListIndex) => {
+                                      return (
+                                        <div key={questionListIndex}>
+                                          <div
+
+                                            style={{
+                                              display: 'flex',
+                                              justifyContent: 'space-between',
+                                              width: '170px',
+                                              alignItems: 'center',
+                                              marginLeft: '20px',
+                                            }}
+                                          >
+                                            {questionListItem.question}
+                                          </div>
+                                        </div>)
+                                    }) : null}
+                                  </div>
+                                }
+                              >
+                                <div className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>
+                                  {nodeItem.label}
+                                </div>
+                              </Tooltip>}
                           />
                           <div className={styles.headright}>
                             <SettingOutlined onClick={(() => { this.props.onNewQuestion(chapterItem, nodeItem) })} title="配置问题/关键字" />
@@ -145,12 +231,13 @@ class OutlineList extends Component {
                             <EditOutlined onClick={(() => { this.props.onSEdit(chapterItem, nodeItem) })} title="编辑节标题" />
                             <Divider type="vertical" />
                             <DeleteOutlined onClick={(() => { this.props.onDelete(nodeItem) })} title="删除节标题" />
-
-
                           </div>
-
-
-
+                          {(nodeItem.questionList && nodeItem.questionList.length !== 0) ||
+                            (nodeItem.children && nodeItem.children.length !== 0) ? null :
+                            <div className={styles.headrightReverse}>
+                              <WarningTwoTone twoToneColor='orange' title="未配置问题" />
+                            </div>
+                          }
                         </div>
                       )
                     }))}
