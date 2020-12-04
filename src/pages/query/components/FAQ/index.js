@@ -7,7 +7,7 @@ import arrow_up from '../../../../assets/arrow_up.png';
 import arrow_down from '../../../../assets/arrow_down.png';
 
 function FAQ(props) {
-  const { question, answer, id, evaluate, domain } = props.data;
+  const { question, answer, id, evaluate } = props.data;
   const { good, bad, isevalute } = evaluate;
   const [showAnswer, updateAnswer] = useState(
     answer.length > 500
@@ -33,7 +33,8 @@ function FAQ(props) {
     <div className={styles.FAQ}>
       <h2>
         <span style={{ color: '#1890ff' }}>{props.q}</span>
-        <span> - 随问{domain === 'CNKI问答库_期刊' ? '期刊' : domain}知识库</span>
+        {/* <span> - 随问{domain === 'CNKI问答库_期刊' ? '期刊' : domain}知识库</span> */}
+        <span> - 随问知识库</span>
       </h2>
       <div className={styles.wrapper}>
         <div className={styles.icon}>Q</div>
