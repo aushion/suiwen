@@ -80,7 +80,9 @@ function Technology({ data, q }) {
           </>
         }
       >
-        <Link to={`/query?q=${encodeURIComponent(text)}`}>{RestTools.translateToRed(text)}</Link>
+        <Link style={{ whiteSpace: 'nowrap' }} to={`/query?q=${encodeURIComponent(text)}`}>
+          {RestTools.translateToRed(text)}
+        </Link>
       </Popover>
     );
   };
