@@ -636,7 +636,7 @@ const OutlineConfig = (props) => {
   //选择文档模版改变时 触发事件
   function onDocTemplateSelectChange(value) {
     setSeletedDocTemplate(value);
-    if (value === '') {
+    if (value === '' || (!docId)) {
       return;
     }
 
@@ -682,7 +682,7 @@ const OutlineConfig = (props) => {
           }}
         ></Button>
       </div>
-      <div style={{ paddingRight: '14%' }}>
+      <div style={{ paddingRight: '5%' }}>
         <div style={{ width: 360, float: 'left' }}>
           <div className={styles.list}>
             <div className={styles.right}>
@@ -703,7 +703,7 @@ const OutlineConfig = (props) => {
                   重命名
                 </Button>
                 <Select
-                  disabled={docId ? false : true}
+                  // disabled={docId ? false : true}
                   style={{ width: 120, marginLeft: 10 }}
                   value={selectedDocTemplate}
                   onChange={(v) => onDocTemplateSelectChange(v)}
@@ -712,8 +712,8 @@ const OutlineConfig = (props) => {
                   {docTemplateOptions}
                 </Select>
                 <SettingOutlined
-                  disabled={docId ? false : true}
-                  style={{ width: 5, marginLeft: 5, visibility: 'hidden' }}
+                  // disabled={docId ? false : true}
+                  style={{ width: 5, marginLeft: 5 ,visibility: 'hidden'}}
                   onClick={() => {
                     setTemplateManagementVisible(true);
                   }}
@@ -770,7 +770,7 @@ const OutlineConfig = (props) => {
                 dispatch={dispatch}
                 loading={props.loading}
                 docTemplateOptions={docTemplateOptions}
-                // onTemplateSelectChange={onTemplateSelectChange}
+                defaultDocumentTemplate={selectedDocTemplate}
               />
             ) : null}
             {editDocVisible ? (
@@ -852,6 +852,16 @@ const OutlineConfig = (props) => {
               style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
             >
               内容刷新
+            </Button>
+            <Button
+              disabled={username ? false : true}
+              loading={props.loading}
+              style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
+              onClick={() => {
+                router.push(`/personCenter/people/doc?userName=${username}`);
+              }}
+            >
+              个人文档
             </Button>
           </div>
           <div id="scrollContent" className={styles.scrollContent}>

@@ -51,7 +51,7 @@ const TemplateManagementModel = props => {
             dataIndex: 'name',
             key: 'name',
             align: 'center',
-            width: '65%',
+            width: '45%',
             render: (text, record, index) => {
                 return <>
                     <TextArea
@@ -87,7 +87,7 @@ const TemplateManagementModel = props => {
             dataIndex: '',
             key: 'x',
             align: 'center',
-            width: '25%',
+            width: '35%',
             render: (text, record, index) => (
 
                 <span>
@@ -129,6 +129,12 @@ const TemplateManagementModel = props => {
 
     //根据模板id编辑对应的模板名称
     function editTemplateName(record) {
+        //去除文本框里的焦点
+        document.getElementById("nameInput" + record.id).blur();
+        setTableEditedname('');
+        setInputIndex('');
+        setEditFlag(false);
+        getDocTemplate();
         message.success('空响应 根据模板id编辑对应的模板名称事件 ！');
 
     }
@@ -301,7 +307,8 @@ const TemplateManagementModel = props => {
                             <Tree
                                 showLine={true}
                                 showIcon={false}
-
+                                //展开所有的树节点
+                                defaultExpandAll={true}
                             // style={{ width: '100%' }}
                             //defaultExpandParent={true}
                             //autoExpandParent={autoExpandParent}

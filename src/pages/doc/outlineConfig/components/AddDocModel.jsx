@@ -13,9 +13,9 @@ const AddDocModel = Form.create({
 })(props => {
 
 
-  const { modalVisible, form, docTemplateOptions } = props;
+  const { modalVisible, form, docTemplateOptions,defaultDocumentTemplate } = props;
   //文档模版选择
-  const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
+  const [selectedDocTemplate, setSeletedDocTemplate] = useState(defaultDocumentTemplate ? defaultDocumentTemplate : '');
 
 
   const formItemLayout = {
@@ -40,7 +40,7 @@ const AddDocModel = Form.create({
     }
   }
 
-  //新建章，提交按钮事件
+  //新建文档，提交按钮事件
   const onHandleOk = () => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
