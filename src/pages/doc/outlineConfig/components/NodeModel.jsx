@@ -5,8 +5,8 @@ const NodeModel = Form.create({
   mapPropsToFields(props) {
     if (props.data !== undefined) {
       return {
-        label: Form.createFormField({ value: props.data.label }),
-        orderNum: Form.createFormField({ value: props.data.orderNum }),
+        label: Form.createFormField({ value: props.data.label?String(props.data.label).slice(String(props.data.label).indexOf(' ') + 1).trim():'' }),
+        orderNum: Form.createFormField({ value: props.data.orderNum?props.data.orderNum:'' }),
       };
     }
   },
@@ -142,9 +142,9 @@ const NodeModel = Form.create({
             }}
           />
         </Form.Item>
-        <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
+        <Form.Item label="章节号" hidden={data.id === undefined ? true : false}>
           {form.getFieldDecorator('orderNum', {
-            rules: [{ pattern: /^([1-9][0-9]?)$/, required: true, message: '排序号取值范围为[1,99]的正整数!' }],
+            rules: [{ pattern: /^([1-9][0-9]?)$/, required: true, message: '章节号取值范围为[1,99]的正整数!' }],
           })(<Input placeholder='只支持数字格式' style={{ width: 400 }} />)}
         </Form.Item>
       </Form>

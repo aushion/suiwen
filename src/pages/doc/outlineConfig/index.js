@@ -12,7 +12,8 @@ import {
   Anchor,
   Tree,
   Select,
-  Tooltip
+  Tooltip,
+  Icon
 } from 'antd';
 import { ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
@@ -41,6 +42,8 @@ const OutlineConfig = (props) => {
   const { dispatch } = props;
   //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
+  //提纲标题变动加载loading（控制spin组件）
+  const [outlineSpinLoading, setOutlineSpinLoading] = useState(true);
   //下载文档确定按钮loading
   const [downloadDocHandleOkLoading, setDownloadDocHandleOkLoading] = useState(false);
   //控制文档标题、章、节、问题模态框
@@ -67,6 +70,8 @@ const OutlineConfig = (props) => {
   const docTemplateList = props.docTemplateData;
   const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
 
+  const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+
   useEffect(() => {
     //加载文档模版数据
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,18 +96,18 @@ const OutlineConfig = (props) => {
         }
       });
       setDocContentResultLoading(false);
+      setOutlineSpinLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFlag]);
 
   //获取所有的文档模版
   function getDocTemplate() {
-    if((!docTemplateList) || (docTemplateList && docTemplateList.length === 0)){
+    if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
       props.dispatch({
         type: 'Doc/getTemplateList'
       });
     }
-    
   }
 
   //获取该文档id下的提纲目录
@@ -154,6 +159,7 @@ const OutlineConfig = (props) => {
       .then((res) => {
         if (res.code === 200) {
           setDocContentResultLoading(false);
+          setOutlineSpinLoading(false);
         } else {
           message.error(res.msg);
         }
@@ -279,6 +285,9 @@ const OutlineConfig = (props) => {
 
   //新建或编辑章节，提交按钮事件
   const onHandleOk = (values) => {
+    //设置文档预览区loading
+    setDocContentResultLoading(true);
+    setOutlineSpinLoading(true);
     dispatch({
       type: 'Doc/saveRoute',
       payload: {
@@ -326,7 +335,11 @@ const OutlineConfig = (props) => {
         setChapterData('');
         setNodeData('');
         setChapterId('');
+        setDocContentResultLoading(false);
+        setOutlineSpinLoading(false);
       } else {
+        setDocContentResultLoading(false);
+        setOutlineSpinLoading(false);
         message.error(res.msg);
       }
     });
@@ -481,7 +494,7 @@ const OutlineConfig = (props) => {
       document.body.removeChild(eleLink);
       //文档下载方式选择框设置消失
       setDownloadDocHandleOkLoading(false);
-      setDownloadDocVisible(false); 
+      setDownloadDocVisible(false);
     });
   };
 
@@ -647,7 +660,7 @@ const OutlineConfig = (props) => {
   //选择文档模版改变时 触发事件
   function onDocTemplateSelectChange(value) {
     setSeletedDocTemplate(value);
-    if (value === '' || (!docId)) {
+    if (value === '' || !docId) {
       return;
     }
 
@@ -655,6 +668,9 @@ const OutlineConfig = (props) => {
       title: '确定应用此文档模板吗?此操作将会使之前编辑的提纲内容被覆盖掉！',
       centered: true,
       onOk() {
+        //设置文档预览区loading
+        setDocContentResultLoading(true);
+        setOutlineSpinLoading(true);
         props
           .dispatch({
             type: 'Doc/chooseTemplateRoute',
@@ -672,8 +688,12 @@ const OutlineConfig = (props) => {
               setChapterId('');
               queryForRoute();
               getDocContent();
+              setDocContentResultLoading(false);
+              setOutlineSpinLoading(false);
               message.success('文档模板应用完毕');
             } else {
+              setDocContentResultLoading(false);
+              setOutlineSpinLoading(false);
               message.error(res.msg);
             }
           });
@@ -724,7 +744,7 @@ const OutlineConfig = (props) => {
                 </Select>
                 <SettingOutlined
                   // disabled={docId ? false : true}
-                  style={{ width: 5, marginLeft: 5 ,visibility: 'hidden'}}
+                  style={{ width: 5, marginLeft: 5, visibility: 'hidden' }}
                   onClick={() => {
                     setTemplateManagementVisible(true);
                   }}
@@ -734,27 +754,29 @@ const OutlineConfig = (props) => {
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>
                   {docId ? (
-                    <Anchor
-                      // affix
-                      // targetOffset={50}
-                      className={styles.anchor}
-                      style={{ maxHeight: '72vh' }}
-                      getContainer={() => document.getElementById('scrollContent')}
-                    >
-                      <OutlineList
-                        data={props.outlineData}
-                        id={classID}
-                        onEdit={onEditChapter}
-                        onDelete={onDeleteChapter}
-                        onNew={onNewNode}
-                        onSEdit={onEditNode}
-                        onClick={onClassChange}
-                        onNewQuestion={onNewNodeQuestion}
-                        onChapterNew={onEditOutLine}
-                        onDocEdit={onEditDoc}
-                        onDocDelete={onDocDelete}
-                      />
-                    </Anchor>
+                    <Spin spinning={outlineSpinLoading} indicator={antIcon}>
+                      <Anchor
+                        // affix
+                        // targetOffset={50}
+                        className={styles.anchor}
+                        style={{ maxHeight: '72vh' }}
+                        getContainer={() => document.getElementById('scrollContent')}
+                      >
+                        <OutlineList
+                          data={props.outlineData}
+                          id={classID}
+                          onEdit={onEditChapter}
+                          onDelete={onDeleteChapter}
+                          onNew={onNewNode}
+                          onSEdit={onEditNode}
+                          onClick={onClassChange}
+                          onNewQuestion={onNewNodeQuestion}
+                          onChapterNew={onEditOutLine}
+                          onDocEdit={onEditDoc}
+                          onDocDelete={onDocDelete}
+                        />
+                      </Anchor>
+                    </Spin>
                   ) : (
                     <Tree disabled defaultExpandAll>
                       <TreeNode title="文档标题：XXX" key="0-0">
@@ -823,7 +845,10 @@ const OutlineConfig = (props) => {
                 dispatch={dispatch}
                 loading={props.loading}
                 chapterId={chapterId}
-                onCancle={() => {setAddNodeQuestionVisible(false);queryForRoute();}}
+                onCancle={() => {
+                  setAddNodeQuestionVisible(false);
+                  queryForRoute();
+                }}
                 handleOk={addNodeQuestion}
               />
             ) : null}
@@ -876,7 +901,7 @@ const OutlineConfig = (props) => {
             </Button>
           </div>
           <div id="scrollContent" className={styles.scrollContent}>
-            <Spin spinning={docContentResultLoading}>
+            <Spin spinning={docContentResultLoading} tip="Loading..." size="large">
               {props.docContentData ? (
                 <>
                   <div
