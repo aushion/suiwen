@@ -221,6 +221,9 @@ const OutlineConfig = (props) => {
       message.warn('请您登录后再操作');
       return;
     }
+    //设置提纲目录区与文档内容预览区加载动画效果
+    setDocContentResultLoading(true);
+    setOutlineSpinLoading(true);
     //新增文档
     props
       .dispatch({
@@ -252,11 +255,16 @@ const OutlineConfig = (props) => {
         } else {
           message.error(res.msg);
         }
+        setDocContentResultLoading(false);
+        setOutlineSpinLoading(false);
       });
   };
 
   //编辑文档题目，提交按钮事件
   const onHandleOkDoc = (values) => {
+    //设置提纲目录区与文档内容预览区加载动画效果
+    setDocContentResultLoading(true);
+    setOutlineSpinLoading(true);
     dispatch({
       type: 'Doc/editUserDoc',
       payload: {
@@ -280,6 +288,8 @@ const OutlineConfig = (props) => {
       } else {
         message.error(res.msg);
       }
+      setDocContentResultLoading(false);
+      setOutlineSpinLoading(false);
     });
   };
 
@@ -754,7 +764,7 @@ const OutlineConfig = (props) => {
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>
                   {docId ? (
-                    <Spin spinning={outlineSpinLoading} indicator={antIcon}>
+                    <Spin spinning={outlineSpinLoading} indicator={antIcon} tip="目录加载中..."> 
                       <Anchor
                         // affix
                         // targetOffset={50}
@@ -780,14 +790,14 @@ const OutlineConfig = (props) => {
                   ) : (
                     <Tree disabled defaultExpandAll>
                       <TreeNode title="文档标题：XXX" key="0-0">
-                        <TreeNode title="第一章：XXX" key="0-0-0">
-                          <TreeNode title="第一节：XXX" key="0-0-0-0" />
-                          <TreeNode title="第二节：XXX" key="0-0-0-1" />
+                        <TreeNode title="第1章：XXX" key="0-0-0">
+                          <TreeNode title="第1节：XXX" key="0-0-0-0" />
+                          <TreeNode title="第2节：XXX" key="0-0-0-1" />
                         </TreeNode>
-                        <TreeNode title="第二章：XXX" key="0-0-1">
-                          <TreeNode title="第一节：XXX" key="0-0-1-0" />
-                          <TreeNode title="第二节：XXX" key="0-0-1-1" />
-                          <TreeNode title="第三节：XXX" key="0-0-1-2" />
+                        <TreeNode title="第2章：XXX" key="0-0-1">
+                          <TreeNode title="第1节：XXX" key="0-0-1-0" />
+                          <TreeNode title="第2节：XXX" key="0-0-1-1" />
+                          <TreeNode title="第3节：XXX" key="0-0-1-2" />
                         </TreeNode>
                       </TreeNode>
                     </Tree>
@@ -901,7 +911,7 @@ const OutlineConfig = (props) => {
             </Button>
           </div>
           <div id="scrollContent" className={styles.scrollContent}>
-            <Spin spinning={docContentResultLoading} tip="Loading..." size="large">
+            <Spin spinning={docContentResultLoading} tip="文档内容加载中..." size="large">
               {props.docContentData ? (
                 <>
                   <div
