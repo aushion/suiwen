@@ -64,8 +64,8 @@ const ChapterEdit = Form.create({
         </Form.Item>
         <Form.Item label="排序号" hidden={data.id === undefined ? true : false}>
           {form.getFieldDecorator('orderNum', {
-
-          })(<Input placeholder='建议纯数字' style={{ width: 400 }} />)}
+            rules: [{ pattern: /^([1-9][0-9]?)$/, required: true, message: '排序号取值范围为[1,99]的正整数!' }],
+          })(<Input placeholder='只支持数字格式' style={{ width: 400 }} />)}
         </Form.Item>
 
       </Form>
