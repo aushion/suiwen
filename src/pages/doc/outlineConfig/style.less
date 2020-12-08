@@ -38,8 +38,36 @@
     overflow-y: auto;
     height: 72vh;
   }
+  /*谷歌等webkit内核隐藏滚动条方式，隐藏但可滚动*/
   .outlineArea::-webkit-scrollbar {
     display: none;
+  }
+  /*IE内核隐藏滚动条方式，隐藏但可滚动*/
+  .outlineArea {
+    /*三角箭头的颜色*/
+    scrollbar-arrow-color: #fff;
+    /*滚动条滑块按钮的颜色*/
+    scrollbar-face-color: #fff;
+    /*滚动条整体颜色*/
+    scrollbar-highlight-color: #fff;
+    /*滚动条阴影*/
+    scrollbar-shadow-color: #fff;
+    /*滚动条轨道颜色*/
+    scrollbar-track-color: #fff;
+    /*滚动条3d亮色阴影边框的外观颜色——左边和上边的阴影色*/
+    scrollbar-3dlight-color: #fff;
+    /*滚动条3d暗色阴影边框的外观颜色——右边和下边的阴影色*/
+    scrollbar-darkshadow-color: #fff;
+    /*滚动条基准颜色*/
+    scrollbar-base-color: #fff;
+  }
+  /*火狐内核隐藏滚动条方式，隐藏但可滚动*/
+  .outlineArea {
+    /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+    -ms-overflow-style: none;
+    /*火狐下隐藏滚动条*/
+    scrollbar-width: none;
+    // overflow: -moz-scrollbars-none;
   }
 }
 
@@ -49,7 +77,6 @@
   border-style: outset;
   word-break: break-all;
 }
-
 
 /* 谷歌等WebKit内核浏览器 */
 .scrollContent::-webkit-scrollbar {
@@ -79,7 +106,6 @@
   border-radius: 10px;
 }
 
-
 /* IE 浏览器 */
 /* 谷歌等WebKit内核浏览器 */
 .scrollContent::-ms-scrollbar {
@@ -87,8 +113,7 @@
   width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
   height: 1px;
 }
-.scrollContent{
-
+.scrollContent {
   /*三角箭头的颜色*/
   scrollbar-arrow-color: #0099dd;
   /*滚动条滑块按钮的颜色*/
@@ -106,8 +131,6 @@
   /*滚动条基准颜色*/
   // scrollbar-base-color: #0099dd;
 }
-
-
 
 .domain {
   background-color: #fff;

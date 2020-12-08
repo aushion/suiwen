@@ -764,12 +764,12 @@ const OutlineConfig = (props) => {
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>
                   {docId ? (
-                    <Spin spinning={outlineSpinLoading} indicator={antIcon} tip="目录加载中..."> 
+                    <Spin spinning={outlineSpinLoading} indicator={antIcon} tip="目录加载中...">
                       <Anchor
                         // affix
                         // targetOffset={50}
                         className={styles.anchor}
-                        style={{ minHeight:'50vh',maxHeight: '72vh' }}
+                        style={{ minHeight: '50vh', maxHeight: '72vh' }}
                         getContainer={() => document.getElementById('scrollContent')}
                       >
                         <OutlineList
@@ -1027,6 +1027,35 @@ const OutlineConfig = (props) => {
                           ) : null}
                         </List.Item>
                       </div>
+                    )}
+                  />
+
+                  <div
+                    key={'docLiteratureTitle' + props.docContentData.literatureName}
+                    id={'docLiteratureTitle' + props.docContentData.literatureName}
+                    dangerouslySetInnerHTML={{
+                      __html: '<h2 align="center">' + props.docContentData.literatureName + '</h2>'
+                    }}
+                  />
+
+                  <List
+                    split={false}
+                    itemLayout="horizontal"
+                    dataSource={props.docContentData.literatureList}
+                    renderItem={(literatureItem, i) => (
+                      <List.Item>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              '<p style="text-indent:2em">' +
+                              '[' +
+                              ++i +
+                              '] ' +
+                              literatureItem +
+                              '</p>'
+                          }}
+                        />
+                      </List.Item>
                     )}
                   />
                 </>
