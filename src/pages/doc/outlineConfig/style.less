@@ -50,6 +50,65 @@
   word-break: break-all;
 }
 
+
+/* 谷歌等WebKit内核浏览器 */
+.scrollContent::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.scrollContent::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  background-color: skyblue;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+.scrollContent::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #ededed;
+  border-radius: 10px;
+}
+
+
+/* IE 浏览器 */
+/* 谷歌等WebKit内核浏览器 */
+.scrollContent::-ms-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.scrollContent{
+
+  /*三角箭头的颜色*/
+  scrollbar-arrow-color: #0099dd;
+  /*滚动条滑块按钮的颜色*/
+  scrollbar-face-color: skyblue;
+  /*滚动条整体颜色*/
+  scrollbar-highlight-color: #0099dd;
+  /*滚动条阴影*/
+  scrollbar-shadow-color: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  /*滚动条轨道颜色*/
+  scrollbar-track-color: #ededed;
+  /*滚动条3d亮色阴影边框的外观颜色——左边和上边的阴影色*/
+  // scrollbar-3dlight-color:#0099dd;
+  /*滚动条3d暗色阴影边框的外观颜色——右边和下边的阴影色*/
+  // scrollbar-darkshadow-color: #0099dd;
+  /*滚动条基准颜色*/
+  // scrollbar-base-color: #0099dd;
+}
+
+
+
 .domain {
   background-color: #fff;
   .item {
@@ -95,7 +154,7 @@
       display: block; /*显示*/
     }
     .head:hover .headrightReverse {
-      display: none; 
+      display: none;
     }
     .head:hover .titleheadright {
       display: block; /*显示*/
@@ -125,7 +184,7 @@
         display: none;
         align-items: center;
       }
-      .headrightReverse{
+      .headrightReverse {
         display: block; /*显示*/
         align-items: center;
       }
@@ -134,9 +193,8 @@
       display: block; /*显示*/
     }
     .text:hover .headrightReverse {
-      display: none; 
+      display: none;
     }
-    
   }
 }
 

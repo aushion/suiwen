@@ -769,7 +769,7 @@ const OutlineConfig = (props) => {
                         // affix
                         // targetOffset={50}
                         className={styles.anchor}
-                        style={{ maxHeight: '72vh' }}
+                        style={{ minHeight:'50vh',maxHeight: '72vh' }}
                         getContainer={() => document.getElementById('scrollContent')}
                       >
                         <OutlineList
