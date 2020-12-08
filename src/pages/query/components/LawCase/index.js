@@ -78,14 +78,14 @@ function LawCase({ data, type }) {
           }
         }}
         footer={
-          <div style={{ textAlign: 'right' }}>
+          <div style={{ textAlign: 'right', padding: 0 }}>
             <a
               style={{ color: '#999' }}
               href="https://lawnew.cnki.net/kns/brief/result.aspx?dbprefix=CLKC"
               rel="noreferrer"
               target="_blank"
             >
-              CNKI法律案例库
+              CNKI法律法规库
             </a>
           </div>
         }
@@ -118,6 +118,11 @@ function LawCase({ data, type }) {
                         />
                       ) : (
                         <div
+                          style={{
+                            color: '#333',
+                            letterSpacing: '2px',
+                            lineHeight: '27.2px'
+                          }}
                           dangerouslySetInnerHTML={{
                             __html: RestTools.translateToRed(item[current])
                           }}
