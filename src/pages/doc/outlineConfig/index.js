@@ -43,7 +43,7 @@ const OutlineConfig = (props) => {
   //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
   //提纲标题变动加载loading（控制spin组件）
-  const [outlineSpinLoading, setOutlineSpinLoading] = useState(true);
+  const [outlineSpinLoading, setOutlineSpinLoading] = useState(false);
   //下载文档确定按钮loading
   const [downloadDocHandleOkLoading, setDownloadDocHandleOkLoading] = useState(false);
   //控制文档标题、章、节、问题模态框
@@ -96,7 +96,6 @@ const OutlineConfig = (props) => {
         }
       });
       setDocContentResultLoading(false);
-      setOutlineSpinLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFlag]);
@@ -112,10 +111,17 @@ const OutlineConfig = (props) => {
 
   //获取该文档id下的提纲目录
   function queryForRoute() {
+    setOutlineSpinLoading(true);
     dispatch({
       type: 'Doc/queryForRoute',
       payload: {
         docId: docId
+      }
+    }).then((res) => {
+      if (res.code === 200) {
+        setOutlineSpinLoading(false);
+      } else {
+        message.error(res.msg);
       }
     });
   }
@@ -159,30 +165,11 @@ const OutlineConfig = (props) => {
       .then((res) => {
         if (res.code === 200) {
           setDocContentResultLoading(false);
-          setOutlineSpinLoading(false);
         } else {
           message.error(res.msg);
         }
       });
   }
-
-  //获取该文档id下的文档内容
-  // function getDocContentByDocId() {
-  //   props
-  //     .dispatch({
-  //       type: 'Doc/refreshDocContent',
-  //       payload: {
-  //         docId: docId
-  //       }
-  //     })
-  //     .then((res) => {
-  //       if (res.code === 200) {
-  //         setDocContentResultLoading(false);
-  //       } else {
-  //         message.error(res.msg);
-  //       }
-  //     });
-  // }
 
   //新增文档题目，取消按钮事件
   const onHandleCancelAddDoc = () => {
@@ -223,7 +210,6 @@ const OutlineConfig = (props) => {
     }
     //设置提纲目录区与文档内容预览区加载动画效果
     setDocContentResultLoading(true);
-    setOutlineSpinLoading(true);
     //新增文档
     props
       .dispatch({
@@ -256,7 +242,6 @@ const OutlineConfig = (props) => {
           message.error(res.msg);
         }
         setDocContentResultLoading(false);
-        setOutlineSpinLoading(false);
       });
   };
 
@@ -264,7 +249,6 @@ const OutlineConfig = (props) => {
   const onHandleOkDoc = (values) => {
     //设置提纲目录区与文档内容预览区加载动画效果
     setDocContentResultLoading(true);
-    setOutlineSpinLoading(true);
     dispatch({
       type: 'Doc/editUserDoc',
       payload: {
@@ -289,7 +273,6 @@ const OutlineConfig = (props) => {
         message.error(res.msg);
       }
       setDocContentResultLoading(false);
-      setOutlineSpinLoading(false);
     });
   };
 
@@ -297,7 +280,6 @@ const OutlineConfig = (props) => {
   const onHandleOk = (values) => {
     //设置文档预览区loading
     setDocContentResultLoading(true);
-    setOutlineSpinLoading(true);
     dispatch({
       type: 'Doc/saveRoute',
       payload: {
@@ -346,10 +328,8 @@ const OutlineConfig = (props) => {
         setNodeData('');
         setChapterId('');
         setDocContentResultLoading(false);
-        setOutlineSpinLoading(false);
       } else {
         setDocContentResultLoading(false);
-        setOutlineSpinLoading(false);
         message.error(res.msg);
       }
     });
@@ -556,9 +536,6 @@ const OutlineConfig = (props) => {
       });
   }
 
-  //滚动条初始化方法
-  // function handleInfiniteOnLoad() {}
-
   //删除指定的片段
   function deleteContent(contentItem) {
     confirm({
@@ -699,11 +676,9 @@ const OutlineConfig = (props) => {
               queryForRoute();
               getDocContent();
               setDocContentResultLoading(false);
-              setOutlineSpinLoading(false);
               message.success('文档模板应用完毕');
             } else {
               setDocContentResultLoading(false);
-              setOutlineSpinLoading(false);
               message.error(res.msg);
             }
           });
