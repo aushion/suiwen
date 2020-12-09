@@ -447,7 +447,7 @@ const NodeQuestionModel = props => {
             return;
         }
         //将选择的问题模版 填充到文本域里
-        let newNodeQuestionsStr = newNodeQuestions + '\n' + v;
+        let newNodeQuestionsStr = (newNodeQuestions===''?(v):(newNodeQuestions+ '\n' + v));
         setNewNodeQuestions(newNodeQuestionsStr);
     }
 
