@@ -32,7 +32,7 @@ function DomainTags(props) {
     onClickTag(payload);
     const firstNode = index >= 0 ? { ...data[index] } : '';
     const secondNode = isChild && index >= 0 ? item : '';
-
+    sessionStorage.removeItem('searchKey');
     sessionStorage.setItem(
       'communityNode',
       JSON.stringify({

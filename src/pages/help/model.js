@@ -53,9 +53,8 @@ export default {
           userInfo: resultData.result
         }
       });
- 
-        sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
-      
+
+      sessionStorage.setItem('userCommunityInfo', JSON.stringify(resultData.result));
     },
 
     *getDomain({ payload }, { call, put }) {
@@ -113,11 +112,11 @@ export default {
           const current = pathname;
           window.document.title = `知网随问-社区`;
           sessionStorage.removeItem('q');
+          sessionStorage.removeItem('searchKey');
           dispatch({
             type: 'saveList',
             payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 }
           }); //重置状态
-         
 
           dispatch({ type: 'getDomain' });
           userInfo &&
