@@ -154,6 +154,11 @@ class OutlineList extends Component {
                             }
                           >
                             <div className={[styles.header, id === chapterItem.id ? styles.active : null].join(' ')}>
+                              <WarningTwoTone twoToneColor='orange' title="未配置问题" style={{
+                                visibility: (chapterItem.questionList && chapterItem.questionList.length !== 0) ||
+                                  (chapterItem.children && chapterItem.children.length !== 0) ? 'hidden' : 'visible'
+                              }} />
+
                               {chapterItem.label}
                             </div>
                           </Tooltip>}
@@ -168,12 +173,6 @@ class OutlineList extends Component {
                       <Divider type="vertical" />
                       <DeleteOutlined onClick={(() => { this.props.onDelete(chapterItem) })} title="删除章标题" />
                     </div>
-                    {(chapterItem.questionList && chapterItem.questionList.length !== 0) ||
-                      (chapterItem.children && chapterItem.children.length !== 0) ? null :
-                      <div className={styles.headrightReverse}>
-                        <WarningTwoTone twoToneColor='orange' title="未配置问题" />
-                      </div>
-                    }
                   </div>
 
                   {chapterItem.children && (chapterItem.flag === false ? null :
@@ -220,7 +219,9 @@ class OutlineList extends Component {
                                   </div>
                                 }
                               >
+
                                 <div className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>
+                                  <WarningTwoTone twoToneColor='orange' title="未配置问题" style={{ visibility: nodeItem.questionList && nodeItem.questionList.length !== 0 ? 'hidden' : 'visible' }} />
                                   {nodeItem.label}
                                 </div>
                               </Tooltip>}
@@ -232,12 +233,6 @@ class OutlineList extends Component {
                             <Divider type="vertical" />
                             <DeleteOutlined onClick={(() => { this.props.onDelete(nodeItem) })} title="删除节标题" />
                           </div>
-                          {(nodeItem.questionList && nodeItem.questionList.length !== 0) ||
-                            (nodeItem.children && nodeItem.children.length !== 0) ? null :
-                            <div className={styles.headrightReverse}>
-                              <WarningTwoTone twoToneColor='orange' title="未配置问题" />
-                            </div>
-                          }
                         </div>
                       )
                     }))}
