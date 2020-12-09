@@ -395,7 +395,7 @@ function ResultPage(props) {
                     </div>
                   ) : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
-                  {weather.length ? <Weather weatherData={weather[0]} /> : null}
+                  {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
                   {semanticData.length ? <ReadComp data={semanticData} /> : null}
                   {translateData.length
                     ? translateData.map((item) => (
