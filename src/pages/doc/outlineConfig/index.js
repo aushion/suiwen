@@ -1004,37 +1004,38 @@ const OutlineConfig = (props) => {
                       </div>
                     )}
                   />
-                  {props.docContentData.literatureName ? (
-                    <div
-                      key={'docLiteratureTitle' + props.docContentData.literatureName}
-                      id={'docLiteratureTitle' + props.docContentData.literatureName}
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          '<h2 align="center">' + props.docContentData.literatureName + '</h2>'
-                      }}
-                    />
-                  ) : null}
-                  {props.docContentData.literatureList && props.docContentData.literatureList.length > 0 ? (
-                    <List
-                      split={false}
-                      itemLayout="horizontal"
-                      dataSource={props.docContentData.literatureList}
-                      renderItem={(literatureItem, i) => (
-                        <List.Item>
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html:
-                                '<p style="text-indent:2em">' +
-                                '[' +
-                                ++i +
-                                '] ' +
-                                literatureItem +
-                                '</p>'
-                            }}
-                          />
-                        </List.Item>
-                      )}
-                    />
+                  {props.docContentData.literatureList &&
+                  props.docContentData.literatureList.length > 0 ? (
+                    <div>
+                      <div
+                        key={'docLiteratureTitle' + props.docContentData.literatureName}
+                        id={'docLiteratureTitle' + props.docContentData.literatureName}
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            '<h2 align="center">' + props.docContentData.literatureName + '</h2>'
+                        }}
+                      />
+                      <List
+                        split={false}
+                        itemLayout="horizontal"
+                        dataSource={props.docContentData.literatureList}
+                        renderItem={(literatureItem, i) => (
+                          <List.Item>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  '<p style="text-indent:2em">' +
+                                  '[' +
+                                  ++i +
+                                  '] ' +
+                                  literatureItem +
+                                  '</p>'
+                              }}
+                            />
+                          </List.Item>
+                        )}
+                      />
+                    </div>
                   ) : null}
                 </>
               ) : null}

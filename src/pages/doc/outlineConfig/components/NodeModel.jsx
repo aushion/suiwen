@@ -144,7 +144,7 @@ const NodeModel = Form.create({
         </Form.Item>
         <Form.Item label="章节号" hidden={data.id === undefined ? true : false}>
           {form.getFieldDecorator('orderNum', {
-            rules: [{ pattern: /^([1-9][0-9]?)$/, required: true, message: '章节号取值范围为[1,99]的正整数!' }],
+            rules: [{ pattern: /^([1-9][0-9]?)$/, required: data.id === undefined ? false : true, message: '章节号取值范围为[1,99]的正整数!' }],
           })(<Input placeholder='只支持数字格式' style={{ width: 400 }} />)}
         </Form.Item>
       </Form>
