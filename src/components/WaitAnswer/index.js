@@ -63,7 +63,7 @@ function WaitAnswer() {
             >
               <Link
                 className={styles.link}
-                title={item.Content}
+                title={item.content}
                 to={`/reply?q=${encodeURIComponent(item.content)}&QID=${item.qid}&editStatus=true`}
               >
                 {item.content}
