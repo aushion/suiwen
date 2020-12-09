@@ -134,7 +134,7 @@ function Graphic(props) {
     }
   }
 
-  function changePage(pageIndex,pageSize = 10) {
+  function changePage(pageIndex, pageSize = 10) {
     const userId = RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
       : Cookies.get('cnki_qa_uuid');
@@ -253,6 +253,11 @@ function Graphic(props) {
 
   return (
     <div className={styles.Graphic}>
+      <h2>
+        <span style={{ color: '#1890ff' }}>{props.q}</span>
+        {/* <span> - 随问{domain === 'CNKI问答库_期刊' ? '期刊' : domain}知识库</span> */}
+        <span> - 随问知识库</span>
+      </h2>
       {data ? (
         <div
           style={{ color: '#2f8bd6', fontSize: 20 }}

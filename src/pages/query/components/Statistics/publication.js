@@ -35,7 +35,11 @@ export default function Publication(props) {
               </a>
               <div className={styles.Statistics_right_item}>
                 <label htmlFor="">收录年份：</label>
-                <span dangerouslySetInnerHTML={{__html: RestTools.translateToRed(item.收录年份 || '-')}} />
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: RestTools.translateToRed(item.收录年份 || '-')
+                  }}
+                />
               </div>
               <div className={styles.Statistics_right_item}>
                 <label htmlFor="">历任主编：</label>
@@ -62,6 +66,10 @@ export default function Publication(props) {
 
   return (
     <div className={styles.Statistics}>
+      <h2>
+        <span style={{ color: '#1890ff' }}>{props.title}</span>
+        <span> - 随问知识库</span>
+      </h2>
       {intentDomain === '统计刊物' ? tongjikanwu : null}
       <div className={styles.Journal_evaluate}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
