@@ -22,14 +22,14 @@ function HelpList(props) {
           padding: '10px'
         }}
       >
-        {communityNode ? (
-          <div style={{ background: '#EBF7FF', padding: '4px 10px', borderRadius: 4 }}>
-            <Breadcrumb>
-              <Breadcrumb.Item>{firstNode.cName || '全部分类'}</Breadcrumb.Item>
-              {secondNode ? <Breadcrumb.Item href="">{secondNode.cName}</Breadcrumb.Item> : null}
-            </Breadcrumb>
-          </div>
-        ) : null}
+        {/* {communityNode ? ( */}
+        <div style={{ background: '#EBF7FF', padding: '4px 10px', borderRadius: 4 }}>
+          <Breadcrumb>
+            <Breadcrumb.Item>{firstNode ? firstNode.cName : '全部分类'}</Breadcrumb.Item>
+            {secondNode ? <Breadcrumb.Item href="">{secondNode.cName}</Breadcrumb.Item> : null}
+          </Breadcrumb>
+        </div>
+        {/* ) : null} */}
         <div>
           <Search
             style={{ width: 200 }}
