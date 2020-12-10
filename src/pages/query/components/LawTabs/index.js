@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import LawCase from '../LawCase';
 import styles from './index.less';
 
-function LawTabs({ repositoryData, loading }) {
+function LawTabs({ repositoryData, loading, q }) {
   repositoryData =
     repositoryData &&
     repositoryData
@@ -15,6 +15,10 @@ function LawTabs({ repositoryData, loading }) {
 
   return repositoryData.length ? (
     <div className={styles.lawTabs}>
+      <h2>
+        <span style={{ color: '#1890ff' }}>{q}</span>
+        <span> - 知网法律</span>
+      </h2>
       <Spin spinning={loading}>
         {repositoryData.length > 1 ? (
           <Tabs type="card" tabBarGutter={0}>
