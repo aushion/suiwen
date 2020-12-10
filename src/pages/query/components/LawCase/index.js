@@ -55,16 +55,17 @@ function LawCase({ data, type }) {
         itemLayout="vertical"
         dataSource={dataNode}
         loading={loading}
-        header={
-          <div>
-            共<strong>{pagination.total}</strong>条结果
-          </div>
-        }
+        // header={
+        //   <div>
+        //     共<strong>{pagination.total}</strong>条结果
+        //   </div>
+        // }
         pagination={{
           current: pagination.pageStart,
           pageSize: pagination.pageCount,
           total: pagination.total,
           hideOnSinglePage: true,
+          showTotal: (total, range) => `共 ${total} 条`,
           onChange: (page) => {
             fetchData({
               domain: encodeURIComponent(domain),

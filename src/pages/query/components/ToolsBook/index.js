@@ -102,25 +102,30 @@ function ToolsBook(props) {
   return (
     <div className={styles.ToolsBook}>
       <h2>
-      {(data[0].tagName === '汉英词典' || data[0].tagName === '英汉词典')?(
-        <a
-          href={`http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
-            RestTools.getKeyword(data[0].dataNode[0].Title)
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
-        </a>):
-        (<a
-          href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
-            RestTools.getKeyword(data[0].dataNode[0].Title)
-          )}&c=crfdsearch`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
-        </a>)}
+        {data[0].tagName === '汉英词典' || data[0].tagName === '英汉词典' ? (
+          <a
+            href={`http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
+              RestTools.getKeyword(data[0].dataNode[0].Title)
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
+          </a>
+        ) : (
+          <a
+            href={`http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
+              RestTools.getKeyword(data[0].dataNode[0].Title)
+            )}&c=crfdsearch`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>
+              {RestTools.getKeyword(data[0].dataNode[0].Title) ||
+                RestTools.getKeyword(data[0].dataNode[0].TITLE)}
+            </span>
+          </a>
+        )}
         - 知网工具书
       </h2>
       <div className={styles.tags}>
@@ -226,9 +231,11 @@ function ToolsBook(props) {
                     <a
                       className={styles.ReferenceBook_more}
                       href={
-                        (tagName === '汉英词典' || tagName === '英汉词典')
+                        tagName === '汉英词典' || tagName === '英汉词典'
                           ? `http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
-                              RestTools.removeFlag(item.dataNode[0].TITLE || item.dataNode[0].Title || '-')
+                              RestTools.removeFlag(
+                                item.dataNode[0].TITLE || item.dataNode[0].Title || '-'
+                              )
                             )}`
                           : intentFocus === '成语'
                           ? `http://gongjushu.cnki.net/rbook/`
@@ -239,7 +246,10 @@ function ToolsBook(props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       dangerouslySetInnerHTML={{
-                        __html: (tagName === '汉英词典' || tagName === '英汉词典') ? 'CNKI翻译助手' : `查看更多`
+                        __html:
+                          tagName === '汉英词典' || tagName === '英汉词典'
+                            ? 'CNKI翻译助手'
+                            : `查看更多`
                       }}
                     />
                   </div>

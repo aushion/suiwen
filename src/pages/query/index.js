@@ -156,6 +156,7 @@ function ResultPage(props) {
 
   const resultLength =
     sgCount +
+    lawData.length +
     semanticData.length +
     faqData.length +
     referenceBookData.length +
@@ -225,7 +226,7 @@ function ResultPage(props) {
             <div>
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
-                  {lawData.length ? <LawTabs data={lawData} /> : null}
+                  {lawData.length ? <LawTabs data={lawData} q={q} /> : null}
                   {medicalData.length
                     ? medicalData.map((item) => (
                         <Medical
