@@ -5,10 +5,13 @@ import { Link } from 'umi';
 import router from 'umi/router';
 import styles from './people.less';
 import RestTools from '../../../utils/RestTools';
+
 import {
   ExclamationCircleOutlined,
   DeleteOutlined,
-  EditOutlined
+  EditOutlined,
+  GlobalOutlined
+  // PlusOutlined
 } from '@ant-design/icons';
 
 function Doc(props) {
@@ -67,6 +70,18 @@ function Doc(props) {
           {userInfo?.UserName === userName
             ? '我的文档'
             : `${RestTools.formatPhoneNumber(userName)}的文档`}
+          <Link to={`/doc/outlineConfig`} target="_blank" style={{ marginLeft: '20px',fontSize:'15px' ,fontWeight:'normal'}}>
+            新建文档
+          </Link>
+          {/* <PlusOutlined
+            style={{marginLeft:'10px'}}
+            onClick={() => {
+              router.push({
+                pathname: '/doc/outlineConfig'
+              });
+            }}
+            title="新建文档"
+          /> */}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
@@ -104,11 +119,11 @@ function Doc(props) {
                     </Col>
                     <Col span={4}>
                       <div style={{ textAlign: 'right' }}>
-                        {/* <GlobalOutlined
+                        <GlobalOutlined
                           style={{ marginRight: '20px' }}
                           onClick={() => {}}
-                          title="发布"
-                        /> */}
+                          title="发布文档"
+                        />
                         <EditOutlined
                           style={{ marginRight: '20px' }}
                           onClick={() => {

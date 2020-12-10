@@ -408,7 +408,7 @@ function Home(props) {
                     style={{ border: 0 }}
                     onClick={() => {
                       router.push({
-                        pathname: '/doc/outlineConfig'
+                        pathname: '/doc/outlineConfigPreview'
                       });
                     }}
                   >

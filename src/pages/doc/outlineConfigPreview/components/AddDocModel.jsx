@@ -73,6 +73,7 @@ const AddDocModel = Form.create({
           })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)}
         </Form.Item>
         <Form.Item label="文档模版" >
+
           <Select
             style={{ width: 400 }}
             value={selectedDocTemplate}
@@ -81,15 +82,7 @@ const AddDocModel = Form.create({
             <Select.Option value={''}>{'无'}</Select.Option>
             {docTemplateOptions}
           </Select>
-          {/* <Form.Item label="公开类型">
-            {getFieldDecorator('publicType', {
-            })(
-              <Radio.Group>
-                <Radio value="1">公有</Radio>
-                <Radio value="2">私有</Radio>
-              </Radio.Group>
-            )}
-          </Form.Item> */}
+
 
         </Form.Item>
 

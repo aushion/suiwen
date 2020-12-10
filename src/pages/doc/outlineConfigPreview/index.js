@@ -35,7 +35,7 @@ import request from '@/utils/request';
 
 const { confirm } = Modal;
 const { TreeNode } = Tree;
-const OutlineConfig = (props) => {
+const OutlineConfigPreview = (props) => {
   const { docId } = querystring.parse(window.location.href.split('?')[1], '#');
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const username = userInfo ? userInfo.UserName : '';
@@ -102,11 +102,11 @@ const OutlineConfig = (props) => {
 
   //获取所有的文档模版
   function getDocTemplate() {
-    if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
-      props.dispatch({
-        type: 'Doc/getTemplateList'
-      });
-    }
+    // if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
+    //   props.dispatch({
+    //     type: 'Doc/getTemplateList'
+    //   });
+    // }
   }
 
   //获取该文档id下的提纲目录
@@ -719,20 +719,22 @@ const OutlineConfig = (props) => {
               <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
                 <Button
                   onClick={addNewDoc}
+                  disabled={true}
                   loading={props.loading}
-                  style={{ marginLeft: 0, background: '#2ae', color: '#FFFFFF' }}
+                  style={{ marginLeft: 0, background: '#CDCDCD ', color: '#FFFFFF' }}
                 >
                   新建文档
                 </Button>
                 <Button
-                  disabled={docId ? false : true}
+                  disabled={true}
                   onClick={renameDoc}
                   loading={props.loading}
-                  style={{ marginLeft: 5, background: ' #2ae', color: '#FFFFFF' }}
+                  style={{ marginLeft: 5, background: ' #CDCDCD', color: '#FFFFFF' }}
                 >
                   重命名
                 </Button>
                 <Select
+                  disabled={true}
                   style={{ width: 190, marginLeft: 5 }}
                   value={selectedDocTemplate}
                   onChange={(v) => onDocTemplateSelectChange(v)}
@@ -871,20 +873,20 @@ const OutlineConfig = (props) => {
         <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
           <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
             <Button
-              disabled={docId ? false : true}
-              onClick={selectDocDownloadMethod}
+              disabled={true}
+              onClick={refreshDocContent}
               loading={props.loading}
-              style={{ marginBottom: 10, marginRight:5,background: '#2ae', color: '#FFFFFF' }}
+              style={{ marginBottom: 10, marginRight:5,background: ' #CDCDCD', color: '#FFFFFF' }}
             >
-              文档下载
+              内容刷新
             </Button>
             <Button
               disabled={docId ? false : true}
-              onClick={refreshDocContent}
+              onClick={selectDocDownloadMethod}
               loading={props.loading}
-              style={{ marginBottom: 10,  marginRight:5,background: ' #2ae', color: '#FFFFFF' }}
+              style={{ marginBottom: 10,marginRight:5, background: '#2ae', color: '#FFFFFF' }}
             >
-              内容刷新
+              文档下载
             </Button>
             <Button
               disabled={username ? false : true}
@@ -974,7 +976,7 @@ const OutlineConfig = (props) => {
                                                   dangerouslySetInnerHTML={{
                                                     __html:
                                                       '<p style="text-align: right">' +
-                                                      '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                                      '<a  disabled="true" style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
                                                       contentItem.resourceId +
                                                       '>' +
                                                       contentItem.resource +
@@ -989,9 +991,10 @@ const OutlineConfig = (props) => {
                                               <Row gutter={10}>
                                                 <Col span={10}>
                                                   <Button
+                                                    disabled={true}
                                                     style={{
                                                       border: '0px',
-                                                      color: ' #FF0000   '
+                                                      color: ' #CDCDCD   '
                                                     }}
                                                     icon={'close-circle'}
                                                     title={'删除片段'}
@@ -1062,4 +1065,4 @@ export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
   docContentData: Doc.docContentData,
   docTemplateData: Doc.docTemplateData
-}))(Form.create()(OutlineConfig));
+}))(Form.create()(OutlineConfigPreview));
