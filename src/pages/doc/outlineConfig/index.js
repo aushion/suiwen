@@ -15,7 +15,7 @@ import {
   Tooltip,
   Icon
 } from 'antd';
-import { ExclamationCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
 import RestTools from '../../../utils/RestTools';
@@ -575,6 +575,7 @@ const OutlineConfig = (props) => {
                 {docTemplateSigData.map((docItem, docIndex) => {
                   return (
                     <div key={docIndex}>
+                      
                       <div
                         title={docItem.label}
                         style={{
@@ -706,7 +707,7 @@ const OutlineConfig = (props) => {
                 <Button
                   onClick={addNewDoc}
                   loading={props.loading}
-                  style={{ marginLeft: 10, background: '#2ae', color: '#FFFFFF' }}
+                  style={{ marginLeft: 0, background: '#2ae', color: '#FFFFFF' }}
                 >
                   新建文档
                 </Button>
@@ -714,27 +715,25 @@ const OutlineConfig = (props) => {
                   disabled={docId ? false : true}
                   onClick={renameDoc}
                   loading={props.loading}
-                  style={{ marginLeft: 10, background: ' #2ae', color: '#FFFFFF' }}
+                  style={{ marginLeft: 5, background: ' #2ae', color: '#FFFFFF' }}
                 >
                   重命名
                 </Button>
                 <Select
-                  // disabled={docId ? false : true}
-                  style={{ width: 120, marginLeft: 10 }}
+                  style={{ width: 190, marginLeft: 5 }}
                   value={selectedDocTemplate}
                   onChange={(v) => onDocTemplateSelectChange(v)}
                 >
-                  <Select.Option value={''}>{'模板选择'}</Select.Option>
+                  <Select.Option value={''}>{'文档模板选择'}</Select.Option>
                   {docTemplateOptions}
                 </Select>
-                <SettingOutlined
-                  // disabled={docId ? false : true}
-                  style={{ width: 5, marginLeft: 5, visibility: 'hidden' }}
+                {/* <SettingOutlined
+                  style={{ width: 5, marginLeft: 5 }}
                   onClick={() => {
                     setTemplateManagementVisible(true);
                   }}
                   title="模板管理"
-                />
+                /> */}
               </div>
               <div className={styles.outlineArea}>
                 <div className={styles.domain}>

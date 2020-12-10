@@ -109,10 +109,16 @@ class OutlineList extends Component {
                 <div className={styles.item} key={chapterIndex}>
                   <div className={styles.head}>
                     <div className={styles.headleft} >
-                      {chapterItem.children && (chapterItem.flag === false ?
-                        <CaretRightOutlined onClick={(() => { this.changeClick2(chapterItem, chapterIndex, true) })} />
-                        : <CaretDownOutlined onClick={(() => { this.changeClick2(chapterItem, chapterIndex, false) })} />
-                      )}
+                      <WarningTwoTone twoToneColor='orange' title="未配置问题" style={{
+                        visibility: (chapterItem.questionList && chapterItem.questionList.length !== 0) ||
+                          (chapterItem.children && chapterItem.children.length !== 0) ? 'hidden' : 'visible'
+                      }} />
+                      {chapterItem.flag === false ?
+                        <CaretRightOutlined onClick={(() => { this.changeClick2(chapterItem, chapterIndex, true) })}
+                          style={{ visibility: chapterItem.children ? 'visible' : 'hidden' }} />
+                        : <CaretDownOutlined onClick={(() => { this.changeClick2(chapterItem, chapterIndex, false) })}
+                          style={{ visibility: chapterItem.children ? 'visible' : 'hidden' }} />
+                      }
                       <Link
                         key={chapterItem}
                         href={`#${'chapterTitle' + chapterItem.label}`}
@@ -154,11 +160,6 @@ class OutlineList extends Component {
                             }
                           >
                             <div className={[styles.header, id === chapterItem.id ? styles.active : null].join(' ')}>
-                              <WarningTwoTone twoToneColor='orange' title="未配置问题" style={{
-                                visibility: (chapterItem.questionList && chapterItem.questionList.length !== 0) ||
-                                  (chapterItem.children && chapterItem.children.length !== 0) ? 'hidden' : 'visible'
-                              }} />
-
                               {chapterItem.label}
                             </div>
                           </Tooltip>}
@@ -222,7 +223,8 @@ class OutlineList extends Component {
 
                                 <div className={[styles.content, id === nodeItem.id ? styles.active : null].join(' ')}>
                                   <WarningTwoTone twoToneColor='orange' title="未配置问题" style={{ visibility: nodeItem.questionList && nodeItem.questionList.length !== 0 ? 'hidden' : 'visible' }} />
-                                  {nodeItem.label}
+
+                                  <span style={{ marginLeft: '28px' }}>{nodeItem.label}</span>
                                 </div>
                               </Tooltip>}
                           />
