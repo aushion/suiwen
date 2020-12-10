@@ -161,6 +161,7 @@ function ResultPage(props) {
 
   const resultLength =
     sgCount +
+    lawData.length +
     semanticData.length +
     faqData.length +
     referenceBookData.length +
