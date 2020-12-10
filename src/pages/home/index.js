@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge, Button } from 'antd';
+import { Spin, List, Tabs, Divider, message, Icon, Carousel, Badge } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -369,53 +369,60 @@ function Home(props) {
           <div className={homeStyles.title}>
             <BlockTitle enTitle="Experience" cnTitle="体验" />
           </div>
-          <Carousel autoplay autoplaySpeed={4000} hoverPause>
+          {/* <Carousel autoplay autoplaySpeed={4000} hoverPause infinite> */}
+          <Slider dots={true}>
             <div className={homeStyles.content}>
-              <div className={homeStyles.left}>
-                <img src={docGen} alt="文档生成" />
+              <div className={homeStyles.left} style={{ width: 500, marginRight: 20 }}>
+                <img style={{ width: '100%' }} src={docGen} alt="文档生成" />
               </div>
-              <div className={homeStyles.right}>
-                <Link to={`/doc/outlineConfig`} target="_blank">
-                  <div className={homeStyles.cnTitle}>文档速成助手</div>
-                  <div className={homeStyles.enTitle}>内容动态重组</div>
-                </Link>
-
-                <div className={homeStyles.desc}>
-                  <div>
-                    <font color="red" size="3">
-                      便捷、高效
-                    </font>
-                    的文档
-                    <font color="red" size="3">
-                      撰写助手
-                    </font>
-                  </div>
-                  <div>面向系列问题的内容动态生成重组</div>
-                  <div> 文档章节标题要点自定义</div>
-                  <div>知网权威、海量学术期刊来源</div>
-                  <div>
-                    文档
-                    <font color="red" size="3">
-                      在线定制、生成、预览、下载
-                    </font>
+              <div className={homeStyles.right} style={{ width: 584, display: 'flex' }}>
+                <div className={homeStyles.wrap} style={{ paddingRight: 20 }}>
+                  <Link to={`/doc/outlineConfig`} target="_blank">
+                    <div className={homeStyles.cnTitle}>文档速成助手</div>
+                    <div className={homeStyles.enTitle}>文档撰写助手、文档共享社区</div>
+                  </Link>
+                  <div className={homeStyles.desc}>
+                    <div>
+                      <font color="red" size="3">
+                        调研、论文写作、科研助手
+                      </font>
+                    </div>
+                    <div>可靠的知识来源、灵活的内容定制</div>
+                    <div> 面向系列问题的内容动态生成重组</div>
+                    <div>知网权威、海量学术期刊来源</div>
+                    <div>
+                      文档
+                      <font color="red" size="3">
+                        在线定制、生成、共享、下载
+                      </font>
+                    </div>
                   </div>
                 </div>
-
-                <div style={{ textAlign: 'center' }}>
-                  <Button
-                    type="primary"
-                    ghost
-                    style={{ border: 0 }}
-                    onClick={() => {
-                      router.push({
-                        pathname: '/doc/outlineConfig'
-                      });
-                    }}
+                <Divider type="vertical" style={{ height: '20em' }} />
+                <div style={{ flex: 1, textAlign: 'center' }}>
+                  <div className={homeStyles.cnTitle}>文档示例、共享</div>
+                  <div
+                    className={homeStyles.desc}
+                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 30 }}
                   >
-                    <font color="blue" size="5">
-                      {'试用>>'}
-                    </font>
-                  </Button>
+                    <div>
+                      <a href="">大数据技术综述</a>
+                    </div>
+                    <div>
+                      <a href="">新型冠状病毒肺炎研究综述</a>
+                    </div>
+                    <div
+                      onClick={() => {
+                        router.push({
+                          pathname: '/doc/outlineConfig'
+                        });
+                      }}
+                    >
+                      <span style={{ color: 'blue', fontSize: 20, cursor: 'pointer' }}>
+                        {'试用>>'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -452,7 +459,8 @@ function Home(props) {
                 </div>
               </div>
             </div>
-          </Carousel>
+          </Slider>
+          {/* </Carousel> */}
         </div>
       </Spin>
     </div>
