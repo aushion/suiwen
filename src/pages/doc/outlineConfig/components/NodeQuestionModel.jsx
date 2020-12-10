@@ -209,7 +209,6 @@ const NodeQuestionModel = props => {
 
     //为当前节标题添加问题或关键字
     function addNodeQuestion() {
-
         if (newNodeQuestions.trim() === '') {
             message.warn('不可添加空字符');
             return;
@@ -447,7 +446,7 @@ const NodeQuestionModel = props => {
             return;
         }
         //将选择的问题模版 填充到文本域里
-        let newNodeQuestionsStr = (newNodeQuestions===''?(v):(newNodeQuestions+ '\n' + v));
+        let newNodeQuestionsStr = (newNodeQuestions === '' ? (v) : (newNodeQuestions + '\n' + v));
         setNewNodeQuestions(newNodeQuestionsStr);
     }
 

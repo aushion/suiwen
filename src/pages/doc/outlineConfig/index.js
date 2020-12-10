@@ -490,6 +490,13 @@ const OutlineConfig = (props) => {
 
   //刷新文档内容
   const refreshDocContent = () => {
+    //重新拉取文档内容数据前，预先清空文档内容缓存数据
+    dispatch({
+      type: 'Doc/save',
+      payload: {
+        docContentData: []
+      }
+    });
     setDocContentResultLoading(true);
     props
       .dispatch({
@@ -504,16 +511,23 @@ const OutlineConfig = (props) => {
         } else {
           message.error(res.msg);
         }
+        //跳至当前瞄点位置
+        let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
+        console.log('currentUrlRight', currentUrlRight);
+        if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
+          let currentAnchorPoint = currentUrlRight.split('#')[1];
+          window.location.href = '#' + encodeURI(currentAnchorPoint);
+        }
       });
   };
 
   //为当前节标题配置问题或关键字
   function addNodeQuestion(values) {
     //限制问题的数量最大值为5
-    if (values.questionSourceData && values.questionSourceData.length >= 5) {
-      message.warn('最多配置5个问题/关键字');
-      return;
-    }
+    // if (values.questionSourceData && values.questionSourceData.length >= 5) {
+    //   message.warn('最多配置5个问题/关键字');
+    //   return;
+    // }
     props
       .dispatch({
         type: 'Doc/saveRouteQuestion',
@@ -575,7 +589,6 @@ const OutlineConfig = (props) => {
                 {docTemplateSigData.map((docItem, docIndex) => {
                   return (
                     <div key={docIndex}>
-                      
                       <div
                         title={docItem.label}
                         style={{

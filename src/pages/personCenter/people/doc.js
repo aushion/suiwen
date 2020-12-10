@@ -2,9 +2,14 @@ import React from 'react';
 import { Divider, List, Modal, message, Row, Col } from 'antd';
 import { connect } from 'dva';
 import { Link } from 'umi';
+import router from 'umi/router';
 import styles from './people.less';
 import RestTools from '../../../utils/RestTools';
-import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  DeleteOutlined,
+  EditOutlined
+} from '@ant-design/icons';
 
 function Doc(props) {
   const { userDoc, loading, location, dispatch } = props;
@@ -99,7 +104,20 @@ function Doc(props) {
                     </Col>
                     <Col span={4}>
                       <div style={{ textAlign: 'right' }}>
+                        {/* <GlobalOutlined
+                          style={{ marginRight: '20px' }}
+                          onClick={() => {}}
+                          title="发布"
+                        /> */}
+                        <EditOutlined
+                          style={{ marginRight: '20px' }}
+                          onClick={() => {
+                            router.push(`/doc/outlineConfig?docId=${item.docId}`);
+                          }}
+                          title="编辑文档"
+                        />
                         <DeleteOutlined
+                          style={{ marginRight: '0px' }}
                           onClick={() => {
                             delUserDoc(item);
                           }}
