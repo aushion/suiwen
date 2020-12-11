@@ -427,8 +427,21 @@ const OutlineConfig = (props) => {
 
   //编辑文档题目
   const onEditDoc = (item) => {
+    console.log(item);
     setEditDocVisible(true);
+    //获取标签字段信息，并将其从逗号分隔的字符串转换成数组结构，便于显示在前端
+    let tagStr = item.tag;
+    let tagList = [];
+    //判断该字符串里是否有“,”，如果有，则代表有多个标签，如果没有，则代表标签只有一个。
+    if (tagStr && tagStr.indexOf(',') !== -1) {
+      tagList = tagStr.split(',');
+    } else if (tagStr) {
+      tagList = tagStr.trim() === '' ? [] : tagStr;
+    }
+    //将当前文档的标签数组信息存入state
+    setCurrentDocTagList(tagList);
     setDocData(item);
+    
   };
 
   //删除个人文档
