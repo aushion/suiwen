@@ -73,7 +73,11 @@ function UserLayout(props) {
             <div style={{ float: 'right', marginTop: 10 }}>
               {userInfo && userInfo.UserName === userName ? (
                 <Button type="primary" ghost>
-                  <Link to={`/personCenter/edit/personInfo?userName=${userCommunityInfo.userName}`}>
+                  <Link
+                    to={`/personCenter/edit/personInfo?userName=${RestTools.encodeBase64(
+                      userInfo.UserName
+                    )}`}
+                  >
                     编辑个人资料
                   </Link>
                 </Button>
