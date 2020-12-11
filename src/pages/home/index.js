@@ -30,7 +30,7 @@ function Home(props) {
   const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
   const [activeTagName, setActiveTag] = useState(sessionStorage.getItem('tagName') || '');
 
-  const PrevArrow = function(props) {
+  const PrevArrow = function (props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -39,7 +39,7 @@ function Home(props) {
     );
   };
 
-  const NextArrow = function(props) {
+  const NextArrow = function (props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -405,12 +405,20 @@ function Home(props) {
                     className={homeStyles.desc}
                     style={{ textAlign: 'center', fontSize: 15, paddingTop: 30 }}
                   >
-                    <div>
-                      <a href="">大数据技术综述</a>
-                    </div>
-                    <div>
-                      <a href="">新型冠状病毒肺炎研究综述</a>
-                    </div>
+                    {props.docExamples && props.docExamples.length !== 0
+                      ? props.docExamples.map((docExample, exampleIndex) => {
+                          return (
+                            <div>
+                              <Link
+                                to={`/doc/outlineConfigPreview?docId=${docExample.docId}`}
+                                style={{ fontSize: 16,  color: '#1890ff' }}
+                              >
+                                {docExample.docName}
+                              </Link>
+                            </div>
+                          );
+                        })
+                      : null}
                     <div
                       onClick={() => {
                         router.push({

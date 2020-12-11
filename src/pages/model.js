@@ -2,7 +2,8 @@ import {
   getDomainQuestions,
   getTopicQuestions,
   getHotHelpList,
-  getHomePictureIds
+  getHomePictureIds,
+  getExampleDoc
 } from './home/service/home';
 import RestTools from '../utils/RestTools';
 
@@ -14,7 +15,8 @@ export default {
     specialQuestions: [],
     skillPicture: [],
     helpPicture: [],
-    topicTheme: null
+    topicTheme: null,
+    docExamples: []
   },
 
   effects: {
@@ -64,7 +66,7 @@ export default {
 
     *getHotHelpList({ payload }, { call, put }) {
       const { data } = yield call(getHotHelpList, payload);
-      const {code, result} = data;
+      const { code, result } = data;
       if (code === 200 && result) {
         yield put({
           type: 'save',
@@ -95,6 +97,21 @@ export default {
               }
             });
       }
+    },
+
+    //获取示例文档 /doc/getExampleDoc
+    *getExampleDoc({ payload }, { call, put }) {
+      const { data } = yield call(getExampleDoc, payload);
+      const { code, result } = data;
+      console.log('result', result);
+      if (code === 200 && result) {
+        yield put({
+          type: 'save',
+          payload: {
+            docExamples: result
+          }
+        });
+      }
     }
   },
 
@@ -109,7 +126,11 @@ export default {
           dispatch({ type: 'getTopicQuestions' });
           dispatch({ type: 'getHomePicture', payload: { type: 0 } });
           dispatch({ type: 'getHomePicture', payload: { type: 1 } });
-          dispatch({ type: 'getHotHelpList', payload: { pageStart: 1, pageSize: 10, type: 'new'} });
+          dispatch({
+            type: 'getHotHelpList',
+            payload: { pageStart: 1, pageSize: 10, type: 'new' }
+          });
+          dispatch({ type: 'getExampleDoc' });
         }
       });
     }
