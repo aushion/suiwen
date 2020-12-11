@@ -102,13 +102,13 @@ const OutlineConfig = (props) => {
           docContentData: []
         }
       });
-
       setDocContentResultLoading(false);
-      //当dom卸载时调用，清除定时器
-      return () => {
-        timer && clearInterval(timer);
-      };
     }
+    //当dom卸载时调用，清除定时器
+    return () => {
+      console.log("ris-fsfs");
+      timer && clearInterval(timer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFlag]);
 
@@ -1040,7 +1040,9 @@ const OutlineConfig = (props) => {
               loading={props.loading}
               style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
               onClick={() => {
-                router.push(`/personCenter/people/doc?userName=${username}`);
+                router.push(
+                  `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
+                );
               }}
             >
               个人文档

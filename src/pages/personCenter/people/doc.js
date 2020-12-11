@@ -125,7 +125,7 @@ function Doc(props) {
       }
     });
   }
-  
+
   return (
     <div className={styles.people}>
       <div className={styles.main}>
@@ -133,13 +133,15 @@ function Doc(props) {
           {userInfo?.UserName === userName
             ? '我的文档'
             : `${RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}的文档`}
-          <Link
-            to={`/doc/outlineConfig`}
-            target="_blank"
-            style={{ marginLeft: '20px', fontSize: '15px', fontWeight: 'normal' }}
-          >
-            新建文档
-          </Link>
+          {userInfo?.UserName === userName ? (
+            <Link
+              to={`/doc/outlineConfig`}
+              target="_blank"
+              style={{ marginLeft: '20px', fontSize: '15px', fontWeight: 'normal' }}
+            >
+              新建文档
+            </Link>
+          ) : null}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
@@ -169,68 +171,78 @@ function Doc(props) {
                   <Row gutter={[24, 24]}>
                     <Col span={20}>
                       <Link
-                        to={`/doc/outlineConfig?docId=${item.docId}`}
+                        to={
+                          userInfo?.UserName === userName
+                            ? `/doc/outlineConfig?docId=${item.docId}`
+                            : `/doc/outlineConfigPreview?docId=${item.docId}`
+                        }
                         style={{ fontSize: 16, fontWeight: 'bold', color: '#38393C' }}
                       >
                         {item.docName}
                       </Link>
-                      <Tag
-                        style={{ marginLeft: '10px' }}
-                        color={item.type && item.type === '0' ? 'orange' : 'blue'}
-                      >
-                        {item.type && item.type === '0' ? '公开' : '私有'}
-                      </Tag>
-                      <Tag
-                        style={{ marginLeft: '10px' }}
-                        color={item.isPublish && item.isPublish === '1' ? '#DB70DB' : '#D9D9F3'}
-                      >
-                        {item.isPublish && item.isPublish === '1' ? '已发布' : '未发布'}
-                      </Tag>
+                      {userInfo?.UserName === userName ? (
+                        <Tag
+                          style={{ marginLeft: '10px' }}
+                          color={item.type && item.type === '0' ? 'orange' : 'blue'}
+                        >
+                          {item.type && item.type === '0' ? '公开' : '私有'}
+                        </Tag>
+                      ) : null}
+                      {userInfo?.UserName === userName ? (
+                        <Tag
+                          style={{ marginLeft: '10px' }}
+                          color={item.isPublish && item.isPublish === '1' ? '#DB70DB' : '#D9D9F3'}
+                        >
+                          {item.isPublish && item.isPublish === '1' ? '已发布' : '未发布'}
+                        </Tag>
+                      ) : null}
                     </Col>
-                    <Col span={4}>
-                      <div style={{ textAlign: 'right' }}>
-                        {item.isPublish && item.isPublish === '1' ? (
-                          <RocketTwoTone
-                            twoToneColor="orange"
-                            style={{ marginRight: '20px' }}
-                            onClick={() => {
-                              revokeDocumentPublish(item);
-                            }}
-                            title="已发布"
-                          />
-                        ) : (
-                          <RocketOutlined
-                            style={{ marginRight: '20px' }}
-                            onClick={() => {
-                              documentPublish(item);
-                            }}
-                            title="未发布"
-                          />
-                        )}
+                    {userInfo?.UserName === userName ? (
+                      <Col span={4}>
+                        <div style={{ textAlign: 'right' }}>
+                          {item.isPublish && item.isPublish === '1' ? (
+                            <RocketTwoTone
+                              twoToneColor="orange"
+                              style={{ marginRight: '20px' }}
+                              onClick={() => {
+                                revokeDocumentPublish(item);
+                              }}
+                              title="已发布"
+                            />
+                          ) : (
+                            <RocketOutlined
+                              style={{ marginRight: '20px' }}
+                              onClick={() => {
+                                documentPublish(item);
+                              }}
+                              title="未发布"
+                            />
+                          )}
 
-                        <EditOutlined
-                          style={{ marginRight: '20px' }}
-                          onClick={() => {
-                            router.push(`/doc/outlineConfig?docId=${item.docId}`);
-                          }}
-                          title="编辑文档"
-                        />
-                        <DeleteOutlined
-                          style={{ marginRight: '0px' }}
-                          onClick={() => {
-                            delUserDoc(item);
-                          }}
-                          title="删除文档"
-                        />
-                      </div>
-                    </Col>
+                          <EditOutlined
+                            style={{ marginRight: '20px' }}
+                            onClick={() => {
+                              router.push(`/doc/outlineConfig?docId=${item.docId}`);
+                            }}
+                            title="编辑文档"
+                          />
+                          <DeleteOutlined
+                            style={{ marginRight: '0px' }}
+                            onClick={() => {
+                              delUserDoc(item);
+                            }}
+                            title="删除文档"
+                          />
+                        </div>
+                      </Col>
+                    ) : null}
                   </Row>
                   <Row gutter={[24, 24]}>
                     <Col span={24}>
                       <div>
                         {item.tag
-                          ? item.tag.split(',').map((i) => {
-                              return <Tag color={'blue'}>{i}</Tag>;
+                          ? item.tag.split(',').map((i,index) => {
+                              return <Tag key={index} color={'blue'}>{i}</Tag>;
                             })
                           : null}
                       </div>

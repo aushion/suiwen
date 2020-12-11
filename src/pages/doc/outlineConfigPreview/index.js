@@ -893,7 +893,7 @@ const OutlineConfigPreview = (props) => {
               loading={props.loading}
               style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
               onClick={() => {
-                router.push(`/personCenter/people/doc?userName=${username}`);
+                router.push(`/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`);
               }}
             >
               个人文档
