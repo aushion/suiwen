@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu } from 'antd';
 import { router } from 'umi';
 import { connect } from 'dva';
+import RestTools from 'Utils/RestTools';
 
 function PeopleMenu(props) {
   const { defaultPersonKey, dispatch, userName } = props;
@@ -19,7 +20,7 @@ function PeopleMenu(props) {
         defaultPersonKey: item.key
       }
     });
-    router.push(`/personCenter/people/${item.key}?userName=${userName}`);
+    router.push(`/personCenter/people/${item.key}?userName=${RestTools.encodeBase64(userName)}`);
   }
 
   return (
