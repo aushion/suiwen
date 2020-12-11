@@ -199,3 +199,12 @@ export async function getDocInfo(params) {
   });
 }
 
+//获取内容刷新完成状态
+export async function getContentTaskStatus(params) {
+  return request({
+    url: '/doc/getContentTaskStatus',
+    method: 'post',
+    params
+  });
+}
+

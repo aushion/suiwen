@@ -35,6 +35,7 @@ import request from '@/utils/request';
 
 const { confirm } = Modal;
 const { TreeNode } = Tree;
+let timer = null;
 const OutlineConfig = (props) => {
   const { docId } = querystring.parse(window.location.href.split('?')[1], '#');
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -101,7 +102,12 @@ const OutlineConfig = (props) => {
           docContentData: []
         }
       });
+
       setDocContentResultLoading(false);
+      //当dom卸载时调用，清除定时器
+      return () => {
+        timer && clearInterval(timer);
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFlag]);
@@ -141,6 +147,40 @@ const OutlineConfig = (props) => {
     });
   }
 
+  //设置定时器
+  function componentDidMount() {
+    timer = setInterval(() => {
+      getContentTaskStatus();
+    }, 1 * 2000);
+  }
+
+  //获取内容刷新完成状态
+  function getContentTaskStatus() {
+    props
+      .dispatch({
+        type: 'Doc/getContentTaskStatus',
+        payload: {
+          docId: docId
+        }
+      })
+      .then((res) => {
+        if (res.code === 200) {
+          setDocContentResultLoading(false);
+          //清除定时器
+          clearInterval(timer);
+          //跳至当前瞄点位置
+          let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
+          console.log('currentUrlRight', currentUrlRight);
+          if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
+            let currentAnchorPoint = currentUrlRight.split('#')[1];
+            window.location.href = '#' + encodeURI(currentAnchorPoint);
+          }
+        } else {
+          setDocContentResultLoading(true);
+        }
+      });
+  }
+
   //取设定最大值与最小值之间的随机数
   function random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -171,7 +211,7 @@ const OutlineConfig = (props) => {
     //判断该字符串里是否有“,”，如果有，则代表有多个标签，如果没有，则代表标签只有一个。
     if (tagStr && tagStr.indexOf(',') !== -1) {
       tagList = tagStr.split(',');
-    } else if(tagStr){
+    } else if (tagStr) {
       tagList = tagStr.trim() === '' ? [] : tagStr;
     }
     //将当前文档的标签数组信息存入state
@@ -540,12 +580,13 @@ const OutlineConfig = (props) => {
 
   //文档发布
   const documentPublish = () => {
-
     //获取当前文档的文档标题数据
     let docItem = props.outlineData ? props.outlineData[0] : '';
     //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
     if (!(docItem && docItem.type && docItem.type === '0')) {
-      message.warn('当前文档未公开，无法进行发布相关操作！若确定需要发布，请先修改文档类型为公开！');
+      message.warn(
+        '当前文档未公开，无法进行发布相关操作！若确定需要发布，请先修改文档类型为公开！'
+      );
       return;
     }
     Modal.confirm({
@@ -586,27 +627,30 @@ const OutlineConfig = (props) => {
       }
     });
     setDocContentResultLoading(true);
-    props
-      .dispatch({
-        type: 'Doc/refreshDocContent',
-        payload: {
-          docId: docId
-        }
-      })
-      .then((res) => {
-        if (res.code === 200) {
-          setDocContentResultLoading(false);
-        } else {
-          message.error(res.msg);
-        }
-        //跳至当前瞄点位置
-        let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
-        console.log('currentUrlRight', currentUrlRight);
-        if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
-          let currentAnchorPoint = currentUrlRight.split('#')[1];
-          window.location.href = '#' + encodeURI(currentAnchorPoint);
-        }
-      });
+    props.dispatch({
+      type: 'Doc/refreshDocContent',
+      payload: {
+        docId: docId
+      }
+    });
+    //开启定时器，轮询后去内容刷新完成状态
+    componentDidMount();
+
+    // .then((res) => {
+
+    //   if (res.code === 200) {
+    //     setDocContentResultLoading(false);
+    //   } else {
+    //     message.error(res.msg);
+    //   }
+    //   //跳至当前瞄点位置
+    //   let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
+    //   console.log('currentUrlRight', currentUrlRight);
+    //   if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
+    //     let currentAnchorPoint = currentUrlRight.split('#')[1];
+    //     window.location.href = '#' + encodeURI(currentAnchorPoint);
+    //   }
+    // });
   };
 
   //为当前节标题配置问题或关键字

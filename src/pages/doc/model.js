@@ -20,6 +20,7 @@ import {
   getQuestionTemplate,
   getDocClassify,
   getDocInfo,
+  getContentTaskStatus,
 } from './service/index';
 const Doc = {
   namespace: 'Doc',
@@ -190,6 +191,13 @@ const Doc = {
       let data = response.data;
       return data;
     },
+
+    *getContentTaskStatus({ payload }, { call, put }) {
+      const response = yield call(getContentTaskStatus, payload);
+      let data = response.data;
+      return data;
+    },
+    
   },
   reducers: {
     save(state, action) {
