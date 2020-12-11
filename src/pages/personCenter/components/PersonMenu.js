@@ -3,6 +3,7 @@ import { Menu, Icon } from 'antd';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
+import RestTools from '../../../utils/RestTools';
 
 function PersonMenu(props) {
   const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
@@ -25,7 +26,7 @@ function PersonMenu(props) {
         defaultKey: item.key
       }
     });
-    router.push(`/personCenter/edit/${item.key}?userName=${userName}`);
+    router.push(`/personCenter/edit/${item.key}?userName=${RestTools.encodeBase64(userName)}`);
   }
 
   return (
@@ -60,7 +61,7 @@ function PersonMenu(props) {
         </Menu>
       )}
       <div style={{ padding: '10px 40px 0 0' }}>
-        <Link to={`/personCenter/people/ask?userName=${userInfo.UserName}`}>
+        <Link to={`/personCenter/people/ask?userName=${RestTools.encodeBase64(userInfo.UserName)}`}>
           返回个人主页
           <Icon type="double-right" />{' '}
         </Link>
