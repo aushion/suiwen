@@ -17,7 +17,7 @@ function CaAvatar({ userName, showFollowBtn = true }) {
     // }
     setLoading(true);
     helpServer
-      .getUserCommunityInfo({ userName, operator: loginUser?loginUser.UserName:"" })
+      .getUserCommunityInfo({ userName, operator: loginUser ? loginUser.UserName : '' })
       .then((res) => {
         if (res.data.code === 200) {
           setUserInfo(res.data.result);
@@ -37,7 +37,10 @@ function CaAvatar({ userName, showFollowBtn = true }) {
           <span style={{ color: '#414141', marginLeft: 10, fontWeight: 400 }}>游客</span>
         </div>
       ) : (
-        <Link to={`/personCenter/people/ask?userName=${userName}`} target="_blank">
+        <Link
+          to={`/personCenter/people/ask?userName=${RestTools.encodeBase64(userName)}`}
+          target="_blank"
+        >
           <Popover
             placement="bottomLeft"
             content={
@@ -47,7 +50,7 @@ function CaAvatar({ userName, showFollowBtn = true }) {
                   shape="square"
                 />
                 <span style={{ marginLeft: 10, fontWeight: 400, color: '#414141' }}>
-                  {RestTools.formatPhoneNumber(userName)}
+                  {RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}
                 </span>
                 <div>
                   {userInfo ? (
@@ -71,18 +74,15 @@ function CaAvatar({ userName, showFollowBtn = true }) {
                           <strong>{userInfo.followers}</strong>
                         </div>
                       </div>
-                      {
-                        !loginUser?null:(
-                          showFollowBtn && loginUser.userName !== userName && userInfo.hasFollowed ? (
-                            <FollowButton
-                              hasFollowed={userInfo.hasFollowed}
-                              currentUser={userName}
-                              loginUserInfo={loginUser}
-                            />
-                          ) : null
-                        )
-                      }
-                      
+                      {!loginUser ? null : showFollowBtn &&
+                        loginUser.userName !== userName &&
+                        userInfo.hasFollowed ? (
+                        <FollowButton
+                          hasFollowed={userInfo.hasFollowed}
+                          currentUser={userName}
+                          loginUserInfo={loginUser}
+                        />
+                      ) : null}
                     </>
                   ) : null}
                 </div>
@@ -94,7 +94,9 @@ function CaAvatar({ userName, showFollowBtn = true }) {
                 shape="square"
                 src={`${process.env.apiUrl}/user/getUserHeadPicture?userName=${userName}`}
               />
-              <span style={{ paddingLeft: 6 }}>{RestTools.formatPhoneNumber(userName)}</span>
+              <span style={{ paddingLeft: 6 }}>
+                {RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}
+              </span>
             </div>
           </Popover>
         </Link>

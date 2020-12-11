@@ -201,7 +201,8 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const match = pathname.match(/personCenter/i);
-        const { userName } = query;
+        let { userName } = query;
+        userName = RestTools.decodeBase64(userName);
         const userInfo = localStorage.getItem('userInfo')
           ? JSON.parse(localStorage.getItem('userInfo'))
           : null;

@@ -8,7 +8,8 @@ import RestTools from '../../../utils/RestTools';
 function FollowQuestion(props) {
   const { userFollowQuestion, loading, location, dispatch } = props;
   const { query } = location;
-  const { userName } = query;
+  let { userName } = query;
+  userName = RestTools.decodeBase64(userName);
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
@@ -16,7 +17,9 @@ function FollowQuestion(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? '我关注的问题' : `${RestTools.formatPhoneNumber(userName)}关注的问题`}
+          {userInfo?.UserName === userName
+            ? '我关注的问题'
+            : `${RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}关注的问题`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>

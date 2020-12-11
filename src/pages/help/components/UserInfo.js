@@ -20,7 +20,7 @@ function UserInfo(props) {
         <div>
           <Link
             className="display_flex justify-content_flex-center"
-            to={`/personCenter/people/ask?userName=${userInfo?.userName}`}
+            to={`/personCenter/people/ask?userName=${RestTools.encodeBase64(userInfo?.userName)}`}
           >
             <Avatar
               icon="user"
@@ -31,14 +31,14 @@ function UserInfo(props) {
               <div style={{ color: '#414141', fontSize: 18 }}>
                 {RestTools.formatPhoneNumber(userInfo?.userName) || '游客'}
               </div>
-              <div style={{ color: '#666', fontSize: 13 }}>我很懒什么也没留下</div>
+              <div style={{ color: '#666', fontSize: 13 }}>我很忙什么也没留下</div>
             </div>
           </Link>
         </div>
 
         <div
           className="display_flex justify-content_flex-justify"
-          style={{ padding: '20px 20px 0', textAlign: 'center' }}
+          style={{ padding: '0px 20px 0', textAlign: 'center' }}
         >
           <Link
             to={`/personCenter/people/answer?userName=${userInfo?.userName}`}

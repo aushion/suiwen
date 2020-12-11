@@ -21,17 +21,17 @@ dayjs.locale('zh-cn');
 
 let timerCount = null;
 function Reply(props) {
-  const { dispatch, followed, location, userCommunityInfo, sgData, answerList, loading } = props;
+  const { dispatch, followed, location, userCommunityInfo, answerList, loading } = props;
   const params = location.query;
   const { QID, editStatus = false } = params;
 
-  const [showEditor, switchEditor] = useState(JSON.parse(editStatus)); //是否显示回答框
+  const [showEditor, switchEditor] = useState(true); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
   const [showDrawer, setDrawer] = useState(false); //展示抽屉
 
   const userInfo = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo'))
-  : null;
+    ? JSON.parse(localStorage.getItem('userInfo'))
+    : null;
 
   useEffect(() => {
     switchFollowQ(followed);
@@ -42,8 +42,8 @@ function Reply(props) {
   }, [editStatus]);
 
   function followQuestion() {
-    if(!userCommunityInfo){
-      message.warning('请您先登录')
+    if (!userCommunityInfo) {
+      message.warning('请您先登录');
       return;
     }
     clearTimeout(timerCount);
@@ -77,43 +77,43 @@ function Reply(props) {
               <div className={replyStyle.title}>
                 <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
                 <span>{params.q}</span>
-                {userInfo ? 
-                <div className="display_flex" style={{ marginTop: 20 }}>
-                  <div style={{ marginRight: 10 }}>
-                    <Button
-                      type="primary"
-                      style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
-                      onClick={followQuestion}
-                      disabled={!userCommunityInfo}
-                    >
-                      {isFollowQ  ? '取消关注' : '关注问题'}
-                    </Button>
-                  </div>
-                  <div>
-                    <Button
-                      type="primary"
-                      icon="edit"
-                      ghost
-                      onClick={() => {
-                        console.log('showEditor', showEditor);
-                        switchEditor(!showEditor);
-                        if (showEditor) {
-                          dispatch({
-                            type: 'reply/saveAnswers',
-                            payload: {
-                              answerHelpData: {
-                                contents: '',
-                                resource: ''
+                {userInfo ? (
+                  <div className="display_flex" style={{ marginTop: 20 }}>
+                    <div style={{ marginRight: 10 }}>
+                      <Button
+                        type="primary"
+                        style={isFollowQ ? { background: 'gray', borderColor: 'gray' } : null}
+                        onClick={followQuestion}
+                        disabled={!userCommunityInfo}
+                      >
+                        {isFollowQ ? '取消关注' : '关注问题'}
+                      </Button>
+                    </div>
+                    <div>
+                      <Button
+                        type="primary"
+                        icon="edit"
+                        ghost
+                        onClick={() => {
+                          switchEditor(!showEditor);
+                          if (showEditor) {
+                            dispatch({
+                              type: 'reply/saveAnswers',
+                              payload: {
+                                answerHelpData: {
+                                  contents: '',
+                                  resource: ''
+                                }
                               }
-                            }
-                          });
-                        }
-                      }}
-                    >
-                      {showEditor && answerList.length ? '取消回答' : '写回答'}
-                    </Button>
+                            });
+                          }
+                        }}
+                      >
+                        {showEditor && answerList.length ? '取消回答' : '写回答'}
+                      </Button>
+                    </div>
                   </div>
-                </div>:null}
+                ) : null}
               </div>
               <Divider style={{ margin: 0 }} />
               <div className={replyStyle.draft}>
@@ -126,23 +126,28 @@ function Reply(props) {
             <div>
               {userCommunityInfo ? <UserInfo /> : null}
               <WaitAnswer />
-              <Button type="primary" style={{marginTop: 10}} block href={`${process.env.basePath}/help/newHelp`}>
+              <Button
+                type="primary"
+                style={{ marginTop: 10 }}
+                block
+                href={`${process.env.basePath}/help/newHelp`}
+              >
                 去社区首页
               </Button>
             </div>
           </Col>
         </Row>
-        {sgData.length && (showEditor || answerList.length === 0) ? (
-          <Affix offsetBottom={300} style={{ position: 'absolute', right: 20, bottom: 10 }}>
-            <Button
-              onClick={() => {
-                setDrawer(true);
-              }}
-            >
-              <Icon type="alert" theme="filled" style={{ color: 'gold', fontSize: 24 }} />
-            </Button>
-          </Affix>
-        ) : null}
+        {/* {showEditor ? ( */}
+        <Affix offsetBottom={300} style={{ position: 'absolute', right: 20, bottom: 10 }}>
+          <Button
+            onClick={() => {
+              setDrawer(true);
+            }}
+          >
+            <Icon type="alert" theme="filled" style={{ color: 'gold', fontSize: 24 }} />
+          </Button>
+        </Affix>
+        {/* ) : null} */}
 
         <Drawer
           title="参考回答助手"
