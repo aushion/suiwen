@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, List, Modal, message, Row, Col } from 'antd';
+import { Divider, List, Modal, message, Row, Col, Tag } from 'antd';
 import { connect } from 'dva';
 import { Link } from 'umi';
 import router from 'umi/router';
@@ -11,7 +11,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   RocketOutlined,
-  RocketTwoTone,
+  RocketTwoTone
 } from '@ant-design/icons';
 
 function Doc(props) {
@@ -173,6 +173,18 @@ function Doc(props) {
                       >
                         {item.docName}
                       </Link>
+                      <Tag
+                        style={{ marginLeft: '10px' }}
+                        color={item.type && item.type === '0' ? 'orange' : 'blue'}
+                      >
+                        {item.type && item.type === '0' ? '公开' : '私有'}
+                      </Tag>
+                      <Tag
+                        style={{ marginLeft: '10px' }}
+                        color={item.isPublish && item.isPublish === '1' ? '#DB70DB' : '#D9D9F3'}
+                      >
+                        {item.isPublish && item.isPublish === '1' ? '已发布' : '未发布'}
+                      </Tag>
                     </Col>
                     <Col span={4}>
                       <div style={{ textAlign: 'right' }}>
@@ -209,6 +221,17 @@ function Doc(props) {
                           }}
                           title="删除文档"
                         />
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row gutter={[24, 24]}>
+                    <Col span={24}>
+                      <div>
+                        {item.tag
+                          ? item.tag.split(',').map((i) => {
+                              return <Tag color={'blue'}>{i}</Tag>;
+                            })
+                          : null}
                       </div>
                     </Col>
                   </Row>

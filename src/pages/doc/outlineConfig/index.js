@@ -171,7 +171,7 @@ const OutlineConfig = (props) => {
     //判断该字符串里是否有“,”，如果有，则代表有多个标签，如果没有，则代表标签只有一个。
     if (tagStr && tagStr.indexOf(',') !== -1) {
       tagList = tagStr.split(',');
-    } else {
+    } else if(tagStr){
       tagList = tagStr.trim() === '' ? [] : tagStr;
     }
     //将当前文档的标签数组信息存入state
