@@ -215,11 +215,8 @@ function ResultPage(props) {
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
             社区求助
           </span>
-          <Popover
-            title="您可以试试问题分解"
-            content={<Link to="/doc/outlineConfig">问题分解</Link>}
-          >
-            <span style={{ marginLeft: 10, cursor: 'pointer' }}>问题分解</span>
+          <Popover title="您可以试试:" content={<Link to="/doc/outlineConfig">文档助手</Link>}>
+            <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }}>问题分解</span>
           </Popover>
         </div>
 
