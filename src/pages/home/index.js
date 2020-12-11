@@ -30,7 +30,7 @@ function Home(props) {
   const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
   const [activeTagName, setActiveTag] = useState(sessionStorage.getItem('tagName') || '');
 
-  const PrevArrow = function (props) {
+  const PrevArrow = function(props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -39,7 +39,7 @@ function Home(props) {
     );
   };
 
-  const NextArrow = function (props) {
+  const NextArrow = function(props) {
     const { className, style, onClick } = props;
     return (
       <div className={className} style={{ ...style }} onClick={onClick}>
@@ -378,17 +378,17 @@ function Home(props) {
               <div className={homeStyles.right} style={{ width: 584, display: 'flex' }}>
                 <div className={homeStyles.wrap} style={{ paddingRight: 20 }}>
                   <Link to={`/doc/outlineConfig`} target="_blank">
-                    <div className={homeStyles.cnTitle}>文档速成助手</div>
+                    <div className={homeStyles.cnTitle}>随问知识文库</div>
                     <div className={homeStyles.enTitle}>文档撰写助手、文档共享社区</div>
                   </Link>
                   <div className={homeStyles.desc}>
                     <div>
-                      <font color="red" size="3">
-                        调研、论文写作、科研助手
-                      </font>
+                      调研、论文写作、科研<span style={{ color: 'red', fontSize: 15 }}>助手</span>
                     </div>
                     <div>可靠的知识来源、灵活的内容定制</div>
-                    <div> 面向系列问题的内容动态生成重组</div>
+                    <div>
+                      面向系列问题的内容<span style={{ color: 'red' }}>动态生成重组</span>
+                    </div>
                     <div>知网权威、海量学术期刊来源</div>
                     <div>
                       文档
@@ -403,7 +403,7 @@ function Home(props) {
                   <div className={homeStyles.cnTitle}>文档示例、共享</div>
                   <div
                     className={homeStyles.desc}
-                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 30 }}
+                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 60 }}
                   >
                     {props.docExamples && props.docExamples.length !== 0
                       ? props.docExamples.map((docExample, exampleIndex) => {
@@ -411,7 +411,7 @@ function Home(props) {
                             <div>
                               <Link
                                 to={`/doc/outlineConfigPreview?docId=${docExample.docId}`}
-                                style={{ fontSize: 16,  color: '#1890ff' }}
+                                style={{ fontSize: 16, color: '#1890ff' }}
                               >
                                 {docExample.docName}
                               </Link>
