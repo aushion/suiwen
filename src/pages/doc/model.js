@@ -33,6 +33,8 @@ const Doc = {
     docTemplateData: [],
     //文档标签
     docClassifyData: [],
+    //当前文档定时任务Id
+    // currentTaskId:'',
   },
   effects: {
     *addUserDoc({ payload }, { call, put }) {
@@ -143,14 +145,14 @@ const Doc = {
     *refreshDocContent({ payload }, { call, put }) {
       const response = yield call(refreshDocContent, payload);
       let data = response.data;
-      if (data.code === 200) {
-        yield put({
-          type: 'save',
-          payload: {
-            docContentData: data.result
-          }
-        });
-      }
+      // if (data.code === 200) {
+      //   yield put({
+      //     type: 'save',
+      //     payload: {   
+      //       currentTaskId: data.result
+      //     }
+      //   });
+      // }
 
       return data;
     },

@@ -106,7 +106,7 @@ const OutlineConfig = (props) => {
     }
     //当dom卸载时调用，清除定时器
     return () => {
-      console.log("ris-fsfs");
+      console.log('ris-fsfs');
       timer && clearInterval(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,19 +148,19 @@ const OutlineConfig = (props) => {
   }
 
   //设置定时器
-  function componentDidMount() {
+  function componentDidMount(currentTaskId) {
     timer = setInterval(() => {
-      getContentTaskStatus();
+      getContentTaskStatus(currentTaskId);
     }, 1 * 2000);
   }
 
   //获取内容刷新完成状态
-  function getContentTaskStatus() {
+  function getContentTaskStatus(currentTaskId) {
     props
       .dispatch({
         type: 'Doc/getContentTaskStatus',
         payload: {
-          docId: docId
+          taskId: currentTaskId
         }
       })
       .then((res) => {
@@ -169,8 +169,8 @@ const OutlineConfig = (props) => {
           //清除定时器
           clearInterval(timer);
           //跳至当前瞄点位置
+          getDocContent();
           let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
-          console.log('currentUrlRight', currentUrlRight);
           if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
             let currentAnchorPoint = currentUrlRight.split('#')[1];
             window.location.href = '#' + encodeURI(currentAnchorPoint);
@@ -627,14 +627,20 @@ const OutlineConfig = (props) => {
       }
     });
     setDocContentResultLoading(true);
-    props.dispatch({
-      type: 'Doc/refreshDocContent',
-      payload: {
-        docId: docId
-      }
-    });
-    //开启定时器，轮询后去内容刷新完成状态
-    componentDidMount();
+    props
+      .dispatch({
+        type: 'Doc/refreshDocContent',
+        payload: {
+          docId: docId
+        }
+      })
+      .then((res) => {
+        if (res.code === 200) {
+          let currentTaskId = res.result;
+          //开启定时器，轮询后去内容刷新完成状态
+          componentDidMount(currentTaskId);
+        }
+      });
 
     // .then((res) => {
 
@@ -1213,5 +1219,6 @@ export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
   docContentData: Doc.docContentData,
   docTemplateData: Doc.docTemplateData,
-  docClassifyData: Doc.docClassifyData
+  docClassifyData: Doc.docClassifyData,
+  // currentTaskId: Doc.currentTaskId
 }))(Form.create()(OutlineConfig));
