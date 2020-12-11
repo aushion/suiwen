@@ -53,6 +53,12 @@ export function getUserDoc(payload) {
   });
 }
 
+export function editUserDoc(payload) {
+  return request.post(`/doc/editUserDoc`, null,{
+    data: { ...payload }
+  });
+}
+
 export function delUserDoc(payload) {
   return request.post(`/doc/delUserDoc`, null, {
     params: { ...payload }

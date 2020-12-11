@@ -17,7 +17,9 @@ import {
   saveRoute,
   saveRouteQuestion,
   chooseTemplateRoute,
-  getQuestionTemplate
+  getQuestionTemplate,
+  getDocClassify,
+  getDocInfo,
 } from './service/index';
 const Doc = {
   namespace: 'Doc',
@@ -27,7 +29,9 @@ const Doc = {
     //文档内容
     docContentData: [],
     //文档模版
-    docTemplateData: []
+    docTemplateData: [],
+    //文档标签
+    docClassifyData: [],
   },
   effects: {
     *addUserDoc({ payload }, { call, put }) {
@@ -164,7 +168,28 @@ const Doc = {
       const response = yield call(getQuestionTemplate, payload);
       let data = response.data;
       return data;
-    }
+    },
+
+    *getDocClassify({ payload }, { call, put }) {
+      const response = yield call(getDocClassify, payload);
+      let data = response.data;
+      if (data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            docClassifyData: data.result
+          }
+        });
+      }
+
+      return data;
+    },
+
+    *getDocInfo({ payload }, { call, put }) {
+      const response = yield call(getDocInfo, payload);
+      let data = response.data;
+      return data;
+    },
   },
   reducers: {
     save(state, action) {

@@ -8,6 +8,7 @@ import {
   getUserFollowerInfo,
   getUserFollowedQuestion,
   getUserDoc,
+  editUserDoc,
   delUserDoc,
   delPersonQuestion
 } from './service';
@@ -45,6 +46,11 @@ export default {
           }
         });
       }
+    },
+
+    *editUserDoc({ payload }, { call, put }) {
+      const response = yield call(editUserDoc, payload);
+      return response.data;
     },
 
     *delUserDoc({ payload }, { call, put }) {

@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { Input, Modal, Form, Select } from 'antd';
+import { Input, Modal, Form, Select, Radio,Button } from 'antd';
 
 const AddDocModel = Form.create({
   mapPropsToFields(props) {
     if (props.data !== undefined) {
       return {
         label: Form.createFormField({ value: props.data.label }),
-        docTemplateId: Form.createFormField({ value: props.data.docTemplateId }),
+        type: Form.createFormField({ value: props.data.type }),
+        tag: Form.createFormField({ value: props.data.tag }),
       };
     }
   },
 })(props => {
 
 
-  const { modalVisible, form, docTemplateOptions,defaultDocumentTemplate } = props;
+  const { modalVisible, form, docTemplateOptions, defaultDocumentTemplate, docClassifyOptions } = props;
   //文档模版选择
   const [selectedDocTemplate, setSeletedDocTemplate] = useState(defaultDocumentTemplate ? defaultDocumentTemplate : '');
 
@@ -81,18 +82,42 @@ const AddDocModel = Form.create({
             <Select.Option value={''}>{'无'}</Select.Option>
             {docTemplateOptions}
           </Select>
-          {/* <Form.Item label="公开类型">
-            {getFieldDecorator('publicType', {
-            })(
-              <Radio.Group>
-                <Radio value="1">公有</Radio>
-                <Radio value="2">私有</Radio>
-              </Radio.Group>
-            )}
-          </Form.Item> */}
-
+        </Form.Item>
+        <Form.Item label="文档标签">
+          {form.getFieldDecorator('tag', {
+          })(
+            <Select
+              placeholder='点击此处可为文档选取多个标签'
+              mode="multiple"
+              style={{ width: 400 }}
+            >
+              {docClassifyOptions}
+            </Select>
+          )}
         </Form.Item>
 
+        <Form.Item label="是否公开">
+          {form.getFieldDecorator('type', {
+            initialValue: '1',
+            rules: []
+          })(
+            <Radio.Group  style={{ width: 150 }}>
+              <Radio value="0">公开</Radio>
+              <Radio value="1">私有</Radio>
+            </Radio.Group>
+            
+          )}
+          <Button
+          style={{ border: "0px", marginLeft:"230px" }}
+          size={"small"}
+          icon={"info-circle"}
+          title={"选择公开，表示文档可以发布，使他人可见；\r\n选择私有，代表文档只自己可见。"}
+          onClick={() => {
+          }}
+        >
+        </Button>
+        </Form.Item>
+        
       </Form>
     </Modal>
   );
