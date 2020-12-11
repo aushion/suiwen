@@ -41,28 +41,32 @@ function UserInfo(props) {
           style={{ padding: '0px 20px 0', textAlign: 'center' }}
         >
           <Link
-            to={`/personCenter/people/answer?userName=${userInfo?.userName}`}
+            to={`/personCenter/people/answer?userName=${RestTools.encodeBase64(
+              userInfo?.userName
+            )}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.answerNum || 0}</div>
             <div style={{ color: '#868686', fontWeight: 400 }}>回答</div>
           </Link>
           <Link
-            to={`/personCenter/people/ask?userName=${userInfo?.userName}`}
+            to={`/personCenter/people/ask?userName=${RestTools.encodeBase64(userInfo?.userName)}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.questionNum || 0}</div>
             <div style={{ color: '#868686', fontWeight: 400 }}>提问</div>
           </Link>
           <Link
-            to={`/personCenter/people/fans?userName=${userInfo?.userName}`}
+            to={`/personCenter/people/fans?userName=${RestTools.encodeBase64(userInfo?.userName)}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.followers || 0}</div>
             <div style={{ color: '#868686', fontWeight: 400 }}>粉丝</div>
           </Link>
           <Link
-            to={`/personCenter/people/follow?userName=${userInfo?.userName}`}
+            to={`/personCenter/people/follow?userName=${RestTools.encodeBase64(
+              userInfo?.userName
+            )}`}
             style={{ color: '#333', fontWeight: 'bold' }}
           >
             <div>{userInfo?.followees || 0}</div>

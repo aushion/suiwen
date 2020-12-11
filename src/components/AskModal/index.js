@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, message, Tag, Divider, Input, Icon, Alert } from 'antd';
 import { router } from 'umi';
 import { find } from 'lodash';
+import RestTools from '../../utils/RestTools';
 
 import request from '../../utils/request';
 const { TextArea } = Input;
@@ -62,7 +63,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
     const loginUser = localStorage.getItem('userInfo')
       ? JSON.parse(localStorage.getItem('userInfo'))
       : null;
-    if(loginUser == null){
+    if (loginUser == null) {
       message.warn('请您登录后再操作');
       return;
     }
@@ -82,12 +83,14 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
           params: {
             q: submitQ,
             uId: loginUser.UserName,
-            domain,
+            domain
           }
         })
         .then((res) => {
           if (res.data.result) {
-            router.push(`/personCenter/people/ask?userName=${loginUser.UserName}`);
+            router.push(
+              `/personCenter/people/ask?userName=${RestTools.encodeBase64(loginUser.UserName)}`
+            );
           } else {
             message.error(res.data.msg);
           }

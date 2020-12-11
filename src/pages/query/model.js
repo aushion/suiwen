@@ -413,7 +413,7 @@ export default {
       const res = yield call(setQuestion, payload);
       if (res.data.result) {
         yield put({ type: 'save', payload: { visible: false } });
-        router.push(`/personCenter/people/ask?userName=${payload.uId}`);
+        router.push(`/personCenter/people/ask?userName=${RestTools.encodeBase64(payload.uId)}`);
       } else {
         message.error(res.data.msg);
       }
