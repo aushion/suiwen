@@ -7,6 +7,7 @@ import PersonMenu from './components/PersonMenu'; //编辑个人资料菜单
 import PeopleMenu from './components/PeopleMenu'; //社区相关
 import FollowButton from '../../components/FollowButton';
 import styles from './_layout.less';
+import RestTools from '../../utils/RestTools';
 
 function UserLayout(props) {
   const { userCommunityInfo, location, avatar } = props;
@@ -14,7 +15,8 @@ function UserLayout(props) {
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
   const { pathname, query } = location;
-  const { userName } = query;
+  let { userName } = query;
+  userName = RestTools.decodeBase64(userName);
 
   function showEditMenu(pathname) {
     return pathname.indexOf('edit') > 0;
@@ -51,7 +53,10 @@ function UserLayout(props) {
           <span style={{ lineHeight: '32px', fontWeight: 'bold', fontSize: 16 }}>社区</span>
         </Link>
         <div className={styles.avatar}>
-          <PersonAvatar avatar={avatar} userName={query.userName} />
+          <PersonAvatar
+            avatar={avatar}
+            userName={RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}
+          />
         </div>
         {userCommunityInfo ? (
           <div className={styles.info}>

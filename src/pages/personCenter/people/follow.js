@@ -8,7 +8,8 @@ import RestTools from '../../../utils/RestTools';
 function Follow(props) {
   const { userFolloweeInfo, loading, dispatch, location } = props;
   const { query } = location;
-  const { userName } = query;
+  let { userName } = query;
+  userName = RestTools.decodeBase64(userName);
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
@@ -16,7 +17,9 @@ function Follow(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? '我的关注' : `${RestTools.formatPhoneNumber(userName)}的关注`}
+          {userInfo?.UserName === userName
+            ? '我的关注'
+            : `${RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}的关注`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>

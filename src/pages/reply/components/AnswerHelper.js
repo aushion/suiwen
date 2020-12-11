@@ -145,6 +145,7 @@ function AnswerHelper(props) {
         <span>参考回答助手：</span>
         <Search
           style={{ width: '50%', marginBottom: 10 }}
+          autoComplete="off"
           onSearch={(value) => {
             dispatch({
               type: 'reply/getSG',

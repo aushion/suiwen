@@ -8,7 +8,8 @@ const { confirm } = Modal;
 function People(props) {
   const { myCommunityQuestion, loading, location, dispatch } = props;
   const { query } = location;
-  const { userName } = query;
+  let { userName } = query;
+  userName = RestTools.decodeBase64(userName);
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
@@ -39,7 +40,7 @@ function People(props) {
         <div className={styles.title}>
           {userInfo?.UserName === userName
             ? `我的提问`
-            : `${RestTools.formatPhoneNumber(userName)}的提问`}
+            : `${RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}的提问`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>

@@ -279,6 +279,35 @@ export default {
         : str
       : '';
   },
+  hideEmailInfo(email) {
+    if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)) {
+      let newEmail,
+        str = email.split('@'),
+        _s = '';
+
+      if (str[0].length > 4) {
+        _s = str[0].substr(0, 4);
+        for (let i = 0; i < str[0].length - 4; i++) {
+          _s += '*';
+        }
+      } else {
+        _s = str[0].substr(0, 1);
+        for (let i = 0; i < str[0].length - 1; i++) {
+          _s += '*';
+        }
+      }
+      newEmail = _s + '@' + str[1];
+      return newEmail;
+    } else {
+      return email;
+    }
+  },
+  encodeBase64(str) {
+    return str ? btoa(encodeURIComponent(str)) : '';
+  },
+  decodeBase64(str) {
+    return str ? decodeURIComponent(atob(str)) : '';
+  },
   status: {
     '0': <Tag color="#2db7f5">未审核</Tag>,
     '1': <Tag color="#87d068">已审核</Tag>,

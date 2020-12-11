@@ -11,7 +11,9 @@ message.config({
   maxCount: 3
 });
 
-const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')):false;
+const userInfo = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : false;
 export default {
   namespace: 'reply',
   state: {
@@ -40,7 +42,7 @@ export default {
 
   effects: {
     *followQuestion({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -48,7 +50,7 @@ export default {
       return res.data;
     },
     *unFollowQuestion({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -56,7 +58,7 @@ export default {
       return res.data;
     },
     *followUser({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -64,7 +66,7 @@ export default {
       return res.data;
     },
     *unFollowUser({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -72,7 +74,6 @@ export default {
       return res.data;
     },
     *getUserCommunityInfo({ payload }, { call, put }) {
-    
       const res = yield call(helpServer.getUserCommunityInfo, {
         ...payload
       });
@@ -107,8 +108,8 @@ export default {
             total: response.result.total
           }
         });
-      }else{
-        router.push('/reply/error')
+      } else {
+        router.push('/reply/error');
       }
     },
     *getComment({ payload }, { call, select }) {
@@ -137,7 +138,7 @@ export default {
     },
 
     *addComment({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -146,7 +147,7 @@ export default {
     },
 
     *replyComment({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -155,8 +156,7 @@ export default {
     },
 
     *delComment({ payload }, { call }) {
-    
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -164,8 +164,7 @@ export default {
       return res.data;
     },
     *delReply({ payload }, { call }) {
-
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -173,30 +172,26 @@ export default {
       return res.data;
     },
     *likeAnswer({ payload }, { call }) {
-     
       const res = yield call(helpServer.likeAnswer, payload);
       return res.data;
     },
 
     *disLikeAnswer({ payload }, { call }) {
-     
       const res = yield call(helpServer.disLikeAnswer, payload);
       return res.data;
     },
 
     *likeComment({ payload }, { call }) {
-     
       const res = yield call(helpServer.likeComment, payload);
       return res.data;
     },
     *likeReply({ payload }, { call }) {
-    
       const res = yield call(helpServer.likeReply, payload);
       return res.data;
     },
 
     *getUserFAQ({ payload }, { call, put }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -210,7 +205,7 @@ export default {
       }
     },
     *setAnswer({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -227,7 +222,7 @@ export default {
     },
 
     *editAnswer({ payload }, { call }) {
-      if(!userInfo){
+      if (!userInfo) {
         message.warning('请先登录');
         return;
       }
@@ -323,7 +318,7 @@ export default {
           }
           if (QID) {
             dispatch({ type: 'getAnswer', payload: { ...params, uid: uid } });
-          } 
+          }
           // else {
           //   dispatch({ type: 'getUserFAQ', payload: params });
           // }
