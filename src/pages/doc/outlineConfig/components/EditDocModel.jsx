@@ -77,7 +77,7 @@ const EditDocModel = Form.create({
 
         <Form.Item label="是否公开">
           {form.getFieldDecorator('type', {
-            initialValue: '1',
+            initialValue: '0',
             rules: []
           })(
             <Radio.Group style={{ width: 150 }}>
