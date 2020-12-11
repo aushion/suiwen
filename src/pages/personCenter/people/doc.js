@@ -10,8 +10,8 @@ import {
   ExclamationCircleOutlined,
   DeleteOutlined,
   EditOutlined,
-  GlobalOutlined
-  // PlusOutlined
+  RocketOutlined,
+  RocketTwoTone,
 } from '@ant-design/icons';
 
 function Doc(props) {
@@ -63,6 +63,68 @@ function Doc(props) {
     });
   }
 
+  //文档发布
+  function documentPublish(item) {
+    //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
+    if (!(item && item.type && item.type === '0')) {
+      message.warn('当前文档未公开，无法进行发布相关操作！');
+      return;
+    }
+    Modal.confirm({
+      title: '确定发布吗?此操作将会使当前文档变得他人可见！',
+      centered: true,
+      onOk() {
+        dispatch({
+          type: 'personCenter/editUserDoc',
+          payload: {
+            docId: item.docId,
+            isPublish: 1,
+            userName: userName
+          }
+        }).then((res) => {
+          if (res.code === 200) {
+            //刷新个人文档
+            getUserDoc();
+            message.success('文档发布成功！');
+          } else {
+            message.error(res.msg);
+          }
+        });
+      }
+    });
+  }
+
+  //撤销文档发布
+  function revokeDocumentPublish(item) {
+    //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
+    if (!(item && item.type && item.type === '0')) {
+      message.warn('当前文档未公开，无法进行发布相关操作！');
+      return;
+    }
+    Modal.confirm({
+      title: '确定撤销发布吗?此操作将会使当前文档只自己可见！',
+      centered: true,
+      onOk() {
+        dispatch({
+          type: 'personCenter/editUserDoc',
+          payload: {
+            docId: item.docId,
+            isPublish: 0,
+            userName: userName
+          }
+        }).then((res) => {
+          if (res.code === 200) {
+            //刷新个人文档
+            getUserDoc();
+            message.success('文档已撤销发布！');
+          } else {
+            message.error(res.msg);
+          }
+        });
+      }
+    });
+  }
+
   return (
     <div className={styles.people}>
       <div className={styles.main}>
@@ -70,18 +132,13 @@ function Doc(props) {
           {userInfo?.UserName === userName
             ? '我的文档'
             : `${RestTools.formatPhoneNumber(userName)}的文档`}
-          <Link to={`/doc/outlineConfig`} target="_blank" style={{ marginLeft: '20px',fontSize:'15px' ,fontWeight:'normal'}}>
+          <Link
+            to={`/doc/outlineConfig`}
+            target="_blank"
+            style={{ marginLeft: '20px', fontSize: '15px', fontWeight: 'normal' }}
+          >
             新建文档
           </Link>
-          {/* <PlusOutlined
-            style={{marginLeft:'10px'}}
-            onClick={() => {
-              router.push({
-                pathname: '/doc/outlineConfig'
-              });
-            }}
-            title="新建文档"
-          /> */}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
@@ -119,11 +176,25 @@ function Doc(props) {
                     </Col>
                     <Col span={4}>
                       <div style={{ textAlign: 'right' }}>
-                        <GlobalOutlined
-                          style={{ marginRight: '20px' }}
-                          onClick={() => {}}
-                          title="发布文档"
-                        />
+                        {item.isPublish && item.isPublish === '1' ? (
+                          <RocketTwoTone
+                            twoToneColor="orange"
+                            style={{ marginRight: '20px' }}
+                            onClick={() => {
+                              revokeDocumentPublish(item);
+                            }}
+                            title="已发布"
+                          />
+                        ) : (
+                          <RocketOutlined
+                            style={{ marginRight: '20px' }}
+                            onClick={() => {
+                              documentPublish(item);
+                            }}
+                            title="未发布"
+                          />
+                        )}
+
                         <EditOutlined
                           style={{ marginRight: '20px' }}
                           onClick={() => {

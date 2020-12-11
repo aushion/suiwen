@@ -180,3 +180,22 @@ export async function getQuestionTemplate(params) {
     params
   });
 }
+
+//获取分类标签
+export async function getDocClassify(params) {
+  return request({
+    url: '/doc/getDocClassify',
+    method: 'post',
+    params
+  });
+}
+
+//获取指定文档Id的标签
+export async function getDocInfo(params) {
+  return request({
+    url: '/doc/getDocInfo',
+    method: 'post',
+    params
+  });
+}
+

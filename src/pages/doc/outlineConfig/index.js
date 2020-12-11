@@ -46,6 +46,8 @@ const OutlineConfig = (props) => {
   const [outlineSpinLoading, setOutlineSpinLoading] = useState(false);
   //下载文档确定按钮loading
   const [downloadDocHandleOkLoading, setDownloadDocHandleOkLoading] = useState(false);
+  //发布文档按钮loading
+  const [documentPublishLoading, setDocumentPublishLoading] = useState(false);
   //控制文档标题、章、节、问题模态框
   const [addDocVisible, setAddDocVisible] = useState(false);
   const [editDocVisible, setEditDocVisible] = useState(false);
@@ -58,6 +60,7 @@ const OutlineConfig = (props) => {
   const [chapterId, setChapterId] = useState('');
   //保存选中的文档数据组
   const [docData, setDocData] = useState('');
+  const [currentDocTagList, setCurrentDocTagList] = useState([]);
   //保存选中的章标题数据组
   const [chapterData, setChapterData] = useState('');
   //保存选中的节标题数据组
@@ -66,6 +69,8 @@ const OutlineConfig = (props) => {
   const [classID, setID] = useState(true);
   const [loadFlag, setLoadFlag] = useState(0);
 
+  //文档标签数据
+  const docClassifyList = props.docClassifyData;
   //文档模版选择
   const docTemplateList = props.docTemplateData;
   const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
@@ -73,9 +78,10 @@ const OutlineConfig = (props) => {
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
   useEffect(() => {
-    //加载文档模版数据
+    //加载文档模版数据和标签数据
     // eslint-disable-next-line react-hooks/exhaustive-deps
     getDocTemplate();
+    getDocClassify();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     if (docId) {
       //加载该文档id下的提纲目录
@@ -105,6 +111,15 @@ const OutlineConfig = (props) => {
     if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
       props.dispatch({
         type: 'Doc/getTemplateList'
+      });
+    }
+  }
+
+  //获取所有的文档标签
+  function getDocClassify() {
+    if (!docClassifyList || (docClassifyList && docClassifyList.length === 0)) {
+      props.dispatch({
+        type: 'Doc/getDocClassify'
       });
     }
   }
@@ -150,6 +165,17 @@ const OutlineConfig = (props) => {
   //重命名文档标题
   function renameDoc() {
     let docItem = props.outlineData ? props.outlineData[0] : '';
+    //获取标签字段信息，并将其从逗号分隔的字符串转换成数组结构，便于显示在前端
+    let tagStr = docItem.tag;
+    let tagList = [];
+    //判断该字符串里是否有“,”，如果有，则代表有多个标签，如果没有，则代表标签只有一个。
+    if (tagStr && tagStr.indexOf(',') !== -1) {
+      tagList = tagStr.split(',');
+    } else {
+      tagList = tagStr.trim() === '' ? [] : tagStr;
+    }
+    //将当前文档的标签数组信息存入state
+    setCurrentDocTagList(tagList);
     onEditDoc(docItem);
   }
 
@@ -210,6 +236,16 @@ const OutlineConfig = (props) => {
     }
     //设置提纲目录区与文档内容预览区加载动画效果
     setDocContentResultLoading(true);
+    //将标签数组转换成逗号分隔的字符串
+    let tag = '';
+    let tagList = values.tag ? values.tag : [];
+    for (var i = 0; i < tagList.length; i++) {
+      tag += tagList[i];
+      if (i !== tagList.length - 1) {
+        tag += ',';
+      }
+    }
+
     //新增文档
     props
       .dispatch({
@@ -218,7 +254,9 @@ const OutlineConfig = (props) => {
           docId: docId,
           docName: values.label,
           userName: username,
-          templateId: values.docTemplateId
+          templateId: values.docTemplateId === '' ? null : values.docTemplateId,
+          tag: tag,
+          type: values.tag === '' ? null : values.type
         }
       })
       .then((res) => {
@@ -249,12 +287,24 @@ const OutlineConfig = (props) => {
   const onHandleOkDoc = (values) => {
     //设置提纲目录区与文档内容预览区加载动画效果
     setDocContentResultLoading(true);
+    //将标签数组转换成逗号分隔的字符串
+    let tag = '';
+    let tagList = values.tag ? values.tag : [];
+    for (var i = 0; i < tagList.length; i++) {
+      tag += tagList[i];
+      if (i !== tagList.length - 1) {
+        tag += ',';
+      }
+    }
+
     dispatch({
       type: 'Doc/editUserDoc',
       payload: {
         docId: docId,
         docName: values.label,
-        userName: username
+        userName: username,
+        tag: tag,
+        type: values.tag === '' ? null : values.type
       }
     }).then((res) => {
       if (res.code === 200) {
@@ -488,6 +538,44 @@ const OutlineConfig = (props) => {
     });
   };
 
+  //文档发布
+  const documentPublish = () => {
+
+    //获取当前文档的文档标题数据
+    let docItem = props.outlineData ? props.outlineData[0] : '';
+    //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
+    if (!(docItem && docItem.type && docItem.type === '0')) {
+      message.warn('当前文档未公开，无法进行发布相关操作！若确定需要发布，请先修改文档类型为公开！');
+      return;
+    }
+    Modal.confirm({
+      title: '确定发布吗?此操作将会使当前文档变得他人可见',
+      centered: true,
+      onOk() {
+        //设置文档发布loading
+        setDocumentPublishLoading(true);
+        props
+          .dispatch({
+            type: 'Doc/editUserDoc',
+            payload: {
+              docId: docId,
+              isPublish: 1,
+              userName: username
+            }
+          })
+          .then((res) => {
+            if (res.code === 200) {
+              setDocumentPublishLoading(false);
+              message.success('文档发布成功！');
+            } else {
+              setDocumentPublishLoading(false);
+              message.error(res.msg);
+            }
+          });
+      }
+    });
+  };
+
   //刷新文档内容
   const refreshDocContent = () => {
     //重新拉取文档内容数据前，预先清空文档内容缓存数据
@@ -523,11 +611,6 @@ const OutlineConfig = (props) => {
 
   //为当前节标题配置问题或关键字
   function addNodeQuestion(values) {
-    //限制问题的数量最大值为5
-    // if (values.questionSourceData && values.questionSourceData.length >= 5) {
-    //   message.warn('最多配置5个问题/关键字');
-    //   return;
-    // }
     props
       .dispatch({
         type: 'Doc/saveRouteQuestion',
@@ -653,6 +736,17 @@ const OutlineConfig = (props) => {
           >
             {docTemplateList[i]['name']}
           </Tooltip>
+        </Select.Option>
+      );
+    }
+  }
+
+  let docClassifyOptions = [];
+  if (docClassifyList.length) {
+    for (let i = 0; i < docClassifyList.length; i++) {
+      docClassifyOptions.push(
+        <Select.Option value={docClassifyList[i]['cId']} key={i}>
+          {docClassifyList[i]['cName']}
         </Select.Option>
       );
     }
@@ -800,6 +894,7 @@ const OutlineConfig = (props) => {
                 dispatch={dispatch}
                 loading={props.loading}
                 docTemplateOptions={docTemplateOptions}
+                docClassifyOptions={docClassifyOptions}
                 defaultDocumentTemplate={selectedDocTemplate}
               />
             ) : null}
@@ -808,10 +903,12 @@ const OutlineConfig = (props) => {
                 onHandleCancel={onHandleCancelDoc}
                 onHandleOk={onHandleOkDoc}
                 data={docData}
+                tag={currentDocTagList}
                 dispatch={dispatch}
                 loading={props.loading}
                 docId={docId}
                 modalVisible={editDocVisible}
+                docClassifyOptions={docClassifyOptions}
               />
             ) : null}
             {chapterVisible ? (
@@ -872,19 +969,27 @@ const OutlineConfig = (props) => {
           <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
             <Button
               disabled={docId ? false : true}
-              onClick={selectDocDownloadMethod}
+              onClick={refreshDocContent}
               loading={props.loading}
-              style={{ marginBottom: 10, marginRight:5,background: '#2ae', color: '#FFFFFF' }}
+              style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
             >
-              文档下载
+              内容刷新
             </Button>
             <Button
               disabled={docId ? false : true}
-              onClick={refreshDocContent}
-              loading={props.loading}
-              style={{ marginBottom: 10,  marginRight:5,background: ' #2ae', color: '#FFFFFF' }}
+              onClick={documentPublish}
+              loading={documentPublishLoading}
+              style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
             >
-              内容刷新
+              文档发布
+            </Button>
+            <Button
+              disabled={docId ? false : true}
+              onClick={selectDocDownloadMethod}
+              loading={props.loading}
+              style={{ marginBottom: 10, marginRight: 5, background: '#2ae', color: '#FFFFFF' }}
+            >
+              文档下载
             </Button>
             <Button
               disabled={username ? false : true}
@@ -1061,5 +1166,6 @@ const OutlineConfig = (props) => {
 export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
   docContentData: Doc.docContentData,
-  docTemplateData: Doc.docTemplateData
+  docTemplateData: Doc.docTemplateData,
+  docClassifyData: Doc.docClassifyData
 }))(Form.create()(OutlineConfig));
