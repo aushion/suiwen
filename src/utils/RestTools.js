@@ -275,7 +275,7 @@ export default {
   formatPhoneNumber(str) {
     return str
       ? /^1[3-9]\d{9}$/.test(str)
-        ? str.substring(0, 3) + '****' + str.substring(7, 11)
+        ? str.substring(0, 3) + '******' + str.substring(9, 11)
         : str
       : '';
   },
