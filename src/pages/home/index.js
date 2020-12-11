@@ -379,7 +379,7 @@ function Home(props) {
                 <div className={homeStyles.wrap} style={{ paddingRight: 20 }}>
                   <Link to={`/doc/outlineConfig`} target="_blank">
                     <div className={homeStyles.cnTitle}>随问知识文库</div>
-                    <div className={homeStyles.enTitle}>文档撰写助手、文档共享社区</div>
+                    <div className={homeStyles.enTitle}>文档撰写助手、系列问题解答</div>
                   </Link>
                   <div className={homeStyles.desc}>
                     <div>
@@ -400,15 +400,17 @@ function Home(props) {
                 </div>
                 <Divider type="vertical" style={{ height: '20em' }} />
                 <div style={{ flex: 1, textAlign: 'center' }}>
-                  <div className={homeStyles.cnTitle}>文档示例、共享</div>
                   <div
                     className={homeStyles.desc}
-                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 60 }}
+                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 40 }}
                   >
+                    <div style={{ fontSize: 20, color: '#666', fontWeight: '400' }}>
+                      文档示例 · 共享
+                    </div>
                     {props.docExamples && props.docExamples.length !== 0
                       ? props.docExamples.map((docExample, exampleIndex) => {
                           return (
-                            <div>
+                            <div key={exampleIndex}>
                               <Link
                                 to={`/doc/outlineConfigPreview?docId=${docExample.docId}`}
                                 style={{ fontSize: 16, color: '#1890ff' }}

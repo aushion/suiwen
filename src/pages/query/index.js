@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Spin, Row, Col, Icon, Result, Button, message, Skeleton, Card } from 'antd';
+import { Spin, Row, Col, Icon, Result, Button, message, Skeleton, Card, Popover } from 'antd';
 import Link from 'umi/link';
 import querystring from 'querystring';
 import Cookies from 'js-cookie';
@@ -111,8 +111,6 @@ function ResultPage(props) {
     document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
 
- 
-
   useEffect(() => {
     document.addEventListener('copy', handleCopy);
     document.addEventListener('click', handleClick);
@@ -157,6 +155,7 @@ function ResultPage(props) {
   const resultLength =
     sgCount +
     lawData.length +
+    technologyData.length +
     semanticData.length +
     faqData.length +
     referenceBookData.length +
@@ -216,9 +215,12 @@ function ResultPage(props) {
           <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={showModal}>
             社区求助
           </span>
-          {/* <span style={{ marginLeft: 10, color: '#1890ff', cursor: 'pointer' }} onClick={myReply}>
-            我来回答
-          </span> */}
+          <Popover
+            title="您可以试试问题分解"
+            content={<Link to="/doc/outlineConfig">问题分解</Link>}
+          >
+            <span style={{ marginLeft: 10, cursor: 'pointer' }}>问题分解</span>
+          </Popover>
         </div>
 
         <Row gutter={16}>
