@@ -17,7 +17,8 @@ import {
 function Doc(props) {
   const { userDoc, loading, location, dispatch } = props;
   const { query } = location;
-  const { userName } = query;
+  let { userName } = query;
+  userName = RestTools.decodeBase64(userName);
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
@@ -124,14 +125,14 @@ function Doc(props) {
       }
     });
   }
-
+  
   return (
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
           {userInfo?.UserName === userName
             ? '我的文档'
-            : `${RestTools.formatPhoneNumber(userName)}的文档`}
+            : `${RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}的文档`}
           <Link
             to={`/doc/outlineConfig`}
             target="_blank"
