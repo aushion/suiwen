@@ -113,7 +113,7 @@ function BasicLayout(props) {
         <div className={styles.inputGroup}>
           <div className={`${styles.inputWrap}`}>
             <SmartInput
-              question={q}
+              question={q || ''}
               needTip
               onClickEnter={handleClickEnterOrItem}
               onClickItem={handleClickEnterOrItem}
