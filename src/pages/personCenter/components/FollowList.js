@@ -26,7 +26,11 @@ function FollowList(props) {
                   <Avatar
                     onClick={() => {
                       if (userCommunityInfo?.userName !== item.userName) {
-                        router.push(`/personCenter/people/ask?userName=${item.userName}`);
+                        router.push(
+                          `/personCenter/people/ask?userName=${RestTools.encodeBase64(
+                            item.userName
+                          )}`
+                        );
                       }
                       return;
                     }}
@@ -39,13 +43,17 @@ function FollowList(props) {
                   <div
                     onClick={() => {
                       if (userCommunityInfo.userName !== item.userName) {
-                        router.push(`/personCenter/people/ask?userName=${item.userName}`);
+                        router.push(
+                          `/personCenter/people/ask?userName=${RestTools.encodeBase64(
+                            item.userName
+                          )}`
+                        );
                       }
                       return;
                     }}
                     style={{ fontSize: 16 }}
                   >
-                    {RestTools.formatPhoneNumber(item.userName)}
+                    {RestTools.formatPhoneNumber(RestTools.hideEmailInfo(item.userName))}
                   </div>
                   <div style={{ color: '#999', fontWeight: 400, paddingTop: 16 }}>
                     <span style={{ paddingRight: 4 }}>
