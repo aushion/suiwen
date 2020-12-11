@@ -53,7 +53,7 @@ function AnswerForm(props) {
       if (!error) {
         const submitData = {
           contents: values.contents.toHTML(), // or values.content.toHTML()
-          resource: answerHelpData.resource || editStatus.resource
+          resource: answerHelpData?.resource || editStatus?.resource || ''
           // domain: values.domain,
         };
         const QID = props.QID || params.QID;

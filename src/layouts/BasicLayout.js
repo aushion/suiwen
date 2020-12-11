@@ -131,7 +131,9 @@ function BasicLayout(props) {
               </span> */}
               <Link
                 style={{ color: '#fff', marginLeft: 10 }}
-                to={`/personCenter/people/ask?userName=${userInfo ? userInfo.UserName : ''}`}
+                to={`/personCenter/people/ask?userName=${
+                  userInfo ? RestTools.encodeBase64(userInfo.UserName) : ''
+                }`}
                 target="_blank"
               >
                 <Avatar

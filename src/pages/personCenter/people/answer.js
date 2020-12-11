@@ -9,7 +9,8 @@ import styles from './people.less';
 function Answer(props) {
   const { myCommunityAnswer, avatar, loading, location, dispatch } = props;
   const { query } = location;
-  const { userName } = query;
+  let { userName } = query;
+  userName = RestTools.decodeBase64(userName);
   const userInfo = localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
@@ -17,7 +18,9 @@ function Answer(props) {
     <div className={styles.people}>
       <div className={styles.main}>
         <div className={styles.title}>
-          {userInfo?.UserName === userName ? `我的回答` : `${RestTools.formatPhoneNumber(userName)}的回答`}
+          {userInfo?.UserName === userName
+            ? `我的回答`
+            : `${RestTools.formatPhoneNumber(RestTools.hideEmailInfo(userName))}的回答`}
         </div>
         <Divider style={{ marginTop: 10, marginBottom: 0 }} />
         <div className={styles.content}>
