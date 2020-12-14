@@ -27,7 +27,10 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
             {repositoryData
               ? repositoryData.map((item, index) => {
                   return (
-                    <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={index}>
+                    <Tabs.TabPane
+                      tab={`${item.intentDomain === '论文类' ? '期刊' : item.intentDomain}`}
+                      key={index}
+                    >
                       {item.template === 'lawliterature' ? (
                         <Literature
                           law
