@@ -103,7 +103,6 @@ export default {
     *getExampleDoc({ payload }, { call, put }) {
       const { data } = yield call(getExampleDoc, payload);
       const { code, result } = data;
-      console.log('result', result);
       if (code === 200 && result) {
         yield put({
           type: 'save',

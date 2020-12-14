@@ -89,7 +89,7 @@ class OutlineList extends Component {
               )}
               <Link
                 key={docItem}
-                href={`#${'docTitle' + docItem.label}`}
+                href={`#${encodeURIComponent('docTitle' + docItem.label)}`}
                 title={<div title={docItem.label} className={[styles.header, id === docItem.id ? styles.active : null].join(' ')}>{docItem.label}</div>}
               />
             </div>
@@ -121,7 +121,7 @@ class OutlineList extends Component {
                       }
                       <Link
                         key={chapterItem}
-                        href={`#${'chapterTitle' + chapterItem.label}`}
+                        href={`#${encodeURIComponent('chapterTitle' + chapterItem.label)}`}
                         title={
                           <Tooltip
                             placement="top"
@@ -182,7 +182,7 @@ class OutlineList extends Component {
                         <div key={nodeIndex} className={styles.text}>
                           <Link
                             key={nodeItem}
-                            href={`#${'nodeTitle' + chapterItem.label + '' + nodeItem.label}`}
+                            href={`#${encodeURIComponent('nodeTitle' + chapterItem.label + '' + nodeItem.label)}`}
                             title={
                               <Tooltip
                                 placement="top"

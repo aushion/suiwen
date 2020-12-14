@@ -17,7 +17,6 @@ function Notify(props) {
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null;
 
-    console.log(userCommunityInfo)
   const action = {
     '00': '喜欢了你的回答',
     '04': '赞了你的评论',
