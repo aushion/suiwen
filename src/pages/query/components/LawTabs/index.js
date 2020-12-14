@@ -2,22 +2,24 @@ import React from 'react';
 import { Tabs, Spin, Empty } from 'antd';
 import { connect } from 'dva';
 import LawCase from '../LawCase';
+import Literature from '../Literature';
 import styles from './index.less';
 
-function LawTabs({ repositoryData, loading, q }) {
+function LawTabs({ repositoryData, loading, q, dispatch }) {
   repositoryData =
     repositoryData &&
     repositoryData
       .filter((item) => item.intentDomain !== '案由')
-      .filter((item) => item.template !== 'lawliterature')
       .filter((item) => item.template !== 'referencebook')
       .filter((item) => item.template !== 'graphic');
+
+  const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature');
 
   return repositoryData.length ? (
     <div className={styles.lawTabs}>
       <h2>
         <span style={{ color: '#1890ff' }}>{q}</span>
-        <span> - 知网法律</span>
+        <span> - 知网法律知识库</span>
       </h2>
       <Spin spinning={loading}>
         {repositoryData.length > 1 ? (
@@ -26,7 +28,16 @@ function LawTabs({ repositoryData, loading, q }) {
               ? repositoryData.map((item, index) => {
                   return (
                     <Tabs.TabPane tab={`${item.intentDomain || item.tagName}`} key={index}>
-                      <LawCase data={item} type={item.template} />
+                      {item.template === 'lawliterature' ? (
+                        <Literature
+                          law
+                          q={q}
+                          literatureData={lawLiteratureData}
+                          dispatch={dispatch}
+                        />
+                      ) : (
+                        <LawCase data={item} type={item.template} />
+                      )}
                     </Tabs.TabPane>
                   );
                 })
