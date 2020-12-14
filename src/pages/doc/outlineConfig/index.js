@@ -28,6 +28,7 @@ import NodeModel from './components/NodeModel';
 import NodeQuestionModel from './components/NodeQuestionModel';
 import TemplateManagementModel from './components/TemplateManagementModel';
 import DownloadDocModel from './components/DownloadDocModel';
+import DocTemplateSelect from './components/DocTemplateSelect';
 import querystring from 'querystring';
 import styles from './style.less';
 
@@ -57,6 +58,7 @@ const OutlineConfig = (props) => {
   const [addNodeQuestionVisible, setAddNodeQuestionVisible] = useState(false);
   const [templateManagementVisible, setTemplateManagementVisible] = useState(false);
   const [downloadDocVisible, setDownloadDocVisible] = useState(false);
+  const [docTemplateSelectVisible, setDocTemplateSelectVisible] = useState(false);
   //保存章标题id
   const [chapterId, setChapterId] = useState('');
   //保存选中的文档数据组
@@ -294,7 +296,8 @@ const OutlineConfig = (props) => {
           userName: username,
           templateId: values.docTemplateId === '' ? null : values.docTemplateId,
           tag: tag,
-          type: values.tag === '' ? null : values.type
+          type: values.tag === '' ? null : values.type,
+          keyWord: values.keyWord && values.keyWord.trim() !== '' ? values.keyWord : null
         }
       })
       .then((res) => {
@@ -438,7 +441,6 @@ const OutlineConfig = (props) => {
     //将当前文档的标签数组信息存入state
     setCurrentDocTagList(tagList);
     setDocData(item);
-    
   };
 
   //删除个人文档
@@ -796,46 +798,47 @@ const OutlineConfig = (props) => {
     }
   }
 
+  //文档模板选择handleOK事件
+  function docTemplateSelectHandleOk(values) {
+    setDocTemplateSelectVisible(false);
+    //设置文档预览区loading
+    setDocContentResultLoading(true);
+    setOutlineSpinLoading(true);
+    props
+      .dispatch({
+        type: 'Doc/chooseTemplateRoute',
+        payload: {
+          docId: docId,
+          templateId: selectedDocTemplate,
+          keyWord: values.keyWord,
+        }
+      })
+      .then((res) => {
+        if (res.code === 200) {
+          //清除文档标题、章标题、节标题、章标题id
+          setDocData('');
+          setChapterData('');
+          setNodeData('');
+          setChapterId('');
+          queryForRoute();
+          getDocContent();
+          setDocContentResultLoading(false);
+          message.success('文档模板应用完毕');
+        } else {
+          setDocContentResultLoading(false);
+          message.error(res.msg);
+        }
+      });
+    
+  }
+
   //选择文档模版改变时 触发事件
   function onDocTemplateSelectChange(value) {
-    setSeletedDocTemplate(value);
     if (value === '' || !docId) {
       return;
     }
-
-    Modal.confirm({
-      title: '确定应用此文档模板吗?此操作将会使之前编辑的提纲内容被覆盖掉！',
-      centered: true,
-      onOk() {
-        //设置文档预览区loading
-        setDocContentResultLoading(true);
-        setOutlineSpinLoading(true);
-        props
-          .dispatch({
-            type: 'Doc/chooseTemplateRoute',
-            payload: {
-              docId: docId,
-              templateId: value
-            }
-          })
-          .then((res) => {
-            if (res.code === 200) {
-              //清除文档标题、章标题、节标题、章标题id
-              setDocData('');
-              setChapterData('');
-              setNodeData('');
-              setChapterId('');
-              queryForRoute();
-              getDocContent();
-              setDocContentResultLoading(false);
-              message.success('文档模板应用完毕');
-            } else {
-              setDocContentResultLoading(false);
-              message.error(res.msg);
-            }
-          });
-      }
-    });
+    setSeletedDocTemplate(value);
+    setDocTemplateSelectVisible(true);
   }
 
   return (
@@ -1007,6 +1010,14 @@ const OutlineConfig = (props) => {
                 handleOk={generateDoc}
               />
             ) : null}
+            {docTemplateSelectVisible ? (
+              <DocTemplateSelect
+                modalVisible={docTemplateSelectVisible}
+                // loading={downloadDocHandleOkLoading}
+                onCancle={() => setDocTemplateSelectVisible(false)}
+                handleOk={docTemplateSelectHandleOk}
+              />
+            ) : null}
           </div>
         </div>
         <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
@@ -1085,10 +1096,12 @@ const OutlineConfig = (props) => {
                               dataSource={chapterItem.sectionList}
                               renderItem={(nodeItem) => (
                                 <div
-                                  key={
-                                    encodeURIComponent('nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName)
-                                  }
-                                  id={encodeURIComponent('nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName)}
+                                  key={encodeURIComponent(
+                                    'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName
+                                  )}
+                                  id={encodeURIComponent(
+                                    'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName
+                                  )}
                                 >
                                   {nodeItem.routeName ? (
                                     <div
@@ -1213,6 +1226,6 @@ export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
   docContentData: Doc.docContentData,
   docTemplateData: Doc.docTemplateData,
-  docClassifyData: Doc.docClassifyData,
+  docClassifyData: Doc.docClassifyData
   // currentTaskId: Doc.currentTaskId
 }))(Form.create()(OutlineConfig));

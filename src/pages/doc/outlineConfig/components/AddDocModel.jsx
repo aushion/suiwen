@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { Input, Modal, Form, Select, Radio,Button } from 'antd';
+import { Input, Modal, Form, Select, Radio, Button } from 'antd';
 
 const AddDocModel = Form.create({
   mapPropsToFields(props) {
     if (props.data !== undefined) {
       return {
-        label: Form.createFormField({ value: props.data.label }),
-        type: Form.createFormField({ value: props.data.type }),
-        tag: Form.createFormField({ value: props.data.tag }),
       };
     }
   },
@@ -83,6 +80,11 @@ const AddDocModel = Form.create({
             {docTemplateOptions}
           </Select>
         </Form.Item>
+        <Form.Item label="主题词" hidden={selectedDocTemplate === '' ? true : false}>
+          {form.getFieldDecorator('keyWord', {
+            rules: [{ pattern: /^(\S[\S\s]{0,19})$/, required: selectedDocTemplate === '' ? false : true, message: '开头不可为空字符,且不可超过20个字符' }],
+          })(<Input placeholder='文档模板不为空时，主题词必填' style={{ width: 400 }} maxLength={30} />)}
+        </Form.Item>
         <Form.Item label="文档标签">
           {form.getFieldDecorator('tag', {
           })(
@@ -101,23 +103,23 @@ const AddDocModel = Form.create({
             initialValue: '0',
             rules: []
           })(
-            <Radio.Group  style={{ width: 150 }}>
+            <Radio.Group style={{ width: 150 }}>
               <Radio value="0">公开</Radio>
               <Radio value="1">私有</Radio>
             </Radio.Group>
-            
+
           )}
           <Button
-          style={{ border: "0px", marginLeft:"230px" }}
-          size={"small"}
-          icon={"info-circle"}
-          title={"选择公开，表示文档可以发布，使他人可见；\r\n选择私有，代表文档只自己可见。"}
-          onClick={() => {
-          }}
-        >
-        </Button>
+            style={{ border: "0px", marginLeft: "230px" }}
+            size={"small"}
+            icon={"info-circle"}
+            title={"选择公开，表示文档可以发布，使他人可见；\r\n选择私有，代表文档只自己可见。"}
+            onClick={() => {
+            }}
+          >
+          </Button>
         </Form.Item>
-        
+
       </Form>
     </Modal>
   );

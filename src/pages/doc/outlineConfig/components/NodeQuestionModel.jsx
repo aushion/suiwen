@@ -17,6 +17,8 @@ const NodeQuestionModel = props => {
     const [tableEditedQuestion, setTableEditedQuestion] = useState('');
     const [inputIndex, setInputIndex] = useState(-1);
     const [editFlag, setEditFlag] = useState(false);
+    //展示问题搜索到的答案内容
+    // const [showAnswerFlag, setShowAnswerFlag] = useState(false);
 
 
     useEffect(() => {
