@@ -136,7 +136,6 @@ function ResultPage(props) {
   const translateData = repositoryData.filter((item) => item.template === 'translate'); //翻译
 
   const lawData = repositoryData.filter((item) => item.template.startsWith('law')); //法律类数据
-  const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature'); //法规案例
   const technologyData = repositoryData.filter((item) => item.template === 'technology'); //核心技术数据
 
   const conceptInfo = repositoryData.filter((item) => item.template === 'concept'); //知识元概念数据
@@ -320,10 +319,6 @@ function ResultPage(props) {
                       dispatch={dispatch}
                       loading={fetchLiterature}
                     />
-                  ) : null}
-
-                  {lawLiteratureData.length ? (
-                    <Literature law q={q} literatureData={lawLiteratureData} dispatch={dispatch} />
                   ) : null}
 
                   {patentData.length

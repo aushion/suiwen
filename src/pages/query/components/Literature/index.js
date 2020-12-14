@@ -39,8 +39,9 @@ export default function Literature(props) {
     evaluate = { good: 0, bad: 0, isevaluate: false },
     intentId,
     pagination = {},
-    intentJson,
+    intentJson
   } = works;
+
   const relevant = orderBy && orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const { good = 0, bad = 0, isevalute = false } = evaluate;
@@ -143,7 +144,6 @@ export default function Literature(props) {
     getCustomView(params)
       .then((res) => {
         if (res.data.code === 200) {
-         
           setLoading(false);
           updateResource({
             ...resource,
@@ -199,22 +199,6 @@ export default function Literature(props) {
       SN,
       orderSql: order
     });
-    // dispatch({
-    //   type: 'result/getCustomView',
-    //   payload: {
-    //     pageStart,
-    //     whereSql: sql,
-    //     yearSql,
-    //     subjectSql,
-    //     intent,
-    //     keyword: '',
-    //     fieldWord,
-    //     replaceSql,
-    //     searchword: '',
-    //     SN,
-    //     orderSql: order
-    //   }
-    // });
   }, [count, sortKey]);
 
   useEffect(() => {
@@ -259,23 +243,6 @@ export default function Literature(props) {
       SN,
       orderSql: orderBy
     });
-
-    // dispatch({
-    //   type: 'result/getCustomView',
-    //   payload: {
-    //     pageStart: page,
-    //     whereSql: sql,
-    //     yearSql,
-    //     subjectSql,
-    //     fieldWord,
-    //     replaceSql,
-    //     keyword: '',
-    //     searchword: '',
-    //     intent,
-    //     SN,
-    //     orderSql: ' ' + orderBy
-    //   }
-    // });
   }
 
   function sortBy(key) {
@@ -312,22 +279,6 @@ export default function Literature(props) {
       SN,
       orderSql: orderBy
     });
-    // dispatch({
-    //   type: 'result/getCustomView',
-    //   payload: {
-    //     pageStart: 1,
-    //     whereSql: sql,
-    //     yearSql: yearSql,
-    //     intent,
-    //     subjectSql,
-    //     fieldWord,
-    //     replaceSql,
-    //     keyword: '',
-    //     searchword: '',
-    //     SN,
-    //     orderSql: orderBy
-    //   }
-    // });
   }
 
   function filterBySubject(subject, index) {
@@ -357,22 +308,6 @@ export default function Literature(props) {
       SN,
       orderSql: orderBy
     });
-    // dispatch({
-    //   type: 'result/getCustomView',
-    //   payload: {
-    //     pageStart: 1,
-    //     whereSql: sql,
-    //     yearSql: '',
-    //     intent,
-    //     subjectSql,
-    //     fieldWord,
-    //     replaceSql,
-    //     searchword: '',
-    //     keyword: '',
-    //     SN,
-    //     orderSql: orderBy
-    //   }
-    // });
   }
 
   function handleSearch(value) {
@@ -414,22 +349,7 @@ export default function Literature(props) {
       SN,
       orderSql: orderBy
     });
-    // dispatch({
-    //   type: 'result/getCustomView',
-    //   payload: {
-    //     pageStart: 1,
-    //     whereSql: sql,
-    //     yearSql: '',
-    //     intent,
-    //     subjectSql: '',
-    //     fieldWord,
-    //     replaceSql,
-    //     keyword,
-    //     searchword: value,
-    //     SN,
-    //     orderSql: orderBy
-    //   }
-    // });
+
     //记录上一次搜索框的值
     RestTools.setSession('preSearchValue', value);
   }
@@ -451,19 +371,25 @@ export default function Literature(props) {
   }
   return (
     <div
-      style={{
-        background: '#fff',
-        padding: 20,
-        marginBottom: 20,
-        boxShadow: '#a5a5a5 0 0 10.8px 0'
-      }}
+      style={
+        props.law
+          ? null
+          : {
+              background: '#fff',
+              padding: 20,
+              marginBottom: 20,
+              boxShadow: '#a5a5a5 0 0 10.8px 0'
+            }
+      }
     >
-      <h2>
-        <a href={linkMap[linkName].url(keyword)} target="_blank" rel="noopener noreferrer">
-          {searchword || props.q}
-        </a>
-        <span> - 知网文献</span>
-      </h2>
+      {props.law ? null : (
+        <h2>
+          <a href={linkMap[linkName].url(keyword)} target="_blank" rel="noopener noreferrer">
+            {searchword || props.q}
+          </a>
+          <span> - 知网文献</span>
+        </h2>
+      )}
       {intentId === '43' || intentId === '71' || intentId === '77' ? (
         <div style={{ fontSize: 15 }}>未找到本科论文，推荐以下博硕士论文</div>
       ) : null}
