@@ -14,13 +14,17 @@ function LawCase({ data, type }) {
   const { q, topic } = querystring.parse(window.location.search.substring(1));
   const showType = {
     lawitem: {
-      dataItem: ['所属法规', '时效性', '发布日期', '全文']
+      dataItem: ['所属法规', '时效性', '发布日期', '全文'],
+      moreUrl: `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=CLKLT`,
+      moreText: '更多法规条目'
     },
     lawcase: {
       title: '标题',
       link: (kw) =>
         `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=clkc&kw=${kw}&korder=0&sel=1`,
-      dataItem: ['案由', '裁判日期', '审理法院', '全文']
+      dataItem: ['案由', '裁判日期', '审理法院', '全文'],
+      moreUrl: `https://lawnew.cnki.net/kns/brief/result.aspx?dbprefix=CLKC`,
+      moreText: '更多法律案例'
     },
     lawpost: {
       title: '中文标题',
@@ -28,7 +32,9 @@ function LawCase({ data, type }) {
         kw
       ) => `https://lawnew.cnki.net/kns/brief/result.aspx?dbPrefix=clklk&kw=${kw}&korder=0&sel=1
       `,
-      dataItem: ['时效性', '发布机关', '发布日期', '全文']
+      dataItem: ['时效性', '发布机关', '发布日期', '全文'],
+      moreUrl: `https://lawnew.cnki.net/kns/brief/result.aspx?dbprefix=CLKLK`,
+      moreText: '更多法律法规'
     }
   };
   function fetchData(params) {
@@ -77,11 +83,11 @@ function LawCase({ data, type }) {
           <div style={{ textAlign: 'right', padding: 0 }}>
             <a
               style={{ color: '#999' }}
-              href="https://lawnew.cnki.net/kns/brief/result.aspx?dbprefix=CLKC"
+              href={showType[type].moreUrl}
               rel="noreferrer"
               target="_blank"
             >
-              CNKI法律法规库
+              {showType[type].moreText}
             </a>
           </div>
         }

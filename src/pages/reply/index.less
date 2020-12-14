@@ -21,15 +21,20 @@
       border-bottom: 1px solid #eee;
       padding: 16px;
       overflow: hidden;
+      .itemTitle {
+        p {
+          white-space: pre-wrap;
+        }
+      }
 
-      :global(.ant-list-vertical .ant-list-item-meta){
+      :global(.ant-list-vertical .ant-list-item-meta) {
         margin-bottom: 0;
       }
 
-      .followBtn{
+      .followBtn {
         padding-top: 10px;
       }
-    
+
       .answerAvatar {
         padding: 10px 0;
       }
@@ -49,20 +54,20 @@
           outline: none;
           border: none;
           padding: 4px 8px;
-          &:hover{
-            background: rgba(123, 132, 255, .8);
+          &:hover {
+            background: rgba(123, 132, 255, 0.8);
             color: #fff;
           }
-          &:focus{
-            border:none;
+          &:focus {
+            border: none;
             outline: none;
           }
         }
         .action {
           margin-right: 20px;
           cursor: pointer;
-          &:hover{
-            color:orange;
+          &:hover {
+            color: orange;
           }
         }
       }

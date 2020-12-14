@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Icon, message, Spin } from 'antd';
 import dayjs from 'dayjs';
 import Cookies from 'js-cookie';
-
+import 'braft-editor/dist/output.css';
 import CommentList from './CommentList';
 import AnswerForm from './AnswerForm';
 import replyStyle from '../index.less';
@@ -269,7 +269,7 @@ function AnswerList(props) {
             ) : (
               <>
                 <div
-                  className={replyStyle.itemTitle}
+                  className={`${replyStyle.itemTitle} braft-output-content`}
                   dangerouslySetInnerHTML={{ __html: item.Content || item.answer }}
                 />
 
