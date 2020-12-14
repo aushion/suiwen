@@ -55,11 +55,6 @@ function LawCase({ data, type }) {
         itemLayout="vertical"
         dataSource={dataNode}
         loading={loading}
-        // header={
-        //   <div>
-        //     共<strong>{pagination.total}</strong>条结果
-        //   </div>
-        // }
         pagination={{
           current: pagination.pageStart,
           pageSize: pagination.pageCount,
