@@ -106,7 +106,6 @@ const OutlineConfig = (props) => {
     }
     //当dom卸载时调用，清除定时器
     return () => {
-      console.log('ris-fsfs');
       timer && clearInterval(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,16 +164,15 @@ const OutlineConfig = (props) => {
       })
       .then((res) => {
         if (res.code === 200) {
-          setDocContentResultLoading(false);
           //清除定时器
           clearInterval(timer);
           //跳至当前瞄点位置
           getDocContent();
-          let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
-          if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
-            let currentAnchorPoint = currentUrlRight.split('#')[1];
-            window.location.href = '#' + encodeURI(currentAnchorPoint);
-          }
+          // let currentUrlRight = window.location.href.split('?')[1];
+          // if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
+          //   let currentAnchorPoint = currentUrlRight.split('#')[1];
+          //   window.location.href = '#' + currentAnchorPoint;
+          // }
         } else {
           setDocContentResultLoading(true);
         }
@@ -427,7 +425,6 @@ const OutlineConfig = (props) => {
 
   //编辑文档题目
   const onEditDoc = (item) => {
-    console.log(item);
     setEditDocVisible(true);
     //获取标签字段信息，并将其从逗号分隔的字符串转换成数组结构，便于显示在前端
     let tagStr = item.tag;
@@ -654,22 +651,6 @@ const OutlineConfig = (props) => {
           componentDidMount(currentTaskId);
         }
       });
-
-    // .then((res) => {
-
-    //   if (res.code === 200) {
-    //     setDocContentResultLoading(false);
-    //   } else {
-    //     message.error(res.msg);
-    //   }
-    //   //跳至当前瞄点位置
-    //   let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
-    //   console.log('currentUrlRight', currentUrlRight);
-    //   if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
-    //     let currentAnchorPoint = currentUrlRight.split('#')[1];
-    //     window.location.href = '#' + encodeURI(currentAnchorPoint);
-    //   }
-    // });
   };
 
   //为当前节标题配置问题或关键字
@@ -1072,8 +1053,8 @@ const OutlineConfig = (props) => {
               {props.docContentData ? (
                 <>
                   <div
-                    key={'docTitle' + props.docContentData.docName}
-                    id={'docTitle' + props.docContentData.docName}
+                    key={encodeURIComponent('docTitle' + props.docContentData.docName)}
+                    id={encodeURIComponent('docTitle' + props.docContentData.docName)}
                     dangerouslySetInnerHTML={{
                       __html:
                         '<h1 align="center">' +
@@ -1087,8 +1068,8 @@ const OutlineConfig = (props) => {
                     dataSource={props.docContentData.routeList}
                     renderItem={(chapterItem) => (
                       <div
-                        key={'chapterTitle' + chapterItem.routeName}
-                        id={'chapterTitle' + chapterItem.routeName}
+                        key={encodeURIComponent('chapterTitle' + chapterItem.routeName)}
+                        id={encodeURIComponent('chapterTitle' + chapterItem.routeName)}
                       >
                         {chapterItem.routeName ? (
                           <div
@@ -1105,9 +1086,9 @@ const OutlineConfig = (props) => {
                               renderItem={(nodeItem) => (
                                 <div
                                   key={
-                                    'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName
+                                    encodeURIComponent('nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName)
                                   }
-                                  id={'nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName}
+                                  id={encodeURIComponent('nodeTitle' + chapterItem.routeName + '' + nodeItem.routeName)}
                                 >
                                   {nodeItem.routeName ? (
                                     <div

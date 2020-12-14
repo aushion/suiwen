@@ -32,7 +32,6 @@ function Detail() {
         })
         .then((res) => {
           if (res.data.code === 200) {
-            console.log('medicalData', res.data.result[0]);
             setMedicalData(res.data.result[0]);
           } else {
             setMedicalData(true);

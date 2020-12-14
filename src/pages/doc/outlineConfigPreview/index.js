@@ -513,7 +513,6 @@ const OutlineConfigPreview = (props) => {
         }
         //跳至当前瞄点位置
         let currentUrlRight = decodeURI(window.location.href.split('?')[1]);
-        console.log('currentUrlRight', currentUrlRight);
         if (currentUrlRight && currentUrlRight.indexOf('#') !== -1) {
           let currentAnchorPoint = currentUrlRight.split('#')[1];
           window.location.href = '#' + encodeURI(currentAnchorPoint);
