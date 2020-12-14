@@ -47,7 +47,17 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
           <div>
             {repositoryData
               ? repositoryData.map((item, index) => {
-                  return <LawCase key={index} data={item} type={item.template} />;
+                  return item.template === 'lawliterature' ? (
+                    <Literature
+                      key={index}
+                      law
+                      q={q}
+                      literatureData={lawLiteratureData}
+                      dispatch={dispatch}
+                    />
+                  ) : (
+                    <LawCase key={index} data={item} type={item.template} />
+                  );
                 })
               : null}
           </div>

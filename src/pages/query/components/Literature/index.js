@@ -41,6 +41,7 @@ export default function Literature(props) {
     pagination = {},
     intentJson
   } = works;
+
   const relevant = orderBy && orderBy.indexOf('relevant');
   const subjectValid = subject ? uniqBy(subject, 'g').filter((item) => !/\d+/g.test(item.g)) : []; //有效学科单元
   const { good = 0, bad = 0, isevalute = false } = evaluate;
