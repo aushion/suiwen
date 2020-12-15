@@ -983,6 +983,7 @@ const OutlineConfig = (props) => {
               <NodeQuestionModel
                 modalVisible={addNodeQuestionVisible}
                 data={nodeData}
+                answerContentDataForCurrentQuestion={props.answerContentDataForCurrentQuestion}
                 dispatch={dispatch}
                 loading={props.loading}
                 chapterId={chapterId}
@@ -1226,6 +1227,6 @@ export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
   docContentData: Doc.docContentData,
   docTemplateData: Doc.docTemplateData,
-  docClassifyData: Doc.docClassifyData
-  // currentTaskId: Doc.currentTaskId
+  docClassifyData: Doc.docClassifyData,
+  answerContentDataForCurrentQuestion: Doc.answerContentDataForCurrentQuestion,
 }))(Form.create()(OutlineConfig));

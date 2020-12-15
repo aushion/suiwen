@@ -208,3 +208,12 @@ export async function getContentTaskStatus(params) {
   });
 }
 
+//根据当前问题获取文档内容片段
+export async function getContentByQuestion(params) {
+  return request({
+    url: '/doc/getContentByQuestion',
+    method: 'post',
+    params
+  });
+}
+

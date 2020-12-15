@@ -1,9 +1,11 @@
-import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select } from 'antd';
+import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select, Spin, List } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { EditOutlined, DeleteOutlined, CheckOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import RestTools from '../../../../utils/RestTools';
+import styles from '../style.less';
+import { EditOutlined, DeleteOutlined, CheckOutlined, ArrowUpOutlined, ArrowDownOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 const NodeQuestionModel = props => {
-    const { modalVisible, onCancle, data, chapterId } = props;
+    const { modalVisible, onCancle, data, chapterId, answerContentDataForCurrentQuestion } = props;
     const [questionSourceData, setQuestionSourceData] = useState([]);
     //新增问题/关键字相关
     const [questionTemplateData, setQuestionTemplateData] = useState([]);
@@ -18,7 +20,9 @@ const NodeQuestionModel = props => {
     const [inputIndex, setInputIndex] = useState(-1);
     const [editFlag, setEditFlag] = useState(false);
     //展示问题搜索到的答案内容
-    // const [showAnswerFlag, setShowAnswerFlag] = useState(false);
+    const [showAnswerFlag, setShowAnswerFlag] = useState(false);
+    const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
+    const [answerResultForCurrentQuestionLoading, setAnswerResultForCurrentQuestionLoading] = useState(false);
 
 
     useEffect(() => {
@@ -62,6 +66,41 @@ const NodeQuestionModel = props => {
                     message.error(res.msg);
                 }
             });
+    }
+
+    //展示当前问题对应的随问答案
+    function showAnswerForCurrentQuestion(record, index) {
+        setShowAnswerIndex(index);
+        //根据当前是否显示预览答案状态，分别判定事件
+        if (showAnswerFlag && index === showAnswerIndex) {
+            setShowAnswerFlag(false);
+            //清空答案数据
+
+        } else {
+            setShowAnswerFlag(true);
+            //调用答案搜索函数，并将其视图化展示出来
+            getAnswerContentForCurrentQuestion(record);
+
+
+        }
+    }
+
+    //根据当前问题搜索随问答案原文函数
+    function getAnswerContentForCurrentQuestion(record) {
+        setAnswerResultForCurrentQuestionLoading(true);
+        //调用获取随问片段接口
+        props.dispatch({
+            type: 'Doc/getContentByQuestion',
+            payload: {
+                q: encodeURIComponent(record.question),
+            }
+        }).then((res) => {
+            if (res.code === 200) {
+                setAnswerResultForCurrentQuestionLoading(false);
+            } else {
+                message.error(res.msg);
+            }
+        });
     }
 
     //多选框
@@ -129,6 +168,11 @@ const NodeQuestionModel = props => {
                         : <EditOutlined onClick={(() => { document.getElementById("queInput" + record.qId).focus() })} title="编辑" />}
                     <Divider type="vertical" />
                     <DeleteOutlined onClick={(() => { deleteNodeQuestion({ qId: record.qId }) })} title="删除" />
+                    <Divider type="vertical" />
+                    {showAnswerFlag === true ?
+                        (index === showAnswerIndex ? <EyeOutlined onClick={(() => { showAnswerForCurrentQuestion(record, index) })} title="点击隐藏答案预览" />
+                            : <EyeInvisibleOutlined onClick={(() => { showAnswerForCurrentQuestion(record, index) })} title="点击显示答案预览" />)
+                        : <EyeInvisibleOutlined onClick={(() => { showAnswerForCurrentQuestion(record, index) })} title="点击显示答案预览" />}
                     <Divider type="vertical" />
                     <ArrowUpOutlined onClick={(() => { arrowUpOutlined(record) })} title="排序上升" />
                     <Divider type="vertical" />
@@ -301,6 +345,7 @@ const NodeQuestionModel = props => {
         //清除行数据编辑缓存和行索引缓存
         setTableEditedQuestion('');
         setInputIndex('');
+        setShowAnswerIndex('');
         //推出编辑状态
         setEditFlag(false);
         search();
@@ -457,117 +502,171 @@ const NodeQuestionModel = props => {
             destroyOnClose
             title={"配置章节系列问题或关键字"}
             visible={modalVisible}
-            width={850}
+            width={showAnswerFlag === true ? 1500 : 850}
             centered={true}
             onOk={onHandleOk}
             onCancel={onCancle}
         >
+            <Row gutter={[24, 24]} >
+                <Col span={12}>
+                    <Card style={{ width: '800px' }}>
+                        <Row gutter={[24, 24]} >
+                            <Col span={24}>
+                                <div style={{ textAlign: 'center', marginTop: 0 }}>
+                                    <font face="楷体" size="4"><b>问题新增</b></font>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row gutter={[24, 24]} >
+                            <Col span={24}>
+                                <div style={{ textAlign: 'left', marginTop: 0 }}>
+                                    <font face="宋体" size="2"><b>模版选择：</b></font>
+                                    <Select
+                                        style={{ width: 300 }}
+                                        value={selectedQuestionTemplate}
+                                        onChange={(v) => onQuestionSelectChange(v)}
+                                    >
+                                        <Select.Option value={''} >
+                                            {'无'}
+                                        </Select.Option>
+                                        {questionTemplateOptions}
+                                    </Select>
+                                </div>
 
-            <Card>
-                <Row gutter={[24, 24]} >
-                    <Col span={24}>
-                        <div style={{ textAlign: 'center', marginTop: 0 }}>
-                            <font face="楷体" size="4"><b>问题新增</b></font>
-                        </div>
-                    </Col>
-                </Row>
-                <Row gutter={[24, 24]} >
-                    <Col span={24}>
-                        <div style={{ textAlign: 'left', marginTop: 0 }}>
-                            <font face="宋体" size="2"><b>模版选择：</b></font>
-                            <Select
-                                style={{ width: 300 }}
-                                value={selectedQuestionTemplate}
-                                onChange={(v) => onQuestionSelectChange(v)}
-                            >
-                                <Select.Option value={''} >
-                                    {'无'}
-                                </Select.Option>
-                                {questionTemplateOptions}
-                            </Select>
-                        </div>
+                            </Col>
+                        </Row>
 
-                    </Col>
-                </Row>
+                        <Row gutter={[24, 24]}>
 
-                <Row gutter={[24, 24]}>
+                            <Col span={20} >
+                                <TextArea
+                                    style={{ border: "solid 3px   #E6E8FA" }}
+                                    placeholder="批量添加以回车换行分割"
+                                    autoSize={{ minRows: 4, maxRows: 4 }}
+                                    value={newNodeQuestions}
+                                    onChange={e => {
+                                        setNewNodeQuestions(e.target.value);
 
-                    <Col span={20} >
-                        <TextArea
-                            style={{ border: "solid 3px   #E6E8FA" }}
-                            placeholder="批量添加以回车换行分割"
-                            autoSize={{ minRows: 4, maxRows: 4 }}
-                            value={newNodeQuestions}
-                            onChange={e => {
-                                setNewNodeQuestions(e.target.value);
-
-                            }}
-                        />
-                    </Col>
-                    <Col span={4}>
-                        <Button
-                            style={{ marginLeft: -10, color: '#5F9F9F' }}
-                            loading={props.loading}
-                            onClick={() => {
-                                //保存问题/关键字
-                                addNodeQuestion();
-                            }}
-                        >
-                            保存更新
+                                    }}
+                                />
+                            </Col>
+                            <Col span={4}>
+                                <Button
+                                    style={{ marginLeft: -10, color: '#5F9F9F' }}
+                                    loading={props.loading}
+                                    onClick={() => {
+                                        //保存问题/关键字
+                                        addNodeQuestion();
+                                    }}
+                                >
+                                    保存更新
                         </Button>
 
-                        <Button
-                            style={{ marginLeft: -10, marginTop: 33, color: '#97694F ' }}
-                            loading={props.loading}
-                            onClick={() => {
-                                //保存问题/关键字
-                                textEmpty();
-                            }}
-                        >
-                            文本清空
+                                <Button
+                                    style={{ marginLeft: -10, marginTop: 33, color: '#97694F ' }}
+                                    loading={props.loading}
+                                    onClick={() => {
+                                        //保存问题/关键字
+                                        textEmpty();
+                                    }}
+                                >
+                                    文本清空
                         </Button>
 
 
 
-                    </Col>
-                </Row>
+                            </Col>
+                        </Row>
 
-                <Row gutter={[24, 24]} >
-                    <Col span={24}>
-                        <Card>
-                            <div style={{ textAlign: 'center', marginTop: 0 }}>
-                                <font face="楷体" size="4"><b>问题展示</b></font>
-                            </div>
-                            <div style={{ textAlign: 'right', marginBottom: 20, marginTop: 10 }}>
-                                <Button onClick={refreshNodeQuestionData} loading={props.loading} style={{ marginLeft: 10, color: '#000000' }} >
-                                    刷新数据
+                        <Row gutter={[24, 24]} >
+                            <Col span={24}>
+                                <Card>
+                                    <div style={{ textAlign: 'center', marginTop: 0 }}>
+                                        <font face="楷体" size="4"><b>问题展示</b></font>
+                                    </div>
+                                    <div style={{ textAlign: 'right', marginBottom: 20, marginTop: 10 }}>
+                                        <Button onClick={refreshNodeQuestionData} loading={props.loading} style={{ marginLeft: 10, color: '#000000' }} >
+                                            刷新数据
                                 </Button>
-                                <Button onClick={batchDeleteNodeQuestion} loading={props.loading} style={{ marginLeft: 10, color: ' red' }} >
-                                    批量删除
+                                        <Button onClick={batchDeleteNodeQuestion} loading={props.loading} style={{ marginLeft: 10, color: ' red' }} >
+                                            批量删除
                                 </Button>
 
-                            </div>
-                            <Table
-                                rowSelection={rowSelection}
-                                loading={props.loading}
-                                columns={columns}
-                                size='middle'
-                                style={{ marginTop: 20, minHeight: 340 }}
-                                pagination={false}
-                                dataSource={questionData}
-                            />
-                        </Card>
+                                    </div>
+                                    <Table
+                                        rowSelection={rowSelection}
+                                        loading={props.loading}
+                                        columns={columns}
+                                        size='middle'
+                                        style={{ marginTop: 20, minHeight: 340 }}
+                                        pagination={false}
+                                        dataSource={questionData}
+                                    />
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Card>
+                </Col>
+                <Col span={12} style={{ display: showAnswerFlag === false ? "none" : "block" }}>
+                    <div id="scrollContentInNodeQuestionModel" className={styles.scrollContentInNodeQuestionModel}>
+                        <Spin spinning={answerResultForCurrentQuestionLoading} tip="文档片段匹配中..." size="large">
+                            {answerContentDataForCurrentQuestion && answerContentDataForCurrentQuestion.contentList && answerContentDataForCurrentQuestion.contentList.length > 0 ? (
+                                <div>
+                                    {
+                                        answerContentDataForCurrentQuestion.question ? (
 
-                    </Col>
-
-
-                </Row>
-
-
-
-
-
-            </Card>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        '<h3 align="center">' +
+                                                        [answerContentDataForCurrentQuestion.question] +
+                                                        '</h3>'
+                                                }}
+                                            />
+                                        ) : null
+                                    }
+                                    < List
+                                        split={false}
+                                        dataSource={answerContentDataForCurrentQuestion.contentList}
+                                        renderItem={(contentItem) => (
+                                            <List.Item>
+                                                <Col>
+                                                    <Row>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    '<p style="text-indent:2em">' +
+                                                                    RestTools.translateDocToRed(
+                                                                        contentItem.content
+                                                                    ) +
+                                                                    '</p>'
+                                                            }}
+                                                        />
+                                                    </Row>
+                                                    <Row>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    '<p style="text-align: right">' +
+                                                                    '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                                                    contentItem.resourceId +
+                                                                    '>' +
+                                                                    contentItem.resource +
+                                                                    '</a>' +
+                                                                    '</p>'
+                                                            }}
+                                                        />
+                                                    </Row>
+                                                </Col>
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+                            ) : null}
+                        </Spin>
+                    </div>
+                </Col>
+            </Row>
         </Modal>
     );
 };

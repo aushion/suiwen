@@ -21,6 +21,7 @@ import {
   getDocClassify,
   getDocInfo,
   getContentTaskStatus,
+  getContentByQuestion,
 } from './service/index';
 const Doc = {
   namespace: 'Doc',
@@ -33,8 +34,8 @@ const Doc = {
     docTemplateData: [],
     //文档标签
     docClassifyData: [],
-    //当前文档定时任务Id
-    // currentTaskId:'',
+    //当前答案匹配到的随问原文
+    answerContentDataForCurrentQuestion: [],
   },
   effects: {
     *addUserDoc({ payload }, { call, put }) {
@@ -197,6 +198,21 @@ const Doc = {
     *getContentTaskStatus({ payload }, { call, put }) {
       const response = yield call(getContentTaskStatus, payload);
       let data = response.data;
+      return data;
+    },
+
+    *getContentByQuestion({ payload }, { call, put }) {
+      const response = yield call(getContentByQuestion, payload);
+      let data = response.data;
+      if (data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            answerContentDataForCurrentQuestion: data.result
+          }
+        });
+      }
+
       return data;
     },
     
