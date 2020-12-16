@@ -134,7 +134,7 @@ function Graphic(props) {
     }
   }
 
-  function changePage(pageIndex, pageSize = 10) {
+  function changePage(pageIndex, pageSize = 5) {
     const userId = RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
       : Cookies.get('cnki_qa_uuid');
