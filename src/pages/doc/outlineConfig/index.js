@@ -80,6 +80,8 @@ const OutlineConfig = (props) => {
   const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
 
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+  //新建文档后是否加载内容刷新函数状态值
+  const [isToCallRefreshDocContent, setIsToCallRefreshDocContent] = useState(false);
 
   useEffect(() => {
     //加载文档模版数据和标签数据
@@ -91,7 +93,12 @@ const OutlineConfig = (props) => {
       //加载该文档id下的提纲目录
       queryForRoute();
       //加载文档内容
-      getDocContent();
+      console.log("isToCallRefreshDocContent",isToCallRefreshDocContent);
+      if(isToCallRefreshDocContent){
+        refreshDocContent();
+      }else{
+        getDocContent();
+      }
       setID(docId);
     } else {
       //不加载文档内容
@@ -169,6 +176,7 @@ const OutlineConfig = (props) => {
         if (res.code === 200) {
           //清除定时器
           clearInterval(timer);
+          setIsToCallRefreshDocContent(false);
           //跳至当前瞄点位置
           getDocContent();
         } else {
@@ -285,6 +293,11 @@ const OutlineConfig = (props) => {
       if (i !== tagList.length - 1) {
         tag += ',';
       }
+    }
+
+    if (values.docTemplateId !== '') {
+      setIsToCallRefreshDocContent(true);
+      setDocContentResultLoading(true);
     }
 
     //新增文档
@@ -822,8 +835,13 @@ const OutlineConfig = (props) => {
           setNodeData('');
           setChapterId('');
           queryForRoute();
-          getDocContent();
-          setDocContentResultLoading(false);
+          if (selectedDocTemplate !== '') {
+            //调用含有定时器启动的内容刷新函数
+            refreshDocContent();
+          }else{
+            getDocContent();
+          }
+          
           message.success('文档模板应用完毕');
         } else {
           setDocContentResultLoading(false);
@@ -876,7 +894,7 @@ const OutlineConfig = (props) => {
                 <Select
                   style={{ width: 190, marginLeft: 5 }}
                   value={selectedDocTemplate}
-                  onChange={(v) => onDocTemplateSelectChange(v)}
+                  onSelect={(v) => onDocTemplateSelectChange(v)}
                 >
                   <Select.Option value={''}>{'文档模板选择'}</Select.Option>
                   {docTemplateOptions}
@@ -1061,7 +1079,7 @@ const OutlineConfig = (props) => {
             </Button>
           </div>
           <div id="scrollContent" className={styles.scrollContent}>
-            <Spin spinning={docContentResultLoading} tip="文档内容加载中..." size="large">
+            <Spin spinning={docContentResultLoading} tip="文档内容生成中..." size="large">
               {props.docContentData ? (
                 <>
                   <div

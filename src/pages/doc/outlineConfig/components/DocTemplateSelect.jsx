@@ -48,7 +48,7 @@ const DocTemplateSelect = Form.create({
       destroyOnClose
       //是否支持键盘 esc 关闭 ， 默认true
       keyboard
-      title={'模板选择应用'}
+      title={'编辑主题词'}
       centered={true}
       visible={modalVisible}
       width={400}

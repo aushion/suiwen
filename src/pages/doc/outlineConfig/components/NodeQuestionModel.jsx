@@ -1,8 +1,9 @@
-import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select, Spin, List } from 'antd';
+import { Modal, Input, Card, Table, Button, message, Col, Row, Divider, Select, Spin, List, Switch } from 'antd';
 import React, { useState, useEffect } from 'react';
 import RestTools from '../../../../utils/RestTools';
 import styles from '../style.less';
 import { EditOutlined, DeleteOutlined, CheckOutlined, ArrowUpOutlined, ArrowDownOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import QuestionTemplateTagSelect from './QuestionTemplateTagSelect';
 
 const NodeQuestionModel = props => {
     const { modalVisible, onCancle, data, chapterId, answerContentDataForCurrentQuestion } = props;
@@ -23,6 +24,8 @@ const NodeQuestionModel = props => {
     const [showAnswerFlag, setShowAnswerFlag] = useState(false);
     const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
     const [answerResultForCurrentQuestionLoading, setAnswerResultForCurrentQuestionLoading] = useState(false);
+    //编辑模式开关状态
+    const [questionInputTypeSwitchStatus, setQuestionInputTypeSwitchStatus] = useState(false);
 
 
     useEffect(() => {
@@ -474,17 +477,26 @@ const NodeQuestionModel = props => {
 
     };
 
+    //问题模板标签多选框数据初始化
+    let questionTemplateTagOptions = [];
     let questionTemplateOptions = [];
     if (questionTemplateData.length) {
         for (let i = 0; i < questionTemplateData.length; i++) {
 
             questionTemplateOptions.push(
-                <Select.Option value={questionTemplateData[i]['question']} key={i} title={questionTemplateData[i]['question']}>
-                    {questionTemplateData[i]['question']}
+                <Select.Option value={questionTemplateData[i]['question']} key={i} title={questionTemplateData[i]['tag']}>
+                    {questionTemplateData[i]['tag']}
                 </Select.Option>
             );
+
+            let tagObject = {label: questionTemplateData[i]['tag'], value: questionTemplateData[i]['question'] + '###' + questionTemplateData[i]['tag']};
+            questionTemplateTagOptions.push(tagObject);
         }
     }
+
+
+
+
 
     //选择问题模版改变事件
     const onQuestionSelectChange = (v) => {
@@ -496,6 +508,19 @@ const NodeQuestionModel = props => {
         let newNodeQuestionsStr = (newNodeQuestions === '' ? (v) : (newNodeQuestions + '\n' + v));
         setNewNodeQuestions(newNodeQuestionsStr);
     }
+
+    //问题输入模式开关改变函数
+    function onQuestionInputTypeSwitchChanged(checked) {
+        console.log('checked', checked);
+        if (checked) {
+            //如果是自由输入模式
+            setQuestionInputTypeSwitchStatus(true);
+        } else {
+            //如果切换到问题标签模式
+            setQuestionInputTypeSwitchStatus(false);
+        }
+    }
+
 
     return (
         <Modal
@@ -512,72 +537,95 @@ const NodeQuestionModel = props => {
                     <Card style={{ width: '800px' }}>
                         <Row gutter={[24, 24]} >
                             <Col span={24}>
+
                                 <div style={{ textAlign: 'center', marginTop: 0 }}>
-                                    <font face="楷体" size="4"><b>问题新增</b></font>
-                                </div>
-                            </Col>
-                        </Row>
-                        <Row gutter={[24, 24]} >
-                            <Col span={24}>
-                                <div style={{ textAlign: 'left', marginTop: 0 }}>
-                                    <font face="宋体" size="2"><b>模版选择：</b></font>
-                                    <Select
-                                        style={{ width: 300 }}
-                                        value={selectedQuestionTemplate}
-                                        onChange={(v) => onQuestionSelectChange(v)}
-                                    >
-                                        <Select.Option value={''} >
-                                            {'无'}
-                                        </Select.Option>
-                                        {questionTemplateOptions}
-                                    </Select>
+                                    <font style={{ marginLeft: '95px' }} face="楷体" size="4"><b>问题新增</b></font>
+                                    <Switch
+                                        style={{ float: "right" ,visibility:'hidden'}}
+                                        title={"标签与自由输入模式切换"}
+                                        checkedChildren={'自由输入模式'}
+                                        unCheckedChildren={'问题标签模式'}
+                                        //默认自由输入状态。只有当点击开关时，才会将其置为问题标签模式。
+                                        defaultChecked={false}
+                                        checked={questionInputTypeSwitchStatus}
+                                        onChange={value => {
+                                            onQuestionInputTypeSwitchChanged(value);
+                                        }}
+                                    />
                                 </div>
 
-                            </Col>
-                        </Row>
-
-                        <Row gutter={[24, 24]}>
-
-                            <Col span={20} >
-                                <TextArea
-                                    style={{ border: "solid 3px   #E6E8FA" }}
-                                    placeholder="批量添加以回车换行分割"
-                                    autoSize={{ minRows: 4, maxRows: 4 }}
-                                    value={newNodeQuestions}
-                                    onChange={e => {
-                                        setNewNodeQuestions(e.target.value);
-
-                                    }}
-                                />
-                            </Col>
-                            <Col span={4}>
-                                <Button
-                                    style={{ marginLeft: -10, color: '#5F9F9F' }}
-                                    loading={props.loading}
-                                    onClick={() => {
-                                        //保存问题/关键字
-                                        addNodeQuestion();
-                                    }}
-                                >
-                                    保存更新
-                        </Button>
-
-                                <Button
-                                    style={{ marginLeft: -10, marginTop: 33, color: '#97694F ' }}
-                                    loading={props.loading}
-                                    onClick={() => {
-                                        //保存问题/关键字
-                                        textEmpty();
-                                    }}
-                                >
-                                    文本清空
-                        </Button>
-
-
 
                             </Col>
                         </Row>
+                        {questionInputTypeSwitchStatus === true ?
+                            <QuestionTemplateTagSelect
+                                questionTemplateTagOptions={questionTemplateTagOptions}
+                                const dispatch={props.dispatch}
+                            />
+                            :
+                            <div>
+                                <Row gutter={[24, 24]} >
+                                    <Col span={24}>
+                                        <div style={{ textAlign: 'left', marginTop: 0 }}>
+                                            <font face="宋体" size="2"><b>模版选择：</b></font>
+                                            <Select
+                                                style={{ width: 300 }}
+                                                value={selectedQuestionTemplate}
+                                                onChange={(v) => onQuestionSelectChange(v)}
+                                            >
+                                                <Select.Option value={''} >
+                                                    {'无'}
+                                                </Select.Option>
+                                                {questionTemplateOptions}
+                                            </Select>
+                                        </div>
 
+                                    </Col>
+                                </Row>
+
+                                <Row gutter={[24, 24]}>
+
+                                    <Col span={20} >
+                                        <TextArea
+                                            style={{ border: "solid 3px   #E6E8FA" }}
+                                            placeholder="批量添加以回车换行分割"
+                                            autoSize={{ minRows: 4, maxRows: 4 }}
+                                            value={newNodeQuestions}
+                                            onChange={e => {
+                                                setNewNodeQuestions(e.target.value);
+
+                                            }}
+                                        />
+                                    </Col>
+                                    <Col span={4}>
+                                        <Button
+                                            style={{ marginLeft: -10, color: '#5F9F9F' }}
+                                            loading={props.loading}
+                                            onClick={() => {
+                                                //保存问题/关键字
+                                                addNodeQuestion();
+                                            }}
+                                        >
+                                            保存更新
+                                </Button>
+
+                                        <Button
+                                            style={{ marginLeft: -10, marginTop: 33, color: '#97694F ' }}
+                                            loading={props.loading}
+                                            onClick={() => {
+                                                //保存问题/关键字
+                                                textEmpty();
+                                            }}
+                                        >
+                                            文本清空
+                                </Button>
+
+
+
+                                    </Col>
+                                </Row>
+                            </div>
+                        }
                         <Row gutter={[24, 24]} >
                             <Col span={24}>
                                 <Card>
