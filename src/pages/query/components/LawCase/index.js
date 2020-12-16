@@ -75,7 +75,7 @@ function LawCase({ data, type }) {
               q: encodeURIComponent(q),
               topic,
               pageStart: page,
-              pageCount: 10
+              pageCount: 5
             });
           }
         }}
