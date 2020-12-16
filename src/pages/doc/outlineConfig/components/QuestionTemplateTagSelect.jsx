@@ -1,4 +1,4 @@
-import { Form, Select, Row, Col, Button, Checkbox,Input,message } from 'antd';
+import {  Row, Col, Checkbox,Input } from 'antd';
 import React, { useState } from 'react';
 import { CheckOutlined} from '@ant-design/icons';
 
@@ -6,7 +6,6 @@ import { CheckOutlined} from '@ant-design/icons';
 //词槽名称下拉列表框控件
 const QuestionTemplateTagSelect = props => {
   const questionTemplateTagOptions = props.questionTemplateTagOptions;
-  const dispatch = props.dispatch;
   const [newTagAndQuestionsList, setNewTagAndQuestionsList] = useState([]);
   //保存多个input组件中自定义内容所形成的问题值
   const [inputTagAndQuestionsList, setInputTagAndQuestionsList] = useState(['','','','','']);
@@ -33,7 +32,7 @@ const QuestionTemplateTagSelect = props => {
 
     inputTagAndQuestionsList[index] = e.target.value + item.split('###')[0].substring(3);
     setInputTagAndQuestionsList(inputTagAndQuestionsList);
-    console.log('inputTagAndQuestionsList',inputTagAndQuestionsList);
+    // console.log('inputTagAndQuestionsList',inputTagAndQuestionsList);
 
   }
   

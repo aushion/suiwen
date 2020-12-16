@@ -138,7 +138,7 @@ class OutlineList extends Component {
                                 >
                                   {chapterItem.label}
                                 </div>
-                                {chapterItem.questionList && chapterItem.questionList.length !== 0 ? <Divider style={{ color: 'white' }}>配置问题</Divider> : null}
+                                {chapterItem.questionList && chapterItem.questionList.length !== 0 ? <Divider style={{ color: 'white' }}>问题配置</Divider> : null}
                                 {chapterItem.questionList && chapterItem.questionList.length !== 0 ? chapterItem.questionList.map((questionListItem, questionListIndex) => {
                                   return (
                                     <div key={questionListIndex}>
@@ -166,7 +166,7 @@ class OutlineList extends Component {
                       />
                     </div>
                     <div className={styles.headright}>
-                      <SettingOutlined onClick={(() => { this.props.onNewQuestion(docItem, chapterItem) })} title="配置问题/关键字" />
+                      <SettingOutlined onClick={(() => { this.props.onNewQuestion(docItem, chapterItem) })} title="问题配置" />
                       <Divider type="vertical" />
                       <PlusOutlined onClick={(() => { this.props.onNew(chapterItem) })} title="新增节标题" />
                       <Divider type="vertical" />
@@ -199,7 +199,7 @@ class OutlineList extends Component {
                                     >
                                       {nodeItem.label}
                                     </div>
-                                    {nodeItem.questionList && nodeItem.questionList.length !== 0 ? <Divider style={{ color: 'white' }}>配置问题</Divider> : null}
+                                    {nodeItem.questionList && nodeItem.questionList.length !== 0 ? <Divider style={{ color: 'white' }}>问题配置</Divider> : null}
                                     {nodeItem.questionList && nodeItem.questionList.length !== 0 ? nodeItem.questionList.map((questionListItem, questionListIndex) => {
                                       return (
                                         <div key={questionListIndex}>
@@ -229,7 +229,7 @@ class OutlineList extends Component {
                               </Tooltip>}
                           />
                           <div className={styles.headright}>
-                            <SettingOutlined onClick={(() => { this.props.onNewQuestion(chapterItem, nodeItem) })} title="配置问题/关键字" />
+                            <SettingOutlined onClick={(() => { this.props.onNewQuestion(chapterItem, nodeItem) })} title="问题配置" />
                             <Divider type="vertical" />
                             <EditOutlined onClick={(() => { this.props.onSEdit(chapterItem, nodeItem) })} title="编辑节标题" />
                             <Divider type="vertical" />

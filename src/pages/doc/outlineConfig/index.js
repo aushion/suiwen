@@ -93,7 +93,6 @@ const OutlineConfig = (props) => {
       //加载该文档id下的提纲目录
       queryForRoute();
       //加载文档内容
-      console.log("isToCallRefreshDocContent",isToCallRefreshDocContent);
       if(isToCallRefreshDocContent){
         refreshDocContent();
       }else{

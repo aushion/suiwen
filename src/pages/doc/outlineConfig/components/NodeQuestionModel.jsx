@@ -511,7 +511,6 @@ const NodeQuestionModel = props => {
 
     //问题输入模式开关改变函数
     function onQuestionInputTypeSwitchChanged(checked) {
-        console.log('checked', checked);
         if (checked) {
             //如果是自由输入模式
             setQuestionInputTypeSwitchStatus(true);
@@ -525,7 +524,7 @@ const NodeQuestionModel = props => {
     return (
         <Modal
             destroyOnClose
-            title={"配置章节系列问题或关键字"}
+            title={"配置章节系列问题"}
             visible={modalVisible}
             width={showAnswerFlag === true ? 1500 : 850}
             centered={true}
