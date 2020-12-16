@@ -35,6 +35,7 @@ import LawTabs from './components/LawTabs';
 import Concept from './components/Concept';
 import Method from './components/Concept/method';
 import Technology from './components/Technology';
+import Recommend from './components/Recommend';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -60,18 +61,18 @@ function ResultPage(props) {
     visible,
     fetchLiterature,
     fetchSg,
+    fetchRecommend,
     fetchSemanticData,
     answerData,
     conceptData,
     conceptDataAttrs,
     methodData, //知识元方法数据
-    methodDataAttrs //知识元方法属性
+    methodDataAttrs, //知识元方法属性,
+    recommend // 相关搜索
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
-
   let { topic = '', topicName = '' } = query;
-
   const topicData =
     JSON.parse(window.sessionStorage.getItem('topicData')) ||
     RestTools.getLocalStorage('topicData');
@@ -405,18 +406,20 @@ function ResultPage(props) {
                     : null}
                 </div>
               </Skeleton>
-
+              <Skeleton loading={fetchRecommend} active>
+                {recommend.length ? <Recommend q={q} data={recommend} /> : null}
+              </Skeleton>
               <Skeleton loading={fetchSg} active>
                 {sgData.length ? <SgList data={sgData} q={q} /> : null}
               </Skeleton>
 
-              <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData}>
+              <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData} active>
                 {!answerData.length &&
                 !communityAnswer &&
                 !sgData.length &&
                 !semanticData.length ? (
                   <Result
-                    style={{ width: 600, background: '#fff' }}
+                    className={styles.noResult}
                     icon={<Icon type="frown" theme="twoTone" />}
                     subTitle={
                       <div style={{ textAlign: 'center' }}>
@@ -538,7 +541,8 @@ function mapStateToProps(state) {
     loading: state.loading.effects['result/getAnswer'] || false,
     fetchLiterature: state.loading.effects['result/getCustomView'] || false,
     fetchSemanticData: state.loading.effects['result/getSemanticData'] || false,
-    fetchSg: state.loading.effects['result/getSG'] || false
+    fetchSg: state.loading.effects['result/getSG'] || false,
+    fetchRecommend: state.loading.effects['result/getRecommend'] || false
   };
 }
 export default connect(mapStateToProps)(ResultPage);

@@ -1,3 +1,4 @@
+@import '../../global.less';
 .result {
   width: 1000px;
   margin: 0 auto;
@@ -6,6 +7,10 @@
   .result_tips {
     padding-bottom: 10px;
     // padding-left: 40px;
+  }
+  .noResult {
+    .cardStyle();
+    padding: 48px 32px;
   }
   .topicList {
     .title {
@@ -26,20 +31,20 @@
       cursor: pointer;
       text-align: center;
       letter-spacing: 2px;
-      &:hover{
+      &:hover {
         box-shadow: #0097ff 0px 1px 5px 0px;
       }
     }
   }
-  .topicWrap{
+  .topicWrap {
     margin-top: 20px;
-    :global(.ant-card-head){
-      padding:0 14px;
+    :global(.ant-card-head) {
+      padding: 0 14px;
     }
-    :global(.ant-card-body){
+    :global(.ant-card-body) {
       padding: 10px 0px;
     }
-    .item{
+    .item {
       font-size: 10px;
       font-weight: bold;
       margin: 10px 0;
@@ -48,17 +53,17 @@
       flex-direction: column;
       align-items: center;
       cursor: pointer;
-      &:hover{
+      &:hover {
         transform: scale(1.2);
       }
-      .imgWrap{
+      .imgWrap {
         width: 48px;
         height: 48px;
         border-radius: 50%;
         line-height: 48px;
         text-align: center;
         margin-bottom: 5px;
-        img{
+        img {
           width: 24px;
           height: 24px;
         }

@@ -16,7 +16,8 @@ import {
   getConceptAttrs,
   getMethod,
   getMethodAttrs,
-  getAnswerByPage
+  getAnswerByPage,
+  getRecommend
 } from './service/result';
 import { getTopicQuestions } from '../home/service/home';
 import { message } from 'antd';
@@ -42,7 +43,8 @@ export default {
     conceptData: null, //知识元概念数据
     conceptDataAttrs: null, //知识元概念属性
     methodData: null, //知识元方法数据
-    methodDataAttrs: null //知识元方法属性
+    methodDataAttrs: null, //知识元方法属性,
+    recommend: []
   },
   reducers: {
     save(state, { payload }) {
@@ -164,6 +166,19 @@ export default {
       }
     },
 
+    // 获取相关推荐
+    *getRecommend({ payload }, { call, put }) {
+      const res = yield call(getRecommend, payload);
+      const { data } = res;
+      if (data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            recommend: data.result
+          }
+        });
+      }
+    },
     //获取知识元概念库属性句子
     *getConcept({ payload }, { call, put }) {
       const res = yield call(getConcept, payload);
@@ -482,6 +497,12 @@ export default {
                 q: q
               }
             });
+            dispatch({
+              type: 'getRecommend',
+              payload: {
+                q
+              }
+            });
             //重置数据
             dispatch({
               type: 'save',
@@ -498,7 +519,8 @@ export default {
                 conceptData: null,
                 conceptDataAttrs: null, //知识元概念属性
                 methodData: null, //知识元方法数据
-                methodDataAttrs: null //知识元方法属性
+                methodDataAttrs: null, //知识元方法属性
+                recommend: []
               }
             });
             dispatch({ type: 'collectQuestion', payload: { q, userId } });
