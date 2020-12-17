@@ -5,9 +5,9 @@ import styles from './index.less';
 function Recommend({ data, q }) {
   return (
     <div className={styles.recommend}>
-      <label className={styles.label} htmlFor="相关搜索">
+      <div className={styles.label} htmlFor="相关搜索">
         拓展问题：
-      </label>
+      </div>
       <div className={styles.wrap}>
         {data.length
           ? data
