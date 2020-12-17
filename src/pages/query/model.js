@@ -522,7 +522,7 @@ export default {
               type: 'save',
               payload: {
                 sgData: [],
-                semanticData: [],
+                semanticData: null,
                 answerData: [],
                 faqData: [],
                 repositoryData: [], //知识库数据
