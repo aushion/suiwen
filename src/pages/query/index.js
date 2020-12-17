@@ -156,7 +156,6 @@ function ResultPage(props) {
     sgCount +
     lawData.length +
     technologyData.length +
-    semanticData.length +
     faqData.length +
     referenceBookData.length +
     referenceBookListData.length +
