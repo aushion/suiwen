@@ -113,7 +113,7 @@ export function getConcept(payload) {
   return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptDataList`, null, {
     data: {
       termName: 概念,
-      attrType: focus === '基本定义'?'':focus
+      attrType: focus === '基本定义' ? '' : focus
     }
   });
 }
@@ -123,7 +123,7 @@ export function getConceptAttrs(payload) {
   const { 概念 } = payload;
   return axios.post(`https://zsysw.cnki.net/api/Concept/GetConceptAttrsByTerm`, null, {
     data: {
-      termName: 概念,
+      termName: 概念
     }
   });
 }
@@ -131,12 +131,12 @@ export function getConceptAttrs(payload) {
 //获取知识元方法数据
 export function getMethod(payload) {
   const { 方法 } = payload;
-    return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodDataList`, null, {
-      data: {
-        termName: 方法,
-        attrType: ""
-      }
-    });
+  return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodDataList`, null, {
+    data: {
+      termName: 方法,
+      attrType: ''
+    }
+  });
 }
 
 //获取知识元方法属性
@@ -144,7 +144,12 @@ export function getMethodAttrs(payload) {
   const { 方法 } = payload;
   return axios.post(`https://zsysw.cnki.net/api/Method/GetMethodAttrsByTerm`, null, {
     data: {
-      termName: 方法,
+      termName: 方法
     }
   });
+}
+
+// 相关推荐
+export function getRecommend(payload) {
+  return request.post(`/getRecommend?query=${payload.q}`);
 }
