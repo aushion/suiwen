@@ -2,17 +2,21 @@
 
 .recommend {
   .cardStyle();
-  .label {
-    font-size: 16px;
-  }
+  display: flex;
   padding-bottom: 20px;
+  .label {
+    font-size: 15px;
+    width: 80px;
+  }
   .wrap {
+    flex: 1;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     .item {
       white-space: nowrap;
-      padding: 6px 10px 0 0;
+      color: #4480b8;
+      padding: 0 10px 6px 0;
       &:last-child {
         margin-right: auto;
       }
