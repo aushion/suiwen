@@ -1,115 +1,110 @@
 import React, { useState } from 'react';
-import { List, Modal } from 'antd';
-import groupBy from 'lodash/groupBy';
-import Evaluate from '../Evaluate/index';
+import { List } from 'antd';
+import Cookies from 'js-cookie';
+
 import RestTools from '../../../../utils/RestTools';
+import request from '../../../../utils/request';
 import styles from './index.less';
 
 function ReadComp(props) {
-  const { data, needEvaluate = true } = props;
-  const groupByData = groupBy(data, 'id');
-  const keys = Object.keys(groupByData);
-  const [visible, setVisible] = useState(false);
-  const [initialText, setText] = useState('');
+  const { data, q, loading, taskId } = props;
+  const [newData, setNewData] = useState(data);
+  const [showLoading, setLoading] = useState(loading);
 
-  function showMore(text) {
-    setVisible(true);
-    setText(text);
+  let userId = RestTools.getLocalStorage('userInfo')
+    ? RestTools.getLocalStorage('userInfo').UserName
+    : Cookies.get('cnki_qa_uuid');
+
+  function checkSemanticStatus(payload) {
+    let timeId = null;
+    request.post(`/checkSemanticStatus`, null, { params: payload }).then((res) => {
+      if (res.data.result.async_result_state === 'SUCCESS') {
+        clearTimeout(timeId);
+        setNewData(res.data.result.dataList);
+        setLoading(false);
+      } else {
+        timeId = setTimeout(() => {
+          checkSemanticStatus(payload);
+        }, 3000);
+      }
+    });
   }
 
-  function handleShowMore(e, str) {
-    if (e.target.className === 'showMore') {
-      showMore(str);
-    }
+  if (showLoading) {
+    checkSemanticStatus({ taskId, userId });
   }
 
   return (
-    <div className={`${styles.ReadComp} copy`} id="ReadComp">
-      {keys.map((item) => {
-        const year =
-          (groupByData[item][0].sgAdditionInfo && groupByData[item][0].sgAdditionInfo.年) || '';
-        // const qikan = groupByData[item][0].Data.additional_info && groupByData[item][0].Data.additional_info.来源数据库 || '';
-        const qikanName =
-          (groupByData[item][0].sgAdditionInfo && groupByData[item][0].sgAdditionInfo.中文刊名) ||
-          '';
-        return (
-          <div key={item} className={styles.wrapper}>
-            <List
-              itemLayout="vertical"
-              dataSource={groupByData[item]}
-              footer={
-                <div style={{ float: 'right', fontSize: 13, color: '#999', overflow: 'hidden' }}>
-                  <div>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                      }}
-                    ></span>
-                    <a
-                      style={{ color: '#999' }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${groupByData[item][0].data.source_id}`}
-                    >
-                      {groupByData[item][0].data.caption}
-                    </a>
-                  </div>
-                  {/* 点赞模块预留 */}
-                  <div className={styles.sg_evaluate}>
-                    {needEvaluate ? (
-                      <Evaluate
-                        id={groupByData[item][0].id}
-                        goodCount={groupByData[item][0].evaluate.good}
-                        badCount={groupByData[item][0].evaluate.bad}
-                        isevalute={groupByData[item][0].evaluate.isevalute}
-                      />
-                    ) : null}
-                  </div>
-                </div>
-              }
-              renderItem={(item, index) => {
-                const orginAnswer = item.data.sub_context;
-                const answer = orginAnswer ? item.data.semantic_text + '<a class="showMore"> 更多>></a>': item.data.semantic_text;
-                return (
-                  <List.Item style={{ overflow: 'hidden' }}>
-                    <div
-                      onClick={(e) => handleShowMore(e, orginAnswer)}
-                      key={index}
-                      className={styles.fontStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: RestTools.superMarkRed(answer)
-                      }}
-                    />
-                  </List.Item>
-                );
-              }}
-            />
-          </div>
-        );
-      })}
-      <Modal
-        visible={visible}
-        footer={null}
-        style={{ top: 40, left: '29%' }}
-        onCancel={() => {
-          setVisible(false);
+    <div className={styles.ReadComp} id="ReadComp">
+      <h2>
+        <a
+          href={`https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CJFQ&kw=${q}&korder=FT`}
+          rel="noreferrer"
+          target="_blank"
+        >
+          <span>{q}</span>
+        </a>{' '}
+        - 细粒度知识问答
+      </h2>
+      <List
+        loading={showLoading}
+        dataSource={newData}
+        itemLayout="vertical"
+        renderItem={(item, index) => {
+          const year = (item.sgAdditionInfo && item.sgAdditionInfo.年) || '';
+          const qikanName = (item.sgAdditionInfo && item.sgAdditionInfo.中文刊名) || '';
+          const answer = item.data.semantic_text ? item.data.semantic_text : item.data.context;
+          return (
+            <List.Item style={{ overflow: 'hidden' }}>
+              <div
+                key={index}
+                className={styles.fontStyle}
+                dangerouslySetInnerHTML={{
+                  __html: RestTools.superMarkRed(answer)
+                }}
+              />
+              <div
+                style={{
+                  paddingTop: '10px',
+                  textAlign: 'right',
+                  fontSize: 13,
+                  color: '#999',
+                  overflow: 'hidden'
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: 'right',
+                    display: 'inline-block',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                  }}
+                />
+                <a
+                  style={{
+                    color: '#999',
+                    // maxWidth: '50%',
+                    display: 'inline-block',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={item.data.caption}
+                  href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.data.source_id}`}
+                >
+                  {item.data.caption}
+                </a>
+              </div>
+            </List.Item>
+          );
         }}
-      >
-        <div
-          style={{
-            // width: 400,
-            paddingTop: 10,
-            color: '#333',
-            letterSpacing: '2px',
-            lineHeight: '27.2px',
-            textIndent: '2em'
-          }}
-          className={`${styles.fontStyle} copy`}
-          dangerouslySetInnerHTML={{
-            __html: RestTools.superMarkRed(RestTools.formatText(initialText))
-          }}
-        />
-      </Modal>
+      />
     </div>
   );
 }

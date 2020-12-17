@@ -30,7 +30,7 @@ export default {
   namespace: 'result',
   state: {
     sgData: [],
-    semanticData: [],
+    semanticData: null,
     relatedData: [],
     answerData: [],
     visible: false,
@@ -371,15 +371,29 @@ export default {
         });
       }
     },
-
+    // 阅读理解
     *getSemanticData({ payload }, { call, put }) {
       const res = yield call(getSemanticData, payload);
       const { data } = res;
-      if (data.result && data.result.length) {
+      if (data.result.async_result_state === 'SUCCESS' && data.code === 200) {
         yield put({
           type: 'save',
           payload: {
-            semanticData: data.result
+            semanticData: {
+              loading: false,
+              dataList: data.result.dataList
+            }
+          }
+        });
+      } else {
+        yield put({
+          type: 'save',
+          payload: {
+            semanticData: {
+              loading: true,
+              dataList: [],
+              taskId: data.result.async_result_id
+            }
           }
         });
       }

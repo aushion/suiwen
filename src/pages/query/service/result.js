@@ -153,3 +153,21 @@ export function getMethodAttrs(payload) {
 export function getRecommend(payload) {
   return request.post(`/getRecommend?query=${payload.q}`);
 }
+// 阅读理解
+export function checkSemanticStatus(payload) {
+  let timeId = null;
+
+  return new Promise((resolve, reject) => {
+    request.post(`/checkSemanticStatus`, null, { params: payload }).then((res) => {
+      if (res.data.result.async_result_state === 'SUCCESS') {
+        clearTimeout(timeId);
+        // console.log('res', res);
+        resolve(res);
+      } else {
+        timeId = setTimeout(() => {
+          checkSemanticStatus(payload);
+        }, 3000);
+      }
+    });
+  });
+}

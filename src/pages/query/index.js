@@ -387,7 +387,14 @@ function ResultPage(props) {
                   ) : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
-                  {semanticData.length ? <ReadComp data={semanticData} /> : null}
+                  {semanticData ? (
+                    <ReadComp
+                      loading={semanticData.loading}
+                      data={semanticData.dataList}
+                      taskId={semanticData.taskId}
+                      q={q}
+                    />
+                  ) : null}
                   {translateData.length
                     ? translateData.map((item) => (
                         <Translate
@@ -412,10 +419,7 @@ function ResultPage(props) {
               </Skeleton>
 
               <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData} active>
-                {!answerData.length &&
-                !communityAnswer &&
-                !sgData.length &&
-                !semanticData.length ? (
+                {!answerData.length && !communityAnswer && !sgData.length && !semanticData ? (
                   <Result
                     className={styles.noResult}
                     icon={<Icon type="frown" theme="twoTone" />}
