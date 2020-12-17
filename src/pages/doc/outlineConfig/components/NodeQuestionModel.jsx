@@ -323,7 +323,7 @@ const NodeQuestionModel = props => {
 
     //批量删除操作触发事件
     function batchDeleteNodeQuestion() {
-        if (selectedRows === '' || selectedRows.length === 0) {
+        if (selectedRows === '' || selectedRows && selectedRows.length === 0) {
             message.warning('请选择一条记录!');
             return;
         }
@@ -565,7 +565,8 @@ const NodeQuestionModel = props => {
                                 <div style={{ textAlign: 'center', marginTop: 0 }}>
                                     <font style={{ marginLeft: '95px' }} face="楷体" size="4"><b>问题新增</b></font>
                                     <Switch
-                                        style={{ float: "right" ,visibility:'hidden'}}
+                                        // style={{ float: "right" ,visibility:'hidden'}}
+                                        style={{ float: "right",backgroundColor:questionInputTypeSwitchStatus===false?'green':'#23238E '}}
                                         title={"标签与自由输入模式切换"}
                                         checkedChildren={'自由输入模式'}
                                         unCheckedChildren={'问题标签模式'}
@@ -581,11 +582,12 @@ const NodeQuestionModel = props => {
 
                             </Col>
                         </Row>
-                        {questionInputTypeSwitchStatus === true ?
+                        {questionInputTypeSwitchStatus === false ?
                             <QuestionTemplateTagSelect
                                 questionTemplateTagOptions={questionTemplateTagOptions}
                                 dispatch={props.dispatch}
                                 addNodeTagQuestion={addNodeTagQuestion}
+                                questionSourceData={questionSourceData}
                             />
                             :
                             <div>

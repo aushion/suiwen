@@ -93,9 +93,9 @@ const OutlineConfig = (props) => {
       //加载该文档id下的提纲目录
       queryForRoute();
       //加载文档内容
-      if(isToCallRefreshDocContent){
+      if (isToCallRefreshDocContent) {
         refreshDocContent();
-      }else{
+      } else {
         getDocContent();
       }
       setID(docId);
@@ -191,6 +191,12 @@ const OutlineConfig = (props) => {
 
   //新建文档触发事件
   function addNewDoc() {
+    //限制如果没有登录，则不能新建文档
+    if (!username) {
+      message.warn('非登录状态，无法新建文档！请先登录');
+      return;
+    }
+
     if (docId) {
       Modal.confirm({
         title:
@@ -207,7 +213,22 @@ const OutlineConfig = (props) => {
 
   //重命名文档标题
   function renameDoc() {
+    //限制如果没有登录，则不能重命名文档
+    if (!username) {
+      message.warn('非登录状态，无法重命名文档！请先登录');
+      return;
+    }
+
+    if (!docId) {
+      message.warn('当前无有效文档，无法进行重命名操作！');
+      return;
+    }
+
     let docItem = props.outlineData ? props.outlineData[0] : '';
+    if(!docItem){
+      message.warn('当前无有效提纲目录信息，无法进行重命名操作！');
+      return;
+    }
     //获取标签字段信息，并将其从逗号分隔的字符串转换成数组结构，便于显示在前端
     let tagStr = docItem.tag;
     let tagList = [];
@@ -566,6 +587,11 @@ const OutlineConfig = (props) => {
 
   //选择文档下载方式
   function selectDocDownloadMethod() {
+    //限制如果没有登录，则不能发布文档
+    if (!docId) {
+      message.warn('当前无有效文档，无法下载');
+      return;
+    }
     setDownloadDocVisible(true);
   }
 
@@ -605,6 +631,17 @@ const OutlineConfig = (props) => {
 
   //文档发布
   const documentPublish = () => {
+    //限制如果没有登录，则不能发布文档
+    if (!username) {
+      message.warn('非登录状态，无法发布文档！请先登录');
+      return;
+    }
+
+    if (!docId) {
+      message.warn('当前无有效文档，无法进行文档发布操作！');
+      return;
+    }
+
     //获取当前文档的文档标题数据
     let docItem = props.outlineData ? props.outlineData[0] : '';
     //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
@@ -644,6 +681,17 @@ const OutlineConfig = (props) => {
 
   //刷新文档内容
   const refreshDocContent = () => {
+    //限制如果没有登录，则不能重命名文档
+    if (!username) {
+      message.warn('非登录状态，无法刷新文档内容！请先登录');
+      return;
+    }
+
+    if (!docId) {
+      message.warn('当前无有效文档，无法进行内容刷新操作！');
+      return;
+    }
+
     //重新拉取文档内容数据前，预先清空文档内容缓存数据
     dispatch({
       type: 'Doc/save',
@@ -837,10 +885,10 @@ const OutlineConfig = (props) => {
           if (selectedDocTemplate !== '') {
             //调用含有定时器启动的内容刷新函数
             refreshDocContent();
-          }else{
+          } else {
             getDocContent();
           }
-          
+
           message.success('文档模板应用完毕');
         } else {
           setDocContentResultLoading(false);
@@ -851,10 +899,10 @@ const OutlineConfig = (props) => {
 
   //选择文档模版改变时 触发事件
   function onDocTemplateSelectChange(value) {
+    setSeletedDocTemplate(value);
     if (value === '' || !docId) {
       return;
     }
-    setSeletedDocTemplate(value);
     setDocTemplateSelectVisible(true);
   }
 
@@ -876,6 +924,7 @@ const OutlineConfig = (props) => {
             <div className={styles.right}>
               <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
                 <Button
+                  title={username ? '新建文档' : '非登录状态下，无法新建文档'}
                   onClick={addNewDoc}
                   loading={props.loading}
                   style={{ marginLeft: 0, background: '#2ae', color: '#FFFFFF' }}
@@ -883,7 +932,14 @@ const OutlineConfig = (props) => {
                   新建文档
                 </Button>
                 <Button
-                  disabled={docId ? false : true}
+                  title={
+                    username
+                      ? docId
+                        ? '编辑文档'
+                        : '当前无有效文档，无法进行重命名操作'
+                      : '非登录状态下，无法编辑文档'
+                  }
+                  // disabled={username && docId ? false : true}
                   onClick={renameDoc}
                   loading={props.loading}
                   style={{ marginLeft: 5, background: ' #2ae', color: '#FFFFFF' }}
@@ -1041,7 +1097,14 @@ const OutlineConfig = (props) => {
         <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
           <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
             <Button
-              disabled={docId ? false : true}
+              title={
+                username
+                  ? docId
+                    ? '内容刷新'
+                    : '当前无有效文档，无法刷新内容'
+                  : '非登录状态下，无法刷新内容'
+              }
+              // disabled={docId ? false : true}
               onClick={refreshDocContent}
               loading={props.loading}
               style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
@@ -1049,7 +1112,14 @@ const OutlineConfig = (props) => {
               内容刷新
             </Button>
             <Button
-              disabled={docId ? false : true}
+              title={
+                username
+                  ? docId
+                    ? '文档发布'
+                    : '当前无有效文档，无法发布文档'
+                  : '非登录状态下，无法发布文档'
+              }
+              // disabled={docId ? false : true}
               onClick={documentPublish}
               loading={documentPublishLoading}
               style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
@@ -1057,7 +1127,8 @@ const OutlineConfig = (props) => {
               文档发布
             </Button>
             <Button
-              disabled={docId ? false : true}
+              title={docId ? '文档下载' : '当前无有效文档，无法下载'}
+              // disabled={docId ? false : true}
               onClick={selectDocDownloadMethod}
               loading={props.loading}
               style={{ marginBottom: 10, marginRight: 5, background: '#2ae', color: '#FFFFFF' }}
@@ -1065,10 +1136,16 @@ const OutlineConfig = (props) => {
               文档下载
             </Button>
             <Button
-              disabled={username ? false : true}
+              title={username ? '前往个人文档' : '非登录状态下，无法前往个人文档'}
+              // disabled={username ? false : true}
               loading={props.loading}
               style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
               onClick={() => {
+                //限制如果没有登录，则不能重命名文档
+                if (!username) {
+                  message.warn('非登录状态下，无法前往个人文档！请先登录');
+                  return;
+                }
                 router.push(
                   `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
                 );
@@ -1142,7 +1219,7 @@ const OutlineConfig = (props) => {
                                             {nodeContentItem.question &&
                                             nodeContentItem.contentList &&
                                             nodeContentItem.contentList.length > 0 ? (
-                                              <div style={{height:'5px'}}>
+                                              <div style={{ height: '5px' }}>
                                                 <Divider style={{ dashed: true }}>
                                                   <h5>{nodeContentItem.question}</h5>
                                                 </Divider>

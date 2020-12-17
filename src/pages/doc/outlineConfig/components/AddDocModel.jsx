@@ -65,11 +65,7 @@ const AddDocModel = Form.create({
 
     >
       <Form {...formItemLayout} >
-        <Form.Item label="文档标题">
-          {form.getFieldDecorator('label', {
-            rules: [{ pattern: /^(.{1,30})$/, required: true, message: '文档标题不可超过30位字符!' }],
-          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)}
-        </Form.Item>
+
         <Form.Item label="文档模版" >
           <Select
             style={{ width: 400 }}
@@ -84,6 +80,11 @@ const AddDocModel = Form.create({
           {form.getFieldDecorator('keyWord', {
             rules: [{ pattern: /^(\S[\S\s]{0,19})$/, required: selectedDocTemplate === '' ? false : true, message: '开头不可为空字符,且不可超过20个字符' }],
           })(<Input placeholder='文档模板不为空时，主题词必填' style={{ width: 400 }} maxLength={30} />)}
+        </Form.Item>
+        <Form.Item label="文档标题">
+          {form.getFieldDecorator('label', {
+            rules: [{ pattern: /^(.{1,30})$/, required: true, message: '文档标题不可超过30位字符!' }],
+          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)}
         </Form.Item>
         <Form.Item label="文档标签">
           {form.getFieldDecorator('tag', {

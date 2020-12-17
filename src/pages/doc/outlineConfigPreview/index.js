@@ -718,6 +718,7 @@ const OutlineConfigPreview = (props) => {
             <div className={styles.right}>
               <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
                 <Button
+                  title={'预览模式下，无法新建文档'}
                   onClick={addNewDoc}
                   disabled={true}
                   loading={props.loading}
@@ -726,6 +727,7 @@ const OutlineConfigPreview = (props) => {
                   新建文档
                 </Button>
                 <Button
+                  title={'预览模式下，无法对文档重命名'}
                   disabled={true}
                   onClick={renameDoc}
                   loading={props.loading}
@@ -734,6 +736,7 @@ const OutlineConfigPreview = (props) => {
                   重命名
                 </Button>
                 <Select
+                  title={'预览模式下，无法选择文档模板'}
                   disabled={true}
                   style={{ width: 190, marginLeft: 5 }}
                   value={selectedDocTemplate}
@@ -873,6 +876,7 @@ const OutlineConfigPreview = (props) => {
         <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
           <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
             <Button
+              title={'预览模式下，无法进行内容刷新'}
               disabled={true}
               onClick={refreshDocContent}
               loading={props.loading}
@@ -881,6 +885,7 @@ const OutlineConfigPreview = (props) => {
               内容刷新
             </Button>
             <Button
+              title={'对预览文档进行下载'}
               disabled={docId ? false : true}
               onClick={selectDocDownloadMethod}
               loading={props.loading}
@@ -889,9 +894,10 @@ const OutlineConfigPreview = (props) => {
               文档下载
             </Button>
             <Button
+              title={username ? '前往个人文档' :'非登录状态，无法前往个人文档'}
               disabled={username ? false : true}
               loading={props.loading}
-              style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
+              style={{ marginBottom: 10, background: ' #2ae', background:username ? '#2ae' :' #CDCDCD', color: '#FFFFFF' }}
               onClick={() => {
                 router.push(
                   `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
