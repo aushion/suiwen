@@ -66,9 +66,16 @@ function Doc(props) {
 
   //文档发布
   function documentPublish(item) {
+    //如果当前欲操作的文档类型为示例文档，那么给出温馨提示
+    if (item && item.type && item.type === '2') {
+      message.warn('当前文档为示例，无法进行发布相关操作，若需要调整请联系相当技术进行后台调整');
+      return;
+    }
     //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
     if (!(item && item.type && item.type === '0')) {
-      message.warn('当前文档未公开，无法进行发布相关操作！');
+      message.warn(
+        '当前文档未公开，无法进行发布相关操作，请先转换文档类型从私有到公开，即可发布操作'
+      );
       return;
     }
     Modal.confirm({
@@ -97,9 +104,14 @@ function Doc(props) {
 
   //撤销文档发布
   function revokeDocumentPublish(item) {
+    //如果当前欲操作的文档类型为示例文档，那么给出温馨提示
+    if (item && item.type && item.type === '2') {
+      message.warn('当前文档为示例，无法进行发布相关操作，若需要调整请联系相当技术进行后台调整');
+      return;
+    }
     //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
     if (!(item && item.type && item.type === '0')) {
-      message.warn('当前文档未公开，无法进行发布相关操作！');
+      message.warn('当前文档未公开，无法进行发布相关操作，请先转换文档类型从私有到公开，即可发布操作！');
       return;
     }
     Modal.confirm({
@@ -185,7 +197,11 @@ function Doc(props) {
                           style={{ marginLeft: '10px' }}
                           color={item.type && item.type === '0' ? 'orange' : 'blue'}
                         >
-                          {item.type && item.type === '0' ? '公开' : '私有'}
+                          {item.type && item.type === '0'
+                            ? '公开'
+                            : item.type && item.type === '1'
+                            ? '私有'
+                            : '示例'}
                         </Tag>
                       ) : null}
                       {userInfo?.UserName === userName ? (
@@ -241,8 +257,12 @@ function Doc(props) {
                     <Col span={24}>
                       <div>
                         {item.tag
-                          ? item.tag.split(',').map((i,index) => {
-                              return <Tag key={index} color={'blue'}>{i}</Tag>;
+                          ? item.tag.split(',').map((i, index) => {
+                              return (
+                                <Tag key={index} color={'blue'}>
+                                  {i}
+                                </Tag>
+                              );
                             })
                           : null}
                       </div>
