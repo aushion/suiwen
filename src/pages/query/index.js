@@ -406,9 +406,7 @@ function ResultPage(props) {
                     : null}
                 </div>
               </Skeleton>
-              <Skeleton loading={fetchRecommend} active>
-                {recommend.length ? <Recommend q={q} data={recommend} /> : null}
-              </Skeleton>
+
               <Skeleton loading={fetchSg} active>
                 {sgData.length ? <SgList data={sgData} q={q} /> : null}
               </Skeleton>
@@ -446,6 +444,10 @@ function ResultPage(props) {
                     }
                   />
                 ) : null}
+              </Skeleton>
+              {/* 相关拓展问题 */}
+              <Skeleton loading={fetchRecommend} active>
+                {recommend.length ? <Recommend q={q} data={recommend} /> : null}
               </Skeleton>
             </div>
           </Col>

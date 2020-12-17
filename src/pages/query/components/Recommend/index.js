@@ -6,7 +6,7 @@ function Recommend({ data, q }) {
   return (
     <div className={styles.recommend}>
       <label className={styles.label} htmlFor="相关搜索">
-        其他人还在问：
+        拓展问题：
       </label>
       <div className={styles.wrap}>
         {data.length
@@ -14,6 +14,7 @@ function Recommend({ data, q }) {
               .filter((item) => item !== q)
               .map((item) => (
                 <Link
+                  title={item}
                   className={styles.item}
                   key={item}
                   to={`/query?q=${encodeURIComponent(item)}`}
