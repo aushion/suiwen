@@ -290,6 +290,31 @@ const NodeQuestionModel = props => {
             });
     }
 
+    //为当前节标题添加标签问题
+    function addNodeTagQuestion(values) {
+
+        props
+            .dispatch({
+                type: 'Doc/saveRouteQuestion',
+                payload: {
+                    qid: null,
+                    routeId: data.id,
+                    parentId: chapterId,
+                    question: encodeURIComponent(values.question),
+                    orderNum: null,
+                }
+            })
+            .then((res) => {
+                if (res.code === 200) {
+                    search();
+                    message.success("保存成功");
+
+                } else {
+                    message.error(res.msg);
+                }
+            });
+    }
+
     //清空文本域文本内容
     function textEmpty() {
         setNewNodeQuestions('');
@@ -489,7 +514,7 @@ const NodeQuestionModel = props => {
                 </Select.Option>
             );
 
-            let tagObject = {label: questionTemplateData[i]['tag'], value: questionTemplateData[i]['question'] + '###' + questionTemplateData[i]['tag']};
+            let tagObject = { label: questionTemplateData[i]['tag'], value: questionTemplateData[i]['question'] + '###' + questionTemplateData[i]['tag'] };
             questionTemplateTagOptions.push(tagObject);
         }
     }
@@ -559,7 +584,8 @@ const NodeQuestionModel = props => {
                         {questionInputTypeSwitchStatus === true ?
                             <QuestionTemplateTagSelect
                                 questionTemplateTagOptions={questionTemplateTagOptions}
-                                const dispatch={props.dispatch}
+                                dispatch={props.dispatch}
+                                addNodeTagQuestion={addNodeTagQuestion}
                             />
                             :
                             <div>
