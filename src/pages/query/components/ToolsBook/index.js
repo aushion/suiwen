@@ -159,74 +159,76 @@ function ToolsBook(props) {
               const tagName = item.tagName;
               return (
                 <div key={item.tagName + index} hidden={index !== checkedIndex}>
-                  {item.dataNode.map((item, index) => {
-                    const answer =
-                      intentFocus === '谜语'
-                        ? `谜底：${cutAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
-                        : cutAnswer(item.Answer || item.介绍 || '-', item.条目编码);
-                    const title =
-                      intentFocus === '谜语'
-                        ? `谜面: ${item.TITLE || item.Title || '-'}`
-                        : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
-                    const blockAnswer = handleAnswer(answer);
-                    return (
-                      <div key={item.条目编码 + index} className={styles.item}>
-                        <div className={styles.ReferenceBook_title}>
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={`https://gongjushu.cnki.net/RBook/Detail?entryId=${item.条目编码}`}
-                            dangerouslySetInnerHTML={{
-                              __html: RestTools.translateToRed(title)
-                            }}
-                          />
-                        </div>
-                        <div className={styles.ReferenceBook_answer}>
-                          {blockAnswer ? (
-                            <Collapse expandIconPosition="right">
-                              <Panel header={RestTools.removeHtmlTag(blockAnswer)}>
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: RestTools.completeToolsBook(
-                                      showOthers(item.Answer),
-                                      tagName
-                                    )
-                                  }}
-                                />
-                              </Panel>
-                            </Collapse>
-                          ) : (
-                            <div
-                              key={item.工具书编号 + index}
+                  <div>
+                    {item.dataNode.map((item, index) => {
+                      const answer =
+                        intentFocus === '谜语'
+                          ? `谜底：${cutAnswer(item.Answer || item.介绍 || '-', item.条目编码)}`
+                          : cutAnswer(item.Answer || item.介绍 || '-', item.条目编码);
+                      const title =
+                        intentFocus === '谜语'
+                          ? `谜面: ${item.TITLE || item.Title || '-'}`
+                          : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
+                      const blockAnswer = handleAnswer(answer);
+                      return (
+                        <div key={item.条目编码 + index} className={styles.item}>
+                          <div className={styles.ReferenceBook_title}>
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={`https://gongjushu.cnki.net/RBook/Detail?entryId=${item.条目编码}`}
                               dangerouslySetInnerHTML={{
-                                __html: RestTools.translateToRed(
-                                  RestTools.completeToolsBook(
-                                    cutAnswer(item.Answer, item.条目编码),
-                                    tagName
-                                  )
-                                )
+                                __html: RestTools.translateToRed(title)
                               }}
                             />
-                          )}
+                          </div>
+                          <div className={styles.ReferenceBook_answer}>
+                            {blockAnswer ? (
+                              <Collapse expandIconPosition="right">
+                                <Panel header={RestTools.removeHtmlTag(blockAnswer)}>
+                                  <div
+                                    dangerouslySetInnerHTML={{
+                                      __html: RestTools.completeToolsBook(
+                                        showOthers(item.Answer),
+                                        tagName
+                                      )
+                                    }}
+                                  />
+                                </Panel>
+                              </Collapse>
+                            ) : (
+                              <div
+                                key={item.工具书编号 + index}
+                                dangerouslySetInnerHTML={{
+                                  __html: RestTools.translateToRed(
+                                    RestTools.completeToolsBook(
+                                      cutAnswer(item.Answer, item.条目编码),
+                                      tagName
+                                    )
+                                  )
+                                }}
+                              />
+                            )}
+                          </div>
+                          <div className={styles.ReferenceBook_extra}>
+                            <a
+                              className={styles.ReferenceBook_name}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(
+                                item.工具书编号
+                              )}.html`}
+                              dangerouslySetInnerHTML={{
+                                __html: `来源:《${RestTools.removeFlag(
+                                  item.工具书名称 || item.Title || item.TITLE
+                                )}》`
+                              }}
+                            />
+                          </div>
                         </div>
-                        <div className={styles.ReferenceBook_extra}>
-                          <a
-                            className={styles.ReferenceBook_name}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={`http://gongjushu.cnki.net/refbook/${RestTools.removeFlag(
-                              item.工具书编号
-                            )}.html`}
-                            dangerouslySetInnerHTML={{
-                              __html: `来源:《${RestTools.removeFlag(
-                                item.工具书名称 || item.Title || item.TITLE
-                              )}》`
-                            }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                   <div style={{ textAlign: 'right' }}>
                     <a
                       className={styles.ReferenceBook_more}
