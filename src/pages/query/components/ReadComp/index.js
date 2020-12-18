@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { List } from 'antd';
+import { List, Spin } from 'antd';
 import Cookies from 'js-cookie';
-
+import gif from '../../../../assets/giphy2.gif';
 import RestTools from '../../../../utils/RestTools';
 import request from '../../../../utils/request';
 import styles from './index.less';
@@ -34,6 +34,15 @@ function ReadComp(props) {
     checkSemanticStatus({ taskId, userId });
   }
 
+  const LoadingGif = () => (
+    <div>
+      <div>
+        <img style={{ width: 300 }} src={gif} alt="loading" />
+      </div>
+      <div style={{ color: '#bababa' }}>答案正在生成中，请您稍等...</div>
+    </div>
+  );
+
   return (
     <div className={styles.ReadComp} id="ReadComp">
       <h2>
@@ -46,8 +55,14 @@ function ReadComp(props) {
         </a>{' '}
         - 细粒度知识问答
       </h2>
+
       <List
-        loading={showLoading}
+        style={{ minHeight: '50vh', alignItems: 'center' }}
+        loading={{
+          spinning: showLoading,
+          // tip: '答案正在生成中，请您稍等...'
+          indicator: <LoadingGif />
+        }}
         dataSource={newData}
         itemLayout="vertical"
         renderItem={(item, index) => {
