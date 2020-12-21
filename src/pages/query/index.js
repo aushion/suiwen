@@ -444,7 +444,7 @@ function ResultPage(props) {
               </Skeleton>
               {/* 相关拓展问题 */}
               <Skeleton loading={fetchRecommend} active>
-                {recommend.length ? <Recommend q={q} data={recommend} /> : null}
+                {recommend.length ? <Recommend q={q} topic={topic} data={recommend} /> : null}
               </Skeleton>
             </div>
           </Col>

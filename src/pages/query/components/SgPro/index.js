@@ -32,6 +32,7 @@ function SgPro(props) {
 
   function fetchSg(q) {
     return request.get(`/getSemanticData`, {
+      timeout: 30000,
       params: {
         q: q,
         pageStart: 1,
@@ -63,7 +64,7 @@ function SgPro(props) {
   }, [q]);
 
   const LoadingGif = () => (
-    <div style={{ marginTop: 50 }}>
+    <div style={{ marginTop: 20 }}>
       <div>
         <img style={{ width: 300 }} src={gif} alt="loading" />
       </div>

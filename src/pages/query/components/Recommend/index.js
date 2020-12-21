@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'umi';
 import styles from './index.less';
 
-function Recommend({ data, q }) {
+function Recommend({ data, q, topic }) {
   return (
     <div className={styles.recommend}>
       <div className={styles.label} htmlFor="相关搜索">
@@ -17,7 +17,11 @@ function Recommend({ data, q }) {
                   title={item}
                   className={styles.item}
                   key={item}
-                  to={`/query?q=${encodeURIComponent(item)}`}
+                  to={
+                    topic
+                      ? `/query?q=${encodeURIComponent(item)}&topic=${topic}`
+                      : `/query?q=${encodeURIComponent(item)}`
+                  }
                 >
                   {item}
                 </Link>
