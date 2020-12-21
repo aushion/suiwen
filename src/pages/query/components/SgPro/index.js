@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { List } from 'antd';
 import Cookies from 'js-cookie';
 import gif from '../../../../assets/giphy2.gif';
@@ -6,10 +6,10 @@ import RestTools from '../../../../utils/RestTools';
 import request from '../../../../utils/request';
 import styles from './index.less';
 
-function ReadComp(props) {
-  const { data, q, loading, taskId } = props;
-  const [newData, setNewData] = useState(data);
-  const [showLoading, setLoading] = useState(loading);
+function SgPro(props) {
+  const { q } = props;
+  const [newData, setNewData] = useState([]);
+  const [showLoading, setLoading] = useState(true);
 
   let userId = RestTools.getLocalStorage('userInfo')
     ? RestTools.getLocalStorage('userInfo').UserName
@@ -30,12 +30,40 @@ function ReadComp(props) {
     });
   }
 
-  if (showLoading) {
-    checkSemanticStatus({ taskId, userId });
+  function fetchSg(q) {
+    return request.get(`/getSemanticData`, {
+      params: {
+        q: q,
+        pageStart: 1,
+        pageCount: 10,
+        userId
+      }
+    });
   }
 
+  useEffect(() => {
+    setNewData([]); //重置数据
+    setLoading(true); //显示loading
+    fetchSg(q)
+      .then((res) => {
+        if (res.data.result.async_result_state === 'SUCCESS') {
+          setNewData(res.data.result.dataList);
+          setLoading(false);
+        } else {
+          checkSemanticStatus({
+            taskId: res.data.result.async_result_id,
+            userId
+          });
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q]);
+
   const LoadingGif = () => (
-    <div>
+    <div style={{ marginTop: 50 }}>
       <div>
         <img style={{ width: 300 }} src={gif} alt="loading" />
       </div>
@@ -44,7 +72,7 @@ function ReadComp(props) {
   );
 
   return (
-    <div className={styles.ReadComp} id="ReadComp">
+    <div className={styles.SgPro} id="ReadComp">
       <h2>
         <a
           href={`https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CJFQ&kw=${q}&korder=FT`}
@@ -60,7 +88,6 @@ function ReadComp(props) {
         style={{ minHeight: '50vh', alignItems: 'center' }}
         loading={{
           spinning: showLoading,
-          // tip: '答案正在生成中，请您稍等...'
           indicator: <LoadingGif />
         }}
         dataSource={newData}
@@ -102,7 +129,6 @@ function ReadComp(props) {
                 <a
                   style={{
                     color: '#999',
-                    // maxWidth: '50%',
                     display: 'inline-block',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -124,4 +150,4 @@ function ReadComp(props) {
   );
 }
 
-export default ReadComp;
+export default SgPro;

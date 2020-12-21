@@ -28,7 +28,6 @@ import Sentence from './components/Sentence';
 import ToolsBook from './components/ToolsBook';
 import ToolsBookList from './components/ToolsBookList';
 import Weather from './components/Weather';
-import ReadComp from './components/ReadComp';
 import Translate from './components/Translate';
 import AskModal from '../../components/AskModal';
 import LawTabs from './components/LawTabs';
@@ -36,6 +35,7 @@ import Concept from './components/Concept';
 import Method from './components/Concept/method';
 import Technology from './components/Technology';
 import Recommend from './components/Recommend';
+import SgPro from './components/SgPro';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -49,7 +49,6 @@ function ResultPage(props) {
   const {
     sgData,
     faqData,
-    semanticData,
     repositoryData,
     q,
     relatedData,
@@ -222,6 +221,8 @@ function ResultPage(props) {
         <Row gutter={16}>
           <Col span={17}>
             <div>
+              {/* 阅读理解 */}
+              {topic === 'YD' ? <SgPro q={q} /> : null}
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
                   {lawData.length ? <LawTabs data={lawData} q={q} /> : null}
@@ -386,14 +387,7 @@ function ResultPage(props) {
                   ) : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
-                  {semanticData ? (
-                    <ReadComp
-                      loading={semanticData.loading}
-                      data={semanticData.dataList}
-                      taskId={semanticData.taskId}
-                      q={q}
-                    />
-                  ) : null}
+
                   {translateData.length
                     ? translateData.map((item) => (
                         <Translate
@@ -417,8 +411,8 @@ function ResultPage(props) {
                 {sgData.length ? <SgList data={sgData} q={q} /> : null}
               </Skeleton>
 
-              <Skeleton loading={loading || fetchSg || fetchLiterature || fetchSemanticData} active>
-                {!answerData.length && !communityAnswer && !sgData.length && !semanticData ? (
+              <Skeleton loading={loading || fetchSg || fetchLiterature} active>
+                {!answerData.length && !communityAnswer && !sgData.length && topic !== 'YD' ? (
                   <Result
                     className={styles.noResult}
                     icon={<Icon type="frown" theme="twoTone" />}

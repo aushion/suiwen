@@ -6,7 +6,6 @@ import {
   setEvaluate,
   getHotHelpList,
   getCommunityAnswer,
-  getSemanticData,
   getRelevant,
   setQuestion,
   getCustomView,
@@ -371,33 +370,7 @@ export default {
         });
       }
     },
-    // 阅读理解
-    *getSemanticData({ payload }, { call, put }) {
-      const res = yield call(getSemanticData, payload);
-      const { data } = res;
-      if (data.result.async_result_state === 'SUCCESS' && data.code === 200) {
-        yield put({
-          type: 'save',
-          payload: {
-            semanticData: {
-              loading: false,
-              dataList: data.result.dataList
-            }
-          }
-        });
-      } else {
-        yield put({
-          type: 'save',
-          payload: {
-            semanticData: {
-              loading: true,
-              dataList: [],
-              taskId: data.result.async_result_id
-            }
-          }
-        });
-      }
-    },
+
     *getRelevantByAnswer({ payload }, { call, put }) {
       const res = yield call(getRelevantByAnswer, payload);
       const { data } = res;
@@ -543,10 +516,10 @@ export default {
             });
             if (topic) {
               if (topic === 'YD') {
-                dispatch({
-                  type: 'getSemanticData',
-                  payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-                });
+                // dispatch({
+                //   type: 'getSemanticData',
+                //   payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
+                // });
               } else {
                 dispatch({
                   type: 'getAnswer',
