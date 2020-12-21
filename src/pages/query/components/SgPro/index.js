@@ -47,14 +47,18 @@ function SgPro(props) {
     setLoading(true); //显示loading
     fetchSg(q)
       .then((res) => {
-        if (res.data.result.async_result_state === 'SUCCESS') {
-          setNewData(res.data.result.dataList);
-          setLoading(false);
+        if (res.data.code === 200) {
+          if (res.data.result.async_result_state === 'SUCCESS') {
+            setNewData(res.data.result.dataList);
+            setLoading(false);
+          } else {
+            checkSemanticStatus({
+              taskId: res.data.result.async_result_id,
+              userId
+            });
+          }
         } else {
-          checkSemanticStatus({
-            taskId: res.data.result.async_result_id,
-            userId
-          });
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -86,7 +90,7 @@ function SgPro(props) {
       </h2>
 
       <List
-        style={{ minHeight: '50vh', alignItems: 'center' }}
+        style={showLoading ? { minHeight: '45vh', alignItems: 'center' } : null}
         loading={{
           spinning: showLoading,
           indicator: <LoadingGif />
