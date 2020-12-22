@@ -225,7 +225,7 @@ const OutlineConfig = (props) => {
     }
 
     let docItem = props.outlineData ? props.outlineData[0] : '';
-    if(!docItem){
+    if (!docItem) {
       message.warn('当前无有效提纲目录信息，无法进行重命名操作！');
       return;
     }
@@ -1068,7 +1068,7 @@ const OutlineConfig = (props) => {
                     payload: {
                       docId: docId
                     }
-                  })
+                  });
                 }}
                 handleOk={addNodeQuestion}
               />

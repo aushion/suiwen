@@ -10,7 +10,7 @@ const NodeQuestionModel = props => {
     const [questionSourceData, setQuestionSourceData] = useState([]);
     //新增问题/关键字相关
     const [questionTemplateData, setQuestionTemplateData] = useState([]);
-    const [selectedQuestionTemplate, setSeletedQuestionTemplate] = useState('');
+    // const [selectedQuestionTemplate, setSeletedQuestionTemplate] = useState('');
     const [newNodeQuestions, setNewNodeQuestions] = useState('');
     const { TextArea } = Input;
     //多选框参数
@@ -525,15 +525,15 @@ const NodeQuestionModel = props => {
 
 
     //选择问题模版改变事件
-    const onQuestionSelectChange = (v) => {
-        setSeletedQuestionTemplate(v);
-        if (v === '') {
-            return;
-        }
-        //将选择的问题模版 填充到文本域里
-        let newNodeQuestionsStr = (newNodeQuestions === '' ? (v) : (newNodeQuestions + '\n' + v));
-        setNewNodeQuestions(newNodeQuestionsStr);
-    }
+    // const onQuestionSelectChange = (v) => {
+    //     setSeletedQuestionTemplate(v);
+    //     if (v === '') {
+    //         return;
+    //     }
+    //     //将选择的问题模版 填充到文本域里
+    //     let newNodeQuestionsStr = (newNodeQuestions === '' ? (v) : (newNodeQuestions + '\n' + v));
+    //     setNewNodeQuestions(newNodeQuestionsStr);
+    // }
 
     //问题输入模式开关改变函数
     function onQuestionInputTypeSwitchChanged(checked) {

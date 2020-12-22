@@ -894,10 +894,14 @@ const OutlineConfigPreview = (props) => {
               文档下载
             </Button>
             <Button
-              title={username ? '前往个人文档' :'非登录状态，无法前往个人文档'}
+              title={username ? '前往个人文档' : '非登录状态，无法前往个人文档'}
               disabled={username ? false : true}
               loading={props.loading}
-              style={{ marginBottom: 10, background: ' #2ae', background:username ? '#2ae' :' #CDCDCD', color: '#FFFFFF' }}
+              style={{
+                marginBottom: 10,
+                background: username ? '#2ae' : ' #CDCDCD',
+                color: '#FFFFFF'
+              }}
               onClick={() => {
                 router.push(
                   `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
