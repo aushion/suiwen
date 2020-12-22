@@ -211,12 +211,12 @@ const QuestionTemplateTagSelect = props => {
         <Col span={16}>
           <Row>
             <Button
-              style={{ float: "right", marginRight: '50px', marginBottom: '5px' }}
+              style={{ float: "right", marginRight: '50px', marginBottom: '5px', color: ' #6B238E ' }}
               title={"全部保存"}
               loading={batchSaveTagQuestionLoading}
               onClick={batchSaveTagQuestion}
             >
-              全部保存
+              <strong>全部保存</strong>
             </Button>
           </Row>
           <Row>

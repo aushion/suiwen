@@ -666,11 +666,11 @@ const NodeQuestionModel = props => {
                                     </div>
                                     <div style={{ textAlign: 'right', marginBottom: 20, marginTop: 10 }}>
                                         <Button onClick={refreshNodeQuestionData} loading={props.loading} style={{ marginLeft: 10, color: '#000000' }} >
-                                            刷新数据
-                                </Button>
+                                            <strong>刷新数据</strong>
+                                        </Button>
                                         <Button onClick={batchDeleteNodeQuestion} loading={props.loading} style={{ marginLeft: 10, color: ' red' }} >
-                                            批量删除
-                                </Button>
+                                            <strong>批量删除</strong>
+                                        </Button>
 
                                     </div>
                                     <Table

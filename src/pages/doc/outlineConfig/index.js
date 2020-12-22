@@ -1062,7 +1062,13 @@ const OutlineConfig = (props) => {
                 chapterId={chapterId}
                 onCancle={() => {
                   setAddNodeQuestionVisible(false);
-                  queryForRoute();
+                  // queryForRoute();
+                  dispatch({
+                    type: 'Doc/queryForRoute',
+                    payload: {
+                      docId: docId
+                    }
+                  })
                 }}
                 handleOk={addNodeQuestion}
               />
