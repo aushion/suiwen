@@ -98,8 +98,8 @@ const QuestionTemplateTagSelect = props => {
           qid: null,
           routeId: props.data.id,
           parentId: props.chapterId,
-          question: encodeURIComponent(values.question),
-          tag: encodeURIComponent(values.tagQuestion),
+          question: encodeURIComponent(values.tagQuestion),
+          // tag: encodeURIComponent(values.tagQuestion),
           orderNum: null,
         }
       })
@@ -162,8 +162,8 @@ const QuestionTemplateTagSelect = props => {
           qid: null,
           routeId: props.data.id,
           parentId: props.chapterId,
-          question: encodeURIComponent(values.question),
-          tag: encodeURIComponent(values.tagQuestion),
+          question: encodeURIComponent(values.tagQuestion),
+          // tag: encodeURIComponent(values.tagQuestion),
           orderNum: null,
         }
       })
