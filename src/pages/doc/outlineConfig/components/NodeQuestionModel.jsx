@@ -301,6 +301,7 @@ const NodeQuestionModel = props => {
                     routeId: data.id,
                     parentId: chapterId,
                     question: encodeURIComponent(values.question),
+                    tag: encodeURIComponent(values.tagQuestion),
                     orderNum: null,
                 }
             })
@@ -555,6 +556,7 @@ const NodeQuestionModel = props => {
             centered={true}
             onOk={onHandleOk}
             onCancel={onCancle}
+            footer={null}
         >
             <Row gutter={[24, 24]} >
                 <Col span={12}>
@@ -566,7 +568,7 @@ const NodeQuestionModel = props => {
                                     <font style={{ marginLeft: '95px' }} face="楷体" size="4"><b>问题新增</b></font>
                                     <Switch
                                         // style={{ float: "right" ,visibility:'hidden'}}
-                                        style={{ float: "right",backgroundColor:questionInputTypeSwitchStatus===false?'green':'#23238E '}}
+                                        style={{ float: "right", backgroundColor: questionInputTypeSwitchStatus === false ? 'green' : '#23238E ' }}
                                         title={"标签与自由输入模式切换"}
                                         checkedChildren={'自由输入模式'}
                                         unCheckedChildren={'问题标签模式'}
@@ -588,10 +590,13 @@ const NodeQuestionModel = props => {
                                 dispatch={props.dispatch}
                                 addNodeTagQuestion={addNodeTagQuestion}
                                 questionSourceData={questionSourceData}
+                                search={search}
+                                data={data}
+                                chapterId={chapterId}
                             />
                             :
                             <div>
-                                <Row gutter={[24, 24]} >
+                                {/* <Row gutter={[24, 24]} >
                                     <Col span={24}>
                                         <div style={{ textAlign: 'left', marginTop: 0 }}>
                                             <font face="宋体" size="2"><b>模版选择：</b></font>
@@ -608,7 +613,7 @@ const NodeQuestionModel = props => {
                                         </div>
 
                                     </Col>
-                                </Row>
+                                </Row> */}
 
                                 <Row gutter={[24, 24]}>
 
@@ -673,7 +678,7 @@ const NodeQuestionModel = props => {
                                         loading={props.loading}
                                         columns={columns}
                                         size='middle'
-                                        style={{ marginTop: 20, minHeight: 340 }}
+                                        style={{ marginTop: 20, minHeight: 320 }}
                                         pagination={false}
                                         dataSource={questionData}
                                     />
