@@ -6,6 +6,8 @@ import RestTools from '../../../../utils/RestTools';
 import request from '../../../../utils/request';
 import styles from './index.less';
 
+let count = 0;
+let timeId = null;
 function SgPro(props) {
   const { q } = props;
   const [newData, setNewData] = useState([]);
@@ -16,14 +18,14 @@ function SgPro(props) {
     : Cookies.get('cnki_qa_uuid');
 
   function checkSemanticStatus(payload) {
-    let timeId = null;
     request.post(`/checkSemanticStatus`, null, { params: payload }).then((res) => {
-      if (res.data.result.async_result_state === 'SUCCESS') {
+      if (res.data.result.async_result_state === 'SUCCESS' || count === 100) {
         clearTimeout(timeId);
         setNewData(res.data.result.dataList);
         setLoading(false);
       } else {
         timeId = setTimeout(() => {
+          count += 1;
           checkSemanticStatus(payload);
         }, 3000);
       }
@@ -64,6 +66,10 @@ function SgPro(props) {
       .catch((err) => {
         setLoading(false);
       });
+    return () => {
+      console.log('timeId', timeId);
+      clearTimeout(timeId);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q]);
 
