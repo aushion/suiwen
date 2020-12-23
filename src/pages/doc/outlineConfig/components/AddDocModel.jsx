@@ -11,10 +11,11 @@ const AddDocModel = Form.create({
 })(props => {
 
 
-  const { modalVisible, form, docTemplateOptions, defaultDocumentTemplate, docClassifyOptions } = props;
+  const { modalVisible, form, docTemplateOptions, defaultDocumentTemplate, docClassifyOptions, newType } = props;
   //文档模版选择
   const [selectedDocTemplate, setSeletedDocTemplate] = useState(defaultDocumentTemplate ? defaultDocumentTemplate : '');
-
+  //文档标题
+  const [docTitle, setDocTitle] = useState('');
 
   const formItemLayout = {
     labelCol: {
@@ -30,12 +31,34 @@ const AddDocModel = Form.create({
   const onHandleCancel = () => {
     props.onHandleCancel();
   }
-
+  //文档模板选择改变触发函数
   const onDocTemplateSelectChange = (v) => {
     setSeletedDocTemplate(v);
     if (v === '') {
       return;
     }
+  }
+  //主题词输入内容改变触发函数
+  const onKeyWordChange = (e) => {
+    //将文档标题随着主题词的改变而改变。规则分为两种：
+    //1.如果直接点击新建文档弹出的页面：主题词（内燃机）-> 文档标题(内燃机)
+    //2.如果切换文档模板弹出的页面：主题词（内燃机）-> 文档标题(内燃机temp16081068352777428)
+    let keyWordTemp = e.target.value;
+    if (newType === 1) {
+      setDocTitle(keyWordTemp);
+    } else if (newType === 2) {
+      var currentDate = new Date().Format("yyyyMMddHHmmss");
+      let newDocTitleTemp = keyWordTemp + 'temp_' + currentDate;
+      setDocTitle(newDocTitleTemp);
+    } else {
+      return;
+    }
+
+  }
+
+  //文档标题输入内容改变触发函数
+  const onDocTitleChange = (e) => {
+    setDocTitle(e.target.value);
   }
 
   //新建文档，提交按钮事件
@@ -45,6 +68,7 @@ const AddDocModel = Form.create({
       const values = {
         ...fieldsValue,
         'docTemplateId': selectedDocTemplate,
+        'label': docTitle,
       }
       props.onHandleOk(values);
     });
@@ -56,7 +80,7 @@ const AddDocModel = Form.create({
       destroyOnClose
       //是否支持键盘 esc 关闭 ， 默认true
       keyboard
-      title={'新增文档'}
+      title={'新建文档'}
       centered={true}
       visible={modalVisible}
       width={600}
@@ -79,12 +103,20 @@ const AddDocModel = Form.create({
         <Form.Item label="主题词" hidden={selectedDocTemplate === '' ? true : false}>
           {form.getFieldDecorator('keyWord', {
             rules: [{ pattern: /^(\S[\S\s]{0,19})$/, required: selectedDocTemplate === '' ? false : true, message: '开头不可为空字符,且不可超过20个字符' }],
-          })(<Input placeholder='文档模板不为空时，主题词必填' style={{ width: 400 }} maxLength={30} />)}
+          })(<Input placeholder='文档模板不为空时，主题词必填' style={{ width: 400 }} maxLength={30} onChange={(e) => onKeyWordChange(e)} />)}
         </Form.Item>
         <Form.Item label="文档标题">
-          {form.getFieldDecorator('label', {
+          {/* {form.getFieldDecorator('label', {
             rules: [{ pattern: /^(.{1,30})$/, required: true, message: '文档标题不可超过30位字符!' }],
-          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)}
+          })(<Input placeholder='建议中文、数字与下划线"_" ' style={{ width: 400 }} maxLength={30} />)} */}
+          <Input
+            required={true}
+            value={docTitle}
+            placeholder='建议中文、数字与下划线"_" '
+            style={{ width: 400 }}
+            maxLength={30}
+            onChange={(e) => onDocTitleChange(e)}
+          />
         </Form.Item>
         <Form.Item label="文档标签">
           {form.getFieldDecorator('tag', {

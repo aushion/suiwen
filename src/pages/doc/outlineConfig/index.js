@@ -78,7 +78,8 @@ const OutlineConfig = (props) => {
   //文档模版选择
   const docTemplateList = props.docTemplateData;
   const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
-
+  //新建文档类型  1:直接点击新建文档弹出的页面; 2:切换文档模板弹出的页面.
+  const [newType, setNewType] = useState(0);
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
   //新建文档后是否加载内容刷新函数状态值
   const [isToCallRefreshDocContent, setIsToCallRefreshDocContent] = useState(false);
@@ -196,7 +197,8 @@ const OutlineConfig = (props) => {
       message.warn('非登录状态，无法新建文档！请先登录');
       return;
     }
-
+    //设置新建文档类型（1:直接点击新建文档弹出的页面; 2:切换文档模板弹出的页面.）
+    setNewType(1);
     if (docId) {
       Modal.confirm({
         title:
@@ -353,8 +355,8 @@ const OutlineConfig = (props) => {
           setLoadFlag(docId);
         } else {
           message.error(res.msg);
+          setDocContentResultLoading(false);
         }
-        setDocContentResultLoading(false);
       });
   };
 
@@ -700,6 +702,7 @@ const OutlineConfig = (props) => {
       }
     });
     setDocContentResultLoading(true);
+
     props
       .dispatch({
         type: 'Doc/refreshDocContent',
@@ -899,11 +902,25 @@ const OutlineConfig = (props) => {
 
   //选择文档模版改变时 触发事件
   function onDocTemplateSelectChange(value) {
-    setSeletedDocTemplate(value);
-    if (value === '' || !docId) {
+    //判断非登录状态
+    if (!username) {
+      message.warn('非登录状态，无法选择，只能预览');
       return;
     }
-    setDocTemplateSelectVisible(true);
+
+    setSeletedDocTemplate(value);
+    if (value === '') {
+      return;
+    }
+    //当前无文档时，切换模板，判定：走新建文档流程，不过功能框里的文档标题需要跟着主题词进行改变。
+    //例如主题词输入“内燃机”，那么控制文档标题自动输入“内燃机temp16081068352777428”
+    if (!docId) {
+      //设置新建文档类型（1:直接点击新建文档弹出的页面; 2:切换文档模板弹出的页面.）
+      setNewType(2);
+      setAddDocVisible(true);
+    } else {
+      setDocTemplateSelectVisible(true);
+    }
   }
 
   return (
@@ -947,6 +964,7 @@ const OutlineConfig = (props) => {
                   重命名
                 </Button>
                 <Select
+                  disabled={username ? false : true}
                   style={{ width: 190, marginLeft: 5 }}
                   value={selectedDocTemplate}
                   onSelect={(v) => onDocTemplateSelectChange(v)}
@@ -1016,6 +1034,7 @@ const OutlineConfig = (props) => {
                 docTemplateOptions={docTemplateOptions}
                 docClassifyOptions={docClassifyOptions}
                 defaultDocumentTemplate={selectedDocTemplate}
+                newType={newType}
               />
             ) : null}
             {editDocVisible ? (
@@ -1332,16 +1351,16 @@ const OutlineConfig = (props) => {
                                   literatureItem +
                                   '</p>'
 
-                                  // '<p style="text-indent:2em">' +
-                                  // '<a style="color:#000000" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
-                                  // literatureItem.resourceId +
-                                  // '>' +
-                                  // '[' +
-                                  // ++i +
-                                  // '] ' +
-                                  // literatureItem +
-                                  // '</a>' +
-                                  // '</p>'
+                                // '<p style="text-indent:2em">' +
+                                // '<a style="color:#000000" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                // literatureItem.resourceId +
+                                // '>' +
+                                // '[' +
+                                // ++i +
+                                // '] ' +
+                                // literatureItem +
+                                // '</a>' +
+                                // '</p>'
                               }}
                             />
                           </List.Item>
