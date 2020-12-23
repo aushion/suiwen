@@ -113,6 +113,15 @@ export default {
           window.document.title = `知网随问-社区`;
           sessionStorage.removeItem('q');
           sessionStorage.removeItem('searchKey');
+          sessionStorage.removeItem('page');
+          sessionStorage.removeItem('communityNode');
+
+          dispatch({
+            type: 'changeDomain',
+            payload: {
+              communityNode: null
+            }
+          });
           dispatch({
             type: 'saveList',
             payload: { newHelpData: null, hotHelpData: null, index: 1, size: 10 }
