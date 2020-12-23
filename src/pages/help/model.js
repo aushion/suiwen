@@ -105,7 +105,7 @@ export default {
           const userInfo = RestTools.getLocalStorage('userInfo')
             ? RestTools.getLocalStorage('userInfo')
             : null;
-
+          sessionStorage.removeItem('communityNode');
           const communityNode = sessionStorage.getItem('communityNode')
             ? JSON.parse(sessionStorage.getItem('communityNode'))
             : null;
@@ -114,7 +114,6 @@ export default {
           sessionStorage.removeItem('q');
           sessionStorage.removeItem('searchKey');
           sessionStorage.removeItem('page');
-          sessionStorage.removeItem('communityNode');
 
           dispatch({
             type: 'changeDomain',
