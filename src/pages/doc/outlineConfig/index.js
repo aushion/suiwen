@@ -1344,23 +1344,16 @@ const OutlineConfig = (props) => {
                             <div
                               dangerouslySetInnerHTML={{
                                 __html:
-                                  '<p style="text-indent:2em">' +
-                                  '[' +
-                                  ++i +
-                                  '] ' +
-                                  literatureItem +
-                                  '</p>'
-
-                                // '<p style="text-indent:2em">' +
-                                // '<a style="color:#000000" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
-                                // literatureItem.resourceId +
-                                // '>' +
-                                // '[' +
-                                // ++i +
-                                // '] ' +
-                                // literatureItem +
-                                // '</a>' +
-                                // '</p>'
+                                '<p style="text-indent:2em">' +
+                                '<a style="color:#000000" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                literatureItem.resourceId +
+                                '>' +
+                                '[' +
+                                ++i +
+                                '] ' +
+                                literatureItem.resource +
+                                '</a>' +
+                                '</p>'
                               }}
                             />
                           </List.Item>
