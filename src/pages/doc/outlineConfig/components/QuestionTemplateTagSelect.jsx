@@ -1,11 +1,9 @@
 import { Row, Col, Checkbox, Input, message } from 'antd';
 import React, { useState } from 'react';
 import { CheckOutlined } from '@ant-design/icons';
-import { find } from 'lodash';
-
 
 //词槽名称下拉列表框控件
-const QuestionTemplateTagSelect = props => {
+const QuestionTemplateTagSelect = (props) => {
   const questionTemplateTagOptions = props.questionTemplateTagOptions;
   const questionSourceData = props.questionSourceData;
   const [checkedValues, setCheckedValues] = useState([]);
@@ -35,7 +33,7 @@ const QuestionTemplateTagSelect = props => {
     } else if (checkedValuesArr.length > inputList.length) {
       //代表问题标签选择框 比之前新增了一个值
       //获取新增的那个值，并同步于inputList中。保持两者长度始终不变。
-      for (var i = 0; i < checkedValuesArr.length; i++) {
+      for (let i = 0; i < checkedValuesArr.length; i++) {
         if (checkedValues.indexOf(checkedValuesArr[i]) === -1) {
           //此时checkedValuesArr[i]即为待处理的元素，需要将其在inputList里新增。
           let inputListTemp = inputList;
@@ -47,21 +45,19 @@ const QuestionTemplateTagSelect = props => {
     }
 
     setCheckedValues(checkedValuesArr);
-
   }
 
   //input组件值改变函数 e  内燃机   index  0 item  XXX研究目的###目的
   function inputChange(e, index, item) {
-
-    let newInputList = inputList.map(c => {
+    let newInputList = inputList.map((c) => {
       if (c.title === item) {
         return {
           title: c.title,
           value: e.target.value
-        }
+        };
       }
       return c;
-    })
+    });
 
     setInputList(newInputList);
   }
@@ -87,8 +83,8 @@ const QuestionTemplateTagSelect = props => {
     let tagQuestion = question + '###' + item.split('###')[1];
     const values = {
       question: question,
-      tagQuestion: tagQuestion,
-    }
+      tagQuestion: tagQuestion
+    };
     //调用保存问题函数
     props.addNodeTagQuestion(values);
 
@@ -100,38 +96,59 @@ const QuestionTemplateTagSelect = props => {
     let inputListTemp = inputList;
     inputListTemp.splice(index, 1);
     setInputList(inputListTemp);
-
-
   }
 
-
   return (
-    <div style={{ width: '800px', height: '180px' }} >
-      <Row gutter={[24, 24]} >
+    <div style={{ width: '800px', height: '180px' }}>
+      <Row gutter={[24, 24]}>
         <Col span={8}>
           <div style={{ textAlign: 'left', marginTop: 0 }}>
-            <font face="宋体" size="2"><b>问题标签选择：</b></font>
+            <font face="宋体" size="2">
+              <b>问题标签选择：</b>
+            </font>
           </div>
-          <div style={{ width: '250px', height: '165px', overflowY: 'scroll' }} >
-            <Checkbox.Group value={checkedValues} options={questionTemplateTagOptions} style={{ display: 'flex', flexDirection: 'column' }}
-              onChange={onCheckboxChange} />
+          <div style={{ width: '250px', height: '165px', overflowY: 'scroll' }}>
+            <Checkbox.Group
+              value={checkedValues}
+              options={questionTemplateTagOptions}
+              style={{ display: 'flex', flexDirection: 'column' }}
+              onChange={onCheckboxChange}
+            />
           </div>
         </Col>
 
         <Col span={16}>
-          {inputList.length ? inputList.map((item, index) => {
-            return <div style={{ display: 'flex' }} key={index}>
-              <Input value={item.value} style={{ width: '400px' }} addonAfter={item.title.split('###')[0].substring(3)}
-                onChange={(e) => { inputChange(e, index, item.title) }} />
-              <CheckOutlined style={{ width: '30px', marginLeft: '10px', display: 'flex', alignItems: 'center' }}
-                onClick={(() => { saveInputTagQuestion(item.title, index) })} title="保存" />
-            </div>
-          }) : null}
+          {inputList.length
+            ? inputList.map((item, index) => {
+                return (
+                  <div style={{ display: 'flex' }} key={index}>
+                    <Input
+                      value={item.value}
+                      style={{ width: '400px' }}
+                      addonAfter={item.title.split('###')[0].substring(3)}
+                      onChange={(e) => {
+                        inputChange(e, index, item.title);
+                      }}
+                    />
+                    <CheckOutlined
+                      style={{
+                        width: '30px',
+                        marginLeft: '10px',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      onClick={() => {
+                        saveInputTagQuestion(item.title, index);
+                      }}
+                      title="保存"
+                    />
+                  </div>
+                );
+              })
+            : null}
         </Col>
       </Row>
-
-
-    </div >
+    </div>
   );
 };
 export default QuestionTemplateTagSelect;
