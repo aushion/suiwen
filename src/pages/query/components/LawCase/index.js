@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { List, Descriptions, Tag, Divider } from 'antd';
 import querystring from 'querystring';
-import Label from '../Label';
 import FoldText from '../../../../components/FoldText';
 import { getAnswerByPage } from '../../service/result';
 import RestTools from '../../../../utils/RestTools';
@@ -100,7 +99,7 @@ function LawCase({ data, type }) {
                   showType[type].title ? (
                     <>
                       <a
-                        style={{ color: '#333', fontSize: 18, marginBottom: 10 }}
+                        style={{ color: '#333', fontSize: 18, marginBottom: 10, marginRight: 10 }}
                         href={showType[type].link(RestTools.removeFlag(item[showType[type].title]))}
                         dangerouslySetInnerHTML={{
                           __html: RestTools.translateToRed(item[showType[type].title])
@@ -157,26 +156,28 @@ function LawCase({ data, type }) {
                         })}
                       </div>
                     </Descriptions.Item>
-                    <Descriptions.Item span={3}>
-                      {item.全文.length > 300 ? (
-                        <FoldText
-                          style={{ color: '#777', letterSpacing: '1px', lineHeight: '20px' }}
-                          originText={item.全文.substring(0, 300)}
-                          fullText={item.全文}
-                        />
-                      ) : (
-                        <div
-                          style={{
-                            color: '#777',
-                            letterSpacing: '1px',
-                            lineHeight: '20px'
-                          }}
-                          dangerouslySetInnerHTML={{
-                            __html: RestTools.translateToRed(item.全文)
-                          }}
-                        />
-                      )}
-                    </Descriptions.Item>
+                    {item.全文 ? (
+                      <Descriptions.Item span={3}>
+                        {item.全文.length > 300 ? (
+                          <FoldText
+                            style={{ color: '#777', letterSpacing: '1px', lineHeight: '20px' }}
+                            originText={item.全文.substring(0, 300)}
+                            fullText={item.全文}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: '#777',
+                              letterSpacing: '1px',
+                              lineHeight: '20px'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: RestTools.translateToRed(item.全文)
+                            }}
+                          />
+                        )}
+                      </Descriptions.Item>
+                    ) : null}
                   </>
                 ) : null}
 
@@ -228,31 +229,39 @@ function LawCase({ data, type }) {
                   </>
                 ) : null}
 
-                {type === 'lawitem'
-                  ? showType.lawitem.dataItem.map((current) => {
-                      return item[current] ? (
-                        <Descriptions.Item key={current} label={<Label text={current} />} span={3}>
-                          {item[current].length > 300 ? (
-                            <FoldText
-                              originText={item[current].slice(0, 300)}
-                              fullText={item[current]}
-                            />
-                          ) : (
-                            <div
-                              style={{
-                                color: '#333',
-                                letterSpacing: '2px',
-                                lineHeight: '27.2px'
-                              }}
-                              dangerouslySetInnerHTML={{
-                                __html: RestTools.translateToRed(item[current])
-                              }}
-                            />
-                          )}
-                        </Descriptions.Item>
-                      ) : null;
-                    })
-                  : null}
+                {type === 'lawitem' ? (
+                  <>
+                    <Descriptions.Item span={3}>
+                      <>
+                        <span
+                          style={{
+                            fontSize: 18,
+                            letterSpacing: '1px',
+                            color: '#333',
+                            fontWeight: '700',
+                            marginRight: 10
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: RestTools.translateToRed(`【所属法规】${item.所属法规}`)
+                          }}
+                        />
+                        <Tag color="green">{item.时效性}</Tag>
+                      </>
+                    </Descriptions.Item>
+
+                    <Descriptions.Item span={3}>
+                      <div>
+                        <span style={{ fontWeight: 'bold' }}>【条目全文】</span>
+                        <span
+                          style={{ letterSpacing: '1px' }}
+                          dangerouslySetInnerHTML={{
+                            __html: RestTools.translateToRed(`${item.全文}`)
+                          }}
+                        />
+                      </div>
+                    </Descriptions.Item>
+                  </>
+                ) : null}
               </Descriptions>
             </List.Item>
           );

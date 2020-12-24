@@ -15,6 +15,13 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
 
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature');
 
+  const tabName = {
+    法规篇: '法规(篇)',
+    法规条目: '法规(条目)',
+    案例: '案例',
+    论文类: '期刊'
+  };
+
   return repositoryData.length ? (
     <div className={styles.lawTabs}>
       <h2>
@@ -27,10 +34,7 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
             {repositoryData
               ? repositoryData.map((item, index) => {
                   return (
-                    <Tabs.TabPane
-                      tab={`${item.intentDomain === '论文类' ? '期刊' : item.intentDomain}`}
-                      key={index}
-                    >
+                    <Tabs.TabPane tab={tabName[item.intentDomain]} key={index}>
                       {item.template === 'lawliterature' ? (
                         <Literature
                           law
