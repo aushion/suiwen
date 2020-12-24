@@ -106,6 +106,7 @@ function SgPro(props) {
         renderItem={(item, index) => {
           const year = (item.sgAdditionInfo && item.sgAdditionInfo.年) || '';
           const qikanName = (item.sgAdditionInfo && item.sgAdditionInfo.中文刊名) || '';
+          const result_score = item.data.result_score || 0;
           const answer = item.data.semantic_text ? item.data.semantic_text : item.data.context;
           return (
             <List.Item style={{ overflow: 'hidden' }}>
@@ -134,7 +135,11 @@ function SgPro(props) {
                     whiteSpace: 'nowrap'
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                    __html: `${
+                      result_score
+                        ? 'CF:' + result_score + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                        : ''
+                    }${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
                   }}
                 />
                 <a

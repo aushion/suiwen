@@ -4,7 +4,7 @@ import arrow_up from '../../assets/arrow_up.png';
 import arrow_down from '../../assets/arrow_down.png';
 import styles from './index.less';
 
-function FoldText({ originText, fullText = null }) {
+function FoldText({ originText, fullText = null, style = null }) {
   let fullTextWithIcon = fullText
     ? fullText +
       `<a class="up" style="color:#2090E3">  收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}"></a>`
@@ -30,6 +30,7 @@ function FoldText({ originText, fullText = null }) {
   return (
     <div
       className={styles.fontStyle}
+      style={style}
       onClick={(e) => handleClick(e)}
       dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(text) }}
     />
