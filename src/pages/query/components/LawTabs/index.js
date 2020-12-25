@@ -15,6 +15,13 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
 
   const lawLiteratureData = repositoryData.filter((item) => item.template === 'lawliterature');
 
+  const tabName = {
+    法规篇: '法规(篇)',
+    法规条目: '法规(条目)',
+    案例: '案例',
+    论文类: '期刊'
+  };
+
   return repositoryData.length ? (
     <div className={styles.lawTabs}>
       <h2>
@@ -22,31 +29,28 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
         <span> - 知网法律知识库</span>
       </h2>
       <Spin spinning={loading}>
-        {repositoryData.length > 1 ? (
-          <Tabs type="card" tabBarGutter={0}>
-            {repositoryData
-              ? repositoryData.map((item, index) => {
-                  return (
-                    <Tabs.TabPane
-                      tab={`${item.intentDomain === '论文类' ? '期刊' : item.intentDomain}`}
-                      key={index}
-                    >
-                      {item.template === 'lawliterature' ? (
-                        <Literature
-                          law
-                          q={q}
-                          literatureData={lawLiteratureData}
-                          dispatch={dispatch}
-                        />
-                      ) : (
-                        <LawCase data={item} type={item.template} />
-                      )}
-                    </Tabs.TabPane>
-                  );
-                })
-              : null}
-          </Tabs>
-        ) : (
+        {/* {repositoryData.length > 1 ? ( */}
+        <Tabs tabBarGutter={10}>
+          {repositoryData
+            ? repositoryData.map((item, index) => {
+                return (
+                  <Tabs.TabPane tab={tabName[item.intentDomain]} key={index}>
+                    {item.template === 'lawliterature' ? (
+                      <Literature
+                        law
+                        q={q}
+                        literatureData={lawLiteratureData}
+                        dispatch={dispatch}
+                      />
+                    ) : (
+                      <LawCase data={item} type={item.template} />
+                    )}
+                  </Tabs.TabPane>
+                );
+              })
+            : null}
+        </Tabs>
+        {/* ) : (
           <div>
             {repositoryData
               ? repositoryData.map((item, index) => {
@@ -64,7 +68,7 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
                 })
               : null}
           </div>
-        )}
+        )} */}
         {!loading && !repositoryData ? <Empty /> : null}
       </Spin>
     </div>
