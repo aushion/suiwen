@@ -29,28 +29,28 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
         <span> - 知网法律知识库</span>
       </h2>
       <Spin spinning={loading}>
-        {repositoryData.length > 1 ? (
-          <Tabs type="card" tabBarGutter={0}>
-            {repositoryData
-              ? repositoryData.map((item, index) => {
-                  return (
-                    <Tabs.TabPane tab={tabName[item.intentDomain]} key={index}>
-                      {item.template === 'lawliterature' ? (
-                        <Literature
-                          law
-                          q={q}
-                          literatureData={lawLiteratureData}
-                          dispatch={dispatch}
-                        />
-                      ) : (
-                        <LawCase data={item} type={item.template} />
-                      )}
-                    </Tabs.TabPane>
-                  );
-                })
-              : null}
-          </Tabs>
-        ) : (
+        {/* {repositoryData.length > 1 ? ( */}
+        <Tabs tabBarGutter={10}>
+          {repositoryData
+            ? repositoryData.map((item, index) => {
+                return (
+                  <Tabs.TabPane tab={tabName[item.intentDomain]} key={index}>
+                    {item.template === 'lawliterature' ? (
+                      <Literature
+                        law
+                        q={q}
+                        literatureData={lawLiteratureData}
+                        dispatch={dispatch}
+                      />
+                    ) : (
+                      <LawCase data={item} type={item.template} />
+                    )}
+                  </Tabs.TabPane>
+                );
+              })
+            : null}
+        </Tabs>
+        {/* ) : (
           <div>
             {repositoryData
               ? repositoryData.map((item, index) => {
@@ -68,7 +68,7 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
                 })
               : null}
           </div>
-        )}
+        )} */}
         {!loading && !repositoryData ? <Empty /> : null}
       </Spin>
     </div>

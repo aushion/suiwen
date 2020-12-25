@@ -58,6 +58,7 @@ function LawCase({ data, type }) {
   return (
     <div className={styles.LawCase}>
       <List
+        style={loading ? { minHeight: '60vh' } : null}
         itemLayout="vertical"
         dataSource={dataNode}
         loading={loading}
@@ -252,12 +253,24 @@ function LawCase({ data, type }) {
                     <Descriptions.Item span={3}>
                       <div>
                         <span style={{ fontWeight: 'bold' }}>【条目全文】</span>
-                        <span
-                          style={{ letterSpacing: '1px' }}
-                          dangerouslySetInnerHTML={{
-                            __html: RestTools.translateToRed(`${item.全文}`)
-                          }}
-                        />
+                        {item.全文.length > 300 ? (
+                          <FoldText
+                            style={{ color: '#777', letterSpacing: '1px', lineHeight: '20px' }}
+                            originText={item.全文.substring(0, 300)}
+                            fullText={item.全文}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              color: '#777',
+                              letterSpacing: '1px',
+                              lineHeight: '20px'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: RestTools.translateToRed(item.全文)
+                            }}
+                          />
+                        )}
                       </div>
                     </Descriptions.Item>
                   </>
