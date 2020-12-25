@@ -129,11 +129,11 @@ function LawCase({ data, type }) {
                                 __html: RestTools.translateToRed(item.案号)
                               }}
                             />
+                            <span style={{ margin: '0 4px' }}>|</span>
                           </>
                         ) : null}
                         {item.裁判日期 ? (
                           <>
-                            <span style={{ margin: '0 4px' }}>|</span>
                             <span
                               dangerouslySetInnerHTML={{
                                 __html: RestTools.translateToRed(item.裁判日期)
@@ -255,7 +255,12 @@ function LawCase({ data, type }) {
                         <span style={{ fontWeight: 'bold' }}>【条目全文】</span>
                         {item.全文.length > 300 ? (
                           <FoldText
-                            style={{ color: '#777', letterSpacing: '1px', lineHeight: '20px' }}
+                            style={{
+                              color: '#777',
+                              letterSpacing: '1px',
+                              lineHeight: '20px',
+                              display: 'inline'
+                            }}
                             originText={item.全文.substring(0, 300)}
                             fullText={item.全文}
                           />
@@ -264,7 +269,8 @@ function LawCase({ data, type }) {
                             style={{
                               color: '#777',
                               letterSpacing: '1px',
-                              lineHeight: '20px'
+                              lineHeight: '20px',
+                              display: 'inline'
                             }}
                             dangerouslySetInnerHTML={{
                               __html: RestTools.translateToRed(item.全文)
