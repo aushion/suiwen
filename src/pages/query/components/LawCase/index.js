@@ -108,7 +108,15 @@ function LawCase({ data, type }) {
                         target="_blank"
                         rel="noreferrer"
                       />
-                      {item.时效性 ? <Tag color="green">{item.时效性}</Tag> : null}
+                      {item.时效性 ? (
+                        <Tag color="green">
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: RestTools.translateToRed(item.时效性)
+                            }}
+                          ></span>
+                        </Tag>
+                      ) : null}
                     </>
                   ) : null
                 }

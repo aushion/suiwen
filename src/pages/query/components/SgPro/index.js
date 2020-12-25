@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { List } from 'antd';
 import Cookies from 'js-cookie';
+import FoldText from '../../../../components/FoldText';
 import gif from '../../../../assets/giphy2.gif';
 import RestTools from '../../../../utils/RestTools';
 import request from '../../../../utils/request';
@@ -110,12 +111,9 @@ function SgPro(props) {
           const answer = item.data.semantic_text ? item.data.semantic_text : item.data.context;
           return (
             <List.Item style={{ overflow: 'hidden' }}>
-              <div
-                key={index}
-                className={styles.fontStyle}
-                dangerouslySetInnerHTML={{
-                  __html: RestTools.superMarkRed(answer)
-                }}
+              <FoldText
+                originText={RestTools.superMarkRed(answer)}
+                fullText={RestTools.superMarkRed(answer + item.data.sub_context)}
               />
               <div
                 style={{
