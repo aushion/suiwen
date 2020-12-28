@@ -16,7 +16,7 @@ import tech from '../../assets/tech.png';
 
 let skillSlider = null;
 let specialSlider = null;
-// let tagSlider = null;
+let experienceSlider = null;
 const { TabPane } = Tabs;
 const HISTORYKEY = RestTools.HISTORYKEY;
 message.config({
@@ -202,11 +202,6 @@ function Home(props) {
       ))
     : null;
 
-  //取设定最大值与最小值之间的随机数
-  // function random(min, max) {
-  //   return Math.floor(Math.random() * (max - min)) + min;
-  // }
-
   return (
     <div className={homeStyles.home}>
       <Spin spinning={loading}>
@@ -263,7 +258,6 @@ function Home(props) {
             </div>
           </div>
           <div className={homeStyles.special_bottom}>
-            {/* <Slider {...specialSettings} ref={(slider) => (specialSlider = slider)}> */}
             <Tabs defaultActiveKey="1" type="card" tabBarGutter={0}>
               <TabPane tab="专题问答" key="1">
                 <div className={homeStyles.topic}>
@@ -360,8 +354,6 @@ function Home(props) {
                 </div>
               </TabPane>
             </Tabs>
-
-            {/* </Slider> */}
           </div>
         </div>
 
@@ -369,8 +361,16 @@ function Home(props) {
           <div className={homeStyles.title}>
             <BlockTitle enTitle="Experience" cnTitle="体验" />
           </div>
-          {/* <Carousel autoplay autoplaySpeed={4000} hoverPause infinite> */}
-          <Slider dots={true}>
+          <div
+            className={homeStyles.arrowBtn}
+            style={{ left: 'calc(50% - 690px)' }}
+            onClick={() => {
+              experienceSlider.slickPrev();
+            }}
+          >
+            <Icon type="left" />
+          </div>
+          <Slider dots={true} ref={(slider) => (experienceSlider = slider)}>
             <div className={homeStyles.content}>
               <div className={homeStyles.left} style={{ width: 500, marginRight: 20 }}>
                 <img style={{ width: '100%' }} src={docGen} alt="文档生成" />
@@ -470,7 +470,15 @@ function Home(props) {
               </div>
             </div>
           </Slider>
-          {/* </Carousel> */}
+          <div
+            className={homeStyles.arrowBtn}
+            style={{ right: 'calc(50% - 690px)' }}
+            onClick={() => {
+              experienceSlider.slickNext();
+            }}
+          >
+            <Icon type="right" />
+          </div>
         </div>
       </Spin>
     </div>

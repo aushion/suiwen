@@ -35,8 +35,8 @@ function SgList(props) {
           return (
             <List.Item style={{ overflow: 'hidden', borderBottom: '1px solid #eee' }}>
               <FoldText
-                originText={item.data.context}
-                fullText={item.data.context + item.data.sub_context}
+                originText={item.data.semantic_text || item.data.context}
+                fullText={(item.data.semantic_text || item.data.context) + item.data.sub_context}
               />
 
               <div
