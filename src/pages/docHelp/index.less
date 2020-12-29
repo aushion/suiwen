@@ -1,0 +1,72 @@
+.docHelp {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+  .header {
+    background: linear-gradient(0deg, rgba(0, 138, 255, 1), rgba(0, 205, 255, 1));
+    height: 84px;
+    line-height: 0;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 0 5px #888;
+    display: flex;
+    top: 0px;
+    align-items: center;
+    .wrapper {
+      display: flex;
+      // .logo {
+      //   background-image: url(../../assets/logo1.png);
+      //   background-size: 66px 40.48px;
+      //   background-repeat: no-repeat;
+      //   width: 300px;
+      //   height: 40.48px;
+      //   cursor: pointer;
+      // }
+      .logo {
+        padding: 0 calc(50vw - 395px);
+        vertical-align: top;
+        color: #fff;
+        height: 38px;
+        width: calc(50% - 100px);
+        text-align: right;
+        cursor: pointer;
+        padding-right: 10px;
+        img {
+          height: 100%;
+          width: auto;
+        }
+      }
+      .title {
+        padding: 0 calc(10vw + 45px);
+        flex: 1;
+        -ms-flex: 1;
+        color: #fff;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 400;
+      }
+    }
+  }
+  .container {
+    width: 1200px;
+    margin: 0 auto;
+    .left {
+      width: 200px;
+      float: left;
+      font-size: 16px;
+    }
+    .right {
+      margin-left: 210px;
+      p {
+        color: #333;
+        font-size: 16px;
+        padding: 10px 0;
+      }
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}

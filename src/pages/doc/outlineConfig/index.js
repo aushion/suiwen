@@ -929,25 +929,25 @@ const OutlineConfig = (props) => {
   }
 
   //下载文档使用说明书
-  function downloadDocInstructions() {
-    generateDocInstructions();
-  }
+  // function downloadDocInstructions() {
+  //   generateDocInstructions();
+  // }
 
   //生成文档使用说明书
-  function generateDocInstructions() {
-    var url = `${process.env.apiUrl}/file/doc/辅助文档使用说明.doc`;
-    var filename = "辅助文档使用说明.doc";
-    // 创建隐藏的可下载链接
-    var eleLink = document.createElement('a');
-    eleLink.style.display = 'none';
-    eleLink.setAttribute("href", url);
-    eleLink.setAttribute("download", filename);
-    // 触发点击
-    document.body.appendChild(eleLink);
-    eleLink.click();
-    // 然后移除
-    document.body.removeChild(eleLink);
-  }
+  // function generateDocInstructions() {
+  //   var url = `${process.env.apiUrl}/file/doc/辅助文档使用说明.doc`;
+  //   var filename = '辅助文档使用说明.doc';
+  //   // 创建隐藏的可下载链接
+  //   var eleLink = document.createElement('a');
+  //   eleLink.style.display = 'none';
+  //   eleLink.setAttribute('href', url);
+  //   eleLink.setAttribute('download', filename);
+  //   // 触发点击
+  //   document.body.appendChild(eleLink);
+  //   eleLink.click();
+  //   // 然后移除
+  //   document.body.removeChild(eleLink);
+  // }
 
   //控制文档使用说明书下载按钮的显示与隐藏
   function docHelpOpenOrClose() {
@@ -1421,7 +1421,8 @@ const OutlineConfig = (props) => {
               <div
                 className={styles.dochelp}
                 onClick={() => {
-                  downloadDocInstructions();
+                  // downloadDocInstructions();
+                  router.push('/docHelp');
                 }}
               >
                 <img src={helpImg} alt="帮助" />
