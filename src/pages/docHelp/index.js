@@ -2,8 +2,6 @@ import React from 'react';
 import { Anchor, Layout } from 'antd';
 import { router } from 'umi';
 import logo from '../../assets/logo1.png';
-import one from '../../assets/doc/1.png';
-import two from '../../assets/doc/2.png';
 import styles from './index.less';
 const { Header } = Layout;
 const { Link } = Anchor;
@@ -57,15 +55,20 @@ export default function DocHelp() {
               空白文档即没有应用文档模板的文档。
               <br /> ①点击“新建文档”按钮
             </p>
-            <img src={one} alt="" />
+            <img src={require('../../assets/doc/doc_help_ins_1_1_1.png')} alt="" />
             <p>
               ②在“新建文档”弹窗中，输入文档标题等信息
-              这里以“新能源”为主题词。文档标题为：“新能源简述”；文档标签选择为：“科研技术”；公开属性选择默认的“公开”；空白文档的文档模板为“无”。预览如下：
+              <br />这里以“新能源”为主题词。文档标题为：“新能源简述”；文档标签选择为：“科研技术”；公开属性选择默认的“公开”；空白文档的文档模板为“无”。预览如下：
             </p>
-            <img src={two} alt="" />
+            <img src={require('../../assets/doc/doc_help_ins_1_1_2.png')} alt="" />
+            <p>
+              ③新建空白文档成功后，预览如下：
+            </p>
+            <img src={require('../../assets/doc/doc_help_ins_1_1_3.png')} alt="" />
           </div>
           <div id="新建模板文档">
-            <p>这是模板文档</p>
+            <p>模板文档即应用某一个文档模板的文档。
+              <br />①点击“新建文档”按钮</p>
           </div>
         </div>
       </div>
