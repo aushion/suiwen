@@ -18,15 +18,12 @@ let quoteArray = [];
 
 function AnswerHelper(props) {
   const params = queryString.parse(window.location.href.split('?')[1]);
-
   const { loading, sgData, dispatch } = props;
-
   const { q } = params;
-
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
 
-  const groupByData = groupBy(sgData, 'id');
+  const groupByData = groupBy(sgData[0]?.dataList, 'id');
   const keys = Object.keys(groupByData);
 
   useEffect(() => {

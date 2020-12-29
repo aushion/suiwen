@@ -8,7 +8,20 @@ import styles from './index.less';
 function SgList(props) {
   const { data, q, needEvaluate = true } = props;
   const [initType, setType] = useState(data[0].name);
-
+  const kns = {
+    硕士: {
+      dbcode: 'CMFD',
+      dbname: 'CMFDTEMP'
+    },
+    博士: {
+      dbcode: 'CDFD',
+      dbname: 'CDFDTEMP'
+    },
+    会议: {
+      dbcode: 'CIPD',
+      dbname: 'CPFDTEMP'
+    }
+  };
   return (
     <div className={`${styles.SgList} copy`} id="sg">
       <h2>
@@ -32,7 +45,7 @@ function SgList(props) {
                 setType(item.name);
               }}
             >
-              {item.name}
+              {`${item.name}（${item.dataList.length}）`}
             </Button>
           );
         })}
@@ -105,7 +118,7 @@ function SgList(props) {
                           target="_blank"
                           rel="noopener noreferrer"
                           title={caption}
-                          href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${source_id}`}
+                          href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&&dbname=CMFDTEMPfilename=${source_id}`}
                         >
                           {caption}
                         </a>

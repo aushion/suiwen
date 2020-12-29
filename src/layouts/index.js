@@ -15,7 +15,7 @@ export default function(props) {
     );
   } else if (
     props.location.pathname === '/docHelp' ||
-    props.location.pathname === '/special' ||
+    props.location.pathname.includes('/special') ||
     props.location.pathname === '/detail' ||
     props.location.pathname === '/handleRedirect'
   ) {
