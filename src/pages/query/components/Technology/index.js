@@ -199,4 +199,4 @@ function Technology({ data, q }) {
   );
 }
 
-export default Technology;
+export default React.memo(Technology);

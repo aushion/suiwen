@@ -164,4 +164,4 @@ function SgPro(props) {
   );
 }
 
-export default SgPro;
+export default React.memo(SgPro);

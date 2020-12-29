@@ -112,6 +112,24 @@
       }
     }
   }
+  .arrowBtn {
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    font-size: 30px;
+    background: rgba(0, 0, 0, 0.1);
+    color: #fff;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
   .special {
     margin: 10px auto;
     .special_top {
@@ -152,10 +170,7 @@
       :global(.ant-tabs-card-bar .ant-tabs-nav-wrap) {
         margin-right: calc(50% - 650px);
       }
-      // :global(.slick-slider) {
-      //   height: 100%;
-      //   :global(.slick-list) {
-      //     height: 100%;
+
       .topic {
         position: relative;
         .arrowBtn {
@@ -306,7 +321,7 @@
   .experience {
     width: 1200px;
     margin: 40px auto;
-    // overflow: hidden;
+    position: relative;
     .title {
       padding-bottom: 40px;
     }
