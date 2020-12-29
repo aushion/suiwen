@@ -22,6 +22,10 @@ function SgList(props) {
       dbcode: 'CIPD',
       dbname: 'CPFDTEMP'
     },
+    国际会议: {
+      dbcode: 'IPFD',
+      dbname: 'IPFDTEMP'
+    },
     期刊: {
       dbcode: 'CJFD',
       dbname: 'CJFDTOTAL'
