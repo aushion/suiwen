@@ -267,4 +267,4 @@ function ToolsBook(props) {
   );
 }
 
-export default ToolsBook;
+export default React.memo(ToolsBook);

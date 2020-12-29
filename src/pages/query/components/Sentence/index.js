@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Tabs } from 'antd';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
@@ -64,7 +64,7 @@ function Sentence(props) {
 
   return (
     <div className={styles.Sentence}>
-      <h2 >{data[0].title || ''} - 知网百科问答</h2>
+      <h2>{data[0].title || ''} - 知网百科问答</h2>
       <div className={styles.Sentence_answer}>
         <Tabs defaultActiveKey="0">
           {sData.length
@@ -130,4 +130,4 @@ function Sentence(props) {
   );
 }
 
-export default Sentence;
+export default React.memo(Sentence);
