@@ -8,6 +8,7 @@ import styles from './index.less';
 function SgList(props) {
   const { data, q, needEvaluate = true } = props;
   const [initType, setType] = useState(data[0].name);
+
   const kns = {
     硕士: {
       dbcode: 'CMFD',
@@ -17,9 +18,13 @@ function SgList(props) {
       dbcode: 'CDFD',
       dbname: 'CDFDTEMP'
     },
-    会议: {
+    中国会议: {
       dbcode: 'CIPD',
       dbname: 'CPFDTEMP'
+    },
+    期刊: {
+      dbcode: 'CJFD',
+      dbname: 'CJFDTOTAL'
     }
   };
   return (
@@ -73,6 +78,7 @@ function SgList(props) {
                     '';
                   const caption = item.dataList[0].data.caption;
                   const source_id = item.dataList[0].data.source_id;
+                  const source_type = item.dataList[0].data.soure_type;
                   return (
                     <List.Item>
                       {item.dataList.map((current, index) => {
@@ -118,7 +124,7 @@ function SgList(props) {
                           target="_blank"
                           rel="noopener noreferrer"
                           title={caption}
-                          href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&&dbname=CMFDTEMPfilename=${source_id}`}
+                          href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${kns[source_type].dbcode}&&dbname=${kns[source_type].dbname}&filename=${source_id}`}
                         >
                           {caption}
                         </a>

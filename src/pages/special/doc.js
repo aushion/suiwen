@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Popover, Icon, Button, Avatar } from 'antd';
+import { Layout, Popover, Icon, Button, Avatar, Tabs, Row, Col } from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './index.less';
 import RestTools from '../../utils/RestTools';
+import request from '../../utils/request';
 import LoginRegister from '../../components/LoginRegister';
 import logo from '../../assets/logo1.png';
 import user from '../../assets/user.png';
 import home from '../../assets/home.png';
 import docBg from '../../assets/banner.png';
-
+const { TabPane } = Tabs;
 const { Header, Content, Footer } = Layout;
 function Doc(props) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-
-  const [visible, setVisible] = useState(false);
+  const [subject, setSubject] = useState([]);
   const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
   const [isVisibleLogin, setShowLogin] = useState(false);
   const [isVisibleRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    request.get('/doc/getSubjectDocs').then((res) => {
+      console.log('res', res);
+      if (res.data.code === 200) {
+        setSubject(res.data.result);
+      }
+    });
   }, []);
 
   function logout() {
@@ -82,21 +87,6 @@ function Doc(props) {
           <Icon type="form" style={{ marginRight: 6 }} />
           注册
         </span>
-      </div>
-      <div
-        style={{ padding: '10px 30px', cursor: 'pointer', borderRadius: 4, margin: '10px 0' }}
-        onClick={() => {
-          setVisible(true);
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'green';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '';
-        }}
-      >
-        <Icon type="message" style={{ marginRight: 6 }} />
-        反馈
       </div>
     </div>
   );
@@ -164,7 +154,25 @@ function Doc(props) {
       <Layout className={styles.main}>
         <Content className={styles.hotQuestions}>
           <div className={styles.title}>
-            <div>问题分类</div>
+            <Tabs>
+              {subject.map((item) =>
+                item.subject ? (
+                  <TabPane key={item.subject} tab={item.subject}>
+                    <Row>
+                      {item.dataList.length
+                        ? item.dataList.map((current) => {
+                            return (
+                              <Col span={12}>
+                                <div key={current.docId}>{current.docName}</div>
+                              </Col>
+                            );
+                          })
+                        : null}
+                    </Row>
+                  </TabPane>
+                ) : null
+              )}
+            </Tabs>
           </div>
         </Content>
       </Layout>

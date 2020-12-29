@@ -402,18 +402,28 @@ function Home(props) {
                 <div style={{ flex: 1, textAlign: 'center' }}>
                   <div
                     className={homeStyles.desc}
-                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 40 }}
+                    style={{ textAlign: 'center', fontSize: 15, paddingTop: 20 }}
                   >
                     <div style={{ fontSize: 20, color: '#666', fontWeight: '400' }}>
                       文档示例 · 共享
                     </div>
                     {props.docExamples && props.docExamples.length !== 0
-                      ? props.docExamples.map((docExample, exampleIndex) => {
+                      ? props.docExamples.slice(0, 4).map((docExample, exampleIndex) => {
                           return (
-                            <div key={exampleIndex}>
+                            <div
+                              key={exampleIndex}
+                              style={{
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
                               <Link
                                 to={`/doc/outlineConfigPreview?docId=${docExample.docId}`}
-                                style={{ fontSize: 16, color: '#1890ff' }}
+                                style={{
+                                  fontSize: 15,
+                                  color: '#1890ff'
+                                }}
                               >
                                 {docExample.docName}
                               </Link>
