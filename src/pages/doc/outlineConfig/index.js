@@ -20,7 +20,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
 import RestTools from '../../../utils/RestTools';
-
+import Link from 'umi/link';
 import OutlineList from './components/OutlineList';
 import AddDocModel from './components/AddDocModel';
 import EditDocModel from './components/EditDocModel';
@@ -1418,16 +1418,14 @@ const OutlineConfig = (props) => {
                   alt="收起"
                 />
               </div>
-              <div
-                className={styles.dochelp}
-                onClick={() => {
-                  // downloadDocInstructions();
-                  router.push('/docHelp');
-                }}
-              >
-                <img src={helpImg} alt="帮助" />
-                <div className={styles.buttonTxt}>帮助</div>
-              </div>
+              <Link to={`/docHelp`} target="_blank">
+                <div
+                  className={styles.dochelp}
+                >
+                  <img src={helpImg} alt="帮助" />
+                  <div className={styles.buttonTxt}>帮助</div>
+                </div>
+              </Link>
             </div>
           </div>
         ) : (

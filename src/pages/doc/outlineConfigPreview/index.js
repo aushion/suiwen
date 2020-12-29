@@ -20,7 +20,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect } from 'dva';
 import router from 'umi/router';
 import RestTools from '../../../utils/RestTools';
-
+import Link from 'umi/link';
 import OutlineList from './components/OutlineList';
 import AddDocModel from './components/AddDocModel';
 import EditDocModel from './components/EditDocModel';
@@ -31,7 +31,9 @@ import TemplateManagementModel from './components/TemplateManagementModel';
 import DownloadDocModel from './components/DownloadDocModel';
 import querystring from 'querystring';
 import styles from './style.less';
-
+import helpImg from '../../../assets/doc_help.png';
+import helpCloseImg from '../../../assets/doc_help_close.png';
+import helpOpenImg from '../../../assets/doc_help_open.png';
 import request from '@/utils/request';
 
 const { confirm } = Modal;
@@ -66,7 +68,8 @@ const OutlineConfigPreview = (props) => {
 
   const [classID, setID] = useState(true);
   const [loadFlag, setLoadFlag] = useState(0);
-
+  //文档使用帮助文档下载按钮显示状态
+  const [docHelpOpenStatus, setDocHelpOpenStatus] = useState(true);
   //文档模版选择
   const docTemplateList = props.docTemplateData;
   const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
@@ -700,6 +703,15 @@ const OutlineConfigPreview = (props) => {
     });
   }
 
+  //控制文档使用说明书下载按钮的显示与隐藏
+  function docHelpOpenOrClose() {
+    if (docHelpOpenStatus === true) {
+      setDocHelpOpenStatus(false);
+    } else {
+      setDocHelpOpenStatus(true);
+    }
+  }
+
   return (
     <Card>
       <div style={{ textAlign: 'right' }}>
@@ -712,394 +724,445 @@ const OutlineConfigPreview = (props) => {
           }}
         ></Button>
       </div>
-      <div style={{ paddingRight: '5%' }}>
-        <div style={{ width: 360, float: 'left' }}>
-          <div className={styles.list}>
-            <div className={styles.right}>
-              <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
-                <Button
-                  title={'预览模式下，无法新建文档'}
-                  onClick={addNewDoc}
-                  disabled={true}
-                  loading={props.loading}
-                  style={{ marginLeft: 0, background: '#CDCDCD ', color: '#FFFFFF' }}
-                >
-                  新建文档
-                </Button>
-                <Button
-                  title={'预览模式下，无法对文档重命名'}
-                  disabled={true}
-                  onClick={renameDoc}
-                  loading={props.loading}
-                  style={{ marginLeft: 5, background: ' #CDCDCD', color: '#FFFFFF' }}
-                >
-                  重命名
-                </Button>
-                <Select
-                  title={'预览模式下，无法选择文档模板'}
-                  disabled={true}
-                  style={{ width: 190, marginLeft: 5 }}
-                  value={selectedDocTemplate}
-                  onChange={(v) => onDocTemplateSelectChange(v)}
-                >
-                  <Select.Option value={''}>{'文档模板选择'}</Select.Option>
-                  {docTemplateOptions}
-                </Select>
-                {/* <SettingOutlined
+      <div style={{ display: 'flex' }}>
+        <div style={{ width: '95vw' }}>
+          <div style={{ width: 360, float: 'left' }}>
+            <div className={styles.list}>
+              <div className={styles.right}>
+                <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
+                  <Button
+                    title={'预览模式下，无法新建文档'}
+                    onClick={addNewDoc}
+                    disabled={true}
+                    loading={props.loading}
+                    style={{ marginLeft: 0, background: '#CDCDCD ', color: '#FFFFFF' }}
+                  >
+                    新建文档
+                  </Button>
+                  <Button
+                    title={'预览模式下，无法对文档重命名'}
+                    disabled={true}
+                    onClick={renameDoc}
+                    loading={props.loading}
+                    style={{ marginLeft: 5, background: ' #CDCDCD', color: '#FFFFFF' }}
+                  >
+                    重命名
+                  </Button>
+                  <Select
+                    title={'预览模式下，无法选择文档模板'}
+                    disabled={true}
+                    style={{ width: 190, marginLeft: 5 }}
+                    value={selectedDocTemplate}
+                    onChange={(v) => onDocTemplateSelectChange(v)}
+                  >
+                    <Select.Option value={''}>{'文档模板选择'}</Select.Option>
+                    {docTemplateOptions}
+                  </Select>
+                  {/* <SettingOutlined
                   style={{ width: 5, marginLeft: 5 }}
                   onClick={() => {
                     setTemplateManagementVisible(true);
                   }}
                   title="模板管理"
                 /> */}
-              </div>
-              <div className={styles.outlineArea}>
-                <div className={styles.domain}>
-                  {docId ? (
-                    <Spin spinning={outlineSpinLoading} indicator={antIcon} tip="目录加载中...">
-                      <Anchor
-                        // affix
-                        // targetOffset={50}
-                        className={styles.anchor}
-                        style={{ minHeight: '50vh', maxHeight: '72vh' }}
-                        getContainer={() => document.getElementById('scrollContent')}
-                      >
-                        <OutlineList
-                          data={props.outlineData}
-                          id={classID}
-                          onEdit={onEditChapter}
-                          onDelete={onDeleteChapter}
-                          onNew={onNewNode}
-                          onSEdit={onEditNode}
-                          onClick={onClassChange}
-                          onNewQuestion={onNewNodeQuestion}
-                          onChapterNew={onEditOutLine}
-                          onDocEdit={onEditDoc}
-                          onDocDelete={onDocDelete}
-                        />
-                      </Anchor>
-                    </Spin>
-                  ) : (
-                    <Tree disabled defaultExpandAll>
-                      <TreeNode title="文档标题：XXX" key="0-0">
-                        <TreeNode title="第1章：XXX" key="0-0-0">
-                          <TreeNode title="第1节：XXX" key="0-0-0-0" />
-                          <TreeNode title="第2节：XXX" key="0-0-0-1" />
+                </div>
+                <div className={styles.outlineArea}>
+                  <div className={styles.domain}>
+                    {docId ? (
+                      <Spin spinning={outlineSpinLoading} indicator={antIcon} tip="目录加载中...">
+                        <Anchor
+                          // affix
+                          // targetOffset={50}
+                          className={styles.anchor}
+                          style={{ minHeight: '50vh', maxHeight: '72vh' }}
+                          getContainer={() => document.getElementById('scrollContent')}
+                        >
+                          <OutlineList
+                            data={props.outlineData}
+                            id={classID}
+                            onEdit={onEditChapter}
+                            onDelete={onDeleteChapter}
+                            onNew={onNewNode}
+                            onSEdit={onEditNode}
+                            onClick={onClassChange}
+                            onNewQuestion={onNewNodeQuestion}
+                            onChapterNew={onEditOutLine}
+                            onDocEdit={onEditDoc}
+                            onDocDelete={onDocDelete}
+                          />
+                        </Anchor>
+                      </Spin>
+                    ) : (
+                      <Tree disabled defaultExpandAll>
+                        <TreeNode title="文档标题：XXX" key="0-0">
+                          <TreeNode title="第1章：XXX" key="0-0-0">
+                            <TreeNode title="第1节：XXX" key="0-0-0-0" />
+                            <TreeNode title="第2节：XXX" key="0-0-0-1" />
+                          </TreeNode>
+                          <TreeNode title="第2章：XXX" key="0-0-1">
+                            <TreeNode title="第1节：XXX" key="0-0-1-0" />
+                            <TreeNode title="第2节：XXX" key="0-0-1-1" />
+                            <TreeNode title="第3节：XXX" key="0-0-1-2" />
+                          </TreeNode>
                         </TreeNode>
-                        <TreeNode title="第2章：XXX" key="0-0-1">
-                          <TreeNode title="第1节：XXX" key="0-0-1-0" />
-                          <TreeNode title="第2节：XXX" key="0-0-1-1" />
-                          <TreeNode title="第3节：XXX" key="0-0-1-2" />
-                        </TreeNode>
-                      </TreeNode>
-                    </Tree>
-                  )}
+                      </Tree>
+                    )}
+                  </div>
                 </div>
               </div>
+              {addDocVisible ? (
+                <AddDocModel
+                  onHandleCancel={onHandleCancelAddDoc}
+                  onHandleOk={onHandleOkAddDoc}
+                  modalVisible={addDocVisible}
+                  dispatch={dispatch}
+                  loading={props.loading}
+                  docTemplateOptions={docTemplateOptions}
+                  defaultDocumentTemplate={selectedDocTemplate}
+                />
+              ) : null}
+              {editDocVisible ? (
+                <EditDocModel
+                  onHandleCancel={onHandleCancelDoc}
+                  onHandleOk={onHandleOkDoc}
+                  data={docData}
+                  dispatch={dispatch}
+                  loading={props.loading}
+                  docId={docId}
+                  modalVisible={editDocVisible}
+                />
+              ) : null}
+              {chapterVisible ? (
+                <ChapterModel
+                  onHandleCancel={onHandleCancelChapter}
+                  onHandleOk={onHandleOk}
+                  data={chapterData}
+                  dispatch={dispatch}
+                  loading={props.loading}
+                  modalVisible={chapterVisible}
+                />
+              ) : null}
+              {nodeVisible ? (
+                <NodeModel
+                  onHandleCancel={onHandleCancelNode}
+                  onHandleOk={onHandleOk}
+                  data={nodeData}
+                  dispatch={dispatch}
+                  loading={props.loading}
+                  chapterId={chapterId}
+                  modalVisible={nodeVisible}
+                />
+              ) : null}
+              {addNodeQuestionVisible ? (
+                <NodeQuestionModel
+                  modalVisible={addNodeQuestionVisible}
+                  data={nodeData}
+                  dispatch={dispatch}
+                  loading={props.loading}
+                  chapterId={chapterId}
+                  onCancle={() => {
+                    setAddNodeQuestionVisible(false);
+                    queryForRoute();
+                  }}
+                  handleOk={addNodeQuestion}
+                />
+              ) : null}
+              {templateManagementVisible ? (
+                <TemplateManagementModel
+                  modalVisible={templateManagementVisible}
+                  dispatch={dispatch}
+                  loading={props.loading}
+                  onCancle={() => setTemplateManagementVisible(false)}
+                  handleOk={() => setTemplateManagementVisible(false)}
+                />
+              ) : null}
+              {downloadDocVisible ? (
+                <DownloadDocModel
+                  modalVisible={downloadDocVisible}
+                  loading={downloadDocHandleOkLoading}
+                  onCancle={() => setDownloadDocVisible(false)}
+                  handleOk={generateDoc}
+                />
+              ) : null}
             </div>
-            {addDocVisible ? (
-              <AddDocModel
-                onHandleCancel={onHandleCancelAddDoc}
-                onHandleOk={onHandleOkAddDoc}
-                modalVisible={addDocVisible}
-                dispatch={dispatch}
+          </div>
+          <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
+            <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
+              <Button
+                title={'预览模式下，无法进行内容刷新'}
+                disabled={true}
+                onClick={refreshDocContent}
                 loading={props.loading}
-                docTemplateOptions={docTemplateOptions}
-                defaultDocumentTemplate={selectedDocTemplate}
-              />
-            ) : null}
-            {editDocVisible ? (
-              <EditDocModel
-                onHandleCancel={onHandleCancelDoc}
-                onHandleOk={onHandleOkDoc}
-                data={docData}
-                dispatch={dispatch}
-                loading={props.loading}
-                docId={docId}
-                modalVisible={editDocVisible}
-              />
-            ) : null}
-            {chapterVisible ? (
-              <ChapterModel
-                onHandleCancel={onHandleCancelChapter}
-                onHandleOk={onHandleOk}
-                data={chapterData}
-                dispatch={dispatch}
-                loading={props.loading}
-                modalVisible={chapterVisible}
-              />
-            ) : null}
-            {nodeVisible ? (
-              <NodeModel
-                onHandleCancel={onHandleCancelNode}
-                onHandleOk={onHandleOk}
-                data={nodeData}
-                dispatch={dispatch}
-                loading={props.loading}
-                chapterId={chapterId}
-                modalVisible={nodeVisible}
-              />
-            ) : null}
-            {addNodeQuestionVisible ? (
-              <NodeQuestionModel
-                modalVisible={addNodeQuestionVisible}
-                data={nodeData}
-                dispatch={dispatch}
-                loading={props.loading}
-                chapterId={chapterId}
-                onCancle={() => {
-                  setAddNodeQuestionVisible(false);
-                  queryForRoute();
+                style={{
+                  marginBottom: 10,
+                  marginRight: 5,
+                  background: ' #CDCDCD',
+                  color: '#FFFFFF'
                 }}
-                handleOk={addNodeQuestion}
-              />
-            ) : null}
-            {templateManagementVisible ? (
-              <TemplateManagementModel
-                modalVisible={templateManagementVisible}
-                dispatch={dispatch}
+              >
+                内容刷新
+              </Button>
+              <Button
+                title={'对预览文档进行下载'}
+                disabled={docId ? false : true}
+                onClick={selectDocDownloadMethod}
                 loading={props.loading}
-                onCancle={() => setTemplateManagementVisible(false)}
-                handleOk={() => setTemplateManagementVisible(false)}
-              />
-            ) : null}
-            {downloadDocVisible ? (
-              <DownloadDocModel
-                modalVisible={downloadDocVisible}
-                loading={downloadDocHandleOkLoading}
-                onCancle={() => setDownloadDocVisible(false)}
-                handleOk={generateDoc}
-              />
-            ) : null}
-          </div>
-        </div>
-        <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
-          <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
-            <Button
-              title={'预览模式下，无法进行内容刷新'}
-              disabled={true}
-              onClick={refreshDocContent}
-              loading={props.loading}
-              style={{ marginBottom: 10, marginRight: 5, background: ' #CDCDCD', color: '#FFFFFF' }}
-            >
-              内容刷新
-            </Button>
-            <Button
-              title={'对预览文档进行下载'}
-              disabled={docId ? false : true}
-              onClick={selectDocDownloadMethod}
-              loading={props.loading}
-              style={{ marginBottom: 10, marginRight: 5, background: '#2ae', color: '#FFFFFF' }}
-            >
-              文档下载
-            </Button>
-            <Button
-              title={username ? '前往个人文档' : '非登录状态，无法前往个人文档'}
-              disabled={username ? false : true}
-              loading={props.loading}
-              style={{
-                marginBottom: 10,
-                background: username ? '#2ae' : ' #CDCDCD',
-                color: '#FFFFFF'
-              }}
-              onClick={() => {
-                router.push(
-                  `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
-                );
-              }}
-            >
-              个人文档
-            </Button>
-          </div>
+                style={{ marginBottom: 10, marginRight: 5, background: '#2ae', color: '#FFFFFF' }}
+              >
+                文档下载
+              </Button>
+              <Button
+                title={username ? '前往个人文档' : '非登录状态，无法前往个人文档'}
+                disabled={username ? false : true}
+                loading={props.loading}
+                style={{
+                  marginBottom: 10,
+                  background: username ? '#2ae' : ' #CDCDCD',
+                  color: '#FFFFFF'
+                }}
+                onClick={() => {
+                  router.push(
+                    `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
+                  );
+                }}
+              >
+                个人文档
+              </Button>
+            </div>
 
-          <div id="scrollContent" className={styles.scrollContent}>
-            <Spin spinning={docContentResultLoading} tip="文档内容生成中..." size="large">
-              {props.docContentData ? (
-                <>
-                  <div
-                    key={encodeURIComponent('docTitle' + props.docContentData.docId)}
-                    id={encodeURIComponent('docTitle' + props.docContentData.docId)}
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        '<h1 align="center">' +
-                        [props.docContentData.docName ? props.docContentData.docName : ''] +
-                        '</h1>'
-                    }}
-                  />
+            <div id="scrollContent" className={styles.scrollContent}>
+              <Spin spinning={docContentResultLoading} tip="文档内容生成中..." size="large">
+                {props.docContentData ? (
+                  <>
+                    <div
+                      key={encodeURIComponent('docTitle' + props.docContentData.docId)}
+                      id={encodeURIComponent('docTitle' + props.docContentData.docId)}
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          '<h1 align="center">' +
+                          [props.docContentData.docName ? props.docContentData.docName : ''] +
+                          '</h1>'
+                      }}
+                    />
 
-                  <List
-                    split={false}
-                    itemLayout="horizontal"
-                    dataSource={props.docContentData.routeList}
-                    renderItem={(chapterItem) => (
-                      <div
-                        key={encodeURIComponent('chapterTitle' + chapterItem.routeId)}
-                        id={encodeURIComponent('chapterTitle' + chapterItem.routeId)}
-                      >
-                        {chapterItem.routeName ? (
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
-                            }}
-                          />
-                        ) : null}
-                        <List.Item>
-                          {chapterItem.sectionList && chapterItem.sectionList.length > 0 ? (
-                            <List
-                              split={false}
-                              dataSource={chapterItem.sectionList}
-                              renderItem={(nodeItem) => (
-                                <div
-                                  key={encodeURIComponent(
-                                    'nodeTitle' + chapterItem.routeId + '' + nodeItem.routeId
-                                  )}
-                                  id={encodeURIComponent(
-                                    'nodeTitle' + chapterItem.routeId + '' + nodeItem.routeId
-                                  )}
-                                >
-                                  {nodeItem.routeName ? (
-                                    <div
-                                      dangerouslySetInnerHTML={{
-                                        __html:
-                                          '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' +
-                                          nodeItem.routeName +
-                                          '</h3>'
-                                      }}
-                                    />
-                                  ) : null}
-                                  <List.Item>
-                                    {nodeItem.content && nodeItem.content.length > 0 ? (
-                                      <List
-                                        split={false}
-                                        dataSource={nodeItem.content}
-                                        renderItem={(nodeContentItem) => (
-                                          <div>
-                                            {nodeContentItem.question &&
-                                            nodeContentItem.contentList &&
-                                            nodeContentItem.contentList.length > 0 ? (
-                                              <div style={{ height: '5px' }}>
-                                                <Divider style={{ dashed: true }}>
-                                                  <h5>{nodeContentItem.question}</h5>
-                                                </Divider>
-                                              </div>
-                                            ) : null}
-                                            <List.Item>
-                                              {nodeContentItem.contentList &&
-                                              nodeContentItem.contentList.length > 0 ? (
-                                                <List
-                                                  split={false}
-                                                  dataSource={nodeContentItem.contentList}
-                                                  renderItem={(contentItem) => (
-                                                    <List.Item>
-                                                      <Col>
-                                                        <Row>
-                                                          <div
-                                                            dangerouslySetInnerHTML={{
-                                                              __html:
-                                                                '<p style="text-indent:2em">' +
-                                                                RestTools.translateDocToRed(
-                                                                  contentItem.content
-                                                                ) +
-                                                                '</p>'
-                                                            }}
-                                                          />
-                                                        </Row>
-                                                        <Row>
-                                                          <div
-                                                            dangerouslySetInnerHTML={{
-                                                              __html:
-                                                                '<p style="text-align: right">' +
-                                                                '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
-                                                                contentItem.resourceId +
-                                                                '>' +
-                                                                contentItem.resource +
-                                                                '</a>' +
-                                                                '</p>'
-                                                            }}
-                                                          />
-                                                        </Row>
-                                                      </Col>
-
-                                                      <div>
-                                                        <Row gutter={10}>
-                                                          <Col span={10}>
-                                                            <Button
-                                                              disabled={true}
-                                                              style={{
-                                                                border: '0px',
-                                                                color: ' #CDCDCD   '
-                                                              }}
-                                                              icon={'close-circle'}
-                                                              title={'删除片段'}
-                                                              onClick={() => {
-                                                                //去除原文
-                                                                deleteContent(contentItem);
-                                                              }}
-                                                            ></Button>
-                                                          </Col>
-                                                        </Row>
-                                                      </div>
-                                                    </List.Item>
-                                                  )}
-                                                />
-                                              ) : null}
-                                            </List.Item>
-                                          </div>
-                                        )}
-                                      />
-                                    ) : null}
-                                  </List.Item>
-                                </div>
-                              )}
-                            />
-                          ) : null}
-                        </List.Item>
-                      </div>
-                    )}
-                  />
-
-                  {props.docContentData.literatureList &&
-                  props.docContentData.literatureList.length > 0 ? (
-                    <div>
-                      <div
-                        key={'docLiteratureTitle' + props.docContentData.literatureName}
-                        id={'docLiteratureTitle' + props.docContentData.literatureName}
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            '<h2 align="center">' + props.docContentData.literatureName + '</h2>'
-                        }}
-                      />
-                      <List
-                        split={false}
-                        itemLayout="horizontal"
-                        dataSource={props.docContentData.literatureList}
-                        renderItem={(literatureItem, i) => (
-                          <List.Item>
+                    <List
+                      split={false}
+                      itemLayout="horizontal"
+                      dataSource={props.docContentData.routeList}
+                      renderItem={(chapterItem) => (
+                        <div
+                          key={encodeURIComponent('chapterTitle' + chapterItem.routeId)}
+                          id={encodeURIComponent('chapterTitle' + chapterItem.routeId)}
+                        >
+                          {chapterItem.routeName ? (
                             <div
                               dangerouslySetInnerHTML={{
-                                __html:
-                                  '<p style="text-indent:2em">' +
-                                  '<a style="color:#000000" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
-                                  literatureItem.resourceId +
-                                  '>' +
-                                  '[' +
-                                  ++i +
-                                  '] ' +
-                                  literatureItem.resource +
-                                  '</a>' +
-                                  '</p>'
+                                __html: '<h2 align="center">' + chapterItem.routeName + '</h2>'
                               }}
                             />
+                          ) : null}
+                          <List.Item>
+                            {chapterItem.sectionList && chapterItem.sectionList.length > 0 ? (
+                              <List
+                                split={false}
+                                dataSource={chapterItem.sectionList}
+                                renderItem={(nodeItem) => (
+                                  <div
+                                    key={encodeURIComponent(
+                                      'nodeTitle' + chapterItem.routeId + '' + nodeItem.routeId
+                                    )}
+                                    id={encodeURIComponent(
+                                      'nodeTitle' + chapterItem.routeId + '' + nodeItem.routeId
+                                    )}
+                                  >
+                                    {nodeItem.routeName ? (
+                                      <div
+                                        dangerouslySetInnerHTML={{
+                                          __html:
+                                            '<h3 >&nbsp;&nbsp;&nbsp;&nbsp;' +
+                                            nodeItem.routeName +
+                                            '</h3>'
+                                        }}
+                                      />
+                                    ) : null}
+                                    <List.Item>
+                                      {nodeItem.content && nodeItem.content.length > 0 ? (
+                                        <List
+                                          split={false}
+                                          dataSource={nodeItem.content}
+                                          renderItem={(nodeContentItem) => (
+                                            <div>
+                                              {nodeContentItem.question &&
+                                              nodeContentItem.contentList &&
+                                              nodeContentItem.contentList.length > 0 ? (
+                                                <div style={{ height: '5px' }}>
+                                                  <Divider style={{ dashed: true }}>
+                                                    <h5>{nodeContentItem.question}</h5>
+                                                  </Divider>
+                                                </div>
+                                              ) : null}
+                                              <List.Item>
+                                                {nodeContentItem.contentList &&
+                                                nodeContentItem.contentList.length > 0 ? (
+                                                  <List
+                                                    split={false}
+                                                    dataSource={nodeContentItem.contentList}
+                                                    renderItem={(contentItem) => (
+                                                      <List.Item>
+                                                        <Col>
+                                                          <Row>
+                                                            <div
+                                                              dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                  '<p style="text-indent:2em">' +
+                                                                  RestTools.translateDocToRed(
+                                                                    contentItem.content
+                                                                  ) +
+                                                                  '</p>'
+                                                              }}
+                                                            />
+                                                          </Row>
+                                                          <Row>
+                                                            <div
+                                                              dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                  '<p style="text-align: right">' +
+                                                                  '<a style="color:#999" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                                                  contentItem.resourceId +
+                                                                  '>' +
+                                                                  contentItem.resource +
+                                                                  '</a>' +
+                                                                  '</p>'
+                                                              }}
+                                                            />
+                                                          </Row>
+                                                        </Col>
+
+                                                        <div>
+                                                          <Row gutter={10}>
+                                                            <Col span={10}>
+                                                              <Button
+                                                                disabled={true}
+                                                                style={{
+                                                                  border: '0px',
+                                                                  color: ' #CDCDCD   '
+                                                                }}
+                                                                icon={'close-circle'}
+                                                                title={'删除片段'}
+                                                                onClick={() => {
+                                                                  //去除原文
+                                                                  deleteContent(contentItem);
+                                                                }}
+                                                              ></Button>
+                                                            </Col>
+                                                          </Row>
+                                                        </div>
+                                                      </List.Item>
+                                                    )}
+                                                  />
+                                                ) : null}
+                                              </List.Item>
+                                            </div>
+                                          )}
+                                        />
+                                      ) : null}
+                                    </List.Item>
+                                  </div>
+                                )}
+                              />
+                            ) : null}
                           </List.Item>
-                        )}
-                      />
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
-            </Spin>
+                        </div>
+                      )}
+                    />
+
+                    {props.docContentData.literatureList &&
+                    props.docContentData.literatureList.length > 0 ? (
+                      <div>
+                        <div
+                          key={'docLiteratureTitle' + props.docContentData.literatureName}
+                          id={'docLiteratureTitle' + props.docContentData.literatureName}
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              '<h2 align="center">' + props.docContentData.literatureName + '</h2>'
+                          }}
+                        />
+                        <List
+                          split={false}
+                          itemLayout="horizontal"
+                          dataSource={props.docContentData.literatureList}
+                          renderItem={(literatureItem, i) => (
+                            <List.Item>
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html:
+                                    '<p style="text-indent:2em">' +
+                                    '<a style="color:#000000" target="_blank" rel="noopener noreferrer" href=http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=' +
+                                    literatureItem.resourceId +
+                                    '>' +
+                                    '[' +
+                                    ++i +
+                                    '] ' +
+                                    literatureItem.resource +
+                                    '</a>' +
+                                    '</p>'
+                                }}
+                              />
+                            </List.Item>
+                          )}
+                        />
+                      </div>
+                    ) : null}
+                  </>
+                ) : null}
+              </Spin>
+            </div>
           </div>
         </div>
+        {docHelpOpenStatus === true ? (
+          <div style={{ width: '5vw', textAlign: 'center', marginTop: '25vh' }}>
+            <div style={{ display: 'flex' }}>
+              <div
+                onClick={() => {
+                  docHelpOpenOrClose();
+                }}
+              >
+                <img
+                  title={'收起'}
+                  style={{ marginTop: '15px', marginLeft: '25px', cursor: 'pointer' }}
+                  src={helpCloseImg}
+                  alt="收起"
+                />
+              </div>
+              <Link to={`/docHelp`} target="_blank">
+                <div className={styles.dochelp}>
+                  <img src={helpImg} alt="帮助" />
+                  <div className={styles.buttonTxt}>帮助</div>
+                </div>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div style={{ width: '5vw', textAlign: 'right', marginTop: '25vh' }}>
+            <div style={{ display: 'flex', float: 'right' }}>
+              <div
+                onClick={() => {
+                  docHelpOpenOrClose();
+                }}
+              >
+                <img
+                  title={'展开'}
+                  style={{ marginTop: '15px', cursor: 'pointer' }}
+                  src={helpOpenImg}
+                  alt="展开"
+                />
+              </div>
+              <div className={styles.dochelpClose}>
+                <img src={helpImg} alt="帮助" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Card>
   );
