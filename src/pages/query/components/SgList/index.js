@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, List } from 'antd';
 import groupBy from 'lodash/groupBy';
+import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate/index';
 import FoldText from '../../../../components/FoldText';
 import styles from './index.less';
@@ -9,28 +10,6 @@ function SgList(props) {
   const { data, q, needEvaluate = true } = props;
   const [initType, setType] = useState(data[0].name);
 
-  const kns = {
-    硕士: {
-      dbcode: 'CMFD',
-      dbname: 'CMFDTEMP'
-    },
-    博士: {
-      dbcode: 'CDFD',
-      dbname: 'CDFDTEMP'
-    },
-    中国会议: {
-      dbcode: 'CIPD',
-      dbname: 'CPFDTEMP'
-    },
-    国际会议: {
-      dbcode: 'IPFD',
-      dbname: 'IPFDTEMP'
-    },
-    期刊: {
-      dbcode: 'CJFD',
-      dbname: 'CJFDTOTAL'
-    }
-  };
   return (
     <div className={`${styles.SgList} copy`} id="sg">
       <h2>
@@ -128,7 +107,7 @@ function SgList(props) {
                           target="_blank"
                           rel="noopener noreferrer"
                           title={caption}
-                          href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${kns[source_type].dbcode}&&dbname=${kns[source_type].dbname}&filename=${source_id}`}
+                          href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`}
                         >
                           {caption}
                         </a>

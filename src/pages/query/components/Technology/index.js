@@ -167,7 +167,7 @@ function Technology({ data, q }) {
                       style={{
                         display: 'inline-block',
                         color: '#999',
-                        maxWidth: 300,
+                        maxWidth: 250,
                         marginRight: 10,
                         cursor: 'pointer',
                         overflow: 'hidden',
@@ -176,7 +176,11 @@ function Technology({ data, q }) {
                       }}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.addition.文件名}`}
+                      href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${
+                        RestTools.kns[RestTools.removeFlag(item.SOURE_TYPE)].dbcode
+                      }&dbname=${
+                        RestTools.kns[RestTools.removeFlag(item.SOURE_TYPE)].dbname
+                      }&filename=${item.addition.文件名}`}
                       title={item.addition.篇名}
                     >{`${item.addition.篇名}`}</a>
                     <span
