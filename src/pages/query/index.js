@@ -149,7 +149,7 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
-  const sgCount = sgData.length;
+  const sgCount = sgData.reduce((total, item) => total + item.dataList.length, 0);
 
   const resultLength =
     sgCount +
