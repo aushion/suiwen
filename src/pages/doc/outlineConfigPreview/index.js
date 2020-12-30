@@ -68,24 +68,34 @@ const OutlineConfigPreview = (props) => {
 
   const [classID, setID] = useState(true);
   const [loadFlag, setLoadFlag] = useState(0);
+  //新建文档后是否加载内容刷新函数状态值
+  const [isToCallRefreshDocContent, setIsToCallRefreshDocContent] = useState(false);
   //文档使用帮助文档下载按钮显示状态
   const [docHelpOpenStatus, setDocHelpOpenStatus] = useState(true);
+  //文档标签数据
+  const docClassifyList = props.docClassifyData;
   //文档模版选择
   const docTemplateList = props.docTemplateData;
   const [selectedDocTemplate, setSeletedDocTemplate] = useState('');
-
+  //新建文档类型  1:直接点击新建文档弹出的页面; 2:切换文档模板弹出的页面.
+  const [newType, setNewType] = useState(0);
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
   useEffect(() => {
-    //加载文档模版数据
+    //加载文档模版数据和标签数据
     // eslint-disable-next-line react-hooks/exhaustive-deps
     getDocTemplate();
+    getDocClassify();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     if (docId) {
       //加载该文档id下的提纲目录
       queryForRoute();
       //加载文档内容
-      getDocContent();
+      if (isToCallRefreshDocContent) {
+        refreshDocContent();
+      } else {
+        getDocContent();
+      }
       setID(docId);
     } else {
       //不加载文档内容
@@ -106,11 +116,20 @@ const OutlineConfigPreview = (props) => {
 
   //获取所有的文档模版
   function getDocTemplate() {
-    // if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
-    //   props.dispatch({
-    //     type: 'Doc/getTemplateList'
-    //   });
-    // }
+    if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
+      props.dispatch({
+        type: 'Doc/getTemplateList'
+      });
+    }
+  }
+
+  //获取所有的文档标签
+  function getDocClassify() {
+    if (!docClassifyList || (docClassifyList && docClassifyList.length === 0)) {
+      props.dispatch({
+        type: 'Doc/getDocClassify'
+      });
+    }
   }
 
   //获取该文档id下的提纲目录
@@ -137,18 +156,14 @@ const OutlineConfigPreview = (props) => {
 
   //新建文档触发事件
   function addNewDoc() {
-    if (docId) {
-      Modal.confirm({
-        title:
-          '当前文档已实时保存到"个人中心-文档"里，新建文档操作最终跳转新的文档界面，确定继续执行新建操作？',
-        centered: true,
-        onOk() {
-          setAddDocVisible(true);
-        }
-      });
-    } else {
-      setAddDocVisible(true);
+    //限制如果没有登录，则不能新建文档
+    if (!username) {
+      message.warn('非登录状态，无法新建文档！请先登录');
+      return;
     }
+    //设置新建文档类型（1:直接点击新建文档弹出的页面; 2:切换文档模板弹出的页面.）
+    setNewType(1);
+    setAddDocVisible(true);
   }
 
   //重命名文档标题
@@ -214,6 +229,21 @@ const OutlineConfigPreview = (props) => {
     }
     //设置提纲目录区与文档内容预览区加载动画效果
     setDocContentResultLoading(true);
+    //将标签数组转换成逗号分隔的字符串
+    let tag = '';
+    let tagList = values.tag ? values.tag : [];
+    for (var i = 0; i < tagList.length; i++) {
+      tag += tagList[i];
+      if (i !== tagList.length - 1) {
+        tag += ',';
+      }
+    }
+
+    if (values.docTemplateId !== '') {
+      setIsToCallRefreshDocContent(true);
+      setDocContentResultLoading(true);
+    }
+
     //新增文档
     props
       .dispatch({
@@ -222,7 +252,10 @@ const OutlineConfigPreview = (props) => {
           docId: docId,
           docName: values.label,
           userName: username,
-          templateId: values.docTemplateId
+          templateId: values.docTemplateId === '' ? null : values.docTemplateId,
+          tag: tag,
+          type: values.tag === '' ? null : values.type,
+          keyWord: values.keyWord && values.keyWord.trim() !== '' ? values.keyWord : null
         }
       })
       .then((res) => {
@@ -235,17 +268,19 @@ const OutlineConfigPreview = (props) => {
           setChapterId('');
           message.success('新增文档标题成功');
           //跳转刚才新创建的文档
-          router.push({
-            pathname: '/doc/outlineConfig',
-            query: {
-              docId: docId
-            }
-          });
+          // router.push({
+          //   pathname: '/doc/outlineConfig',
+          //   query: {
+          //     docId: docId
+          //   }
+          // });
+          //新建页面显示新建的文档页面
+          window.open(`/web/doc/outlineConfig?docId=${docId}`);
           setLoadFlag(docId);
         } else {
           message.error(res.msg);
+          setDocContentResultLoading(false);
         }
-        setDocContentResultLoading(false);
       });
   };
 
@@ -661,6 +696,17 @@ const OutlineConfigPreview = (props) => {
     }
   }
 
+  let docClassifyOptions = [];
+  if (docClassifyList.length) {
+    for (let i = 0; i < docClassifyList.length; i++) {
+      docClassifyOptions.push(
+        <Select.Option value={docClassifyList[i]['cId']} key={i}>
+          {docClassifyList[i]['cName']}
+        </Select.Option>
+      );
+    }
+  }
+
   //选择文档模版改变时 触发事件
   function onDocTemplateSelectChange(value) {
     setSeletedDocTemplate(value);
@@ -731,11 +777,10 @@ const OutlineConfigPreview = (props) => {
               <div className={styles.right}>
                 <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
                   <Button
-                    title={'预览模式下，无法新建文档'}
+                    title={username ? '新建文档' : '非登录状态下，无法新建文档'}
                     onClick={addNewDoc}
-                    disabled={true}
                     loading={props.loading}
-                    style={{ marginLeft: 0, background: '#CDCDCD ', color: '#FFFFFF' }}
+                    style={{ marginLeft: 0, background: '#2ae', color: '#FFFFFF' }}
                   >
                     新建文档
                   </Button>
@@ -758,13 +803,6 @@ const OutlineConfigPreview = (props) => {
                     <Select.Option value={''}>{'文档模板选择'}</Select.Option>
                     {docTemplateOptions}
                   </Select>
-                  {/* <SettingOutlined
-                  style={{ width: 5, marginLeft: 5 }}
-                  onClick={() => {
-                    setTemplateManagementVisible(true);
-                  }}
-                  title="模板管理"
-                /> */}
                 </div>
                 <div className={styles.outlineArea}>
                   <div className={styles.domain}>
@@ -818,7 +856,9 @@ const OutlineConfigPreview = (props) => {
                   dispatch={dispatch}
                   loading={props.loading}
                   docTemplateOptions={docTemplateOptions}
+                  docClassifyOptions={docClassifyOptions}
                   defaultDocumentTemplate={selectedDocTemplate}
+                  newType={newType}
                 />
               ) : null}
               {editDocVisible ? (
@@ -1170,5 +1210,7 @@ const OutlineConfigPreview = (props) => {
 export default connect(({ Doc }) => ({
   outlineData: Doc.outlineData,
   docContentData: Doc.docContentData,
-  docTemplateData: Doc.docTemplateData
+  docTemplateData: Doc.docTemplateData,
+  docClassifyData: Doc.docClassifyData,
+  answerContentDataForCurrentQuestion: Doc.answerContentDataForCurrentQuestion
 }))(Form.create()(OutlineConfigPreview));

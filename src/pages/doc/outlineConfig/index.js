@@ -85,7 +85,7 @@ const OutlineConfig = (props) => {
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
   //新建文档后是否加载内容刷新函数状态值
   const [isToCallRefreshDocContent, setIsToCallRefreshDocContent] = useState(false);
-
+  const [currentTaskId, setCurrentTaskId] = useState('');
   //文档使用帮助文档下载按钮显示状态
   const [docHelpOpenStatus, setDocHelpOpenStatus] = useState(true);
 
@@ -99,7 +99,7 @@ const OutlineConfig = (props) => {
       //加载该文档id下的提纲目录
       queryForRoute();
       //加载文档内容
-      if (isToCallRefreshDocContent) {
+      if (isToCallRefreshDocContent || currentTaskId === '') {
         refreshDocContent();
       } else {
         getDocContent();
@@ -718,8 +718,25 @@ const OutlineConfig = (props) => {
       .then((res) => {
         if (res.code === 200) {
           let currentTaskId = res.result;
-          //开启定时器，轮询后去内容刷新完成状态
-          componentDidMount(currentTaskId);
+          setCurrentTaskId(currentTaskId);
+          props
+            .dispatch({
+              type: 'Doc/getContentTaskStatus',
+              payload: {
+                taskId: currentTaskId
+              }
+            })
+            .then((res) => {
+              if (res.code === 200) {
+                setIsToCallRefreshDocContent(false);
+                //跳至当前瞄点位置
+                getDocContent();
+              } else {
+                setDocContentResultLoading(true);
+                //开启定时器，轮询后去内容刷新完成状态
+                componentDidMount(currentTaskId);
+              }
+            });
         }
       });
   };
@@ -1419,9 +1436,7 @@ const OutlineConfig = (props) => {
                 />
               </div>
               <Link to={`/docHelp`} target="_blank">
-                <div
-                  className={styles.dochelp}
-                >
+                <div className={styles.dochelp}>
                   <img src={helpImg} alt="帮助" />
                   <div className={styles.buttonTxt}>帮助</div>
                 </div>
