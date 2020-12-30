@@ -147,11 +147,7 @@ export default {
   },
 
   translateDocToRed(str) {
-    return str
-      ? str
-          .replace(/###/g, '<span style="color:red">')
-          .replace(/\$\$\$/g, '</span>')
-      : '';
+    return str ? str.replace(/###/g, '<span style="color:red">').replace(/\$\$\$/g, '</span>') : '';
   },
 
   superMarkRed(str) {
@@ -190,6 +186,28 @@ export default {
         enText: 'Intelligent Question and Answer'
       },
       headerStyle: null
+    }
+  },
+  kns: {
+    硕士: {
+      dbcode: 'CMFD',
+      dbname: 'CMFDTEMP'
+    },
+    博士: {
+      dbcode: 'CDFD',
+      dbname: 'CDFDTEMP'
+    },
+    中国会议: {
+      dbcode: 'CIPD',
+      dbname: 'CPFDTEMP'
+    },
+    国际会议: {
+      dbcode: 'IPFD',
+      dbname: 'IPFDTEMP'
+    },
+    期刊: {
+      dbcode: 'CJFD',
+      dbname: 'CJFDTOTAL'
     }
   },
   sourceDb: {
