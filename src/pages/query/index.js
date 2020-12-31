@@ -6,7 +6,6 @@ import querystring from 'querystring';
 import Cookies from 'js-cookie';
 import Viewer from 'react-viewer';
 import router from 'umi/router';
-// import findIndex from 'lodash/findIndex';
 import styles from './index.less';
 import SgList from './components/SgList';
 import FAQ from './components/FAQ';
@@ -387,7 +386,7 @@ function ResultPage(props) {
                       ))}
                     </div>
                   ) : null}
-                  <Covid />
+                  {covid ? <Covid /> : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Spin, Tabs, Row, Col } from 'antd';
 import axios from 'axios';
-import request from '../../../../utils/request';
 import styles from './index.less';
 const { TabPane } = Tabs;
 export default React.memo(function Covid() {
