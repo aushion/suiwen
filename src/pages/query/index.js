@@ -6,7 +6,6 @@ import querystring from 'querystring';
 import Cookies from 'js-cookie';
 import Viewer from 'react-viewer';
 import router from 'umi/router';
-// import findIndex from 'lodash/findIndex';
 import styles from './index.less';
 import SgList from './components/SgList';
 import FAQ from './components/FAQ';
@@ -36,6 +35,7 @@ import Method from './components/Concept/method';
 import Technology from './components/Technology';
 import Recommend from './components/Recommend';
 import SgPro from './components/SgPro';
+import Covid from './components/Covid';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -118,7 +118,8 @@ function ResultPage(props) {
       document.removeEventListener('copy', handleCopy);
     };
   }, []);
-
+  const faq = faqData.filter((item) => item.dataType === 0 && item.domain !== '疫情防护'); //faq
+  const covid = faqData.filter((item) => item.domain === '疫情防护'); //疫情防护
   const referenceBookData = repositoryData.filter((item) => item.template === 'referencebook'); //工具书数据
   const referenceBookListData = repositoryData.filter((item) => item.template === 'booklist'); //工具书书目数据
   const JournalData = repositoryData.filter((item) => item.template === 'journal'); //期刊数据
@@ -378,13 +379,14 @@ function ResultPage(props) {
                   {poemData.length
                     ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
                     : null}
-                  {faqData.length ? (
+                  {faq.length ? (
                     <div>
-                      {faqData.map((item) => (
+                      {faq.map((item) => (
                         <FAQ key={item.id} data={item} q={q} />
                       ))}
                     </div>
                   ) : null}
+                  {covid ? <Covid /> : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
 

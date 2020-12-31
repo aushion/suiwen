@@ -23,6 +23,13 @@ export default {
     // '@ant-design/icons/lib/dist$': path.resolve(__dirname, 'src/icon.js'),
     // '@': path.resolve(__dirname, 'src')
   },
+  proxy: {
+    '/test': {
+      target: 'https://interface.sina.cn/news/wap/',
+      changeOrigin: true,
+      pathRewrite: { '^/test': '' }
+    }
+  },
   autoprefixer: {
     flexbox: 'no-2009'
   },
