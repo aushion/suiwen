@@ -386,7 +386,7 @@ function ResultPage(props) {
                       ))}
                     </div>
                   ) : null}
-                  {covid ? <Covid /> : null}
+                  {covid.length ? <Covid /> : null}
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
 

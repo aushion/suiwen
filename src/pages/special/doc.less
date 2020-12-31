@@ -1,0 +1,140 @@
+.wrapper {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+  background: #f3f3f3;
+  .header {
+    padding: 0;
+    .logo {
+      position: absolute;
+      left: 40px;
+      top: 20px;
+      z-index: 999;
+      height: 40px;
+      cursor: pointer;
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+    .title {
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 36px;
+      font-family: Adobe Heiti Std;
+      color: white;
+      font-weight: bold;
+      font-style: italic;
+      letter-spacing: 4px;
+      .wrap {
+        color: yellow;
+        font-size: 18px;
+        // text-decoration: underline;
+        margin-left: 200px;
+        cursor: pointer;
+        .text {
+          background-image: linear-gradient(135deg, red, yellow);
+          color: transparent;
+        }
+
+        @keyframes bounce {
+          0% {
+            top: 0;
+          }
+          25% {
+            top: -2px;
+          }
+          50% {
+            top: -6px;
+          }
+          75% {
+            top: 6px;
+          }
+          100% {
+            top: 0;
+          }
+        }
+        :global {
+          .x :local {
+            animation: bounce 0.8s linear 0s infinite;
+            position: relative;
+          }
+          .j :local {
+            animation: bounce 0.8s linear 0.3s infinite;
+            position: relative;
+          }
+          .w :local {
+            animation: bounce 0.8s linear 0.4s infinite;
+            position: relative;
+          }
+          .d :local {
+            animation: bounce 0.8s linear 0.5s infinite;
+            position: relative;
+          }
+        }
+      }
+    }
+    .imgWrap {
+      width: 100%;
+      img {
+        width: 100%;
+      }
+    }
+
+    .user {
+      position: absolute;
+      right: 100px;
+      top: 20px;
+      color: #fff;
+      cursor: pointer;
+      img {
+        width: 100%;
+      }
+    }
+  }
+  .main {
+    width: 1200px;
+    margin: 20px auto 0;
+    .docItem {
+      padding: 10px;
+      font-size: 15px;
+      .text {
+        color: #787878;
+        &:hover {
+          color: #1890ff;
+        }
+      }
+    }
+  }
+
+  .footer {
+    background-color: #eee;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    .footer_wrap {
+      overflow: hidden;
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      position: relative;
+      .footer_item {
+        display: inline-block;
+        padding: 14px 20px;
+        text-align: center;
+        list-style: none;
+        a {
+          color: #999;
+          &:hover {
+            color: lightsalmon;
+          }
+        }
+      }
+    }
+  }
+}

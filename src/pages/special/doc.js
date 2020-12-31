@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Popover, Icon, Button, Avatar, Tabs, Row, Col } from 'antd';
+import { Layout, Popover, Icon, Button, Avatar, Tabs, Row, Col, Card } from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
-import styles from './index.less';
+import styles from './doc.less';
 import RestTools from '../../utils/RestTools';
 import request from '../../utils/request';
 import LoginRegister from '../../components/LoginRegister';
@@ -11,19 +11,19 @@ import logo from '../../assets/logo1.png';
 import user from '../../assets/user.png';
 import home from '../../assets/home.png';
 import docBg from '../../assets/banner.png';
+import fire from '../../assets/火.png';
 const { TabPane } = Tabs;
-const { Header, Content, Footer } = Layout;
-function Doc(props) {
+const { Footer } = Layout;
+function Doc() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
   const [subject, setSubject] = useState([]);
   const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
   const [isVisibleLogin, setShowLogin] = useState(false);
   const [isVisibleRegister, setShowRegister] = useState(false);
-
+  const docExamples = JSON.parse(localStorage.getItem('docExamples'));
   useEffect(() => {
     request.get('/doc/getSubjectDocs').then((res) => {
-      console.log('res', res);
       if (res.data.code === 200) {
         setSubject(res.data.result);
       }
@@ -92,8 +92,8 @@ function Doc(props) {
   );
 
   return (
-    <Layout className={styles.wrapper}>
-      <Header className={styles.header}>
+    <div className={styles.wrapper}>
+      <div className={styles.header}>
         <div
           className={styles.logo}
           onClick={() => {
@@ -104,12 +104,26 @@ function Doc(props) {
           <img src={logo} alt="logo" />
           <img src={home} alt="home" style={{ width: 31, height: 30, marginLeft: 16 }} />
         </div>
-        <div style={{ height: 300 }}>
-          <img src={docBg} alt="" />
+        <div style={{ height: 250, overflow: 'hidden' }}>
+          <img src={docBg} alt="" style={{ width: '100%' }} />
         </div>
 
-        <div className={styles.title}>文档撰写助手</div>
-        <div className={styles.inputWrap}></div>
+        <div className={styles.title}>
+          文档撰写助手
+          <div
+            className={styles.wrap}
+            onClick={() => {
+              router.push('/doc/outlineConfig');
+            }}
+          >
+            <Icon type="edit" />
+
+            <span className="x">新</span>
+            <span className="j">建</span>
+            <span className="w">文</span>
+            <span className="d">档</span>
+          </div>
+        </div>
 
         <div className={styles.user}>
           {username ? (
@@ -150,42 +164,66 @@ function Doc(props) {
             </Popover>
           )}
         </div>
-      </Header>
-      <Layout className={styles.main}>
-        <Content className={styles.hotQuestions}>
-          <div className={styles.title}>
-            <Tabs>
-              {subject.map((item) =>
-                item.subject ? (
-                  <TabPane key={item.subject} tab={item.subject}>
-                    <Row>
-                      {item.dataList.length
-                        ? item.dataList.map((current) => {
-                            return (
-                              <Col span={12}>
-                                <div key={current.docId}>{current.docName}</div>
-                              </Col>
-                            );
-                          })
-                        : null}
-                    </Row>
-                  </TabPane>
-                ) : null
-              )}
-            </Tabs>
-          </div>
-        </Content>
-      </Layout>
-
-      <Layout className={styles.main}>
-        <Content className={styles.hotQuestions}>
-          <div className={styles.title}>
-            <div>热 门 问 题</div>
-            {/* <div>Hot Issue</div> */}
-          </div>
-          <div className={styles.list}></div>
-        </Content>
-      </Layout>
+      </div>
+      <div className={styles.main}>
+        <Row gutter={36}>
+          <Col span={16}>
+            <Card bordered={false} title="文档分类">
+              <Tabs size="large">
+                {subject.map((item) =>
+                  item.subject ? (
+                    <TabPane key={item.subject} tab={item.subject}>
+                      <Row>
+                        {item.dataList.length
+                          ? item.dataList.map((current) => {
+                              return (
+                                <Col span={12} key={current.docId}>
+                                  <div className={styles.docItem}>
+                                    <Link
+                                      to={`/doc/outlineConfigPreview?docId=${current.docId}`}
+                                      className={styles.text}
+                                    >
+                                      {current.docName}
+                                    </Link>
+                                  </div>
+                                </Col>
+                              );
+                            })
+                          : null}
+                      </Row>
+                    </TabPane>
+                  ) : null
+                )}
+              </Tabs>
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card bordered={false} title="文档示例">
+              <div style={{ marginTop: '-13px' }}>
+                {docExamples
+                  ? docExamples.map((item, index) => (
+                      <div className={styles.docItem} key={item.docId}>
+                        <Link
+                          to={`/doc/outlineConfigPreview?docId=${item.docId}`}
+                          className={styles.text}
+                        >
+                          {item.docName}
+                          {index < 3 ? (
+                            <img
+                              style={{ width: 12, margin: '-8px 0 0 4px' }}
+                              src={fire}
+                              alt="hot"
+                            />
+                          ) : null}
+                        </Link>
+                      </div>
+                    ))
+                  : null}
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </div>
 
       <Footer className={styles.footer}>
         <ul className={styles.footer_wrap}>
@@ -243,7 +281,7 @@ function Doc(props) {
           setShowLoginAndRegister(false);
         }}
       />
-    </Layout>
+    </div>
   );
 }
 

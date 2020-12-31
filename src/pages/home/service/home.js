@@ -20,5 +20,5 @@ export function getHotHelpList(payload) {
 }
 //获取示例文档
 export function getExampleDoc(payload) {
-  return request.get(`/doc/getExampleDoc`);
+  return request.get(`/doc/getExampleDoc`, { params: payload });
 }

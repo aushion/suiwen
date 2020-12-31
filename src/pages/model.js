@@ -104,6 +104,7 @@ export default {
       const { data } = yield call(getExampleDoc, payload);
       const { code, result } = data;
       if (code === 200 && result) {
+        window.localStorage.setItem('docExamples', JSON.stringify(result));
         yield put({
           type: 'save',
           payload: {
@@ -129,7 +130,7 @@ export default {
             type: 'getHotHelpList',
             payload: { pageStart: 1, pageSize: 10, type: 'new' }
           });
-          dispatch({ type: 'getExampleDoc' });
+          dispatch({ type: 'getExampleDoc', payload: { pageSize: 10 } });
         }
       });
     }

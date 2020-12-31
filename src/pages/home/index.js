@@ -377,7 +377,7 @@ function Home(props) {
               </div>
               <div className={homeStyles.right} style={{ width: 584, display: 'flex' }}>
                 <div className={homeStyles.wrap} style={{ paddingRight: 20 }}>
-                  <Link to={`/doc/outlineConfig`} target="_blank">
+                  <Link to={`/special/doc`} target="_blank">
                     <div className={homeStyles.cnTitle}>随问知识文库</div>
                     <div className={homeStyles.enTitle}>文档撰写助手、系列问题解答</div>
                   </Link>
