@@ -1175,6 +1175,16 @@ const OutlineConfig = (props) => {
           <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
             <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
               <Button
+                title={'前往文库中心'}
+                loading={props.loading}
+                style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
+                onClick={() => {
+                  window.open(`/special/doc`);
+                }}
+              >
+                文库中心
+              </Button>
+              <Button
                 title={
                   username
                     ? docId

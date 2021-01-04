@@ -759,16 +759,14 @@ const OutlineConfigPreview = (props) => {
   }
 
   //跳转个人文档
-  function jumpToPersonalDocument(){
+  function jumpToPersonalDocument() {
     //限制如果没有登录，则不能新建文档
     if (!username) {
       message.warn('非登录状态，无法跳转个人中心！请先登录');
       return;
     }
 
-    router.push(
-      `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
-    );
+    router.push(`/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`);
   }
 
   return (
@@ -941,6 +939,16 @@ const OutlineConfigPreview = (props) => {
           </div>
           <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
             <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
+              <Button
+                title={'前往文库中心'}
+                loading={props.loading}
+                style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
+                onClick={() => {
+                  window.open(`/special/doc`);
+                }}
+              >
+                文库中心
+              </Button>
               <Button
                 title={'预览模式下，无法进行内容刷新'}
                 disabled={true}
