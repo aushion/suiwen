@@ -396,6 +396,18 @@ function Home(props) {
                         在线定制、生成、共享、下载
                       </font>
                     </div>
+                    <div
+                      style={{ textAlign: 'center' }}
+                      onClick={() => {
+                        router.push({
+                          pathname: '/doc/outlineConfig'
+                        });
+                      }}
+                    >
+                      <span style={{ color: 'blue', fontSize: 20, cursor: 'pointer' }}>
+                        {'试用>>'}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <Divider type="vertical" style={{ height: '20em' }} />
@@ -408,7 +420,7 @@ function Home(props) {
                       文档示例 · 共享
                     </div>
                     {props.docExamples && props.docExamples.length !== 0
-                      ? props.docExamples.slice(0, 4).map((docExample, exampleIndex) => {
+                      ? props.docExamples.slice(0, 5).map((docExample, exampleIndex) => {
                           return (
                             <div
                               key={exampleIndex}
@@ -432,14 +444,15 @@ function Home(props) {
                         })
                       : null}
                     <div
+                      style={{ textAlign: 'center' }}
                       onClick={() => {
                         router.push({
-                          pathname: '/doc/outlineConfig'
+                          pathname: '/special/doc'
                         });
                       }}
                     >
                       <span style={{ color: 'blue', fontSize: 20, cursor: 'pointer' }}>
-                        {'试用>>'}
+                        {'更多>>'}
                       </span>
                     </div>
                   </div>

@@ -70,6 +70,14 @@ export default React.memo(function Covid() {
   return (
     <div className={styles.covid}>
       <h2>新冠疫情数据</h2>
+      {/* <iframe
+        src="https://www.lovestu.com/api/project/cnmapyinqing/obj.php"
+        height="500"
+        frameborder="no"
+        border="0"
+        width="100%"
+      />
+       */}
       <Spin spinning={loading}>
         <div>{covidData?.times}</div>
         {covidData ? (
@@ -179,8 +187,6 @@ export default React.memo(function Covid() {
                 </Col>
               </Row>
             </TabPane>
-            {/* <TabPane tab="北京疫情" key="2"></TabPane>
-            <TabPane tab="国外疫情" key="3"></TabPane> */}
           </Tabs>
         ) : null}
       </Spin>

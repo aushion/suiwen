@@ -12,6 +12,7 @@ import user from '../../assets/user.png';
 import home from '../../assets/home.png';
 import docBg from '../../assets/banner.png';
 import fire from '../../assets/火.png';
+
 const { TabPane } = Tabs;
 const { Footer } = Layout;
 function Doc() {
@@ -109,7 +110,7 @@ function Doc() {
         </div>
 
         <div className={styles.title}>
-          文档撰写助手
+          随问知识文库
           <div
             className={styles.wrap}
             onClick={() => {
@@ -168,7 +169,7 @@ function Doc() {
       <div className={styles.main}>
         <Row gutter={36}>
           <Col span={16}>
-            <Card bordered={false} title="文档分类">
+            <Card bordered={false} title="共享文档">
               <Tabs size="large">
                 {subject.map((item) =>
                   item.subject ? (
@@ -198,7 +199,7 @@ function Doc() {
             </Card>
           </Col>
           <Col span={8}>
-            <Card bordered={false} title="文档示例">
+            <Card bordered={false} title="热榜">
               <div style={{ marginTop: '-13px' }}>
                 {docExamples
                   ? docExamples.map((item, index) => (
