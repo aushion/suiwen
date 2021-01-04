@@ -69,7 +69,7 @@ function SgList(props) {
                         const fullText = originText + current.data.sub_context;
 
                         return (
-                          <div key={index} style={{ paddingBottom: 10 }}>
+                          <div key={index} style={{ paddingBottom: 10, wordBreak: 'break-all' }}>
                             <FoldText originText={originText} fullText={fullText} />
                           </div>
                         );
