@@ -758,6 +758,19 @@ const OutlineConfigPreview = (props) => {
     }
   }
 
+  //跳转个人文档
+  function jumpToPersonalDocument(){
+    //限制如果没有登录，则不能新建文档
+    if (!username) {
+      message.warn('非登录状态，无法跳转个人中心！请先登录');
+      return;
+    }
+
+    router.push(
+      `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
+    );
+  }
+
   return (
     <Card>
       <div style={{ textAlign: 'right' }}>
@@ -953,17 +966,15 @@ const OutlineConfigPreview = (props) => {
               </Button>
               <Button
                 title={username ? '前往个人文档' : '非登录状态，无法前往个人文档'}
-                disabled={username ? false : true}
+                // disabled={username ? false : true}
                 loading={props.loading}
                 style={{
                   marginBottom: 10,
-                  background: username ? '#2ae' : ' #CDCDCD',
+                  background: '#2ae',
                   color: '#FFFFFF'
                 }}
                 onClick={() => {
-                  router.push(
-                    `/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`
-                  );
+                  jumpToPersonalDocument();
                 }}
               >
                 个人文档
