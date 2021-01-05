@@ -88,7 +88,7 @@ function SgPro(props) {
   }, [q]);
 
   const LoadingGif = () => (
-    <div style={{ marginTop: 20 }}>
+    <div style={{ marginTop: '2%' }}>
       <div>
         <img style={{ width: 300 }} src={gif} alt="loading" />
       </div>
