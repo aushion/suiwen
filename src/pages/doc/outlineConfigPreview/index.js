@@ -805,14 +805,13 @@ const OutlineConfigPreview = (props) => {
                     重命名
                   </Button>
                   <Select
-                    title={'预览模式下，无法选择文档模板'}
                     disabled={true}
                     style={{ width: 190, marginLeft: 5 }}
                     value={selectedDocTemplate}
                     onChange={(v) => onDocTemplateSelectChange(v)}
                   >
-                    <Select.Option value={''}>{'文档模板选择'}</Select.Option>
-                    {docTemplateOptions}
+                    <Select.Option title='预览模式下，无法选择文档模板' value={''}>{'文档模板选择'}</Select.Option>
+                    {/* {docTemplateOptions} */}
                   </Select>
                 </div>
                 <div className={styles.outlineArea}>
