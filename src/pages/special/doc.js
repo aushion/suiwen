@@ -18,7 +18,7 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './doc.less';
 import RestTools from '../../utils/RestTools';
-
+import request from '../../utils/request';
 import LoginRegister from '../../components/LoginRegister';
 import logo from '../../assets/logo1.png';
 import user from '../../assets/user.png';
@@ -44,6 +44,12 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
     window.Ecp_LogoutOptr_my(0);
     localStorage.removeItem('userInfo');
     setUsername(null);
+  }
+
+  function handleClick(docId) {
+    request.post(`/doc/clickedDoc`, null, {
+      params: { docId }
+    });
   }
 
   const btnGruop = (
@@ -225,7 +231,10 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
                           renderItem={(item) => {
                             return (
                               <List.Item>
-                                <div className={styles.docItem}>
+                                <div
+                                  className={styles.docItem}
+                                  onClick={handleClick.bind(this, item.docId)}
+                                >
                                   <Link
                                     to={`/doc/outlineConfigPreview?docId=${item.docId}`}
                                     className={styles.text}
@@ -248,7 +257,11 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
                 <div className={styles.hot}>
                   {docExamples
                     ? docExamples.map((item, index) => (
-                        <div className={styles.docItem} key={item.docId}>
+                        <div
+                          className={styles.docItem}
+                          key={item.docId}
+                          onClick={handleClick.bind(this, item.docId)}
+                        >
                           <Link
                             to={`/doc/outlineConfigPreview?docId=${item.docId}`}
                             className={styles.text}
