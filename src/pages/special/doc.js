@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Popover, Icon, Button, Avatar, Tabs, Row, Col, Card } from 'antd';
+import { Layout, Popover, Icon, Button, Avatar, Row, List, Col, Card, Input } from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -13,22 +13,31 @@ import home from '../../assets/home.png';
 import docBg from '../../assets/banner.png';
 import fire from '../../assets/火.png';
 
-const { TabPane } = Tabs;
+const { Search } = Input;
 const { Footer } = Layout;
 function Doc() {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  const [subject, setSubject] = useState([]);
+  const [subject, setSubject] = useState(null);
   const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
   const [isVisibleLogin, setShowLogin] = useState(false);
   const [isVisibleRegister, setShowRegister] = useState(false);
+  const [searchWord, setSearchWord] = useState('');
   const docExamples = JSON.parse(localStorage.getItem('docExamples'));
+
+  function fetchData({ searchWord = '', pageStart = 1 }) {
+    setSearchWord(searchWord);
+    request
+      .get('/doc/getDocList', { params: { pageSize: 20, pageStart, searchWord } })
+      .then((res) => {
+        if (res.data.code === 200) {
+          setSubject(res.data.result);
+        }
+      });
+  }
+
   useEffect(() => {
-    request.get('/doc/getSubjectDocs').then((res) => {
-      if (res.data.code === 200) {
-        setSubject(res.data.result);
-      }
-    });
+    fetchData({ searchWord: '', pageStart: 1 });
   }, []);
 
   function logout() {
@@ -169,38 +178,54 @@ function Doc() {
       <div className={styles.main}>
         <Row gutter={36}>
           <Col span={16}>
-            <Card bordered={false} title="共享文档">
-              <Tabs size="large">
-                {subject.map((item) =>
-                  item.subject ? (
-                    <TabPane key={item.subject} tab={item.subject}>
-                      <Row>
-                        {item.dataList.length
-                          ? item.dataList.map((current) => {
-                              return (
-                                <Col span={12} key={current.docId}>
-                                  <div className={styles.docItem}>
-                                    <Link
-                                      to={`/doc/outlineConfigPreview?docId=${current.docId}`}
-                                      className={styles.text}
-                                    >
-                                      {current.docName}
-                                    </Link>
-                                  </div>
-                                </Col>
-                              );
-                            })
-                          : null}
-                      </Row>
-                    </TabPane>
-                  ) : null
-                )}
-              </Tabs>
+            <Card
+              bordered={false}
+              title="共享文档"
+              extra={
+                <Search
+                  autoComplete="one-time-code"
+                  onSearch={(value) => {
+                    fetchData({ searchWord: value });
+                  }}
+                  placeholder="请输入关键字搜索"
+                />
+              }
+            >
+              <Row>
+                {subject ? (
+                  <List
+                    dataSource={subject.dataList}
+                    grid={{ gutter: 14, column: 2 }}
+                    pagination={{
+                      current: subject.pageNum,
+                      pageSize: subject.pageCount,
+                      total: subject.total,
+                      onChange: (page) => {
+                        fetchData({ pageStart: page, searchWord });
+                      }
+                    }}
+                    renderItem={(item) => {
+                      return (
+                        <List.Item>
+                          <div className={styles.docItem}>
+                            <Link
+                              to={`/doc/outlineConfigPreview?docId=${item.docId}`}
+                              className={styles.text}
+                            >
+                              {item.docName}
+                            </Link>
+                          </div>
+                        </List.Item>
+                      );
+                    }}
+                  />
+                ) : null}
+              </Row>
             </Card>
           </Col>
           <Col span={8}>
             <Card bordered={false} title="热榜">
-              <div style={{ marginTop: '-13px' }}>
+              <div className={styles.hot}>
                 {docExamples
                   ? docExamples.map((item, index) => (
                       <div className={styles.docItem} key={item.docId}>

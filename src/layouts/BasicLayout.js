@@ -96,6 +96,8 @@ function BasicLayout(props) {
     setUsername(null);
     if (window.location.pathname.includes('personCenter')) {
       router.push('/');
+    } else {
+      window.location.reload();
     }
   }
 
