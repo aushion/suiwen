@@ -64,7 +64,7 @@ function Doc() {
           登录
         </span>
       </div>
-      <div style={{ borderBottom: '1px solid #fff' }}>
+      <div>
         <span
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = 'green';
