@@ -926,7 +926,7 @@ const OutlineConfig = (props) => {
   function onDocTemplateSelectChange(value) {
     //判断非登录状态
     if (!username) {
-      message.warn('非登录状态，无法选择，只能预览');
+      message.warn('非登录状态，无法展开模板列表！请先登录');
       return;
     }
 
@@ -942,6 +942,15 @@ const OutlineConfig = (props) => {
       setAddDocVisible(true);
     } else {
       setDocTemplateSelectVisible(true);
+    }
+  }
+
+  //文档模版选择下拉框获取焦点事件
+  function docTemplateSelectOnFocus() {
+    //判断非登录状态
+    if (!username) {
+      message.warn('非登录状态，无法展开模板列表！请先登录');
+      return;
     }
   }
 
@@ -1016,22 +1025,26 @@ const OutlineConfig = (props) => {
                   >
                     重命名
                   </Button>
-                  <Select
-                    disabled={username ? false : true}
-                    style={{ width: 190, marginLeft: 5 }}
-                    value={selectedDocTemplate}
-                    onSelect={(v) => onDocTemplateSelectChange(v)}
-                  >
-                    <Select.Option value={''}>{'文档模板选择'}</Select.Option>
-                    {docTemplateOptions}
-                  </Select>
-                  {/* <SettingOutlined
-                  style={{ width: 5, marginLeft: 5 }}
-                  onClick={() => {
-                    setTemplateManagementVisible(true);
-                  }}
-                  title="模板管理"
-                /> */}
+                  {username ? (
+                    <Select
+                      style={{ width: 190, marginLeft: 5 }}
+                      value={selectedDocTemplate}
+                      onSelect={(v) => onDocTemplateSelectChange(v)}
+                    >
+                      <Select.Option value={''}>{'文档模板选择'}</Select.Option>
+                      {docTemplateOptions}
+                    </Select>
+                  ) : (
+                    <Select
+                      open={false}
+                      onFocus={() => docTemplateSelectOnFocus()}
+                      style={{ width: 190, marginLeft: 5 }}
+                      value={''}
+                      onSelect={(v) => onDocTemplateSelectChange(v)}
+                    >
+                      <Select.Option title='非登录状态，无法选择文档模版！请登录' value={''}>{'文档模板选择'}</Select.Option>
+                    </Select>
+                  )}
                 </div>
                 <div className={styles.outlineArea}>
                   <div className={styles.domain}>
