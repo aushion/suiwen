@@ -18,7 +18,6 @@ export default React.memo(function Covid() {
         'https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=chinaDayList,chinaDayAddList,cityStatis,nowConfirmStatis,provinceCompare'
       )
       .then((res) => {
-        console.log('res', res);
         if (res.status === 200) {
           setCovidData(res.data.data);
         }
@@ -73,122 +72,145 @@ export default React.memo(function Covid() {
       {/* <iframe
         src="https://www.lovestu.com/api/project/cnmapyinqing/obj.php"
         height="500"
-        frameborder="no"
+        frameBorder="no"
         border="0"
         width="100%"
-      />
-       */}
+      /> */}
+
       <Spin spinning={loading}>
         <div>{covidData?.times}</div>
-        {covidData ? (
-          <Tabs>
-            <TabPane tab="国内疫情" key="1">
-              <Row>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>现有确诊</div>
-                  <div className={styles.count} style={{ color: '#FE350E' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowConfirm}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#FE350E' }}>
-                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowConfirm -
-                        covidData.chinaDayList[covidData.chinaDayList.length - 2].nowConfirm}
-                    </span>
-                  </div>
-                </Col>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>累计境外输入</div>
-                  <div className={styles.count} style={{ color: '#FF792B' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].importedCase}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#FF792B' }}>
-                      +
-                      {covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].importedCase}
-                    </span>
-                  </div>
-                </Col>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>现存无症状</div>
-                  <div className={styles.count} style={{ color: '#fe9986' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].noInfect}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#fe9986' }}>
-                      +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].infect}
-                    </span>
-                  </div>
-                </Col>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>现存确诊重症</div>
-                  <div className={styles.count} style={{ color: '#FE350E' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowSevere}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#FE350E' }}>
-                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowSevere -
-                        covidData.chinaDayList[covidData.chinaDayList.length - 2].nowSevere}
-                    </span>
-                  </div>
-                </Col>
-              </Row>
-              <Row style={{ marginTop: 20 }}>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>累计确诊</div>
-                  <div className={styles.count} style={{ color: '#FF792B' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].confirm}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#FF792B' }}>
-                      +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].confirm}
-                    </span>
-                  </div>
-                </Col>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>累计死亡</div>
-                  <div className={styles.count} style={{ color: '#666666' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].dead}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#666666' }}>
-                      +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].dead}
-                    </span>
-                  </div>
-                </Col>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>累计治愈</div>
-                  <div className={styles.count} style={{ color: '#65CA00' }}>
-                    {covidData.chinaDayList[covidData.chinaDayList.length - 1].heal}
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#65CA00' }}>
-                      +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].heal}
-                    </span>
-                  </div>
-                </Col>
-                <Col span={6} className={styles.info}>
-                  <div className={styles.title}>现存疑似</div>
-                  <div className={styles.count} style={{ color: '#A36FFF' }}>
-                    <span>{covidData.chinaDayList[covidData.chinaDayList.length - 1].suspect}</span>
-                  </div>
-                  <div className={styles.diff}>
-                    较昨日
-                    <span style={{ color: '#A36FFF' }}>
-                      {covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].suspect}
-                    </span>
-                  </div>
-                </Col>
-              </Row>
-            </TabPane>
-          </Tabs>
-        ) : null}
+        <div style={{ paddingBottom: 20 }}>
+          {covidData ? (
+            <Tabs>
+              <TabPane tab="国内疫情" key="1">
+                <Row>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>现有确诊</div>
+                    <div className={styles.count} style={{ color: '#FE350E' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowConfirm}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#FE350E' }}>
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowConfirm -
+                          covidData.chinaDayList[covidData.chinaDayList.length - 2].nowConfirm >
+                        0
+                          ? '+'
+                          : '-'}
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowConfirm -
+                          covidData.chinaDayList[covidData.chinaDayList.length - 2].nowConfirm}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>累计境外输入</div>
+                    <div className={styles.count} style={{ color: '#FF792B' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].importedCase}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#FF792B' }}>
+                        +
+                        {
+                          covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1]
+                            .importedCase
+                        }
+                      </span>
+                    </div>
+                  </Col>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>现存无症状</div>
+                    <div className={styles.count} style={{ color: '#fe9986' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].noInfect}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#fe9986' }}>
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].noInfect -
+                          covidData.chinaDayList[covidData.chinaDayList.length - 2].noInfect >
+                        0
+                          ? '+'
+                          : '-'}
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].noInfect -
+                          covidData.chinaDayList[covidData.chinaDayList.length - 2].noInfect}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>现存确诊重症</div>
+                    <div className={styles.count} style={{ color: '#FE350E' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowSevere}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#FE350E' }}>
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowSevere -
+                          covidData.chinaDayList[covidData.chinaDayList.length - 2].nowSevere >
+                        0
+                          ? '+'
+                          : '-'}
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].nowSevere -
+                          covidData.chinaDayList[covidData.chinaDayList.length - 2].nowSevere}
+                      </span>
+                    </div>
+                  </Col>
+                </Row>
+                <Row style={{ marginTop: 20 }}>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>累计确诊</div>
+                    <div className={styles.count} style={{ color: '#FF792B' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].confirm}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#FF792B' }}>
+                        +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].confirm}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>累计死亡</div>
+                    <div className={styles.count} style={{ color: '#666666' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].dead}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#666666' }}>
+                        +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].dead}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>累计治愈</div>
+                    <div className={styles.count} style={{ color: '#65CA00' }}>
+                      {covidData.chinaDayList[covidData.chinaDayList.length - 1].heal}
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#65CA00' }}>
+                        +{covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].heal}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col span={6} className={styles.info}>
+                    <div className={styles.title}>现存疑似</div>
+                    <div className={styles.count} style={{ color: '#A36FFF' }}>
+                      <span>
+                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].suspect}
+                      </span>
+                    </div>
+                    <div className={styles.diff}>
+                      较昨日
+                      <span style={{ color: '#A36FFF' }}>
+                        {covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].suspect}
+                      </span>
+                    </div>
+                  </Col>
+                </Row>
+              </TabPane>
+            </Tabs>
+          ) : null}
+        </div>
       </Spin>
     </div>
   );

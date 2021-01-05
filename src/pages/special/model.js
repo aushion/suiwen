@@ -1,5 +1,11 @@
 import { message } from 'antd';
-import { getAllclassifyQuestionByTopic, getQuestionByTopic, getTopicPictures } from './service';
+import {
+  getAllclassifyQuestionByTopic,
+  getQuestionByTopic,
+  getTopicPictures,
+  getShareDoc,
+  getHotDoc
+} from './service';
 
 message.config({
   top: 500,
@@ -11,6 +17,8 @@ export default {
   state: {
     topics: [],
     imgData: [],
+    shareDoc: null,
+    hotDoc: null,
     initialKey: null,
     hotQuestions: null
   },
@@ -48,13 +56,33 @@ export default {
       const { data } = yield call(getTopicPictures, payload);
       const urlPrefix = process.env.apiUrl + '/file/topic/topicHome';
       if (data.code === 200) {
-        const imgData = data.result.map(
-          (item) => `${urlPrefix}/${item.picId}.png`
-        );
+        const imgData = data.result.map((item) => `${urlPrefix}/${item.picId}.png`);
         yield put({
           type: 'save',
           payload: {
             imgData
+          }
+        });
+      }
+    },
+    *getShareDoc({ payload }, { call, put }) {
+      const res = yield call(getShareDoc, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            shareDoc: res.data.result
+          }
+        });
+      }
+    },
+    *getHotDoc({ payload }, { call, put }) {
+      const res = yield call(getHotDoc, payload);
+      if (res.data.code === 200) {
+        yield put({
+          type: 'save',
+          payload: {
+            hotDoc: res.data.result
           }
         });
       }
@@ -64,7 +92,27 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         const { topicId = '' } = query;
-        
+        if (pathname === '/special/doc') {
+          dispatch({
+            type: 'save',
+            payload: {
+              topics: [],
+              imgData: [],
+              initialKey: null,
+              hotQuestions: null
+            }
+          });
+          dispatch({
+            type: 'getShareDoc',
+            payload: { pageSize: 20, pageStart: 1, searchWord: '', subject: '' }
+          });
+          dispatch({
+            type: 'getHotDoc',
+            payload: {
+              pageSize: 10
+            }
+          });
+        }
         if (pathname === '/special') {
           dispatch({
             type: 'save',
@@ -74,7 +122,7 @@ export default {
               initialKey: null,
               hotQuestions: null
             }
-          })
+          });
           dispatch({
             type: 'getAllclassifyQuestionByTopic',
             payload: { topicId }
@@ -82,12 +130,12 @@ export default {
 
           dispatch({
             type: 'getQuestionByTopic',
-            payload: { topicId, }
+            payload: { topicId }
           });
 
           dispatch({
             type: 'getTopicPictures',
-            payload: { topicId , type: 'PC' }
+            payload: { topicId, type: 'PC' }
           });
         }
       });

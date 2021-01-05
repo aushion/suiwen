@@ -119,7 +119,7 @@ function ResultPage(props) {
     };
   }, []);
   const faq = faqData.filter((item) => item.dataType === 0 && item.domain !== '疫情防护'); //faq
-  const covid = faqData.filter((item) => item.domain === '疫情防护'); //疫情防护
+  const covid = repositoryData.filter((item) => item.template === 'covid'); //疫情防护
   const referenceBookData = repositoryData.filter((item) => item.template === 'referencebook'); //工具书数据
   const referenceBookListData = repositoryData.filter((item) => item.template === 'booklist'); //工具书书目数据
   const JournalData = repositoryData.filter((item) => item.template === 'journal'); //期刊数据

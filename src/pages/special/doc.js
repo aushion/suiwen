@@ -1,11 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Popover, Icon, Button, Avatar, Row, List, Col, Card, Input } from 'antd';
+import React, { useState } from 'react';
+import {
+  Layout,
+  Popover,
+  Icon,
+  Button,
+  Spin,
+  Tabs,
+  Avatar,
+  Row,
+  List,
+  Col,
+  Card,
+  Input
+} from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './doc.less';
 import RestTools from '../../utils/RestTools';
-import request from '../../utils/request';
+
 import LoginRegister from '../../components/LoginRegister';
 import logo from '../../assets/logo1.png';
 import user from '../../assets/user.png';
@@ -15,30 +28,17 @@ import fire from '../../assets/火.png';
 
 const { Search } = Input;
 const { Footer } = Layout;
-function Doc() {
+const { TabPane } = Tabs;
+function Doc({ shareDoc, hotDoc, dispatch, loading }) {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const [username, setUsername] = useState(userInfo ? userInfo.UserName : '');
-  const [subject, setSubject] = useState(null);
+
   const [showLoginAndRegister, setShowLoginAndRegister] = useState(false);
   const [isVisibleLogin, setShowLogin] = useState(false);
   const [isVisibleRegister, setShowRegister] = useState(false);
   const [searchWord, setSearchWord] = useState('');
-  const docExamples = JSON.parse(localStorage.getItem('docExamples'));
-
-  function fetchData({ searchWord = '', pageStart = 1 }) {
-    setSearchWord(searchWord);
-    request
-      .get('/doc/getDocList', { params: { pageSize: 20, pageStart, searchWord } })
-      .then((res) => {
-        if (res.data.code === 200) {
-          setSubject(res.data.result);
-        }
-      });
-  }
-
-  useEffect(() => {
-    fetchData({ searchWord: '', pageStart: 1 });
-  }, []);
+  const docExamples = hotDoc;
+  const subject = shareDoc;
 
   function logout() {
     window.Ecp_LogoutOptr_my(0);
@@ -177,77 +177,98 @@ function Doc() {
       </div>
       <div className={styles.main}>
         <Row gutter={36}>
-          <Col span={16}>
-            <Card
-              bordered={false}
-              title="共享文档"
-              extra={
-                <Search
-                  autoComplete="one-time-code"
-                  onSearch={(value) => {
-                    fetchData({ searchWord: value });
-                  }}
-                  placeholder="请输入关键字搜索"
-                />
-              }
-            >
-              <Row>
-                {subject ? (
-                  <List
-                    dataSource={subject.dataList}
-                    grid={{ gutter: 14, column: 2 }}
-                    pagination={{
-                      current: subject.pageNum,
-                      pageSize: subject.pageCount,
-                      total: subject.total,
-                      onChange: (page) => {
-                        fetchData({ pageStart: page, searchWord });
-                      }
+          <Spin spinning={loading}>
+            <Col span={16}>
+              <Card
+                bodyStyle={{ paddingTop: 0 }}
+                bordered={false}
+                title="共享文档"
+                extra={
+                  <Search
+                    autoComplete="one-time-code"
+                    onSearch={(value) => {
+                      setSearchWord(value);
+                      dispatch({
+                        type: 'special/getShareDoc',
+                        payload: {
+                          searchWord: value
+                        }
+                      });
                     }}
-                    renderItem={(item) => {
-                      return (
-                        <List.Item>
-                          <div className={styles.docItem}>
-                            <Link
-                              to={`/doc/outlineConfigPreview?docId=${item.docId}`}
-                              className={styles.text}
-                            >
-                              {item.docName}
-                            </Link>
-                          </div>
-                        </List.Item>
-                      );
-                    }}
+                    placeholder="请输入关键字搜索"
                   />
+                }
+              >
+                {subject ? (
+                  <Tabs tabBarStyle={{ fontSize: 24, color: '#333' }} size="large">
+                    {subject.map((item) => (
+                      <TabPane tab={item.subject} key={item.subject}>
+                        <List
+                          dataSource={item.dataList}
+                          grid={{ gutter: 14, column: 2 }}
+                          pagination={{
+                            current: item.pageNum,
+                            pageSize: item.pageCount,
+                            total: item.total,
+                            hideOnSinglePage: true,
+                            onChange: (page) => {
+                              dispatch({
+                                type: 'special/getShareDoc',
+                                payload: {
+                                  pageStart: page,
+                                  searchWord,
+                                  subject: item.subject
+                                }
+                              });
+                            }
+                          }}
+                          renderItem={(item) => {
+                            return (
+                              <List.Item>
+                                <div className={styles.docItem}>
+                                  <Link
+                                    to={`/doc/outlineConfigPreview?docId=${item.docId}`}
+                                    className={styles.text}
+                                  >
+                                    {item.docName}
+                                  </Link>
+                                </div>
+                              </List.Item>
+                            );
+                          }}
+                        />
+                      </TabPane>
+                    ))}
+                  </Tabs>
                 ) : null}
-              </Row>
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card bordered={false} title="热榜">
-              <div className={styles.hot}>
-                {docExamples
-                  ? docExamples.map((item, index) => (
-                      <div className={styles.docItem} key={item.docId}>
-                        <Link
-                          to={`/doc/outlineConfigPreview?docId=${item.docId}`}
-                          className={styles.text}
-                        >
-                          {item.docName}
-                          {index < 3 ? (
-                            <img
-                              style={{ width: 12, margin: '-8px 0 0 4px' }}
-                              src={fire}
-                              alt="hot"
-                            />
-                          ) : null}
-                        </Link>
-                      </div>
-                    ))
-                  : null}
-              </div>
-            </Card>
-          </Col>
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card bordered={false} title="热榜">
+                <div className={styles.hot}>
+                  {docExamples
+                    ? docExamples.map((item, index) => (
+                        <div className={styles.docItem} key={item.docId}>
+                          <Link
+                            to={`/doc/outlineConfigPreview?docId=${item.docId}`}
+                            className={styles.text}
+                          >
+                            {item.docName}
+                            {index < 3 ? (
+                              <img
+                                style={{ width: 12, margin: '-8px 0 0 4px' }}
+                                src={fire}
+                                alt="hot"
+                              />
+                            ) : null}
+                          </Link>
+                        </div>
+                      ))
+                    : null}
+                </div>
+              </Card>
+            </Col>
+          </Spin>
         </Row>
       </div>
 

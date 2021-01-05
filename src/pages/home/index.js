@@ -287,7 +287,7 @@ function Home(props) {
                 </div>
               </TabPane>
 
-              <TabPane tab="热门求助" key="2">
+              <TabPane tab="社区问答" key="2">
                 <div className={homeStyles.special_help}>
                   <div
                     className={homeStyles.help_left}
