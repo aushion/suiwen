@@ -88,7 +88,6 @@
       position: absolute;
       right: 100px;
       top: 20px;
-      color: #fff;
       cursor: pointer;
       img {
         width: 100%;
@@ -137,4 +136,15 @@
       }
     }
   }
+}
+
+:global(.ant-popover-inner) {
+  background-color: rgba(60, 60, 60, 0.8);
+}
+:global(.ant-popover-placement-bottom > .ant-popover-content > .ant-popover-arrow) {
+  background-color: rgba(60, 60, 60, 0.8);
+}
+:global(.ant-popover-placement-bottom > .ant-popover-content > .ant-popover-arrow) {
+  border-top-color: rgba(60, 60, 60, 0.8) !important;
+  border-left-color: rgba(60, 60, 60, 0.8) !important;
 }
