@@ -475,7 +475,7 @@ function Home(props) {
                 ) : null}
                 <div className={homeStyles.questions}>
                   {experience_questions.length
-                    ? experience_questions[0].data.map((item) => {
+                    ? experience_questions[0].data.slice(0, 5).map((item) => {
                         const topic = experience_questions[0].info.topic;
                         const topicName = experience_questions[0].name;
                         return (
