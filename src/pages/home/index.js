@@ -446,16 +446,11 @@ function Home(props) {
                           );
                         })
                       : null}
-                    <div
-                      style={{ textAlign: 'center' }}
-                      onClick={() => {
-                        router.push({
-                          pathname: '/special/doc'
-                        });
-                      }}
-                    >
+                    <div style={{ textAlign: 'center' }}>
                       <span style={{ color: 'blue', fontSize: 20, cursor: 'pointer' }}>
-                        {'更多>>'}
+                        <Link to="/special/doc" target="_blank">
+                          {'更多>>'}
+                        </Link>
                       </span>
                     </div>
                   </div>
