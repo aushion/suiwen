@@ -1192,7 +1192,10 @@ const OutlineConfig = (props) => {
                 loading={props.loading}
                 style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
                 onClick={() => {
-                  window.open(`/web/special/doc`);
+                  // window.open(`/web/special/doc`);
+                  router.push({
+                    pathname: '/special/doc',
+                  });
                 }}
               >
                 文库中心
