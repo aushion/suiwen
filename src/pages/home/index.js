@@ -429,6 +429,9 @@ function Home(props) {
                                 overflow: 'hidden',
                                 whiteSpace: 'nowrap'
                               }}
+                              onClick={() => {
+                                RestTools.clickDoc(docExample.docId);
+                              }}
                             >
                               <Link
                                 to={`/doc/outlineConfigPreview?docId=${docExample.docId}`}

@@ -414,6 +414,11 @@ export default {
       : null;
     return userInfo;
   },
+  clickDoc(docId) {
+    request.post(`/doc/clickedDoc`, null, {
+      params: { docId }
+    });
+  },
 
   topicInfo: {
     法律: { enText: 'Law', topic: 'FL' },

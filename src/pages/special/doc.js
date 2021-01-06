@@ -18,7 +18,6 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './doc.less';
 import RestTools from '../../utils/RestTools';
-import request from '../../utils/request';
 import LoginRegister from '../../components/LoginRegister';
 import logo from '../../assets/logo1.png';
 import user from '../../assets/user.png';
@@ -47,9 +46,7 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
   }
 
   function handleClick(docId) {
-    request.post(`/doc/clickedDoc`, null, {
-      params: { docId }
-    });
+    RestTools.clickDoc(docId);
   }
 
   const btnGruop = (
