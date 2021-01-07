@@ -33,14 +33,14 @@ function SgList(props) {
                 setType(item.name);
               }}
             >
-              {`${item.name}（${item.dataList.length}）`}
+              {`${item.name}（${item.data.length}）`}
             </Button>
           );
         })}
       </div>
       <div style={{ marginTop: 20 }}>
         {data.map((item) => {
-          const list = item.dataList;
+          const list = item.data;
           const groupData = groupBy(list, (item) => item.data.source_id);
           const keys = Object.keys(groupData);
           const sgData = keys.map((item) => ({
@@ -53,6 +53,12 @@ function SgList(props) {
               <List
                 itemLayout="vertical"
                 dataSource={sgData}
+                pagination={{
+                  current: item.pagination.pageStart,
+                  size: item.pagination.pageCount,
+                  total: item.pagination.total,
+                  hideOnSinglePage: true
+                }}
                 renderItem={(item) => {
                   const year =
                     (item.dataList[0].sgAdditionInfo && item.dataList[0].sgAdditionInfo.年) || '';
