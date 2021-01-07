@@ -118,7 +118,7 @@ function ResultPage(props) {
       document.removeEventListener('copy', handleCopy);
     };
   }, []);
-  const faq = faqData.filter((item) => item.dataType === 0 && item.domain !== '疫情防护'); //faq
+  const faq = faqData.filter((item) => item.dataType === 0 && item.template !== 'covid'); //faq
   const covid = repositoryData.filter((item) => item.template === 'covid'); //疫情防护
   const referenceBookData = repositoryData.filter((item) => item.template === 'referencebook'); //工具书数据
   const referenceBookListData = repositoryData.filter((item) => item.template === 'booklist'); //工具书书目数据
