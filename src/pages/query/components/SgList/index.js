@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Button, List } from 'antd';
 import groupBy from 'lodash/groupBy';
+import querystring from 'querystring';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate/index';
 import FoldText from '../../../../components/FoldText';
 import styles from './index.less';
-
+let nameIndex = 0; //计数点击分页是在那个类目下面
 function SgList(props) {
-  const { data, q, needEvaluate = true } = props;
-  const [initType, setType] = useState(data[0].name);
-
+  const { data, q, needEvaluate = true, dispatch } = props;
+  const [initType, setType] = useState(data[nameIndex].name);
+  const { topic = '' } = querystring.parse(window.location.href.split('?')[1]);
   return (
     <div className={`${styles.SgList} copy`} id="sg">
       <h2>
@@ -33,14 +34,14 @@ function SgList(props) {
                 setType(item.name);
               }}
             >
-              {`${item.name}（${item.dataList.length}）`}
+              {`${item.name}（${item.pagination.total}）`}
             </Button>
           );
         })}
       </div>
       <div style={{ marginTop: 20 }}>
-        {data.map((item) => {
-          const list = item.dataList;
+        {data.map((item, index) => {
+          const list = item.data;
           const groupData = groupBy(list, (item) => item.data.source_id);
           const keys = Object.keys(groupData);
           const sgData = keys.map((item) => ({
@@ -53,6 +54,25 @@ function SgList(props) {
               <List
                 itemLayout="vertical"
                 dataSource={sgData}
+                pagination={{
+                  current: item.pagination.pageStart,
+                  size: item.pagination.pageCount,
+                  total: item.pagination.total,
+                  hideOnSinglePage: true,
+                  onChange: (page) => {
+                    nameIndex = index;
+                    dispatch({
+                      type: 'result/getSG',
+                      payload: {
+                        type: item.name,
+                        pageSize: 10,
+                        pageStart: page,
+                        q,
+                        domain: topic
+                      }
+                    });
+                  }
+                }}
                 renderItem={(item) => {
                   const year =
                     (item.dataList[0].sgAdditionInfo && item.dataList[0].sgAdditionInfo.年) || '';
@@ -98,7 +118,6 @@ function SgList(props) {
                         <a
                           style={{
                             color: '#999',
-                            // maxWidth: '50%',
                             display: 'inline-block',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
@@ -130,74 +149,6 @@ function SgList(props) {
           );
         })}
       </div>
-      {/* <List
-        itemLayout="vertical"
-        dataSource={data}
-        renderItem={(item) => {
-          const year = (item.sgAdditionInfo && item.sgAdditionInfo.年) || '';
-          const qikanName = (item.sgAdditionInfo && item.sgAdditionInfo.中文刊名) || '';
-          return (
-            <List.Item style={{ overflow: 'hidden', borderBottom: '1px solid #eee' }}>
-              <FoldText
-                originText={item.data.semantic_text || item.data.context}
-                fullText={(item.data.semantic_text || item.data.context) + item.data.sub_context}
-              />
-
-              <div
-                style={{
-                  paddingTop: '10px',
-                  textAlign: 'right',
-                  fontSize: 13,
-                  color: '#999',
-                  overflow: 'hidden'
-                }}
-              >
-            
-                <div>
-                  <div
-                    style={{
-                      textAlign: 'right',
-                      display: 'inline-block',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}
-                    dangerouslySetInnerHTML={{
-                      __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                    }}
-                  />
-                  <a
-                    style={{
-                      color: '#999',
-                      // maxWidth: '50%',
-                      display: 'inline-block',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={item.data.caption}
-                    href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFD&filename=${item.data.source_id}`}
-                  >
-                    {item.data.caption}
-                  </a>
-                </div>
-                <div className={styles.sg_evaluate}>
-                  {needEvaluate ? (
-                    <Evaluate
-                      id={item.id}
-                      goodCount={item.evaluate.good}
-                      badCount={item.evaluate.bad}
-                      isevalute={item.evaluate.isevalute}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            </List.Item>
-          );
-        }}
-      /> */}
     </div>
   );
 }

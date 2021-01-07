@@ -150,7 +150,7 @@ function ResultPage(props) {
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
 
-  const sgCount = sgData.reduce((total, item) => total + item.dataList.length, 0);
+  const sgCount = sgData.reduce((total, item) => total + item.pagination.total, 0);
 
   const resultLength =
     sgCount +
@@ -197,14 +197,6 @@ function ResultPage(props) {
       }
     });
   }
-
-  // function myReply() {
-  //   if (localStorage.getItem('userInfo')) {
-  //     router.push(`reply?q=${encodeURIComponent(q)}`);
-  //   } else {
-  //     message.warn('请您登录后再操作');
-  //   }
-  // }
 
   return (
     <div className={styles.result} id="result">
@@ -410,7 +402,7 @@ function ResultPage(props) {
               </Skeleton>
 
               <Skeleton loading={fetchSg} active>
-                {sgData.length ? <SgList data={sgData} q={q} /> : null}
+                {sgData.length ? <SgList data={sgData} q={q} dispatch={dispatch} /> : null}
               </Skeleton>
 
               <Skeleton loading={loading || fetchSg || fetchLiterature} active>
