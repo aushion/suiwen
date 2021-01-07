@@ -359,7 +359,16 @@ export default {
     },
 
     *getSG({ payload }, { call, put }) {
-      const res = yield call(getSG, payload);
+      let userId = RestTools.getLocalStorage('userInfo')
+        ? RestTools.getLocalStorage('userInfo').UserName
+        : Cookies.get('cnki_qa_uuid');
+      if (!userId) {
+        userId = RestTools.createUid();
+        Cookies.set('cnki_qa_uuid', userId, {
+          expires: 3650
+        });
+      }
+      const res = yield call(getSG, { ...payload, userId });
       const { data } = res;
       if (data.result && data.result.length) {
         yield put({
@@ -537,7 +546,7 @@ export default {
                   payload: {
                     q: encodeURIComponent(q),
                     pageStart: 1,
-                    pageCount: 50,
+                    pageSize: 10,
                     userId,
                     domain: topic
                   }

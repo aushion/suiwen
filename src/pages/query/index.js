@@ -198,14 +198,6 @@ function ResultPage(props) {
     });
   }
 
-  // function myReply() {
-  //   if (localStorage.getItem('userInfo')) {
-  //     router.push(`reply?q=${encodeURIComponent(q)}`);
-  //   } else {
-  //     message.warn('请您登录后再操作');
-  //   }
-  // }
-
   return (
     <div className={styles.result} id="result">
       <div style={{ minHeight: 'calc(45vh)' }}>
@@ -410,7 +402,7 @@ function ResultPage(props) {
               </Skeleton>
 
               <Skeleton loading={fetchSg} active>
-                {sgData.length ? <SgList data={sgData} q={q} /> : null}
+                {sgData.length ? <SgList data={sgData} q={q} dispatch={dispatch} /> : null}
               </Skeleton>
 
               <Skeleton loading={loading || fetchSg || fetchLiterature} active>
