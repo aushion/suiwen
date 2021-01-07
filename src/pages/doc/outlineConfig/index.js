@@ -242,8 +242,8 @@ const OutlineConfig = (props) => {
     //判断该字符串里是否有“,”，如果有，则代表有多个标签，如果没有，则代表标签只有一个。
     if (tagStr && tagStr.indexOf(',') !== -1) {
       tagList = tagStr.split(',');
-    } else if (tagStr) {
-      tagList = tagStr.trim() === '' ? [] : tagStr;
+    } else if (tagStr && tagStr.trim() !== '') {
+      tagList.push(tagStr);
     }
     //将当前文档的标签数组信息存入state
     setCurrentDocTagList(tagList);
@@ -476,8 +476,8 @@ const OutlineConfig = (props) => {
     //判断该字符串里是否有“,”，如果有，则代表有多个标签，如果没有，则代表标签只有一个。
     if (tagStr && tagStr.indexOf(',') !== -1) {
       tagList = tagStr.split(',');
-    } else if (tagStr) {
-      tagList = tagStr.trim() === '' ? [] : tagStr;
+    } else if (tagStr && tagStr.trim() !== '') {
+      tagList.push(tagStr);
     }
     //将当前文档的标签数组信息存入state
     setCurrentDocTagList(tagList);
@@ -1042,7 +1042,9 @@ const OutlineConfig = (props) => {
                       value={''}
                       onSelect={(v) => onDocTemplateSelectChange(v)}
                     >
-                      <Select.Option title='非登录状态，无法选择文档模版！请登录' value={''}>{'文档模板选择'}</Select.Option>
+                      <Select.Option title="非登录状态，无法选择文档模版！请登录" value={''}>
+                        {'文档模板选择'}
+                      </Select.Option>
                     </Select>
                   )}
                 </div>
@@ -1194,7 +1196,7 @@ const OutlineConfig = (props) => {
                 onClick={() => {
                   // window.open(`/web/special/doc`);
                   router.push({
-                    pathname: '/special/doc',
+                    pathname: '/special/doc'
                   });
                 }}
               >
