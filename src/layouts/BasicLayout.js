@@ -75,11 +75,15 @@ function BasicLayout(props) {
   }
 
   function goHomeByDomain() {
-    if (topicId) {
-      router.push('/special?topicId=' + topicId);
+    if (name === '知识文库') {
+      router.push('/special/doc');
     } else {
-      router.push('/');
-      window.document.title = '知网随问';
+      if (topicId) {
+        router.push('/special?topicId=' + topicId);
+      } else {
+        router.push('/');
+        window.document.title = '知网随问';
+      }
     }
   }
 
