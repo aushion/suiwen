@@ -810,7 +810,9 @@ const OutlineConfigPreview = (props) => {
                     value={selectedDocTemplate}
                     onChange={(v) => onDocTemplateSelectChange(v)}
                   >
-                    <Select.Option title='预览模式下，无法选择文档模板' value={''}>{'文档模板选择'}</Select.Option>
+                    <Select.Option title="预览模式下，无法选择文档模板" value={''}>
+                      {'文档模板选择'}
+                    </Select.Option>
                     {/* {docTemplateOptions} */}
                   </Select>
                 </div>
@@ -945,7 +947,7 @@ const OutlineConfigPreview = (props) => {
                 onClick={() => {
                   // window.open(`/web/special/doc`);
                   router.push({
-                    pathname: '/special/doc',
+                    pathname: '/special/doc'
                   });
                 }}
               >

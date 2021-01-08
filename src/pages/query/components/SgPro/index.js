@@ -13,21 +13,21 @@ let count = 0;
 let timeId = null;
 function SgPro(props) {
   const { q, needEvaluate = true } = props;
-  const [newData, setNewData] = useState([]);
+  const [newData, setNewData] = useState(null);
   const [showLoading, setLoading] = useState(true);
 
   let userId = RestTools.getLocalStorage('userInfo')
     ? RestTools.getLocalStorage('userInfo').UserName
     : Cookies.get('cnki_qa_uuid');
 
-  function handleData(data) {
+  function handleData({ data, pagination }) {
     let groupData = groupBy(data, (item) => item.data.source_id);
     const tempData = Object.keys(groupData).map((item) => ({
       id: item,
       dataList: groupData[item]
     }));
 
-    setNewData(tempData);
+    setNewData({ tempData, pagination });
   }
 
   function checkSemanticStatus(payload) {
@@ -35,7 +35,7 @@ function SgPro(props) {
       if (res.data.result.async_result_state === 'SUCCESS' || count === 100) {
         clearTimeout(timeId);
         // setNewData(res.data.result.dataList);
-        handleData(res.data.result.dataList);
+        handleData({ data: res.data.result.data, pagination: res.data.result.pagination });
         setLoading(false);
       } else {
         timeId = setTimeout(() => {
@@ -46,12 +46,12 @@ function SgPro(props) {
     });
   }
 
-  function fetchSg(q) {
+  function fetchSg(q, pageStart) {
     return request.get(`/getSemanticData`, {
       timeout: 30000,
       params: {
         q: q,
-        pageStart: 1,
+        pageStart,
         pageCount: 10,
         userId
       }
@@ -65,8 +65,7 @@ function SgPro(props) {
       .then((res) => {
         if (res.data.code === 200) {
           if (res.data.result.async_result_state === 'SUCCESS') {
-            handleData(res.data.result.dataList);
-            // setNewData(res.data.result.dataList);
+            handleData({ data: res.data.result.data, pagination: res.data.result.pagination });
             setLoading(false);
           } else {
             checkSemanticStatus({
@@ -115,7 +114,38 @@ function SgPro(props) {
           spinning: showLoading,
           indicator: <LoadingGif />
         }}
-        dataSource={newData}
+        dataSource={newData?.tempData}
+        pagination={{
+          current: newData?.pagination?.pageStart,
+          pageCount: newData?.pagination?.pageCount,
+          total: newData?.pagination?.total,
+          hideOnSinglePage: true,
+          onChange: (page) => {
+            setLoading(true);
+            fetchSg(q, page)
+              .then((res) => {
+                if (res.data.code === 200) {
+                  if (res.data.result.async_result_state === 'SUCCESS') {
+                    handleData({
+                      data: res.data.result.data,
+                      pagination: res.data.result.pagination
+                    });
+                    setLoading(false);
+                  } else {
+                    checkSemanticStatus({
+                      taskId: res.data.result.async_result_id,
+                      userId
+                    });
+                  }
+                } else {
+                  setLoading(false);
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
+              });
+          }
+        }}
         itemLayout="vertical"
         renderItem={(item, index) => {
           const year =

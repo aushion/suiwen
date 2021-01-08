@@ -111,7 +111,9 @@ function Doc(props) {
     }
     //判定只有文档“公开”类型下，才可进行编辑发布状态的操作
     if (!(item && item.type && item.type === '0')) {
-      message.warn('当前文档未公开，无法进行发布相关操作，请先转换文档类型从私有到公开，即可发布操作！');
+      message.warn(
+        '当前文档未公开，无法进行发布相关操作，请先转换文档类型从私有到公开，即可发布操作！'
+      );
       return;
     }
     Modal.confirm({

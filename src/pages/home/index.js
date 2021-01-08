@@ -26,8 +26,8 @@ message.config({
 function Home(props) {
   let { skillExamples, specialQuestions, newHelpList, loading, skillPicture, helpPicture } = props;
   const [activeTag, setActive] = useState(Number(sessionStorage.getItem('tagIndex')) || 0);
-  const special_questions = specialQuestions.filter((item) => item.name !== '细粒度知识问答');
-  const experience_questions = specialQuestions.filter((item) => item.name === '细粒度知识问答');
+  const special_questions = specialQuestions.filter((item) => item.info.isBeta === 0);
+  const experience_questions = specialQuestions.filter((item) => item.info.isBeta === 1);
   const [activeTagName, setActiveTag] = useState(sessionStorage.getItem('tagName') || '');
 
   const PrevArrow = function(props) {
@@ -150,7 +150,7 @@ function Home(props) {
               to={`/special?topicId=${item.topicId}`}
               target="_blank"
             >
-              {item.name === '细粒度知识问答' ? (
+              {item.info.isBeta === 1 ? (
                 <Badge
                   count={
                     <div style={{ backgroundColor: '#f50', color: '#fff', padding: '2px 4px' }}>
@@ -397,14 +397,7 @@ function Home(props) {
                       </font>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <Link
-                        className={homeStyles.help_more}
-                        onClick={() => {
-                          router.push({
-                            pathname: '/doc/outlineConfig'
-                          });
-                        }}
-                      >
+                      <Link className={homeStyles.help_more} to="/doc/outlineConfig">
                         试用
                         <Icon
                           style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}

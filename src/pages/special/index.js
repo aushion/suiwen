@@ -32,7 +32,7 @@ function Special(props) {
   const [isVisibleRegister, setShowRegister] = useState(false);
   const topicData =
     JSON.parse(sessionStorage.getItem('topicData')) || RestTools.getLocalStorage('topicData');
-  const topicInfo = find(topicData, { topicId: topicId });
+  const topicInfo = find(topicData, { topicId: parseInt(topicId) });
   const {
     name,
     info: { topic, themeColor },
@@ -479,4 +479,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Special);
+export default connect(mapStateToProps)(React.memo(Special));

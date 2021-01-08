@@ -20,7 +20,7 @@ function BasicLayout(props) {
   const query = querystring.parse(window.location.href.split('?')[1]);
 
   let { q = sessionStorage.getItem('q'), topic = '', topicName = '' } = query;
-
+  const pathname = props.children.props.location.pathname;
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const topicData =
     JSON.parse(sessionStorage.getItem('topicData')) ||
@@ -34,8 +34,8 @@ function BasicLayout(props) {
   const currentTopic = find(topicData, { info: { topic: topic } });
 
   let { title, dispatch, theme, showLoginModal, avatar } = props;
-  const { topicId, info, name } = currentTopic || {};
-
+  let { topicId, info, name } = currentTopic || {};
+  name = pathname.includes('/doc') ? '知识文库' : name; //单独处理路由为doc的情况
   const themeColor = info ? info.themeColor : theme;
 
   useEffect(() => {
