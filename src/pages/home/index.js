@@ -304,7 +304,6 @@ function Home(props) {
                             onClick={() => {
                               RestTools.setSession('q', item.content);
                             }}
-                            // onClick={handleClickItem.bind(this, item.Content)}
                           >
                             <Link
                               to={`/reply?q=${encodeURIComponent(item.content.trim())}&QID=${
@@ -335,21 +334,22 @@ function Home(props) {
                         </List.Item>
                       )}
                     />
-
-                    <Link
-                      className={homeStyles.help_more}
-                      onClick={() => {
-                        sessionStorage.removeItem('page'); //删除分页缓存
-                      }}
-                      to={'/help/newHelp'}
-                      target="_blank"
-                    >
-                      MORE
-                      <Icon
-                        style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}
-                        type="right"
-                      />
-                    </Link>
+                    <div style={{ float: 'right' }}>
+                      <Link
+                        className={homeStyles.help_more}
+                        onClick={() => {
+                          sessionStorage.removeItem('page'); //删除分页缓存
+                        }}
+                        to={'/help/newHelp'}
+                        target="_blank"
+                      >
+                        MORE
+                        <Icon
+                          style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}
+                          type="right"
+                        />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </TabPane>
@@ -396,17 +396,21 @@ function Home(props) {
                         在线定制、生成、共享、下载
                       </font>
                     </div>
-                    <div
-                      style={{ textAlign: 'center' }}
-                      onClick={() => {
-                        router.push({
-                          pathname: '/doc/outlineConfig'
-                        });
-                      }}
-                    >
-                      <span style={{ color: 'blue', fontSize: 20, cursor: 'pointer' }}>
-                        {'试用>>'}
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <Link
+                        className={homeStyles.help_more}
+                        onClick={() => {
+                          router.push({
+                            pathname: '/doc/outlineConfig'
+                          });
+                        }}
+                      >
+                        试用
+                        <Icon
+                          style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}
+                          type="right"
+                        />
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -446,12 +450,14 @@ function Home(props) {
                           );
                         })
                       : null}
-                    <div style={{ textAlign: 'center' }}>
-                      <span style={{ color: 'blue', fontSize: 20, cursor: 'pointer' }}>
-                        <Link to="/special/doc" target="_blank">
-                          {'更多>>'}
-                        </Link>
-                      </span>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <Link to="/special/doc" target="_blank" className={homeStyles.help_more}>
+                        更多
+                        <Icon
+                          style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}
+                          type="right"
+                        />
+                      </Link>
                     </div>
                   </div>
                 </div>

@@ -260,20 +260,7 @@
         padding: 10px 0 0 0;
         overflow: hidden;
         // padding: 10px 0 !important;
-        .help_more {
-          cursor: pointer;
-          width: 100px;
-          height: 36px;
-          float: right;
-          color: #fff;
-          font-size: 16px;
-          line-height: 36px;
-          text-align: center;
-          background: linear-gradient(90deg, #89dce4, #79c1ea);
-          &:hover {
-            opacity: 0.8;
-          }
-        }
+
         .help_left {
           background: url(../../assets/hotHelp.png);
           border-radius: 10px;
@@ -389,6 +376,22 @@
           }
         }
       }
+    }
+  }
+  .help_more {
+    cursor: pointer;
+    width: 100px;
+    height: 36px;
+    // float: right;
+    overflow: hidden;
+    display: block;
+    color: #fff;
+    font-size: 16px;
+    line-height: 36px;
+    text-align: center;
+    background: linear-gradient(90deg, #89dce4, #79c1ea);
+    &:hover {
+      opacity: 0.8;
     }
   }
 }
