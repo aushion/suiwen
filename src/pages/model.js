@@ -42,16 +42,14 @@ export default {
     *getTopicQuestions({ payload }, { call, put }) {
       const { data } = yield call(getTopicQuestions);
       const urlPrefix = process.env.apiUrl;
-      const topicData = data.result
-        .filter((item) => item.info.isBeta === 0)
-        .map((item) => {
-          return {
-            ...item,
-            logoUrl: `${urlPrefix}/file/topic/icon/${item.info.topicId}.png`,
-            thumbUrl: `${urlPrefix}/file/topic/home/${item.info.topicId}.png`,
-            topicId: item.info?.topicId
-          };
-        });
+      const topicData = data.result.map((item) => {
+        return {
+          ...item,
+          logoUrl: `${urlPrefix}/file/topic/icon/${item.info.topicId}.png`,
+          thumbUrl: `${urlPrefix}/file/topic/home/${item.info.topicId}.png`,
+          topicId: item.info?.topicId
+        };
+      });
       if (data.code === 200) {
         yield put({
           type: 'save',
