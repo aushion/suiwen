@@ -23,7 +23,7 @@ function AnswerHelper(props) {
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
 
-  const groupByData = groupBy(sgData[0]?.dataList, 'id');
+  const groupByData = groupBy(sgData[0]?.data, 'id');
   const keys = Object.keys(groupByData);
 
   useEffect(() => {
