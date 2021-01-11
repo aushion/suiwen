@@ -371,14 +371,15 @@ function ResultPage(props) {
                   {poemData.length
                     ? poemData.map((item) => <Poem key={item.id} data={item}></Poem>)
                     : null}
-                  {faq.length ? (
+                  {covid.length ? <Covid /> : null}
+                  {faq.length && covid.length === 0 ? (
                     <div>
                       {faq.map((item) => (
                         <FAQ key={item.id} data={item} q={q} />
                       ))}
                     </div>
                   ) : null}
-                  {covid.length ? <Covid /> : null}
+
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
                   {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
 

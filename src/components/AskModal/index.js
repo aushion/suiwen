@@ -76,6 +76,10 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       setErrorTips('至多选择10个标签');
       return;
     }
+    if (submitQ.length <= 5) {
+      setErrorTips('您输入的问题不能少于5个字');
+      return;
+    }
     if (submitQ) {
       setLoading(true);
       request
@@ -151,7 +155,7 @@ function AskModal({ visible, q = '', onTriggerCancel }) {
       onOk={submitQuestion}
       confirmLoading={loading}
     >
-      <TextArea maxLength={200} value={submitQ} rows={4} onChange={changeQuestion} />
+      <TextArea maxLength={200} minLength={10} value={submitQ} rows={4} onChange={changeQuestion} />
       <Divider />
       <div>
         <div>选择标签</div>

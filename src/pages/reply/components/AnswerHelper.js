@@ -179,6 +179,7 @@ function AnswerHelper(props) {
 
                 const title = groupByData[item][0].data.caption || '';
                 const source_id = groupByData[item][0].data.source_id || '';
+                const source_type = groupByData[item][0].data.soure_type;
                 return (
                   <div className={replyStyle.wrapper} key={item}>
                     <List
@@ -198,6 +199,43 @@ function AnswerHelper(props) {
                                 __html: RestTools.formatText(RestTools.translateToRed(answer))
                               }}
                             />
+                            <div
+                              style={{
+                                paddingTop: '10px',
+                                textAlign: 'right',
+                                fontSize: 13,
+                                color: '#999',
+                                overflow: 'hidden'
+                              }}
+                            >
+                              <div
+                                style={{
+                                  textAlign: 'right',
+                                  display: 'inline-block',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap'
+                                }}
+                                dangerouslySetInnerHTML={{
+                                  __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                                }}
+                              />
+                              <a
+                                style={{
+                                  color: '#999',
+                                  display: 'inline-block',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap'
+                                }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={title}
+                                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`}
+                              >
+                                {title}
+                              </a>
+                            </div>
                           </List.Item>
                         );
                       }}

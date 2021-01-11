@@ -100,6 +100,9 @@ function AnswerForm(props) {
               {
                 required: true,
                 validator: (_, value, callback) => {
+                  // if (value.toText().length <= 5) {
+                  //   callback('您的问题描述不能少于五个字！');
+                  // }
                   if (value.isEmpty()) {
                     callback('请输入正文内容');
                   } else {
