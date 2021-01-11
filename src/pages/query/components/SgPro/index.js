@@ -121,6 +121,7 @@ function SgPro(props) {
           total: newData?.pagination?.total,
           hideOnSinglePage: true,
           onChange: (page) => {
+            setNewData([]); //清空上一页数据
             setLoading(true);
             fetchSg(q, page)
               .then((res) => {
@@ -196,7 +197,6 @@ function SgPro(props) {
                 <a
                   style={{
                     color: '#999',
-                    // maxWidth: '50%',
                     display: 'inline-block',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
