@@ -54,7 +54,7 @@ function Concept({ data, attrs, intentJson }) {
               <a
                 className={styles.item}
                 key={item}
-                href={`https://method.cnki.net/ResultShow.aspx?term=${方法}&option=1`}
+                href={`https://method.cnki.net/ResultShow.aspx?term=${方法}&option=1&attrType=${item}`}
                 rel="noreferrer"
                 target="_blank"
               >

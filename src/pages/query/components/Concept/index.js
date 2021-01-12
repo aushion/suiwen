@@ -10,7 +10,7 @@ function Concept({ data, attrs, intentJson }) {
 
   const conceptTypes = attrs ? attrs.AttrTypes : [];
   const conceptContent = Array.isArray(data) ? data : null;
-  const basicContent = Array.isArray(data) ?  null : find(data.Terms, { 属性类型: '基本定义' });
+  const basicContent = Array.isArray(data) ? null : find(data.Terms, { 属性类型: '基本定义' });
   return (
     <div className={styles.concept}>
       <h2>
@@ -46,7 +46,7 @@ function Concept({ data, attrs, intentJson }) {
             </div>
           </div>
         ) : null}
-        
+
         {conceptContent ? (
           <ol>
             {conceptContent.map((item, index) => (
@@ -78,7 +78,7 @@ function Concept({ data, attrs, intentJson }) {
               <a
                 className={styles.item}
                 key={item}
-                href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}`}
+                href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}&attrType=${item}`}
                 rel="noreferrer"
                 target="_blank"
               >
