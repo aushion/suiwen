@@ -88,7 +88,8 @@ function BasicLayout(props) {
   }
 
   function logout() {
-    window.Ecp_LogoutOptr_my(0);
+    // window.Ecp_LogoutOptr_my(0);
+    window.Ecp_ReomveCookie(0);
     localStorage.removeItem('userInfo');
     sessionStorage.removeItem('userCommunityInfo');
     dispatch({
