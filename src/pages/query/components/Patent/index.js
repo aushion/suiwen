@@ -10,7 +10,7 @@ function Patent(props) {
   const name = intentJson && intentJson.results[0].fields['专利名'];
   return (
     <div className={styles.Patent}>
-      <h2 >{name ? `${name} - 相关专利` : title}</h2>
+      <h2>{name ? `${name} - 相关专利` : title}</h2>
       <Table
         rowKey={'文件名'}
         dataSource={dataNode}
@@ -30,7 +30,7 @@ function Patent(props) {
               target="_blank"
               title={RestTools.removeFlag(item.TITLE)}
               rel="noopener noreferrer"
-              href={`http://dbpub.cnki.net/grid2008/dbpub/detail.aspx?dbcode=SCPD&dbname=SCPD&filename=${item.文件名}`}
+              href={`https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=SCPD&dbname=SCPD&filename=${item.文件名}`}
               dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item.TITLE) }}
             />
           )}

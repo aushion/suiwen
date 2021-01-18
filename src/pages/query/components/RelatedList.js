@@ -8,7 +8,7 @@ function RelatedLiteraure(props) {
     if (type === '相关文献') {
       return `http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.sourceDb[source]}&filename=${filename}`;
     } else {
-      return `http://dbpub.cnki.net/grid2008/dbpub/detail.aspx?dbcode=SCPD&dbname=SCPD&filename=${filename}`;
+      return `https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=SCPD&dbname=SCPD&filename=${filename}`;
     }
   }
 
@@ -54,7 +54,7 @@ function RelatedLiteraure(props) {
         itemLayout="vertical"
         dataSource={data.filter((item) => item !== q)}
         renderItem={(item) => (
-          <List.Item style={focus === '问题' ? { border: 'none', padding: 8, }: {border: 'none'}}>
+          <List.Item style={focus === '问题' ? { border: 'none', padding: 8 } : { border: 'none' }}>
             <div>
               {focus === '问题' ? (
                 <Link
@@ -85,7 +85,7 @@ function RelatedLiteraure(props) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
                   }}
-                  title={  RestTools.removeFlag(item[focus])}
+                  title={RestTools.removeFlag(item[focus])}
                   target="_blank"
                   rel="noopener noreferrer"
                   href={outLink(title, item.文件名, item.来源数据库)}
