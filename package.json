@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "umi dev",
+    "start": "cross-env UMI_ENV=dev umi dev",
     "build": "cross-env UMI_ENV=prod umi build",
     "devs": "cross-env UMI_ENV=prod umi dev",
     "test": "cross-env UMI_ENV=test umi build",
@@ -22,6 +22,7 @@
     "dayjs": "^1.8.18",
     "dva": "^2.6.0-beta.6",
     "js-cookie": "^2.2.1",
+    "jsencrypt": "^3.0.0-rc.1",
     "lodash": "^4.17.15",
     "nprogress": "^0.2.0",
     "rc-texty": "^0.2.0",

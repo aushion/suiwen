@@ -126,13 +126,10 @@ export default React.memo(function Covid() {
                     <div className={styles.diff}>
                       较昨日
                       <span style={{ color: '#fe9986' }}>
-                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].noInfect -
-                          covidData.chinaDayList[covidData.chinaDayList.length - 2].noInfect >
-                        0
+                        {covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].infect > 0
                           ? '+'
                           : '-'}
-                        {covidData.chinaDayList[covidData.chinaDayList.length - 1].noInfect -
-                          covidData.chinaDayList[covidData.chinaDayList.length - 2].noInfect}
+                        {covidData.chinaDayAddList[covidData.chinaDayAddList.length - 1].infect}
                       </span>
                     </div>
                   </Col>
@@ -210,6 +207,16 @@ export default React.memo(function Covid() {
               </TabPane>
             </Tabs>
           ) : null}
+        </div>
+        <div className={styles.source}>
+          来源：
+          <a
+            href="https://news.qq.com/zt2020/page/feiyan.htm?from=timeline#/"
+            rel="noreferrer"
+            target="_blank"
+          >
+            腾讯疫情实时动态
+          </a>
         </div>
       </Spin>
     </div>
