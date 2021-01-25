@@ -124,7 +124,7 @@ function LoginRegister(props) {
             }
           })
           .then((res) => {
-            if (res.data.result) {
+            if (res.data.result && res.data.code === 200) {
               time = setInterval(() => {
                 setCountDown((countDown) => countDown - 1);
               }, 1000);
@@ -383,6 +383,7 @@ function LoginRegister(props) {
         <Button type="primary" block size="large" htmlType="submit">
           注册
         </Button>
+        {errMsg ? <div style={{ color: 'red' }}>{errMsg}</div> : null}
       </Form>
       {/* <Tabs
         type="card"
