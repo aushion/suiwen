@@ -702,11 +702,14 @@ const OutlineConfig = (props) => {
     //限制如果没有登录，则不能重命名文档
     if (!username) {
       message.warn('非登录状态，无法刷新文档内容！请先登录');
+      getDocContent();
+      setDocContentResultLoading(false);
       return;
     }
 
     if (!docId) {
       message.warn('当前无有效文档，无法进行内容刷新操作！');
+      setDocContentResultLoading(false);
       return;
     }
 
