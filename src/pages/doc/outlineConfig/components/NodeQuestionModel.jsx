@@ -362,13 +362,13 @@ const NodeQuestionModel = props => {
                             if (res.code === 200) {
                                 search();
                                 if (i === (qIds.length - 1)) {
-                                    message.success('删除成功');
+                                    message.success(res.msg);
                                 }
 
                             } else {
                                 //点击按钮，刷新查询页面，但不跳转到第一页，停留在当前页
                                 search();
-                                message.error('删除失败');
+                                message.error(res.msg);
                             }
                         });
                 }

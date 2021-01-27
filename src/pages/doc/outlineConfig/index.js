@@ -936,6 +936,7 @@ const OutlineConfig = (props) => {
           message.success('文档模板应用完毕');
         } else {
           setDocContentResultLoading(false);
+          setOutlineSpinLoading(false);
           message.error(res.msg);
         }
       });
