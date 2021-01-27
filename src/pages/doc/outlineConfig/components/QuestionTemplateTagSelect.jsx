@@ -8,6 +8,8 @@ import { CheckOutlined } from '@ant-design/icons';
 const QuestionTemplateTagSelect = props => {
   const questionTemplateTagOptions = props.questionTemplateTagOptions;
   const questionSourceData = props.questionSourceData;
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const username = userInfo ? userInfo.UserName : '';
   const [checkedValues, setCheckedValues] = useState([]);
   //保存多个input组件中自定义内容所形成的问题值
   const [inputList, setInputList] = useState([]);
@@ -96,6 +98,7 @@ const QuestionTemplateTagSelect = props => {
         type: 'Doc/saveRouteQuestion',
         payload: {
           qid: null,
+          userName: username,
           routeId: props.data.id,
           parentId: props.chapterId,
           question: encodeURIComponent(values.tagQuestion),
@@ -160,6 +163,7 @@ const QuestionTemplateTagSelect = props => {
         type: 'Doc/saveRouteQuestion',
         payload: {
           qid: null,
+          userName: username,
           routeId: props.data.id,
           parentId: props.chapterId,
           question: encodeURIComponent(values.tagQuestion),

@@ -118,7 +118,10 @@ const OutlineConfigPreview = (props) => {
   function getDocTemplate() {
     if (!docTemplateList || (docTemplateList && docTemplateList.length === 0)) {
       props.dispatch({
-        type: 'Doc/getTemplateList'
+        type: 'Doc/getTemplateList',
+        payload: {
+          userName: username,
+        }
       });
     }
   }
@@ -127,7 +130,10 @@ const OutlineConfigPreview = (props) => {
   function getDocClassify() {
     if (!docClassifyList || (docClassifyList && docClassifyList.length === 0)) {
       props.dispatch({
-        type: 'Doc/getDocClassify'
+        type: 'Doc/getDocClassify',
+        payload: {
+          userName: username,
+        }
       });
     }
   }
@@ -138,6 +144,7 @@ const OutlineConfigPreview = (props) => {
     dispatch({
       type: 'Doc/queryForRoute',
       payload: {
+        userName: username,
         docId: docId
       }
     }).then((res) => {
@@ -178,6 +185,7 @@ const OutlineConfigPreview = (props) => {
       .dispatch({
         type: 'Doc/getDocContent',
         payload: {
+          userName: username,
           docId: docId
         }
       })
@@ -324,6 +332,7 @@ const OutlineConfigPreview = (props) => {
       payload: {
         //文档id
         docId: docId,
+        userName: username,
         //排序号(新增时可不传递)
         orderNum: values.orderNum === '' ? 0 : values.orderNum,
         //父节点id，一级节点传0
@@ -500,6 +509,7 @@ const OutlineConfigPreview = (props) => {
     // 文件对象
     form.append('docId', docId);
     form.append('isResource', values.isResource);
+    form.append('userName', username);
     request({
       url: '/doc/generateDoc',
       responseType: 'blob',
@@ -541,6 +551,7 @@ const OutlineConfigPreview = (props) => {
       .dispatch({
         type: 'Doc/refreshDocContent',
         payload: {
+          userName: username,
           docId: docId
         }
       })
@@ -571,6 +582,7 @@ const OutlineConfigPreview = (props) => {
         type: 'Doc/saveRouteQuestion',
         payload: {
           qid: values.qId,
+          userName: username,
           routeId: values.routeId,
           parentId: values.parentId,
           question: encodeURIComponent(values.question),
@@ -598,6 +610,7 @@ const OutlineConfigPreview = (props) => {
         dispatch({
           type: 'Doc/delContent',
           payload: {
+            userName: username,
             contentId: contentItem.contentId
           }
         }).then((res) => {
@@ -726,6 +739,7 @@ const OutlineConfigPreview = (props) => {
             type: 'Doc/chooseTemplateRoute',
             payload: {
               docId: docId,
+              userName: username,
               templateId: value
             }
           })

@@ -7,6 +7,8 @@ import QuestionTemplateTagSelect from './QuestionTemplateTagSelect';
 
 const NodeQuestionModel = props => {
     const { modalVisible, onCancle, data, chapterId, answerContentDataForCurrentQuestion } = props;
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const username = userInfo ? userInfo.UserName : '';
     const [questionSourceData, setQuestionSourceData] = useState([]);
     //新增问题/关键字相关
     const [questionTemplateData, setQuestionTemplateData] = useState([]);
@@ -40,6 +42,9 @@ const NodeQuestionModel = props => {
         props
             .dispatch({
                 type: 'Doc/getQuestionTemplate',
+                payload: {
+                    userName: username,
+                  }
             })
             .then(res => {
                 if (res.code === 200) {
@@ -56,6 +61,7 @@ const NodeQuestionModel = props => {
             .dispatch({
                 type: 'Doc/queryForRouteQuestion',
                 payload: {
+                    userName: username,
                     routeId: data.id,
                     pageStart: 1,
                     pageSize: 5,
@@ -95,6 +101,7 @@ const NodeQuestionModel = props => {
         props.dispatch({
             type: 'Doc/getContentByQuestion',
             payload: {
+                userName: username,
                 q: encodeURIComponent(record.question),
             }
         }).then((res) => {
@@ -170,7 +177,7 @@ const NodeQuestionModel = props => {
                             : <EditOutlined onClick={(() => { document.getElementById("queInput" + record.qId).focus() })} title="编辑" />)
                         : <EditOutlined onClick={(() => { document.getElementById("queInput" + record.qId).focus() })} title="编辑" />}
                     <Divider type="vertical" />
-                    <DeleteOutlined onClick={(() => { deleteNodeQuestion({ qId: record.qId }) })} title="删除" />
+                    <DeleteOutlined onClick={(() => { deleteNodeQuestion({ userName: username,qId: record.qId }) })} title="删除" />
                     <Divider type="vertical" />
                     {showAnswerFlag === true ?
                         (index === showAnswerIndex ? <EyeOutlined onClick={(() => { showAnswerForCurrentQuestion(record, index) })} title="点击隐藏答案预览" />
@@ -208,6 +215,7 @@ const NodeQuestionModel = props => {
                 type: 'Doc/saveRouteQuestion',
                 payload: {
                     qid: record.qId,
+                    userName: username,
                     routeId: record.routeId,
                     parentId: record.parentId,
                     question: tableEditedQuestion === '' ? encodeURIComponent(record.question) : encodeURIComponent(tableEditedQuestion),
@@ -273,6 +281,7 @@ const NodeQuestionModel = props => {
                 type: 'Doc/saveRouteQuestion',
                 payload: {
                     qid: null,
+                    userName: username,
                     routeId: data.id,
                     parentId: chapterId,
                     question: encodeURIComponent(newNodeQuestions),
@@ -298,6 +307,7 @@ const NodeQuestionModel = props => {
                 type: 'Doc/saveRouteQuestion',
                 payload: {
                     qid: null,
+                    userName: username,
                     routeId: data.id,
                     parentId: chapterId,
                     question: encodeURIComponent(values.question),
@@ -344,6 +354,7 @@ const NodeQuestionModel = props => {
                     props.dispatch({
                         type: 'Doc/delRouteQuestion',
                         payload: {
+                            userName: username,
                             qId: qIds[i],
                         },
                     })
@@ -404,6 +415,7 @@ const NodeQuestionModel = props => {
             type: 'Doc/saveRouteQuestion',
             payload: {
                 qid: record.qId,
+                userName: username,
                 routeId: record.routeId,
                 parentId: record.parentId,
                 question: encodeURIComponent(record.question),
@@ -415,6 +427,7 @@ const NodeQuestionModel = props => {
                     type: 'Doc/saveRouteQuestion',
                     payload: {
                         qid: previousLine.qId,
+                        userName: username,
                         routeId: previousLine.routeId,
                         parentId: previousLine.parentId,
                         question: encodeURIComponent(previousLine.question),
@@ -458,6 +471,7 @@ const NodeQuestionModel = props => {
             type: 'Doc/saveRouteQuestion',
             payload: {
                 qid: record.qId,
+                userName: username,
                 routeId: record.routeId,
                 parentId: record.parentId,
                 question: encodeURIComponent(record.question),
@@ -469,6 +483,7 @@ const NodeQuestionModel = props => {
                     type: 'Doc/saveRouteQuestion',
                     payload: {
                         qid: nextLine.qId,
+                        userName: username,
                         routeId: nextLine.routeId,
                         parentId: nextLine.parentId,
                         question: encodeURIComponent(nextLine.question),
