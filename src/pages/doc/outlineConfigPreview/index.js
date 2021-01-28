@@ -851,7 +851,7 @@ const OutlineConfigPreview = (props) => {
                     onChange={(v) => onDocTemplateSelectChange(v)}
                   >
                     <Select.Option title="预览模式下，无法选择文档模板" value={''}>
-                      {'文档模板选择'}
+                      {'--文档模板选择--'}
                     </Select.Option>
                     {/* {docTemplateOptions} */}
                   </Select>

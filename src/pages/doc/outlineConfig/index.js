@@ -1052,7 +1052,7 @@ const OutlineConfig = (props) => {
                       value={selectedDocTemplate}
                       onSelect={(v) => onDocTemplateSelectChange(v)}
                     >
-                      <Select.Option value={''}>{'文档模板选择'}</Select.Option>
+                      <Select.Option value={''}>{'--文档模板选择--'}</Select.Option>
                       {docTemplateOptions}
                     </Select>
                   ) : (
@@ -1064,7 +1064,7 @@ const OutlineConfig = (props) => {
                       onSelect={(v) => onDocTemplateSelectChange(v)}
                     >
                       <Select.Option title="非登录状态，无法选择文档模版！请登录" value={''}>
-                        {'文档模板选择'}
+                        {'--文档模板选择--'}
                       </Select.Option>
                     </Select>
                   )}
