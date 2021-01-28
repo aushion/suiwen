@@ -56,9 +56,9 @@ function ToolsBook(props) {
 
   function cutAnswer(str, code) {
     if (str) {
-      if (str.length > 400) {
+      if (str.length > 500) {
         return (
-          RestTools.subHtml(str, 400, false) +
+          RestTools.subHtml(str, 500, false) +
           '<a href="http://gongjushu.cnki.net/refbook/detail.aspx?recid=' +
           code +
           '&db=crfd"' +

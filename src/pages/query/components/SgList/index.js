@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, List } from 'antd';
 import groupBy from 'lodash/groupBy';
 import querystring from 'querystring';
@@ -11,8 +11,16 @@ function SgList(props) {
   const { data, q, needEvaluate = true, dispatch } = props;
   const [initType, setType] = useState(data[nameIndex].name);
   const { topic = '' } = querystring.parse(window.location.href.split('?')[1]);
+  const sgRef = useRef(null);
+  useEffect(() => {
+    const sgTop = window.localStorage.getItem('sgTop');
+    if (sgTop) {
+      document.body.scrollTop = document.documentElement.scrollTop = Number(sgTop); //页面滚动到记忆位置
+    }
+    return () => {};
+  }, []);
   return (
-    <div className={`${styles.SgList} copy`} id="sg">
+    <div className={`${styles.SgList} copy`} id="sg" ref={sgRef}>
       <h2>
         <a
           href={`https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CJFQ&kw=${q}&korder=FT`}
@@ -60,6 +68,10 @@ function SgList(props) {
                   total: item.pagination.total,
                   hideOnSinglePage: true,
                   onChange: (page) => {
+                    const top = document.getElementById('sg').offsetTop;
+                    if (top) {
+                      window.localStorage.setItem('sgTop', top);
+                    }
                     nameIndex = index;
                     dispatch({
                       type: 'result/getSG',
