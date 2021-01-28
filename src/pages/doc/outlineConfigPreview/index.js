@@ -44,6 +44,8 @@ const OutlineConfigPreview = (props) => {
   const username = userInfo ? userInfo.UserName : '';
   const { dispatch } = props;
   //控制获取文档内容结果loading
+  const [saveToMyDocumentLibraryLoading, setSaveToMyDocumentLibraryLoading] = useState(false);
+  //控制获取文档内容结果loading
   const [docContentResultLoading, setDocContentResultLoading] = useState(true);
   //提纲标题变动加载loading（控制spin组件）
   const [outlineSpinLoading, setOutlineSpinLoading] = useState(false);
@@ -120,7 +122,7 @@ const OutlineConfigPreview = (props) => {
       props.dispatch({
         type: 'Doc/getTemplateList',
         payload: {
-          userName: username,
+          userName: username
         }
       });
     }
@@ -132,7 +134,7 @@ const OutlineConfigPreview = (props) => {
       props.dispatch({
         type: 'Doc/getDocClassify',
         payload: {
-          userName: username,
+          userName: username
         }
       });
     }
@@ -783,6 +785,28 @@ const OutlineConfigPreview = (props) => {
     router.push(`/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`);
   }
 
+  //将当前文档保存到我的文档库里
+  function saveToMyDocumentLibrary() {
+    setSaveToMyDocumentLibraryLoading(true);
+    props
+      .dispatch({
+        type: 'Doc/saveAsMyDoc',
+        payload: {
+          docId: docId,
+          userName: username
+        }
+      })
+      .then((res) => {
+        if (res.code === 200) {
+          setSaveToMyDocumentLibraryLoading(false);
+          message.success(res.msg);
+        } else {
+          setSaveToMyDocumentLibraryLoading(false);
+          message.error(res.msg);
+        }
+      });
+  }
+
   return (
     <Card>
       <div style={{ textAlign: 'right' }}>
@@ -803,6 +827,7 @@ const OutlineConfigPreview = (props) => {
                 <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
                   <Button
                     title={username ? '新建文档' : '非登录状态下，无法新建文档'}
+                    icon={'file-add'}
                     onClick={addNewDoc}
                     loading={props.loading}
                     style={{ marginLeft: 0, background: '#2ae', color: '#FFFFFF' }}
@@ -811,6 +836,7 @@ const OutlineConfigPreview = (props) => {
                   </Button>
                   <Button
                     title={'预览模式下，无法对文档重命名'}
+                    icon={'edit'}
                     disabled={true}
                     onClick={renameDoc}
                     loading={props.loading}
@@ -820,7 +846,7 @@ const OutlineConfigPreview = (props) => {
                   </Button>
                   <Select
                     disabled={true}
-                    style={{ width: 190, marginLeft: 5 }}
+                    style={{ width: 150, marginLeft: 5 }}
                     value={selectedDocTemplate}
                     onChange={(v) => onDocTemplateSelectChange(v)}
                   >
@@ -955,7 +981,17 @@ const OutlineConfigPreview = (props) => {
           <div style={{ marginLeft: 370, minWidth: 185, position: 'relative' }}>
             <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
               <Button
+                title={'将当前文档保存到自己的文档库里'}
+                icon={'export'}
+                loading={saveToMyDocumentLibraryLoading}
+                style={{ marginBottom: 10, marginRight: 5, backgroundColor: ' #E6E8FA  ' }}
+                onClick={saveToMyDocumentLibrary}
+              >
+                保存到我的文档
+              </Button>
+              <Button
                 title={'前往文库中心'}
+                icon={'appstore'}
                 loading={props.loading}
                 style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
                 onClick={() => {
@@ -969,6 +1005,7 @@ const OutlineConfigPreview = (props) => {
               </Button>
               <Button
                 title={'预览模式下，无法进行内容刷新'}
+                icon={'file-sync'}
                 disabled={true}
                 onClick={refreshDocContent}
                 loading={props.loading}
@@ -984,6 +1021,7 @@ const OutlineConfigPreview = (props) => {
               <Button
                 title={'对预览文档进行下载'}
                 disabled={docId ? false : true}
+                icon={'download'}
                 onClick={selectDocDownloadMethod}
                 loading={props.loading}
                 style={{ marginBottom: 10, marginRight: 5, background: '#2ae', color: '#FFFFFF' }}
@@ -992,6 +1030,7 @@ const OutlineConfigPreview = (props) => {
               </Button>
               <Button
                 title={username ? '前往个人文档' : '非登录状态，无法前往个人文档'}
+                icon={'home'}
                 // disabled={username ? false : true}
                 loading={props.loading}
                 style={{

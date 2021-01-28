@@ -217,3 +217,11 @@ export async function getContentByQuestion(params) {
   });
 }
 
+//将当前文档保存到我的文档库里
+export async function saveAsMyDoc(params) {
+  return request({
+    url: '/doc/saveAsMyDoc',
+    method: 'post',
+    params
+  });
+}

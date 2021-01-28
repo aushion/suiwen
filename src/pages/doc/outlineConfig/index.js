@@ -1024,6 +1024,7 @@ const OutlineConfig = (props) => {
                 <div style={{ position: 'absolute', top: '14px', background: '#fff' }}>
                   <Button
                     title={username ? '新建文档' : '非登录状态下，无法新建文档'}
+                    icon={'file-add'}
                     onClick={addNewDoc}
                     loading={props.loading}
                     style={{ marginLeft: 0, background: '#2ae', color: '#FFFFFF' }}
@@ -1038,7 +1039,7 @@ const OutlineConfig = (props) => {
                           : '当前无有效文档，无法进行重命名操作'
                         : '非登录状态下，无法编辑文档'
                     }
-                    // disabled={username && docId ? false : true}
+                    icon={'edit'}
                     onClick={renameDoc}
                     loading={props.loading}
                     style={{ marginLeft: 5, background: ' #2ae', color: '#FFFFFF' }}
@@ -1047,7 +1048,7 @@ const OutlineConfig = (props) => {
                   </Button>
                   {username ? (
                     <Select
-                      style={{ width: 190, marginLeft: 5 }}
+                      style={{ width: 150, marginLeft: 5 }}
                       value={selectedDocTemplate}
                       onSelect={(v) => onDocTemplateSelectChange(v)}
                     >
@@ -1058,7 +1059,7 @@ const OutlineConfig = (props) => {
                     <Select
                       open={false}
                       onFocus={() => docTemplateSelectOnFocus()}
-                      style={{ width: 190, marginLeft: 5 }}
+                      style={{ width: 150, marginLeft: 5 }}
                       value={''}
                       onSelect={(v) => onDocTemplateSelectChange(v)}
                     >
@@ -1212,6 +1213,7 @@ const OutlineConfig = (props) => {
             <div style={{ position: 'absolute', right: 0, top: '-42px' }}>
               <Button
                 title={'前往文库中心'}
+                icon={'appstore'}
                 loading={props.loading}
                 style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
                 onClick={() => {
@@ -1231,7 +1233,7 @@ const OutlineConfig = (props) => {
                       : '当前无有效文档，无法刷新内容'
                     : '非登录状态下，无法刷新内容'
                 }
-                // disabled={docId ? false : true}
+                icon={'file-sync'}
                 onClick={refreshDocContent}
                 loading={props.loading}
                 style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
@@ -1246,7 +1248,7 @@ const OutlineConfig = (props) => {
                       : '当前无有效文档，无法发布文档'
                     : '非登录状态下，无法发布文档'
                 }
-                // disabled={docId ? false : true}
+                icon={'rocket'}
                 onClick={documentPublish}
                 loading={documentPublishLoading}
                 style={{ marginBottom: 10, marginRight: 5, background: ' #2ae', color: '#FFFFFF' }}
@@ -1255,7 +1257,7 @@ const OutlineConfig = (props) => {
               </Button>
               <Button
                 title={docId ? '文档下载' : '当前无有效文档，无法下载'}
-                // disabled={docId ? false : true}
+                icon={'download'}
                 onClick={selectDocDownloadMethod}
                 loading={props.loading}
                 style={{ marginBottom: 10, marginRight: 5, background: '#2ae', color: '#FFFFFF' }}
@@ -1264,7 +1266,7 @@ const OutlineConfig = (props) => {
               </Button>
               <Button
                 title={username ? '前往个人文档' : '非登录状态下，无法前往个人文档'}
-                // disabled={username ? false : true}
+                icon={'home'}
                 loading={props.loading}
                 style={{ marginBottom: 10, background: ' #2ae', color: '#FFFFFF' }}
                 onClick={() => {

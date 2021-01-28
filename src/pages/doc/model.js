@@ -22,6 +22,7 @@ import {
   getDocInfo,
   getContentTaskStatus,
   getContentByQuestion,
+  saveAsMyDoc,
 } from './service/index';
 const Doc = {
   namespace: 'Doc',
@@ -215,6 +216,13 @@ const Doc = {
 
       return data;
     },
+
+    *saveAsMyDoc({ payload }, { call, put }) {
+      const response = yield call(saveAsMyDoc, payload);
+      let data = response.data;
+      return data;
+    },
+    
     
   },
   reducers: {
