@@ -447,6 +447,7 @@ export default {
     listenHistory({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
         let { q, topic = '', topicName } = query;
+        window.localStorage.removeItem('sgTop');
         let userId = RestTools.getLocalStorage('userInfo')
           ? RestTools.getLocalStorage('userInfo').UserName
           : Cookies.get('cnki_qa_uuid');

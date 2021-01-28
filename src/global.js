@@ -42,12 +42,12 @@ if (/Android|Windows Phone|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAge
   window.location.href = 'http://qa.cnki.net/sw.mobile';
 }
 
-console.log('process.env.UMI_ENV', process.env.UMI_ENV);
+// console.log('process.env.UMI_ENV', process.env.UMI_ENV);
 
-if (process.env.UMI_ENV === 'prod' || process.env.UMI_ENV === 'release') {
-  let hostUrl = window.location.host;
-  console.log('host', hostUrl);
-  if (hostUrl !== 'qa.cnki.net') {
-    window.location.href = 'http://qa.cnki.net';
-  }
-}
+// if (process.env.UMI_ENV === 'prod' || process.env.UMI_ENV === 'release') {
+//   let hostUrl = window.location.host;
+//   console.log('host', hostUrl);
+//   if (hostUrl !== 'qa.cnki.net') {
+//     window.location.href = 'http://qa.cnki.net';
+//   }
+// }
