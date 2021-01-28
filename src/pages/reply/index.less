@@ -1,5 +1,7 @@
 .reply {
+  position: relative;
   padding-top: 20px;
+  min-height: calc(100vh - 150px);
   .content {
     width: 1000px;
     margin: auto;
@@ -101,6 +103,37 @@
       p {
         margin: 0;
       }
+    }
+  }
+  :global {
+    .affix :local {
+      position: absolute;
+      bottom: 100px;
+      right: 20px;
+      background-color: greenyellow;
+      // animation: bounce 0.8s linear 0s infinite;
+    }
+  }
+  @keyframes bounce {
+    0% {
+      // bottom: 100px;
+      transform: scale(1);
+    }
+    25% {
+      // bottom: 110px;
+      transform: scale(1.2);
+    }
+    50% {
+      // bottom: 120px;
+      transform: scale(1.5);
+    }
+    75% {
+      // bottom: 100px;
+      transform: scale(1.2);
+    }
+    100% {
+      // bottom: 100px;
+      transform: (1);
     }
   }
   :global(.bf-container .public-DraftEditorPlaceholder-root) {

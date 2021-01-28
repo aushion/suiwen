@@ -144,7 +144,7 @@ function Reply(props) {
               setDrawer(true);
             }}
           >
-            <Icon type="alert" theme="filled" style={{ color: 'gold', fontSize: 24 }} />
+            <Icon type="edit" theme="filled" style={{ color: '#3474D9', fontSize: 24 }} />
           </Button>
         </Affix>
         {/* ) : null} */}
