@@ -83,12 +83,6 @@ const OutlineConfigPreview = (props) => {
   const [newType, setNewType] = useState(0);
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
-  message.config({
-    top: 100,
-    duration: 3,
-    maxCount: 3,
-  });
-
   useEffect(() => {
     //加载文档模版数据和标签数据
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -803,9 +797,24 @@ const OutlineConfigPreview = (props) => {
         }
       })
       .then((res) => {
+        message.config({
+          top: 100,
+          duration: 5,
+          maxCount: 3
+        });
         if (res.code === 200) {
           setSaveToMyDocumentLibraryLoading(false);
-          message.success(res.msg);
+          message.success(    
+              <a
+                style={{color:'blue'}}
+                target={'_blank'}
+                rel={'noopener noreferrer'}
+                href={`/personCenter/people/doc?userName=${RestTools.encodeBase64(username)}`}
+                title={'点击可前往我的文档库查看已保存文档'}
+              >
+               <font color="black">保存成功!</font><font color="blue" ><u>点击查看我的文档</u></font>
+              </a>
+          );
         } else {
           setSaveToMyDocumentLibraryLoading(false);
           message.error(res.msg);
