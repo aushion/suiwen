@@ -787,6 +787,13 @@ const OutlineConfigPreview = (props) => {
 
   //将当前文档保存到我的文档库里
   function saveToMyDocumentLibrary() {
+
+    //限制如果没有登录，则不能将当前文档保存到我的文档库里
+    if (!username) {
+      message.warn('非登录状态，无法保存文档！请先登录');
+      return;
+    }
+
     setSaveToMyDocumentLibraryLoading(true);
     props
       .dispatch({
