@@ -100,10 +100,11 @@ function Technology({ data, q }) {
             <span>
               <span style={{ color: 'red' }}>{subject || q}</span>核心技术：
             </span>
-            {fieldData.dataNode.data.map((item, index) =>
-              index === fieldData.dataNode.data.length - 1 ? (
-                <span key={index}>
-                  <Atom text={item.名称} />。
+            {fieldData.dataNode.data.slice(0, 5).map((item, index) =>
+              index === fieldData.dataNode.data.slice(0, 5).length - 1 ? (
+                <span key={index} style={{ color: '#1b80ff' }}>
+                  <Atom text={item.名称} />
+                  <span>...</span>
                 </span>
               ) : (
                 <span key={index}>
