@@ -5,8 +5,8 @@ import RestTools from '../../../../utils/RestTools';
 
 import styles from './index.less';
 
-function Weather(props) {
-  const { dataNode } = props.weatherData;
+function Weather({ showTitle = true, weatherData, q, style = {} }) {
+  const { dataNode } = weatherData;
   const { 城市 } = dataNode[0];
   const [data, setWeather] = useState(null);
   useEffect(() => {
@@ -24,12 +24,14 @@ function Weather(props) {
   }, [城市]);
 
   return (
-    <div className={styles.weather}>
-      <h2>
-        <span style={{ color: '#1890ff' }}>{props.q}</span>
+    <div className={styles.weather} style={style}>
+      {showTitle ? (
+        <h2>
+          <span style={{ color: '#1890ff' }}>{q}</span>
 
-        <span> - 随问知识库</span>
-      </h2>
+          <span> - 随问知识库</span>
+        </h2>
+      ) : null}
       {data ? (
         <div>
           <Descriptions title={`${data.basic.location}`}>

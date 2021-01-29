@@ -489,6 +489,41 @@ function Home(props) {
                 </div>
               </div>
             </div>
+
+            {/* 多轮入口 */}
+            <div className={homeStyles.content}>
+              <div className={homeStyles.left}>
+                <img src={rd} alt="多轮" />
+              </div>
+              <div className={homeStyles.right}>
+                {experience_questions.length ? (
+                  <Link to={`/special/chat`} target="_blank">
+                    <div className={homeStyles.cnTitle}>多轮对话</div>
+                    <div className={homeStyles.enTitle}>chat</div>
+                  </Link>
+                ) : null}
+                <div className={homeStyles.questions}>
+                  {/* {experience_questions.length
+                    ? experience_questions[0].data.slice(0, 5).map((item) => {
+                        const topic = experience_questions[0].info.topic;
+                        const topicName = experience_questions[0].name;
+                        return (
+                          <Link
+                            className={homeStyles.questions_item}
+                            to={`/query?topic=${topic}&topicName=${encodeURIComponent(
+                              topicName
+                            )}&q=${encodeURIComponent(item.question)}`}
+                            key={item.qId}
+                            target="_blank"
+                          >
+                            {item.question}
+                          </Link>
+                        );
+                      })
+                    : null} */}
+                </div>
+              </div>
+            </div>
           </Slider>
           <div
             className={homeStyles.arrowBtn}
