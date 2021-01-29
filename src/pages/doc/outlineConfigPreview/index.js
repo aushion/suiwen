@@ -83,6 +83,12 @@ const OutlineConfigPreview = (props) => {
   const [newType, setNewType] = useState(0);
   const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
+  message.config({
+    top: 100,
+    duration: 3,
+    maxCount: 3,
+  });
+
   useEffect(() => {
     //加载文档模版数据和标签数据
     // eslint-disable-next-line react-hooks/exhaustive-deps
