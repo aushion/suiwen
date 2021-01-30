@@ -10,8 +10,7 @@ import Chat, { Bubble, useMessages } from '@chatui/core';
 import Weather from '../query/components/Weather';
 
 import '@chatui/core/es/styles/index.less';
-// 引入组件
-// 引入样式
+
 import '@chatui/core/dist/index.css';
 import styles from './chat.less';
 import logo from '../../assets/logo1.png';
