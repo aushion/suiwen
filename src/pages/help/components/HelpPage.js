@@ -15,7 +15,7 @@ function HelpPage(props) {
     domainList,
     newHelpData,
     dispatch,
-    domain,
+    domain = '',
     size,
     index,
     uid,
@@ -24,6 +24,7 @@ function HelpPage(props) {
     current,
     userInfo
   } = props;
+
   const menus = [
     { key: 'newHelp', text: '新求助' },
     { key: 'hotHelp', text: '热门求助' },
@@ -36,7 +37,6 @@ function HelpPage(props) {
     needHelp: 'help/getNeedHelpQuestions'
   };
   const [visible, setVisible] = useState(false);
-
   //点击tag响应事件
   function handleClickTag(payload) {
     dispatch({
@@ -113,4 +113,4 @@ function mapStateToProps(state) {
     loading: state.loading.models.help
   };
 }
-export default connect(mapStateToProps)(HelpPage);
+export default connect(mapStateToProps)(React.memo(HelpPage));

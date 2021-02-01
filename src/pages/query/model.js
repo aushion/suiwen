@@ -471,8 +471,8 @@ export default {
             dispatch({
               type: 'global/save',
               payload: {
-                ...RestTools.headerInfo[topic],
-                domain: topic
+                ...RestTools.headerInfo[topic]
+                // domain: topic
               }
             });
           } else {

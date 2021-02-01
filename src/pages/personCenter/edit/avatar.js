@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Upload, Icon, message } from 'antd';
 import querystring from 'querystring';
 import { connect } from 'dva';
-import RestTools from 'Utils/RestTools';
+import RestTools from '../../../utils/RestTools';
 
 function Avatar(props) {
   const { userName } = querystring.parse(window.location.href.split('?')[1]);
@@ -41,6 +41,7 @@ function Avatar(props) {
       getBase64(info.file.originFileObj, (imageUrl) => {
         // setImageUrl(imageUrl);
         setLoading(false);
+        message.success('上传成功');
         dispatch({
           type: 'personCenter/save',
           payload: {
@@ -69,14 +70,16 @@ function Avatar(props) {
   );
 
   return (
-    <div style={{ padding: '10px 0 10px 50%', marginLeft: '-100px'}}>
+    <div style={{ padding: '10px 0 10px 50%', marginLeft: '-100px' }}>
       <div>
         <Upload
           name="file"
           listType="picture-card"
           className="avatar-uploader"
           showUploadList={false}
-          action={`${process.env.apiUrl}/user/uploadUserHeadPicture?userName=${userName}`}
+          action={`${
+            process.env.apiUrl
+          }/user/uploadUserHeadPicture?userName=${RestTools.decodeBase64(userName)}`}
           beforeUpload={beforeUpload}
           headers={{
             'X-Token': TokenKey

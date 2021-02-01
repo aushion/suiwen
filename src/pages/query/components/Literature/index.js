@@ -12,6 +12,7 @@ import PeopleInfo from './PeopleInfo';
 import SortTag from './SortTag';
 import uniqBy from 'lodash/uniqBy';
 import { getCustomView } from '../../service/result';
+import styles from './index.less';
 
 const { Search } = Input;
 export default function Literature(props) {
@@ -130,7 +131,7 @@ export default function Literature(props) {
   };
   const tagStyle = {
     cursor: 'pointer',
-    marginBottom: '10px',
+    marginBottom: '6px',
     lineHeight: 1.5
   };
 
@@ -371,14 +372,15 @@ export default function Literature(props) {
   }
   return (
     <div
+      className={styles.literature}
       style={
         props.law
           ? null
           : {
               background: '#fff',
-              padding: 20,
+              padding: '20px 20px 10px 20px',
               marginBottom: 20,
-              boxShadow: '#a5a5a5 0 0 10.8px 0'
+              boxShadow: '#cecece 0 0 6px 0'
             }
       }
     >
@@ -397,73 +399,91 @@ export default function Literature(props) {
         loading={loading}
         size="small"
         header={
-          <div style={{ overflow: 'hidden' }}>
-            <div style={{ float: 'left' }}>
-              {people ? (
-                <PeopleInfo data={people.dataNode.data[0]} />
-              ) : (
-                <Search
-                  placeholder="请输入关键字"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  onSearch={(value) => handleSearch(value)}
-                  style={{ width: 300 }}
-                  maxLength={20}
+          <div>
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ float: 'left' }}>
+                {people ? (
+                  <PeopleInfo data={people.dataNode.data[0]} />
+                ) : (
+                  <Search
+                    placeholder="请输入关键字"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onSearch={(value) => handleSearch(value)}
+                    style={{ width: 300 }}
+                    maxLength={20}
+                  />
+                )}
+              </div>
+              <div style={{ float: 'right' }}>
+                <SortTag
+                  sqlKey="ffd"
+                  name="默认排序"
+                  sortKeyText="ffd"
+                  showArrow={false}
+                  sortKey={sortKey}
+                  onClick={sortBy}
+                  tagStyle={tagStyle}
+                  activeTag={activeTag}
+                  count={count}
                 />
-              )}
+                <SortTag
+                  sqlKey="time"
+                  name="时间"
+                  sortKeyText="发表时间"
+                  onClick={sortBy}
+                  sortKey={sortKey}
+                  tagStyle={tagStyle}
+                  showArrow
+                  activeTag={activeTag}
+                  count={count}
+                />
+                <SortTag
+                  sqlKey="ref"
+                  name="引用"
+                  showArrow
+                  sortKey={sortKey}
+                  onClick={sortBy}
+                  sortKeyText="被引频次"
+                  tagStyle={tagStyle}
+                  activeTag={activeTag}
+                  count={count}
+                />
+                <SortTag
+                  sqlKey="down"
+                  name="下载"
+                  showArrow
+                  sortKey={sortKey}
+                  onClick={sortBy}
+                  sortKeyText="下载频次"
+                  tagStyle={tagStyle}
+                  activeTag={activeTag}
+                  count={count}
+                />
+              </div>
             </div>
-            <div style={{ float: 'right' }}>
-              <SortTag
-                sqlKey="ffd"
-                name="默认排序"
-                sortKeyText="ffd"
-                showArrow={false}
-                sortKey={sortKey}
-                onClick={sortBy}
-                tagStyle={tagStyle}
-                activeTag={activeTag}
-                count={count}
-              />
-              <SortTag
-                sqlKey="time"
-                name="时间"
-                sortKeyText="发表时间"
-                onClick={sortBy}
-                sortKey={sortKey}
-                tagStyle={tagStyle}
-                showArrow
-                activeTag={activeTag}
-                count={count}
-              />
-              <SortTag
-                sqlKey="ref"
-                name="引用"
-                showArrow
-                sortKey={sortKey}
-                onClick={sortBy}
-                sortKeyText="被引频次"
-                tagStyle={tagStyle}
-                activeTag={activeTag}
-                count={count}
-              />
-              <SortTag
-                sqlKey="down"
-                name="下载"
-                showArrow
-                sortKey={sortKey}
-                onClick={sortBy}
-                sortKeyText="下载频次"
-                tagStyle={tagStyle}
-                activeTag={activeTag}
-                count={count}
-              />
+            <div
+              style={{
+                display: 'flex',
+                background: '#F2F2F2',
+                padding: '10px 0',
+                justifyContent: 'space-between',
+                marginTop: 10,
+                color: '#778192'
+              }}
+            >
+              <div style={{ width: '38%', textAlign: 'center' }}>提名</div>
+              <div style={{ width: '15%', textAlign: 'center' }}>下载/被引</div>
+              <div style={{ width: '15%', textAlign: 'center' }}>来源</div>
+              <div style={{ width: '15%', textAlign: 'center' }}>发表时间</div>
+              <div style={{ width: '17%', textAlign: 'center' }}>作者</div>
             </div>
           </div>
         }
         footer={
           <div>
             {year && year.length ? (
-              <div style={{ marginBottom: 10 }}>
+              <div style={{ marginBottom: 6 }}>
                 <label htmlFor="时间">时间：</label>
                 {[{ 年: '全部' }].concat(yearInfo.year).map((item, index) => {
                   return (
@@ -492,7 +512,7 @@ export default function Literature(props) {
             ) : null}
 
             {subject && subject.length ? (
-              <div style={{ marginBottom: 10 }}>
+              <div style={{ marginBottom: 6 }}>
                 <label htmlFor="其他">{subjectType}：</label>
                 {[{ g: '全部', i: '全部' }].concat(subjectInfo.subject).map((item, index) => {
                   return (
@@ -572,11 +592,13 @@ export default function Literature(props) {
           const realAuthor = item.作者 ? (/\d+/g.test(item.作者) ? name : item.作者) : '-';
           const randomKey =
             fieldWord === '题名' || fieldWord === '主题' || fieldWord === '作者'
-              ? item['来源数据库']
+              ? item['来源']
               : item[fieldWord] || item.学位授予单位;
 
           return (
-            <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <List.Item
+              style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0' }}
+            >
               <a
                 style={Object.assign({}, spanStyle, { width: '38%' })}
                 dangerouslySetInnerHTML={{
@@ -590,7 +612,7 @@ export default function Literature(props) {
                 rel="noopener noreferrer"
               />
               <div style={{ width: '15%', textAlign: 'center' }}>
-                <div>下载/被引</div>
+                {/* <div>下载/被引</div> */}
                 <div>
                   {item.被引频次
                     ? `${item.下载频次 || '-'}/${item.被引频次}`
