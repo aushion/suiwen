@@ -106,7 +106,7 @@ function PersonInfo(props) {
                   message: '请您输入正确的电话号码'
                 }
               ]
-            })(<Input style={{ width: '60%' }} />)}
+            })(<Input maxLength={15} style={{ width: '60%' }} />)}
           </Form.Item>
           <Form.Item label="手机号">
             {getFieldDecorator('mobile', {
