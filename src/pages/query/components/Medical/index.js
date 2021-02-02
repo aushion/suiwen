@@ -102,12 +102,12 @@ export default function Medical(props) {
             rel="noopener noreferrer"
             to={`/detail?name=${data[0].table}&id=${tableId}`}
           >
-            {intentJson.parsed_key} 
+            {intentJson.parsed_key}
           </Link>
           <span> - 知网医药知识库</span>
         </h2>
       ) : (
-        <div className={styles.title}>{intentJson.parsed_key + '_医药知识库'}</div>
+        <h2>{intentJson.parsed_key + ' - 医药知识库'}</h2>
       )}
 
       {intentDomain === '疾病-用药' ? (
@@ -134,15 +134,15 @@ export default function Medical(props) {
         </div>
       ) : intentDomain === '用药副作用' ? (
         <div>
-          <ul style={{ padding: 0 }}>
+          <div style={{ padding: 0, display: 'flex', flexWrap: 'wrap' }}>
             {data.map((item, index) => (
-              <li
-                style={{ listStyle: 'none', padding: '10px 0', borderBottom: '1px solid #eee' }}
+              <div
+                style={{ paddingRight: 20 }}
                 key={index}
                 dangerouslySetInnerHTML={{ __html: RestTools.translateToRed(item[intentFocus]) }}
               />
             ))}
-          </ul>
+          </div>
         </div>
       ) : (
         <div

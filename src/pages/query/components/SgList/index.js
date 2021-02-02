@@ -27,7 +27,7 @@ function SgList(props) {
           rel="noreferrer"
           target="_blank"
         >
-          <span>知网期刊</span>
+          <span>知网文献</span>
         </a>{' '}
         - 片段重组
       </h2>
