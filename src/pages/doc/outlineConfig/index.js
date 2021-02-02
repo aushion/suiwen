@@ -1286,7 +1286,7 @@ const OutlineConfig = (props) => {
             <div id="scrollContent" className={styles.scrollContent}>
               <Spin spinning={docContentResultLoading} tip="文档内容生成中..." size="large">
                 {props.docContentData ? (
-                  <>
+                  <div style={{marginLeft:'38px'}}>
                     <div
                       key={encodeURIComponent('docTitle' + props.docContentData.docId)}
                       id={encodeURIComponent('docTitle' + props.docContentData.docId)}
@@ -1350,7 +1350,7 @@ const OutlineConfig = (props) => {
                                               nodeContentItem.contentList.length > 0 ? (
                                                 <div style={{ height: '5px' }}>
                                                   <Divider style={{ dashed: true }}>
-                                                    <h5>{nodeContentItem.question}</h5>
+                                                    <h4>{nodeContentItem.question}</h4>
                                                   </Divider>
                                                 </div>
                                               ) : null}
@@ -1367,7 +1367,7 @@ const OutlineConfig = (props) => {
                                                             <div
                                                               dangerouslySetInnerHTML={{
                                                                 __html:
-                                                                  '<p style="text-indent:2em">' +
+                                                                  '<p style="text-indent:2em;line-height:28px">' +
                                                                   RestTools.translateDocToRed(
                                                                     contentItem.content
                                                                   ) +
@@ -1465,7 +1465,7 @@ const OutlineConfig = (props) => {
                         />
                       </div>
                     ) : null}
-                  </>
+                  </div>
                 ) : null}
               </Spin>
             </div>

@@ -787,7 +787,6 @@ const OutlineConfigPreview = (props) => {
 
   //将当前文档保存到我的文档库里
   function saveToMyDocumentLibrary() {
-
     //限制如果没有登录，则不能将当前文档保存到我的文档库里
     if (!username) {
       message.warn('非登录状态，无法保存文档！请先登录');
@@ -1073,7 +1072,7 @@ const OutlineConfigPreview = (props) => {
             <div id="scrollContent" className={styles.scrollContent}>
               <Spin spinning={docContentResultLoading} tip="文档内容生成中..." size="large">
                 {props.docContentData ? (
-                  <>
+                  <div style={{marginLeft:'38px'}}>
                     <div
                       key={encodeURIComponent('docTitle' + props.docContentData.docId)}
                       id={encodeURIComponent('docTitle' + props.docContentData.docId)}
@@ -1137,7 +1136,7 @@ const OutlineConfigPreview = (props) => {
                                               nodeContentItem.contentList.length > 0 ? (
                                                 <div style={{ height: '5px' }}>
                                                   <Divider style={{ dashed: true }}>
-                                                    <h5>{nodeContentItem.question}</h5>
+                                                    <h4>{nodeContentItem.question}</h4>
                                                   </Divider>
                                                 </div>
                                               ) : null}
@@ -1154,7 +1153,7 @@ const OutlineConfigPreview = (props) => {
                                                             <div
                                                               dangerouslySetInnerHTML={{
                                                                 __html:
-                                                                  '<p style="text-indent:2em">' +
+                                                                  '<p style="text-indent:2em;line-height:28px">' +
                                                                   RestTools.translateDocToRed(
                                                                     contentItem.content
                                                                   ) +
@@ -1253,7 +1252,7 @@ const OutlineConfigPreview = (props) => {
                         />
                       </div>
                     ) : null}
-                  </>
+                  </div>
                 ) : null}
               </Spin>
             </div>
