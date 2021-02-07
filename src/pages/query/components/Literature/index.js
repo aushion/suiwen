@@ -472,7 +472,7 @@ export default function Literature(props) {
                 color: '#778192'
               }}
             >
-              <div style={{ width: '38%', textAlign: 'center' }}>提名</div>
+              <div style={{ width: '38%', textAlign: 'center' }}>题名</div>
               <div style={{ width: '15%', textAlign: 'center' }}>下载/被引</div>
               <div style={{ width: '15%', textAlign: 'center' }}>来源</div>
               <div style={{ width: '15%', textAlign: 'center' }}>发表时间</div>
