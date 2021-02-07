@@ -526,10 +526,6 @@ export default {
             });
             if (topic) {
               if (topic === 'YD') {
-                // dispatch({
-                //   type: 'getSemanticData',
-                //   payload: { q: encodeURIComponent(q), pageStart: 1, pageCount: 10, userId }
-                // });
               } else {
                 dispatch({
                   type: 'getAnswer',

@@ -273,7 +273,7 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-
+                  {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
                   {conceptData && conceptDataAttrs ? (
                     <Concept
                       data={conceptData}
@@ -381,7 +381,6 @@ function ResultPage(props) {
                   ) : null}
 
                   {communityAnswer ? <CommunityAnswer data={communityAnswer} q={q} /> : null}
-                  {weather.length ? <Weather weatherData={weather[0]} q={q} /> : null}
 
                   {translateData.length
                     ? translateData.map((item) => (
