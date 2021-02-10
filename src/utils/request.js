@@ -14,7 +14,7 @@ const request = axios.create({
   crossDomain: true,
   baseURL: process.env.apiUrl,
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 10000 // request timeout
+  timeout: 10000 // request timeout,
 });
 
 // request拦截器里设置headers里的x-token
@@ -25,6 +25,8 @@ request.interceptors.request.use(
     config.headers['X-Token'] = window.sessionStorage.getItem('TokenKey')
       ? window.sessionStorage.getItem('TokenKey')
       : '';
+
+    // config.headers['X-Token'] = `421c0d4b546f48d387b44f1eb040bdff`;
 
     return config;
   },

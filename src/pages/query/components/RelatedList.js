@@ -2,7 +2,7 @@ import { List, Icon } from 'antd';
 import Link from 'umi/link';
 import RestTools from '../../../utils/RestTools';
 
-function RelatedLiteraure(props) {
+function RelatedLiterature(props) {
   const { data, q, title, focus, extra, topic } = props;
   function outLink(type, filename, source) {
     if (type === '相关文献') {
@@ -137,4 +137,4 @@ function RelatedLiteraure(props) {
   );
 }
 
-export default RelatedLiteraure;
+export default RelatedLiterature;

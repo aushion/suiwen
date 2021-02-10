@@ -7,6 +7,7 @@ import FoldText from '../../../../components/FoldText';
 import gif from '../../../../assets/giphy2.gif';
 import RestTools from '../../../../utils/RestTools';
 import request from '../../../../utils/request';
+import SgListView from '../../../../components/SgListView';
 import styles from './index.less';
 
 let count = 0;
@@ -34,8 +35,8 @@ function SgPro(props) {
     request.post(`/checkSemanticStatus`, null, { params: payload }).then((res) => {
       if (res.data.result.async_result_state === 'SUCCESS' || count === 100) {
         clearTimeout(timeId);
-        // setNewData(res.data.result.dataList);
-        handleData({ data: res.data.result.data, pagination: res.data.result.pagination });
+        setNewData(res.data.result.data);
+        // handleData({ data: res.data.result.data, pagination: res.data.result.pagination });
         setLoading(false);
       } else {
         timeId = setTimeout(() => {
@@ -65,7 +66,8 @@ function SgPro(props) {
       .then((res) => {
         if (res.data.code === 200) {
           if (res.data.result.async_result_state === 'SUCCESS') {
-            handleData({ data: res.data.result.data, pagination: res.data.result.pagination });
+            setNewData(res.data.result.data);
+            // handleData({ data: res.data.result.data, pagination: res.data.result.pagination });
             setLoading(false);
           } else {
             checkSemanticStatus({
@@ -107,8 +109,8 @@ function SgPro(props) {
         </a>{' '}
         - 细粒度知识问答
       </h2>
-
-      <List
+      <SgListView data={newData} q={q} needEvaluate />
+      {/* <List
         style={showLoading ? { minHeight: '45vh', alignItems: 'center' } : null}
         loading={{
           spinning: showLoading,
@@ -158,7 +160,8 @@ function SgPro(props) {
           const source_type = item.dataList[0].data.soure_type;
           const result_score =
             item.dataList[0].data.result_score !== '0' ? item.dataList[0].data.result_score : '';
-
+          const source_db =
+            (item.dataList[0].sgAdditionInfo && item.dataList[0].sgAdditionInfo.来源数据库) || '';
           return (
             <List.Item style={{ overflow: 'hidden' }}>
               {item.dataList.map((current, index) => {
@@ -191,24 +194,38 @@ function SgPro(props) {
                   dangerouslySetInnerHTML={{
                     __html: `${
                       result_score ? 'CF:' + result_score : ''
-                    }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                    }${source_db}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
                   }}
                 />
-                <a
-                  style={{
-                    color: '#999',
-                    display: 'inline-block',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
-                  }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={caption}
-                  href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`}
-                >
-                  {caption}
-                </a>
+                {source_type ? (
+                  <a
+                    style={{
+                      color: '#999',
+                      display: 'inline-block',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={caption}
+                    href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`}
+                  >
+                    {caption}
+                  </a>
+                ) : (
+                  <div
+                    style={{
+                      color: '#999',
+                      display: 'inline-block',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {caption}
+                  </div>
+                )}
                 <div className={styles.sg_evaluate}>
                   {needEvaluate ? (
                     <Evaluate
@@ -223,7 +240,7 @@ function SgPro(props) {
             </List.Item>
           );
         }}
-      />
+      /> */}
     </div>
   );
 }
