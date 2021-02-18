@@ -2,18 +2,29 @@ import React, { useRef, useEffect } from 'react';
 
 import styles from './index.less';
 import SgListView from '../../../../components/SgListView';
-// let nameIndex = 0; //计数点击分页是在那个类目下面
+
 function SgList(props) {
-  const { data, q, dispatch } = props;
+  const { data, q, dispatch, loading } = props;
 
   const sgRef = useRef(null);
   useEffect(() => {
     const sgTop = window.localStorage.getItem('sgTop');
     if (sgTop) {
-      document.body.scrollTop = document.documentElement.scrollTop = Number(sgTop); //页面滚动到记忆位置
+      document.body.scrollTop = document.documentElement.scrollTop = parseInt(sgTop); //页面滚动到记忆位置
     }
     return () => {};
   }, []);
+
+  function handlePageChange(params) {
+    const top = document.getElementById('sg').offsetTop;
+    if (top) {
+      window.localStorage.setItem('sgTop', top);
+    }
+    dispatch({
+      type: 'result/getSG',
+      payload: { ...params, q: encodeURIComponent(q) }
+    });
+  }
 
   return (
     <div className={`${styles.SgList} copy`} id="sg" ref={sgRef}>
@@ -28,7 +39,14 @@ function SgList(props) {
         - 片段重组
       </h2>
       <div>
-        <SgListView data={data} q={q} needEvaluate dispatch={dispatch} />
+        <SgListView
+          data={data}
+          q={q}
+          loading={loading}
+          needEvaluate
+          dispatch={dispatch}
+          handlePageChange={handlePageChange}
+        />
       </div>
     </div>
   );
