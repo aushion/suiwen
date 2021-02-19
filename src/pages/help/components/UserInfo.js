@@ -7,6 +7,7 @@ function UserInfo(props) {
   const userInfo = sessionStorage.getItem('userCommunityInfo')
     ? JSON.parse(sessionStorage.getItem('userCommunityInfo'))
     : props.userInfo;
+
   return (
     <div
       style={{
@@ -78,4 +79,4 @@ function UserInfo(props) {
   );
 }
 
-export default UserInfo;
+export default React.memo(UserInfo);

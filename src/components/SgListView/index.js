@@ -18,7 +18,7 @@ function SgListView({
   handlePageChange
 }) {
   const [initType, setType] = useState(null);
-  const [newData, setData] = useState([]);
+  const [newData, setData] = useState(prevData);
   const { topic = '' } = querystring.parse(window.location.href.split('?')[1]);
 
   useEffect(() => {

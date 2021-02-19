@@ -124,7 +124,7 @@ function Reply(props) {
           </Col>
           <Col span={6} style={{ paddingRight: 0 }}>
             <div>
-              {userCommunityInfo ? <UserInfo /> : null}
+              {userCommunityInfo ? <UserInfo userInfo={userCommunityInfo} /> : null}
               <WaitAnswer />
               <Button
                 type="primary"

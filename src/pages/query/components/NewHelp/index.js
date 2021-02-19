@@ -16,16 +16,21 @@ function NewHelp(props) {
         itemLayout="vertical"
         dataSource={data}
         footer={
-          <div onClick={() => {
-            router.push('/help/newHelp')
-          }} className={styles.more}>{'更多>>'} </div>
+          <div
+            onClick={() => {
+              router.push('/help/newHelp');
+            }}
+            className={styles.more}
+          >
+            {'更多>>'}{' '}
+          </div>
         }
         renderItem={(item) => (
           <List.Item>
             <div
               className={styles.listItem}
               onClick={() => {
-                RestTools.setSession('q', item.Content);
+                RestTools.setSession('q', item.content);
               }}
               title={item.content}
             >
