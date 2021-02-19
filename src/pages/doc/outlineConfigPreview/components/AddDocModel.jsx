@@ -68,12 +68,7 @@ const AddDocModel = Form.create({
 
   //新建文档，提交按钮事件
   const onHandleOk = () => {
-    //校验文档标题
-    if (docTitle.trim() === '') {
-      message.warn('文档标题不可为空！');
-      return;
-    }
-
+    
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
@@ -81,6 +76,19 @@ const AddDocModel = Form.create({
         docTemplateId: selectedDocTemplate,
         label: docTitle
       };
+
+      //校验主题词
+      if(selectedDocTemplate !== '' && (!values.keyWord || values.keyWord.trim() === '')){
+        message.warn('主题词不可为空！');
+        return ;
+      }
+
+      //校验文档标题
+      if(docTitle.trim() === ''){
+        message.warn('文档标题不可为空！');
+        return ;
+      }
+
       props.onHandleOk(values);
     });
   };
