@@ -109,6 +109,7 @@ function SgPro(props) {
           spinning: showLoading,
           indicator: <LoadingGif />
         }}
+        type=""
         needEvaluate //点赞
         handlePageChange={handlePageChange} //分页
       />

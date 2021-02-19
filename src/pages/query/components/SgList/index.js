@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 
 import styles from './index.less';
 import SgListView from '../../../../components/SgListView';
@@ -7,19 +7,10 @@ function SgList(props) {
   const { data, q, dispatch, loading } = props;
 
   const sgRef = useRef(null);
-  useEffect(() => {
-    const sgTop = window.localStorage.getItem('sgTop');
-    if (sgTop) {
-      document.body.scrollTop = document.documentElement.scrollTop = parseInt(sgTop); //页面滚动到记忆位置
-    }
-    return () => {};
-  }, []);
 
   function handlePageChange(params) {
     const top = document.getElementById('sg').offsetTop;
-    if (top) {
-      window.localStorage.setItem('sgTop', top);
-    }
+    window.localStorage.setItem('sgTop', top);
     dispatch({
       type: 'result/getSG',
       payload: { ...params, q: encodeURIComponent(q) }

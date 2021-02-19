@@ -20,7 +20,11 @@ function SgListView({
   const [initType, setType] = useState(null);
   const [newData, setData] = useState([]);
   const { topic = '' } = querystring.parse(window.location.href.split('?')[1]);
+
   useEffect(() => {
+    const sgTop = window.localStorage.getItem('sgTop');
+    document.body.scrollTop = document.documentElement.scrollTop = Number(sgTop); //页面滚动到记忆位置
+
     if (data && data.length > 1) {
       //记录第一次的数据
       prevData = data;
