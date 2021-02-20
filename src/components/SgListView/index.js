@@ -7,7 +7,7 @@ import Evaluate from '../../pages/query/components/Evaluate';
 import RestTools from '../../utils/RestTools';
 import styles from './index.less';
 
-let nameIndex = 0;
+// let nameIndex = 0;
 let prevData = []; //记录上一次操作的数据，数据快照
 function SgListView({
   data,
@@ -18,7 +18,7 @@ function SgListView({
   handlePageChange
 }) {
   const [initType, setType] = useState(null);
-  const [newData, setData] = useState(prevData);
+  const [newData, setData] = useState([]);
   const { topic = '' } = querystring.parse(window.location.href.split('?')[1]);
 
   useEffect(() => {
@@ -28,6 +28,7 @@ function SgListView({
     if (data && data.length > 1) {
       //记录第一次的数据
       prevData = data;
+      setData(prevData);
     } else if (data.length === 1 && prevData.length) {
       //做数据快照
       prevData = prevData.map((item) => {
@@ -36,21 +37,13 @@ function SgListView({
         }
         return item;
       });
-    } else {
-      //特殊情况阅读理解重置的时候需要的而操作
-      prevData = prevData.map((item, index) => {
-        if (index === nameIndex) {
-          return {
-            ...item,
-            data: []
-          };
-        }
-        return item;
-      });
+      setData(prevData);
+    } else if (data.length === 0) {
+      setData([]);
     }
 
-    setData(prevData);
-    setType(prevData && prevData.length > 1 ? prevData[nameIndex].name : null);
+    // setType(prevData && prevData.length > 1 ? prevData[nameIndex].name : null);
+    setType(data.length && data[0].name);
   }, [data]);
   return (
     <div>
@@ -97,7 +90,7 @@ function SgListView({
                       total: item.pagination.total,
                       hideOnSinglePage: true,
                       onChange: (page) => {
-                        nameIndex = index;
+                        // nameIndex = index;
                         handlePageChange({
                           type: item.name,
                           pageSize: 10,
@@ -109,19 +102,20 @@ function SgListView({
                     }}
                     renderItem={(item) => {
                       const year =
-                        (item.dataList[0].sgAdditionInfo && item.dataList[0].sgAdditionInfo.年) ||
-                        '';
-                      const qikanName =
-                        (item.dataList[0].sgAdditionInfo &&
-                          item.dataList[0].sgAdditionInfo.中文刊名) ||
-                        '';
-                      const caption = item.dataList[0].data.caption;
-                      const source_id = item.dataList[0].data.source_id;
-                      const source_type = item.dataList[0].data.soure_type;
-                      const source_db =
-                        (item.dataList[0].sgAdditionInfo &&
-                          item.dataList[0].sgAdditionInfo.来源数据库) ||
-                        '';
+                          (item.dataList[0].sgAdditionInfo && item.dataList[0].sgAdditionInfo.年) ||
+                          '',
+                        qikanName =
+                          (item.dataList[0].sgAdditionInfo &&
+                            item.dataList[0].sgAdditionInfo.中文刊名) ||
+                          '',
+                        caption = item.dataList[0].data.caption,
+                        source_id = item.dataList[0].data.source_id,
+                        source_type = item.dataList[0].data.soure_type,
+                        source_db =
+                          (item.dataList[0].sgAdditionInfo &&
+                            item.dataList[0].sgAdditionInfo.来源数据库) ||
+                          '',
+                        result_score = item.dataList[0].data.result_score;
 
                       return (
                         <List.Item>
@@ -156,7 +150,9 @@ function SgListView({
                                 whiteSpace: 'nowrap'
                               }}
                               dangerouslySetInnerHTML={{
-                                __html: `${source_db}&nbsp;&nbsp;&nbsp;${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                                __html: `${
+                                  result_score ? 'CF: ' + result_score : ''
+                                }&nbsp;&nbsp;&nbsp;${source_db}&nbsp;&nbsp;&nbsp;${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
                               }}
                             />
                             {source_type ? (

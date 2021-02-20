@@ -121,13 +121,7 @@ function AnswerForm(props) {
               }}
               contentStyle={{ height: 240, fontSize: 14 }}
               controls={controls}
-              placeholder={`   
-                      标准格式更容易被采纳 
-                      文献内容                                                  
-                         XXXXXXXXXXXXX
-                      XXXXXXXXXXXXX[1]
-                        XXXXXXXXXXXXXX
-                      XXXXXXXXXXXXX[2]`}
+              placeholder={`  请输入回答内容，点击右侧【参考助手】图标，可引用相关参考文献`}
             />
           )}
         </FormItem>

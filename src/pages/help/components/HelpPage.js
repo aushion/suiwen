@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col, Button } from 'antd';
 import { connect } from 'dva';
-
 import DomainTags from './DomainTags';
 import HelpList from './HelpList';
 import HelpMenu from './HelpMenu';
@@ -81,7 +80,7 @@ function HelpPage(props) {
             />
           </Col>
           <Col span={6}>
-            {userInfo ? <UserInfo /> : null}
+            {userInfo ? <UserInfo userInfo={userInfo} /> : null}
             <WaitAnswer title="等我来答" />
             <Button
               // type="primary"

@@ -67,7 +67,8 @@ function ResultPage(props) {
     conceptDataAttrs,
     methodData, //知识元方法数据
     methodDataAttrs, //知识元方法属性,
-    recommend // 相关搜索
+    recommend, // 相关搜索
+    sgCount //句群条目计数
   } = props;
 
   const query = querystring.parse(window.location.href.split('?')[1]);
@@ -149,11 +150,13 @@ function ResultPage(props) {
     : []; //相关专利
 
   const communityAnswerLength = communityAnswer ? 1 : 0;
-
-  const sgCount = sgData.reduce((total, item) => total + item.pagination.total, 0);
+  const conceptCount = conceptData ? 1 : 0;
+  const methodCount = methodData ? 1 : 0;
 
   const resultLength =
     sgCount +
+    methodCount +
+    conceptCount +
     lawData.length +
     technologyData.length +
     faqData.length +

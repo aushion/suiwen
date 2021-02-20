@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, List, Modal } from 'antd';
+import { Divider, List, Modal, Tag } from 'antd';
 import { Link } from 'umi';
 import { connect } from 'dva';
 import styles from './people.less';
@@ -78,6 +78,17 @@ function People(props) {
                   >
                     {item.question}
                   </Link>
+                  <div>
+                    <div style={{ paddingTop: 6 }}>
+                      {item.tag
+                        ? item.tag.split(',').map((item) => (
+                            <Tag color="volcano" key={item}>
+                              {item}
+                            </Tag>
+                          ))
+                        : null}
+                    </div>
+                  </div>
                   <div
                     style={{
                       color: '#B3B3B3',

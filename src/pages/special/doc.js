@@ -11,7 +11,8 @@ import {
   List,
   Col,
   Card,
-  Input
+  Input,
+  Empty
 } from 'antd';
 import router from 'umi/router';
 import Link from 'umi/link';
@@ -185,7 +186,17 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
               <Card
                 bodyStyle={{ paddingTop: 0 }}
                 bordered={false}
-                title="共享文档"
+                title={
+                  <div>
+                    <span style={{ marginRight: 20 }}>共享文档</span>
+                    <Link
+                      to="/doc/outlineConfig"
+                      style={{ color: 'dark-blue', fontWeight: 'bold' }}
+                    >
+                      <Icon type="file-add"></Icon>新建文档
+                    </Link>
+                  </div>
+                }
                 extra={
                   <Search
                     autoComplete="one-time-code"
@@ -202,7 +213,7 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
                   />
                 }
               >
-                {subject ? (
+                {subject && subject.length ? (
                   <Tabs tabBarStyle={{ fontSize: 24, color: '#333' }} size="large">
                     {subject.map((item) => (
                       <TabPane tab={item.subject} key={item.subject}>
@@ -246,7 +257,9 @@ function Doc({ shareDoc, hotDoc, dispatch, loading }) {
                       </TabPane>
                     ))}
                   </Tabs>
-                ) : null}
+                ) : (
+                  <Empty className={styles.doc} />
+                )}
               </Card>
             </Col>
             <Col span={8}>

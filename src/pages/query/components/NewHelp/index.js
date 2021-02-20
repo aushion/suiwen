@@ -30,7 +30,7 @@ function NewHelp(props) {
             <div
               className={styles.listItem}
               onClick={() => {
-                RestTools.setSession('q', item.content);
+                item.content && RestTools.setSession('q', item.content);
               }}
               title={item.content}
             >

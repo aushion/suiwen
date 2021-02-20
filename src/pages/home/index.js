@@ -107,9 +107,7 @@ function Home(props) {
                     <div className={homeStyles.icon} style={{ background: '#FAC500' }}>
                       Q
                     </div>
-                    <div className={homeStyles.item_content} style={{ color: '#23242A' }}>
-                      {item.q}
-                    </div>
+                    <div className={homeStyles.item_question}>{item.q}</div>
                   </div>
                   <div className={homeStyles.item}>
                     <div className={homeStyles.icon} style={{ background: '#4BC3FF' }}>
@@ -117,7 +115,7 @@ function Home(props) {
                     </div>
                     <div
                       className={homeStyles.item_content}
-                      title={RestTools.removeTag(item.answer)}
+                      title={RestTools.removeHtmlTag(item.answer)}
                       dangerouslySetInnerHTML={{ __html: RestTools.removeHtmlTag(item.answer) }}
                     />
                   </div>

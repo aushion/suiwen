@@ -80,6 +80,7 @@
                 font-size: 16px;
                 font-weight: 400;
                 cursor: pointer;
+
                 .icon {
                   width: 32px;
                   height: 32px;
@@ -91,7 +92,9 @@
                   text-align: center;
                   float: left;
                 }
-                .item_content {
+
+                .item_content,
+                .item_question {
                   line-height: 32px;
                   overflow: hidden;
                   text-overflow: ellipsis;
@@ -104,6 +107,9 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                   }
+                }
+                .item_question:hover {
+                  color: #1890ff;
                 }
               }
             }

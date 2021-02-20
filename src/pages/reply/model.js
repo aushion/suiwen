@@ -25,6 +25,7 @@ export default {
     followed: false,
     domains: [],
     sgData: [],
+    tag: null,
     inputId: null,
     username: RestTools.getLocalStorage('userInfo')
       ? RestTools.getLocalStorage('userInfo').UserName
@@ -105,7 +106,8 @@ export default {
             answerList: answerList,
             followers: response.result.followers,
             followed: response.result.followed,
-            total: response.result.total
+            total: response.result.total,
+            tag: response.result.tag
           }
         });
       } else {

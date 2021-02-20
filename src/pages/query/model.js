@@ -43,7 +43,8 @@ export default {
     conceptDataAttrs: null, //知识元概念属性
     methodData: null, //知识元方法数据
     methodDataAttrs: null, //知识元方法属性,
-    recommend: []
+    recommend: [],
+    sgCount: 0
   },
   reducers: {
     save(state, { payload }) {
@@ -358,7 +359,7 @@ export default {
       return newRepositoryData;
     },
 
-    *getSG({ payload }, { call, put }) {
+    *getSG({ payload }, { call, put, select }) {
       let userId = RestTools.getLocalStorage('userInfo')
         ? RestTools.getLocalStorage('userInfo').UserName
         : Cookies.get('cnki_qa_uuid');
@@ -368,13 +369,17 @@ export default {
           expires: 3650
         });
       }
+
+      const sgCount = yield select((state) => state.result.sgCount);
+
       const res = yield call(getSG, { ...payload, userId });
       const { data } = res;
       if (data.result && data.result.length) {
         yield put({
           type: 'save',
           payload: {
-            sgData: data.result
+            sgData: data.result,
+            sgCount: data.result[0].name === '全部' ? data.result[0].pagination.total : sgCount
           }
         });
       }
@@ -517,7 +522,8 @@ export default {
                 conceptDataAttrs: null, //知识元概念属性
                 methodData: null, //知识元方法数据
                 methodDataAttrs: null, //知识元方法属性
-                recommend: []
+                recommend: [],
+                sgCount: 0
               }
             });
             dispatch({ type: 'collectQuestion', payload: { q, userId } });

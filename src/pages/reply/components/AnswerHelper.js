@@ -6,7 +6,6 @@ import queryString from 'querystring';
 import groupBy from 'lodash/groupBy';
 import RestTools from '../../../utils/RestTools';
 import replyStyle from '../index.less';
-
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
@@ -22,9 +21,9 @@ function AnswerHelper(props) {
   const { q } = params;
   const [selectText, setSelectText] = useState('');
   const [resourceInfo, setResourceInfo] = useState(null);
-
   const groupByData = groupBy(sgData[0]?.data, 'id');
   const keys = Object.keys(groupByData);
+  console.log(keys);
 
   useEffect(() => {
     function hideAddQuote(e) {
@@ -164,85 +163,88 @@ function AnswerHelper(props) {
             }}
           >
             {keys.length ? (
-              keys.slice(0, 5).map((item) => {
-                const year =
-                  (groupByData[item][0].sgAdditionInfo && groupByData[item][0].sgAdditionInfo.年) ||
-                  '';
-                const author =
-                  (groupByData[item][0].sgAdditionInfo &&
-                    groupByData[item][0].sgAdditionInfo.作者) ||
-                  '';
-                const qikanName =
-                  (groupByData[item][0].sgAdditionInfo &&
-                    groupByData[item][0].sgAdditionInfo.中文刊名) ||
-                  '';
-
-                const title = groupByData[item][0].data.caption || '';
-                const source_id = groupByData[item][0].data.source_id || '';
-                const source_type = groupByData[item][0].data.soure_type;
-                return (
-                  <div className={replyStyle.wrapper} key={item}>
-                    <List
-                      itemLayout="vertical"
-                      dataSource={groupByData[item]}
-                      renderItem={(item, index) => {
-                        const answer = item.data.context + item.data.sub_context;
-                        return (
-                          <List.Item style={{ overflow: 'hidden' }}>
-                            <div
-                              onMouseUp={(e) =>
-                                handleMouseUp(e, { year, qikanName, title, source_id, author })
-                              }
-                              className={replyStyle.fontStyle}
-                              key={index}
-                              dangerouslySetInnerHTML={{
-                                __html: RestTools.formatText(RestTools.translateToRed(answer))
-                              }}
-                            />
-                            <div
-                              style={{
-                                paddingTop: '10px',
-                                textAlign: 'right',
-                                fontSize: 13,
-                                color: '#999',
-                                overflow: 'hidden'
-                              }}
-                            >
-                              <div
-                                style={{
-                                  textAlign: 'right',
-                                  display: 'inline-block',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap'
-                                }}
-                                dangerouslySetInnerHTML={{
-                                  __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
-                                }}
-                              />
-                              <a
-                                style={{
-                                  color: '#999',
-                                  display: 'inline-block',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  whiteSpace: 'nowrap'
-                                }}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title={title}
-                                href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`}
-                              >
-                                {title}
-                              </a>
-                            </div>
-                          </List.Item>
-                        );
-                      }}
-                    />
-                  </div>
-                );
-              })
+              <div className={replyStyle.wrapper}>
+                <List
+                  itemLayout="vertical"
+                  dataSource={sgData[0].data}
+                  pagination={{
+                    pageSize: sgData[0].pagination.pageCount,
+                    current: sgData[0].pagination.pageStart,
+                    total: sgData[0].pagination.total,
+                    onChange: function(page) {
+                      dispatch({
+                        type: 'reply/getSG',
+                        payload: {
+                          type: '全部',
+                          pageSize: 10,
+                          pageStart: page,
+                          q: encodeURIComponent(q)
+                        }
+                      });
+                    }
+                  }}
+                  renderItem={(item, index) => {
+                    const answer = item.data.context + item.data.sub_context,
+                      title = item.data.caption,
+                      year = (item.sgAdditionInfo && item.sgAdditionInfo.年) || '',
+                      qikanName = (item.sgAdditionInfo && item.sgAdditionInfo.中文刊名) || '',
+                      source_id = item.data.source_id,
+                      source_type = item.data.soure_type,
+                      author = (item.sgAdditionInfo && item.sgAdditionInfo.作者) || '';
+                    return (
+                      <List.Item style={{ overflow: 'hidden' }}>
+                        <div
+                          onMouseUp={(e) =>
+                            handleMouseUp(e, { year, qikanName, title, source_id, author })
+                          }
+                          className={replyStyle.fontStyle}
+                          key={index}
+                          dangerouslySetInnerHTML={{
+                            __html: RestTools.formatText(RestTools.translateToRed(answer))
+                          }}
+                        />
+                        <div
+                          style={{
+                            paddingTop: '10px',
+                            textAlign: 'right',
+                            fontSize: 13,
+                            color: '#999',
+                            overflow: 'hidden'
+                          }}
+                        >
+                          <div
+                            style={{
+                              textAlign: 'right',
+                              display: 'inline-block',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}
+                            dangerouslySetInnerHTML={{
+                              __html: `${year}&nbsp;&nbsp;&nbsp;${qikanName}&nbsp;&nbsp;&nbsp;`
+                            }}
+                          />
+                          <a
+                            style={{
+                              color: '#999',
+                              display: 'inline-block',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={title}
+                            href={`http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`}
+                          >
+                            {title}
+                          </a>
+                        </div>
+                      </List.Item>
+                    );
+                  }}
+                />
+              </div>
             ) : (
               <Empty />
             )}

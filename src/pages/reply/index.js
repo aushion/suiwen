@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'dva';
-import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton, message } from 'antd';
+import { Divider, Icon, Button, Form, Row, Col, Affix, Drawer, Skeleton, message, Tag } from 'antd';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -21,9 +21,10 @@ dayjs.locale('zh-cn');
 
 let timerCount = null;
 function Reply(props) {
-  const { dispatch, followed, location, userCommunityInfo, answerList, loading } = props;
+  const { dispatch, followed, location, userCommunityInfo, answerList, loading, tag } = props;
+  console.log('props', props);
   const params = location.query;
-  const { QID, editStatus = false } = params;
+  const { QID, editStatus = false, q } = params;
 
   const [showEditor, switchEditor] = useState(true); //是否显示回答框
   const [isFollowQ, switchFollowQ] = useState(followed); //问题关注状态
@@ -76,7 +77,16 @@ function Reply(props) {
             <Skeleton loading={loading}>
               <div className={replyStyle.title}>
                 <Icon style={{ color: '#f39b27', paddingRight: 10 }} type="question-circle" />
-                <span>{params.q}</span>
+                <span>{q}</span>
+                <div>
+                  {tag
+                    ? tag.split(',').map((item) => (
+                        <Tag color="volcano" key={item}>
+                          {item}
+                        </Tag>
+                      ))
+                    : null}
+                </div>
                 {userInfo ? (
                   <div className="display_flex" style={{ marginTop: 20 }}>
                     <div style={{ marginRight: 10 }}>
