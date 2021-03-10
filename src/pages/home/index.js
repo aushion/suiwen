@@ -395,7 +395,11 @@ function Home(props) {
                       </font>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <Link className={homeStyles.help_more} to="/doc/outlineConfig">
+                      <Link
+                        className={homeStyles.help_more}
+                        to="/doc/outlineConfig"
+                        target="_blank"
+                      >
                         试用
                         <Icon
                           style={{ fontSize: 12, verticalAlign: 'baseline', paddingLeft: 6 }}
@@ -430,6 +434,7 @@ function Home(props) {
                             >
                               <Link
                                 to={`/doc/outlineConfigPreview?docId=${docExample.docId}`}
+                                target="_blank"
                                 style={{
                                   fontSize: 15,
                                   color: '#1890ff'

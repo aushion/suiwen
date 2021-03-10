@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import RestTools from '../../utils/RestTools';
 import arrow_up from '../../assets/arrow_up.png';
 import arrow_down from '../../assets/arrow_down.png';
 import styles from './index.less';
 
-function FoldText({ originText, fullText = null, style = null }) {
+function FoldText({ originText, fullText = null, style = null, openTag, closeTag }) {
   let fullTextWithIcon = fullText
     ? fullText +
       `<a class="up" style="color:#2090E3">  收起<img class="up" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_up}"></a>`
@@ -16,6 +16,14 @@ function FoldText({ originText, fullText = null, style = null }) {
 
   const [text, updateText] = useState(originTextWithIcon);
   const [pageYOffset, setPageYOffest] = useState(0); //默认滚动条移动距离
+
+  useEffect(() => {
+    let originTextWithIcon = fullText
+      ? originText +
+        `<a class="more" style="color:#2090E3">  更多<img class="more" style="width:14px;height:8px;margin-bottom:3px;" src="${arrow_down}"></a>`
+      : originText;
+    updateText(originTextWithIcon);
+  }, [originText, fullText]);
 
   function handleClick(e) {
     if (e.target.className === 'more') {

@@ -32,7 +32,7 @@ function Special(props) {
   const [isVisibleRegister, setShowRegister] = useState(false);
   const topicData =
     JSON.parse(sessionStorage.getItem('topicData')) || RestTools.getLocalStorage('topicData');
-  const topicInfo = find(topicData, { topicId: parseInt(topicId) });
+  const topicInfo = find(topicData, { topicId });
   const {
     name,
     info: { topic, themeColor },

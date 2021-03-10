@@ -23,7 +23,6 @@ function AnswerHelper(props) {
   const [resourceInfo, setResourceInfo] = useState(null);
   const groupByData = groupBy(sgData[0]?.data, 'id');
   const keys = Object.keys(groupByData);
-  console.log(keys);
 
   useEffect(() => {
     function hideAddQuote(e) {

@@ -18,9 +18,7 @@ function Translate(props) {
             }}
             target="_blank"
             rel="noopener noreferrer"
-            href={`http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
-              intentJson.results[0].fields['词汇']
-            )}`}
+            href={`http://dict.cnki.net`}
           >
             试试CNKI翻译助手
           </a>

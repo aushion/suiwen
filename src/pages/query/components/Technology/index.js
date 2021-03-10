@@ -121,7 +121,7 @@ function Technology({ data, q }) {
               <div>
                 <Button
                   type={sourceType === '全部' ? 'primary' : 'default'}
-                  style={{ marginRight: 10 }}
+                  style={{ marginRight: 10, marginBottom: 10 }}
                   onClick={fetchDataBySourceType.bind(this, '全部')}
                 >
                   相关来源（全部）
@@ -187,9 +187,12 @@ function Technology({ data, q }) {
                     <span
                       style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}
                     >{`${item.addition.中文刊名}`}</span>
-                    <span style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}>
-                      {sourceType === '全部' ? '期刊' : sourceType}
-                    </span>
+                    <span
+                      style={{ marginRight: 10, display: 'inline-block', overflow: 'hidden' }}
+                      dangerouslySetInnerHTML={{
+                        __html: RestTools.translateDocToRed(item.SOURE_TYPE)
+                      }}
+                    ></span>
                     <span style={{ display: 'inline-block', overflow: 'hidden' }}>
                       {item.addition.发表时间}
                     </span>

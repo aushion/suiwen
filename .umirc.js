@@ -17,6 +17,8 @@ export default {
   targets: {
     ie: 9
   },
+  devtool: 'source-map',
+  disableCSSSourceMap: true,
   alias: {
     Utils: path.resolve(__dirname, 'src/utils'),
     '@assets': path.resolve(__dirname, 'src/assets')

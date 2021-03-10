@@ -1,8 +1,8 @@
 import { message } from 'antd';
+import { find } from 'lodash';
 import {
   getAllclassifyQuestionByTopic,
   getQuestionByTopic,
-  getTopicPictures,
   getShareDoc,
   getHotDoc
 } from './service';
@@ -53,17 +53,18 @@ export default {
       }
     },
     *getTopicPictures({ payload }, { call, put }) {
-      const { data } = yield call(getTopicPictures, payload);
       const urlPrefix = process.env.apiUrl + '/file/topic/topicHome';
-      if (data.code === 200) {
-        const imgData = data.result.map((item) => `${urlPrefix}/${item.picId}.png`);
-        yield put({
-          type: 'save',
-          payload: {
-            imgData
-          }
-        });
-      }
+      const topicData = JSON.parse(localStorage.getItem('topicData'));
+      const { topicId } = payload;
+      const topic = find(topicData, { topicId: topicId });
+      const imgData = topic && topic.info.picIds.map((item) => `${urlPrefix}/${item.picId}.png`);
+
+      yield put({
+        type: 'save',
+        payload: {
+          imgData
+        }
+      });
     },
     *getShareDoc({ payload }, { call, put }) {
       const res = yield call(getShareDoc, payload);
