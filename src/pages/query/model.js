@@ -371,8 +371,12 @@ export default {
       }
 
       const sgCount = yield select((state) => state.result.sgCount);
+      const start = Date.now();
 
       const res = yield call(getSG, { ...payload, userId });
+
+      const responseTime = Date.now() - start;
+      console.log(`sgResponseTime`, responseTime);
       const { data } = res;
       if (data.result && data.result.length) {
         yield put({

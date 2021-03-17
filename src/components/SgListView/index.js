@@ -158,7 +158,9 @@ function SgListView({
                             {source_type ? (
                               <a
                                 style={{
-                                  color: '#999',
+                                  // color: 'lightblue',
+                                  // textDecoration: 'underline',
+                                  fontWeight: 'bold',
                                   display: 'inline-block',
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',

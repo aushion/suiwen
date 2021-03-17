@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'dva';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
@@ -29,8 +29,26 @@ function FAQ(props) {
       );
     }
   }
+
+  useEffect(() => {
+    const faq = document.querySelector('#faq');
+    const imgs = faq.querySelectorAll('img');
+    const imgList = [...imgs];
+    imgList.forEach(
+      (item) =>
+        (item.onerror = function(err) {
+          this.src = 'https://navi.cnki.net/knavi/images/noPic1.GIF';
+          this.onerror = null;
+          this.parentNode.href = '#';
+          this.parentNode.target = '_self';
+          return;
+        })
+    );
+    return () => {};
+  }, [showAnswer]);
+
   return (
-    <div className={styles.FAQ}>
+    <div className={styles.FAQ} id="faq">
       <h2>
         <span style={{ color: '#1890ff' }}>{props.q}</span>
         {/* <span> - 随问{domain === 'CNKI问答库_期刊' ? '期刊' : domain}知识库</span> */}

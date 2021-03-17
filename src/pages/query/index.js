@@ -292,7 +292,7 @@ function ResultPage(props) {
                       intentJson={methodInfo[0].intentJson}
                     />
                   ) : null}
-                  {technologyData.length ? <Technology data={technologyData} q={q} /> : null}
+                  {technologyData.length > 1 ? <Technology data={technologyData} q={q} /> : null}
                   {yearbookData.length
                     ? yearbookData.map((item) => (
                         <Yearbook

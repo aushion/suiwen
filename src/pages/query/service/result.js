@@ -20,6 +20,7 @@ export function getAnswerByPage(payload) {
 
 export function getSG(payload) {
   return request.get('/getSGData', {
+    timeout: 30000,
     params: { ...payload }
   });
 }
