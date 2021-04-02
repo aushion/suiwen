@@ -77,7 +77,10 @@ export default {
       }
     ]
   ],
-  chainWebpack(config) {
+  chainWebpack(config, { webpack }) {
+    config
+      .plugin('moment-locale')
+      .use(webpack.ContextReplacementPlugin, [/moment[\/\\]locale$/, /en|zh-cn/]);
     config.optimization.splitChunks({
       chunks: 'async',
       minSize: 30000,
@@ -91,6 +94,7 @@ export default {
           test: /[\\/]node_modules[\\/]/,
           priority: -10
         },
+
         default: {
           minChunks: 2,
           priority: -20,

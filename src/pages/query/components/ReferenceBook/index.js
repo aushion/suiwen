@@ -1,8 +1,6 @@
-
 import styles from './index.less';
 import RestTools from '../../../../utils/RestTools';
 import Evaluate from '../Evaluate';
-
 
 function ReferenceBook(props) {
   const { data, id, evaluate, title, domain, intentFocus, intentDomain } = props;
@@ -30,7 +28,7 @@ function ReferenceBook(props) {
   }
 
   return (
-    <div className={`${styles.ReferenceBook} reference`} >
+    <div className={`${styles.ReferenceBook} reference`}>
       {data.map((item, index) => {
         const answer =
           intentFocus === '谜语'
@@ -40,7 +38,6 @@ function ReferenceBook(props) {
           intentFocus === '谜语'
             ? `谜面: ${item.TITLE || item.Title || '-'}`
             : `${item.TITLE || item.Title || '-'} ${item.条目拼音 || ''}`;
-
 
         return (
           <div key={item.工具书编号 + index}>
@@ -54,7 +51,9 @@ function ReferenceBook(props) {
               key={item.工具书编号 + index}
               className={styles.ReferenceBook_answer}
               dangerouslySetInnerHTML={{
-                __html: RestTools.translateToRed(RestTools.completeToolsBook(answer, intentDomain, domain))
+                __html: RestTools.translateToRed(
+                  RestTools.completeToolsBook(answer, intentDomain, domain)
+                )
               }}
             />
             <div className={styles.ReferenceBook_extra}>
@@ -66,7 +65,9 @@ function ReferenceBook(props) {
                   item.工具书编号
                 )}.html`}
                 dangerouslySetInnerHTML={{
-                  __html: `来源:《${RestTools.removeFlag(item.工具书名称 || item.Title || item.TITLE)}》`
+                  __html: `来源:《${RestTools.removeFlag(
+                    item.工具书名称 || item.Title || item.TITLE
+                  )}》`
                 }}
               />
             </div>
@@ -78,9 +79,7 @@ function ReferenceBook(props) {
           className={styles.ReferenceBook_more}
           href={
             domain === '翻译'
-              ? `http://dict.cnki.net/dict_result.aspx?searchword=${encodeURIComponent(
-                  RestTools.removeFlag(data[0].TITLE || data[0].Title || '-')
-                )}`
+              ? `http://dict.cnki.net`
               : intentFocus === '成语'
               ? `http://gongjushu.cnki.net/rbook/`
               : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
@@ -100,7 +99,6 @@ function ReferenceBook(props) {
       <div className={styles.ReferenceBook_evaluate}>
         <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} />
       </div>
-   
     </div>
   );
 }

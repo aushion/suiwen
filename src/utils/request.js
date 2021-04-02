@@ -10,7 +10,7 @@ let xToken = ''; //全局变量临时存储x-token
 // 创建一个axios实例
 const request = axios.create({
   // baseURL: process.env.apiUrl, // url = base url + request url,
-  'Cache-Control': 'no-cache',
+  // 'Cache-Control': 'no-cache',
   crossDomain: true,
   baseURL: process.env.apiUrl,
   withCredentials: true, // send cookies when cross-domain requests
@@ -63,8 +63,9 @@ request.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log('error', error); // for debug
-
+    console.log(`message`, error.message);
+    const { url = '', params } = error.config;
+    collectTimeout({ url, params: JSON.stringify(params), message: error.message });
     return Promise.reject(error);
   }
 );
@@ -74,6 +75,12 @@ function refreshToken() {
   return request.post('/getToken', {
     appId: encrypt.encrypt(Cookies.get('cnki_qa_uuid'))
     // secret: '8b385d3cc269a1af02c37fa78eec18bd28778118'
+  });
+}
+
+function collectTimeout(data) {
+  return request.post('/collectTimeoutUrl', {
+    ...data
   });
 }
 

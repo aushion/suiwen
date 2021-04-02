@@ -117,6 +117,7 @@ function ResultPage(props) {
     document.addEventListener('click', handleClick);
     return function() {
       document.removeEventListener('copy', handleCopy);
+      document.removeEventListener('click', handleClick);
     };
   }, []);
   const faq = faqData.filter((item) => item.dataType === 0 && item.template !== 'covid'); //faq
