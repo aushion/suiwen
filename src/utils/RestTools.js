@@ -154,9 +154,12 @@ export default {
     return str
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
-      .replace(/\|\|\|<<</g, '<span style="background:yellow">')
+      .replace(/\|\|\|<<</g, '<span style="border-bottom:2px solid orange;">')
       .replace(/>>>\|\|\|/g, '</span>')
-      .replace(/\|\|\|___/g, '<span style="color:red;font-weight:800;background:yellow;">')
+      .replace(
+        /\|\|\|___/g,
+        '<span style="color:red;font-weight:800;border-bottom:2px solid orange;">'
+      )
       .replace(/---\|\|\|/g, '</span>')
       .replace(/&nbsp;/g, '');
   },

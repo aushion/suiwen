@@ -15,7 +15,7 @@ function Concept({ data, attrs, intentJson }) {
     <div className={styles.concept}>
       <h2>
         <a
-          href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}`}
+          href={`https://concept.cnki.net/search_result.aspx?w=${概念}`}
           rel="noreferrer"
           target="_blank"
         >
@@ -74,7 +74,7 @@ function Concept({ data, attrs, intentJson }) {
 
         {conceptTypes.length ? (
           <div className={styles.types}>
-            {conceptTypes.map((item) => (
+            {conceptTypes.slice(0, 8).map((item) => (
               <a
                 className={styles.item}
                 key={item}
@@ -85,16 +85,24 @@ function Concept({ data, attrs, intentJson }) {
                 {item}
               </a>
             ))}
+            <a
+              className={styles.item}
+              href={`https://concept.cnki.net/search_attribute.aspx?w=${概念}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              更多{'>>'}
+            </a>
           </div>
         ) : null}
-        <a
+        {/* <a
           className={styles.more}
           rel="noreferrer"
           target="_blank"
           href={`https://concept.cnki.net/search_result.aspx?w=${概念}`}
         >
           查看更多
-        </a>
+        </a> */}
       </div>
     </div>
   );

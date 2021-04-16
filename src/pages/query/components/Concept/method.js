@@ -50,7 +50,7 @@ function Concept({ data, attrs, intentJson }) {
 
         {methodTypes.length ? (
           <div className={styles.types}>
-            {methodTypes.map((item) => (
+            {methodTypes.slice(0, 8).map((item) => (
               <a
                 className={styles.item}
                 key={item}
@@ -63,14 +63,14 @@ function Concept({ data, attrs, intentJson }) {
             ))}
           </div>
         ) : null}
-        <a
+        {/* <a
           className={styles.more}
           rel="noreferrer"
           target="_blank"
           href={`https://method.cnki.net/SearchResult.aspx?keyword=${方法}&option=1`}
         >
           查看更多
-        </a>
+        </a> */}
       </div>
     </div>
   );

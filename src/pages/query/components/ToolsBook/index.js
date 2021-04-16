@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Collapse } from 'antd';
+import { Collapse, Button } from 'antd';
 import { find } from 'lodash';
 import RestTools from '../../../../utils/RestTools';
 import styles from './index.less';
@@ -7,22 +7,6 @@ import styles from './index.less';
 const { Panel } = Collapse;
 function ToolsBook(props) {
   const { data } = props;
-
-  const checkedStyle = {
-    backgroundColor: '#1890ff',
-    color: '#fff',
-    border: '1px solid #1890ff'
-  };
-  const normalStyle = {
-    cursor: 'pointer',
-    display: 'inline-block',
-    padding: '4px 8px',
-    color: 'lightslategray',
-    border: '1px solid #a8a8a8',
-    marginRight: 10,
-    fontSize: 14,
-    borderRadius: 2
-  };
 
   const [checkedIndex, setCheckIndex] = useState(0);
   const sortData = [
@@ -133,15 +117,14 @@ function ToolsBook(props) {
           initData.length > 1 &&
           initData.map((item, index) => {
             return (
-              <div
-                style={
-                  index === checkedIndex ? { ...normalStyle, ...checkedStyle } : { ...normalStyle }
-                }
+              <Button
+                style={{ marginRight: 10 }}
+                type={index === checkedIndex ? 'primary' : null}
                 key={item.id}
                 onClick={handleClickTag.bind(this, index, item)}
               >
                 {item.tagName}
-              </div>
+              </Button>
             );
           })}
       </div>
@@ -149,12 +132,12 @@ function ToolsBook(props) {
       <div className={styles.content}>
         {initData && initData.length
           ? initData.map((item, index) => {
-              const redReg = /###(.*)\$\$\$/;
+              // const redReg = /###(.*)\$\$\$/;
               const intentFocus = item.intentFocus;
               // const domain = item.domain;
-              let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
+              // let title = item.dataNode[0].Title || item.dataNode[0].TITLE;
 
-              const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;
+              // const finalTitle = redReg.test(title) ? title.match(redReg)[1] : item.title;
 
               const tagName = item.tagName;
               return (
@@ -230,7 +213,7 @@ function ToolsBook(props) {
                     })}
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <a
+                    {/* <a
                       className={styles.ReferenceBook_more}
                       href={
                         tagName === '汉英词典' || tagName === '英汉词典'
@@ -253,7 +236,7 @@ function ToolsBook(props) {
                             ? 'CNKI翻译助手'
                             : `查看更多`
                       }}
-                    />
+                    /> */}
                   </div>
                   <div className={styles.ReferenceBook_evaluate}>
                     {/* <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} /> */}

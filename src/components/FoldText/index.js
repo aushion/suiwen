@@ -40,7 +40,9 @@ function FoldText({ originText, fullText = null, style = null, openTag, closeTag
       className={styles.fontStyle}
       style={style}
       onClick={(e) => handleClick(e)}
-      dangerouslySetInnerHTML={{ __html: RestTools.superMarkRed(RestTools.translateToRed(text)) }}
+      dangerouslySetInnerHTML={{
+        __html: RestTools.formatText(RestTools.superMarkRed(RestTools.translateToRed(text)))
+      }}
     />
   );
 }
