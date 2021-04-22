@@ -4,7 +4,7 @@ import styles from './index.less';
 import SgListView from '../../../../components/SgListView';
 
 function SgList(props) {
-  const { data, q, dispatch, loading } = props;
+  const { data, q, dispatch, loading, onCollect } = props;
 
   const sgRef = useRef(null);
 
@@ -24,6 +24,13 @@ function SgList(props) {
           href={`https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CJFQ&kw=${q}&korder=FT`}
           rel="noreferrer"
           target="_blank"
+          onClick={() => {
+            onCollect({
+              question: q,
+              template: 'SG',
+              extra: '点击了标题'
+            });
+          }}
         >
           <span>知网文献</span>
         </a>{' '}
@@ -33,6 +40,7 @@ function SgList(props) {
         <SgListView
           data={data}
           q={q}
+          onCollect={onCollect}
           loading={loading}
           needEvaluate
           dispatch={dispatch}

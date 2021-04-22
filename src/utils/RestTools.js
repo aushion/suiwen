@@ -154,12 +154,9 @@ export default {
     return str
       .replace(/###/g, '<span style="color:red">')
       .replace(/\$\$\$/g, '</span>')
-      .replace(/\|\|\|<<</g, '<span style="border-bottom:2px solid orange;">')
+      .replace(/\|\|\|<<</g, '<span style="background-color:yellow;">')
       .replace(/>>>\|\|\|/g, '</span>')
-      .replace(
-        /\|\|\|___/g,
-        '<span style="color:red;font-weight:800;border-bottom:2px solid orange;">'
-      )
+      .replace(/\|\|\|___/g, '<span style="color:red;background-color:yellow;">')
       .replace(/---\|\|\|/g, '</span>')
       .replace(/&nbsp;/g, '');
   },
@@ -421,6 +418,92 @@ export default {
     request.post(`/doc/clickedDoc`, null, {
       params: { docId }
     });
+  },
+  ReplaceCLRF(str, nstr = '<br />') {
+    return str.replace('\r', nstr).replace('\n', nstr);
+  },
+  GetPreChar(c, p) {
+    while (p > 0) {
+      if (c[p - 1] === ' ' || c[p - 1] === '$') {
+        p--;
+      } else {
+        return c[p - 1];
+      }
+    }
+    return '';
+  },
+  IsChinese(s) {
+    var re = /[^\u4E00-\u9FA5]/;
+    if (re.test(s)) return false;
+    return true;
+  },
+  IsInBrackets(c, p) {
+    let i = 20;
+    while (p > 0 && i > 0) {
+      if (
+        c[p - 1] === '《' ||
+        c[p - 1] === '（' ||
+        c[p - 1] === '(' ||
+        c[p - 1] === '【' ||
+        c[p - 1] === '['
+      )
+        return true;
+      else {
+        p--;
+        i--;
+      }
+    }
+    return false;
+  },
+  CheckContainsNum(text) {
+    return (
+      text.search(
+        /['1','2','3','4','5','6','7','8','9','0','①','②','③','④','⑤','⑥','⑦','⑧','⑨',一','二','三','四','五','六','七','八','九','十']/g
+      ) > -1
+    );
+  },
+  SplitSection(content) {
+    if (!content) return '';
+    content = '<p>' + content + '</p>';
+    // content = this.ReplaceCLRF(content, '</p><p>'); //回车换行替换为br
+
+    content = content.replace(';;', ';');
+    content = content.replace('::', ':');
+    content = content.replace('：：', '：');
+    content = content.replace('；；', '；');
+
+    let len = content.length;
+    let sbContent = '';
+    // let lastPos = 0;
+    for (let i = 0; i < len; i++) {
+      sbContent += content[i];
+      switch (content[i]) {
+        case ':':
+        case '：':
+          if (i > 0) {
+            let preChar = this.GetPreChar(content, i);
+            if (!preChar && this.IsChinese(preChar[0]) && this.IsInBrackets(content, i) === false) {
+              sbContent += '</p><p>';
+            }
+          }
+          break;
+
+        case ';':
+        case '；':
+        case '。':
+          if (this.CheckContainsNum(content.substring(i + 1, i + 4))) {
+            sbContent += '</p><p>';
+          }
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    return sbContent;
+    //return "<p>" + Regex.Replace(content, @"(:|;|：|；)", "$1</p><p>",
+    //   RegexOptions.Compiled | RegexOptions.IgnoreCase) + "</p>";
   },
 
   topicInfo: {

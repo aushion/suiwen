@@ -6,7 +6,7 @@ import styles from './index.less';
 
 const { Panel } = Collapse;
 function ToolsBook(props) {
-  const { data } = props;
+  const { data, onCollect, q } = props;
 
   const [checkedIndex, setCheckIndex] = useState(0);
   const sortData = [
@@ -94,7 +94,17 @@ function ToolsBook(props) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span>{RestTools.getKeyword(data[0].dataNode[0].Title)} </span>
+            <span
+              onClick={() => {
+                onCollect({
+                  question: q,
+                  template: 'toolBook',
+                  extra: RestTools.getKeyword(data[0].dataNode[0].Title)
+                });
+              }}
+            >
+              {RestTools.getKeyword(data[0].dataNode[0].Title)}{' '}
+            </span>
           </a>
         ) : (
           <a
@@ -104,7 +114,15 @@ function ToolsBook(props) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span>
+            <span
+              onClick={() => {
+                onCollect({
+                  question: q,
+                  template: 'toolBook',
+                  extra: RestTools.getKeyword(data[0].dataNode[0].Title)
+                });
+              }}
+            >
               {RestTools.getKeyword(data[0].dataNode[0].Title) ||
                 RestTools.getKeyword(data[0].dataNode[0].TITLE)}
             </span>
@@ -195,6 +213,15 @@ function ToolsBook(props) {
                           </div>
                           <div className={styles.ReferenceBook_extra}>
                             <a
+                              onClick={() => {
+                                onCollect({
+                                  question: q,
+                                  template: 'toolBook',
+                                  extra: `来源:《${RestTools.removeFlag(
+                                    item.工具书名称 || item.Title || item.TITLE
+                                  )}》`
+                                });
+                              }}
                               className={styles.ReferenceBook_name}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -212,35 +239,8 @@ function ToolsBook(props) {
                       );
                     })}
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    {/* <a
-                      className={styles.ReferenceBook_more}
-                      href={
-                        tagName === '汉英词典' || tagName === '英汉词典'
-                          ? `http://dict.cnki.net/dict_result.aspx?scw=${encodeURIComponent(
-                              RestTools.removeFlag(
-                                item.dataNode[0].TITLE || item.dataNode[0].Title || '-'
-                              )
-                            )}`
-                          : intentFocus === '成语'
-                          ? `http://gongjushu.cnki.net/rbook/`
-                          : `http://gongjushu.cnki.net/RBook/Search/SimpleSearch?range=TOTAL&opt=0&key=${encodeURIComponent(
-                              finalTitle
-                            )}&c=crfdsearch`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          tagName === '汉英词典' || tagName === '英汉词典'
-                            ? 'CNKI翻译助手'
-                            : `查看更多`
-                      }}
-                    /> */}
-                  </div>
-                  <div className={styles.ReferenceBook_evaluate}>
-                    {/* <Evaluate id={id} goodCount={good} badCount={bad} isevalute={isevalute} /> */}
-                  </div>
+                  <div style={{ textAlign: 'right' }}></div>
+                  <div className={styles.ReferenceBook_evaluate}></div>
                 </div>
               );
             })

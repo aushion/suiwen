@@ -15,7 +15,8 @@ function SgListView({
   needEvaluate = true,
   loading = false,
   style = null,
-  handlePageChange
+  handlePageChange,
+  onCollect
 }) {
   const [initType, setType] = useState(null);
   const [newData, setData] = useState([]);
@@ -174,6 +175,12 @@ function SgListView({
                                     ? `http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=${RestTools.kns[source_type].dbcode}&&dbname=${RestTools.kns[source_type].dbname}&filename=${source_id}`
                                     : ''
                                 }
+                                onClick={() => {
+                                  onCollect({
+                                    template: 'SG',
+                                    extra: caption
+                                  });
+                                }}
                               >
                                 {caption}
                               </a>
@@ -185,6 +192,12 @@ function SgListView({
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap'
+                                }}
+                                onClick={() => {
+                                  onCollect({
+                                    template: 'SG',
+                                    extra: caption
+                                  });
                                 }}
                               >
                                 {caption}

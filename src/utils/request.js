@@ -64,8 +64,8 @@ request.interceptors.response.use(
   },
   (error) => {
     console.log(`message`, error.message);
-    const { url = '', params } = error.config;
-    collectTimeout({ url, params: JSON.stringify(params), message: error.message });
+    // const { url = '', params } = error.config;
+    // collectTimeout({ url, params: JSON.stringify(params), message: error.message });
     return Promise.reject(error);
   }
 );
@@ -78,10 +78,10 @@ function refreshToken() {
   });
 }
 
-function collectTimeout(data) {
-  return request.post('/collectTimeoutUrl', {
-    ...data
-  });
-}
+// function collectTimeout(data) {
+//   return request.post('/collectTimeoutUrl', {
+//     ...data
+//   });
+// }
 
 export default request;

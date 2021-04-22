@@ -36,6 +36,7 @@ import Technology from './components/Technology';
 import Recommend from './components/Recommend';
 import SgPro from './components/SgPro';
 import Covid from './components/Covid';
+import request from '../../utils/request';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -105,6 +106,7 @@ function ResultPage(props) {
       setVisible(true);
       setPreviewImgSrc(e.target.src);
     }
+
     return;
   }
 
@@ -202,6 +204,18 @@ function ResultPage(props) {
     });
   }
 
+  function handleCollect(item) {
+    const postData = {
+      question: q,
+      ...item,
+      topic,
+      user: localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo')).userName
+        : Cookies.get('cnki_qa_uuid')
+    };
+    request.post('/collectBehavior', postData);
+  }
+
   return (
     <div className={styles.result} id="result">
       <div style={{ minHeight: 'calc(45vh)' }}>
@@ -219,10 +233,12 @@ function ResultPage(props) {
           <Col span={17}>
             <div>
               {/* 阅读理解 */}
-              {topic === 'YD' ? <SgPro q={q} /> : null}
+              {topic === 'YD' ? <SgPro onCollect={handleCollect} q={q} /> : null}
               <Skeleton loading={fetchSemanticData || loading} active>
                 <div>
-                  {lawData.length ? <LawTabs data={lawData} q={q} /> : null}
+                  {lawData.length ? (
+                    <LawTabs onCollect={handleCollect} data={lawData} q={q} />
+                  ) : null}
                   {medicalData.length
                     ? medicalData.map((item) => (
                         <Medical
@@ -237,7 +253,9 @@ function ResultPage(props) {
                         />
                       ))
                     : null}
-                  {referenceBookData.length ? <ToolsBook data={referenceBookData} /> : null}
+                  {referenceBookData.length ? (
+                    <ToolsBook q={q} onCollect={handleCollect} data={referenceBookData} />
+                  ) : null}
                   {referenceBookListData.length ? (
                     <ToolsBookList
                       id={referenceBookListData[0].id}
@@ -406,7 +424,9 @@ function ResultPage(props) {
               </Skeleton>
 
               <Skeleton loading={fetchSg} active>
-                {sgData.length ? <SgList data={sgData} q={q} dispatch={dispatch} /> : null}
+                {sgData.length ? (
+                  <SgList onCollect={handleCollect} data={sgData} q={q} dispatch={dispatch} />
+                ) : null}
               </Skeleton>
 
               <Skeleton loading={loading || fetchSg || fetchLiterature} active>

@@ -5,7 +5,7 @@ import LawCase from '../LawCase';
 import Literature from '../Literature';
 import styles from './index.less';
 
-function LawTabs({ repositoryData, loading, q, dispatch }) {
+function LawTabs({ repositoryData, loading, q, dispatch, onCollect }) {
   repositoryData =
     repositoryData &&
     repositoryData
@@ -25,11 +25,20 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
   return repositoryData.length ? (
     <div className={styles.lawTabs}>
       <h2>
-        <span style={{ color: '#1890ff' }}>{q}</span>
+        <span
+          onClick={() => {
+            onCollect({
+              template: 'Law',
+              extra: '标题'
+            });
+          }}
+          style={{ color: '#1890ff' }}
+        >
+          {q}
+        </span>
         <span> - 知网法律知识库</span>
       </h2>
       <Spin spinning={loading}>
-        {/* {repositoryData.length > 1 ? ( */}
         <Tabs tabBarGutter={10}>
           {repositoryData
             ? repositoryData.map((item, index) => {
@@ -50,25 +59,7 @@ function LawTabs({ repositoryData, loading, q, dispatch }) {
               })
             : null}
         </Tabs>
-        {/* ) : (
-          <div>
-            {repositoryData
-              ? repositoryData.map((item, index) => {
-                  return item.template === 'lawliterature' ? (
-                    <Literature
-                      key={index}
-                      law
-                      q={q}
-                      literatureData={lawLiteratureData}
-                      dispatch={dispatch}
-                    />
-                  ) : (
-                    <LawCase key={index} data={item} type={item.template} />
-                  );
-                })
-              : null}
-          </div>
-        )} */}
+
         {!loading && !repositoryData ? <Empty /> : null}
       </Spin>
     </div>

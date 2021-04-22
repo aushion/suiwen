@@ -9,7 +9,7 @@ import styles from './index.less';
 let count = 0;
 let timeId = null;
 function SgPro(props) {
-  const { q } = props;
+  const { q, onCollect } = props;
   const [newData, setNewData] = useState([]);
   const [showLoading, setLoading] = useState(true);
 
@@ -92,6 +92,12 @@ function SgPro(props) {
     <div className={styles.SgPro} id="ReadComp">
       <h2>
         <a
+          onClick={() => {
+            onCollect({
+              template: 'SG',
+              extra: '点击了标题'
+            });
+          }}
           href={`https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CJFQ&kw=${q}&korder=FT`}
           rel="noreferrer"
           target="_blank"
@@ -102,6 +108,7 @@ function SgPro(props) {
       </h2>
 
       <SgListView
+        onCollect={onCollect}
         data={newData} //数据源
         q={q}
         style={showLoading ? { minHeight: '45vh', alignItems: 'center' } : null}
