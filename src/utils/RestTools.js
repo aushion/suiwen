@@ -158,6 +158,8 @@ export default {
       .replace(/>>>\|\|\|/g, '</span>')
       .replace(/\|\|\|___/g, '<span style="color:red;background-color:yellow;">')
       .replace(/---\|\|\|/g, '</span>')
+      // .replace(/\^\^\^===/g, '<p>')
+      // .replace(/===~~~/g, '</p>')
       .replace(/&nbsp;/g, '');
   },
 
@@ -467,10 +469,10 @@ export default {
     content = '<p>' + content + '</p>';
     // content = this.ReplaceCLRF(content, '</p><p>'); //回车换行替换为br
 
-    content = content.replace(';;', ';');
-    content = content.replace('::', ':');
-    content = content.replace('：：', '：');
-    content = content.replace('；；', '；');
+    content = content.replaceAll(';;', ';');
+    content = content.replaceAll('::', ':');
+    content = content.replaceAll('：：', '：');
+    content = content.replaceAll('；；', '；');
 
     let len = content.length;
     let sbContent = '';
@@ -490,8 +492,16 @@ export default {
 
         case ';':
         case '；':
+          //判断分号是否是转义字符
+          if(content.substring(i - 3, i + 1) === '&lt;' || content.substring(i - 3, i + 1) === '&gt;'){
+            break;
+          }
+          if (this.CheckContainsNum(content.substring(i, i + 3))) {
+            sbContent += '</p><p>';
+          }
+          break;
         case '。':
-          if (this.CheckContainsNum(content.substring(i + 1, i + 4))) {
+          if (this.CheckContainsNum(content.substring(i, i + 3))) {
             sbContent += '</p><p>';
           }
           break;
