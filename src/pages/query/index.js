@@ -7,36 +7,36 @@ import Cookies from 'js-cookie';
 import Viewer from 'react-viewer';
 import router from 'umi/router';
 import styles from './index.less';
-import SgList from './components/SgList';
-import FAQ from './components/FAQ';
-import RelatedList from './components/RelatedList';
-import Journal from './components/Journal';
-import Literature from './components/Literature';
-import Scholar from './components/Scholar';
-import NewHelp from './components/NewHelp';
-import CommunityAnswer from './components/CommunityAnswer';
-import Graphic from './components/Graphic';
-import Medical from './components/Medical';
-import Patent from './components/Patent';
-import Statistics from './components/Statistics';
-import Publication from './components/Statistics/publication';
-import Yearbook from './components/Statistics/yearbook';
-import Poem from './components/Poem';
-import RestTools from '../../utils/RestTools';
-import Sentence from './components/Sentence';
-import ToolsBook from './components/ToolsBook';
-import ToolsBookList from './components/ToolsBookList';
-import Weather from './components/Weather';
-import Translate from './components/Translate';
-import AskModal from '../../components/AskModal';
-import LawTabs from './components/LawTabs';
-import Concept from './components/Concept';
-import Method from './components/Concept/method';
-import Technology from './components/Technology';
-import Recommend from './components/Recommend';
-import SgPro from './components/SgPro';
-import Covid from './components/Covid';
+import SgList from './components/SgList'; //句群组件
+import FAQ from './components/FAQ'; //faq答案
+import RelatedList from './components/RelatedList'; //右侧相关文献
+import Journal from './components/Journal'; //期刊组件
+import Literature from './components/Literature'; //文献组件
+import Scholar from './components/Scholar'; //学者组件
+import NewHelp from './components/NewHelp'; //新求助
+import CommunityAnswer from './components/CommunityAnswer'; //网友回答租价
+import Graphic from './components/Graphic'; //开放域
+import Medical from './components/Medical'; //医药组件
+import Patent from './components/Patent'; //专利
+import Statistics from './components/Statistics'; //统计
+import Publication from './components/Statistics/publication'; //统计刊物
+import Yearbook from './components/Statistics/yearbook'; //年鉴目录
+import Poem from './components/Poem'; //诗
+import Sentence from './components/Sentence'; //句型覆盖
+import ToolsBook from './components/ToolsBook'; //工具书
+import ToolsBookList from './components/ToolsBookList'; //工具书列表
+import Weather from './components/Weather'; //天气
+import Translate from './components/Translate'; //翻译
+import AskModal from '../../components/AskModal'; //社区提问
+import LawTabs from './components/LawTabs'; //法律
+import Concept from './components/Concept'; //概念库
+import Method from './components/Concept/method'; //方法库
+import Technology from './components/Technology'; //技术
+import Recommend from './components/Recommend'; //核心技术
+import SgPro from './components/SgPro'; //细粒度知识问答
+import Covid from './components/Covid'; //新冠疫情数据
 import request from '../../utils/request';
+import RestTools from '../../utils/RestTools';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
@@ -100,7 +100,7 @@ function ResultPage(props) {
       clipboardData.setData('text/plain', text + '\n\n摘自【知网随问】');
     }
   }
-
+  //处理图片点击放大
   function handleClick(e) {
     if (e.target.className === 'imgpreview') {
       setVisible(true);
@@ -109,7 +109,7 @@ function ResultPage(props) {
 
     return;
   }
-
+  //动态修改页面title
   useEffect(() => {
     document.title = topicName ? `${topicName}专题-${q}` : q;
   }, [topicName, q]);
@@ -204,6 +204,7 @@ function ResultPage(props) {
     });
   }
 
+  //行为收集
   function handleCollect(item) {
     const postData = {
       question: q,
