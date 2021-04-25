@@ -2,6 +2,7 @@ import request from './request';
 import { Tag } from 'antd';
 
 export default {
+  //创建一个UUid
   createUid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = (Math.random() * 16) | 0,
@@ -9,12 +10,17 @@ export default {
       return v.toString(16);
     });
   },
+  //判断是否IE浏览器
   isIE() {
     if (!!window.ActiveXObject || 'ActiveXObject' in window) return true;
     else return false;
   },
+  //项目里输入字符限制
   maxLength: 128,
+  //输入框历史记录的key
   HISTORYKEY: 'SUIWEN_RECORD',
+
+  //分割,截取html
   subHtml(oHtml, nlen, isByte) {
     var rgx1 = /<[^<^>^\/]+>/; //前标签(<a>的href属性中可能会有“//”符号，先移除再判断)
     var rgx2 = /<\/[^<^>^\/]+>/; //后标签
@@ -91,6 +97,7 @@ export default {
     });
     return newStr;
   },
+  //判断字符长度超过300截取加上查看全文按钮, 仅工具书里使用
   handleStr(str, code, more) {
     if (str) {
       if (str.length > 300) {
@@ -110,6 +117,8 @@ export default {
     }
     return '-';
   },
+
+  //联想词接口
   getInputTips(value) {
     return request.get(`${process.env.apiUrl}/sug`, {
       params: {
@@ -117,9 +126,11 @@ export default {
       }
     });
   },
+  //清除P标签
   removeTag(str) {
     return str && str.replace(/<p>/g, '').replace(/<\/p>/g, '');
   },
+  //输入框历史记录的存储，先进先出
   setStorageInput(key, value) {
     let inputRecords = JSON.parse(window.localStorage.getItem(key)) || [];
     if (inputRecords.indexOf(value) < 0) {
@@ -137,6 +148,7 @@ export default {
     window.localStorage.setItem(key, JSON.stringify(inputRecords));
     return inputRecords;
   },
+  //处理文本标红
   translateToRed(str) {
     return str
       ? str
@@ -149,18 +161,20 @@ export default {
   translateDocToRed(str) {
     return str ? str.replace(/###/g, '<span style="color:red">').replace(/\$\$\$/g, '</span>') : '';
   },
-
+  //处理细粒度标红
   superMarkRed(str) {
-    return str
-      .replace(/###/g, '<span style="color:red">')
-      .replace(/\$\$\$/g, '</span>')
-      .replace(/\|\|\|<<</g, '<span style="background-color:yellow;">')
-      .replace(/>>>\|\|\|/g, '</span>')
-      .replace(/\|\|\|___/g, '<span style="color:red;background-color:yellow;">')
-      .replace(/---\|\|\|/g, '</span>')
-      // .replace(/\^\^\^===/g, '<p>')
-      // .replace(/===~~~/g, '</p>')
-      .replace(/&nbsp;/g, '');
+    return (
+      str
+        .replace(/###/g, '<span style="color:red">')
+        .replace(/\$\$\$/g, '</span>')
+        .replace(/\|\|\|<<</g, '<span style="background-color:yellow;">')
+        .replace(/>>>\|\|\|/g, '</span>')
+        .replace(/\|\|\|___/g, '<span style="color:red;background-color:yellow;">')
+        .replace(/---\|\|\|/g, '</span>')
+        // .replace(/\^\^\^===/g, '<p>')
+        // .replace(/===~~~/g, '</p>')
+        .replace(/&nbsp;/g, '')
+    );
   },
 
   headerInfo: {
@@ -190,6 +204,7 @@ export default {
       headerStyle: null
     }
   },
+  //
   kns: {
     硕士: {
       dbcode: 'CMFD',
@@ -220,57 +235,22 @@ export default {
     中国会议: 'CPFD',
     报纸: 'CCND'
   },
+  //判断是否是uuid
   isUUid(str) {
     return /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(str);
   },
-  formatText(sgText) {
-    sgText = sgText.replace(/<\sp>/g, '');
-    sgText = sgText.replace(/<\s\/p>/g, '');
-    sgText = sgText.replace(/;;/g, ';');
-    sgText = sgText.replace(/；；/g, '；');
-    sgText = sgText.replace(/::/g, ':');
-    sgText = sgText.replace(/：：/g, '：');
 
-    if (sgText.startsWith('\t\t\n')) {
-      sgText = sgText.replace(/\t\t\n/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
-    }
-
-    let str = '';
-    let lastPos = 0;
-    for (let i = 0; i < sgText.length; i++) {
-      str += sgText[i];
-      switch (sgText[i]) {
-        case ':':
-        case ': ':
-          if (i > 0 && /\u4E00-\u9FA5/.test(str.substr(0, i)[0])) {
-            str += '</p><p>';
-          }
-          lastPos = i;
-          break;
-        case ';':
-        case '; ':
-          if (i > 0) {
-            if (i > lastPos + 15) {
-              str += '</p><p>';
-            }
-          }
-          lastPos = i;
-          break;
-        default:
-          break;
-      }
-    }
-    return str;
-  },
-
+  //删除文本标红标记
   removeFlag(str) {
     return str ? str.replace(/###/g, '').replace(/\$\$\$/g, '') : '';
   },
 
+  //删除html标签
   removeHtmlTag(str) {
     return str.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ''); //正则去掉所有的html标记
   },
 
+  //补全图片路径，东南大学用的
   completeUrl(str) {
     return str
       .replace(/<p>/g, '')
@@ -281,13 +261,14 @@ export default {
       .replace(/<a href="AnswerImage/g, '<a href="/msshow/admin/file/faq/AnswerImage')
       .replace(/<a href="Images/gi, '<a href="/msshow/admin/file/faq/images');
   },
+  //url参数特殊字符转义
   urlFixed(url) {
     return url
       .replace(/\%/g, '%25')
       .replace(/\#/g, '%23')
       .replace(/\&/g, '%26');
   },
-
+  //补全工具书图片路径
   completeToolsBook(str, intentDomain, domain) {
     return intentDomain === '植物栽培'
       ? str
@@ -299,7 +280,7 @@ export default {
           .replace(/src="/g, 'src="https://refbookimg.cnki.net')
           .replace(/src='/g, "src='https://refbookimg.cnki.net");
   },
-
+  //格式化电话号码
   formatPhoneNumber(str) {
     return str
       ? /^1[3-9]\d{9}$/.test(str)
@@ -307,6 +288,7 @@ export default {
         : str
       : '';
   },
+  //隐藏邮箱信息
   hideEmailInfo(email) {
     if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)) {
       let newEmail,
@@ -330,12 +312,15 @@ export default {
       return email;
     }
   },
+  //base64编码字符
   encodeBase64(str) {
     return str ? btoa(encodeURIComponent(str)) : '';
   },
+  //base64解码字符
   decodeBase64(str) {
     return str ? decodeURIComponent(atob(str)) : '';
   },
+
   status: {
     '0': <Tag color="#2db7f5">未审核</Tag>,
     '1': <Tag color="#87d068">已审核</Tag>,
@@ -366,10 +351,11 @@ export default {
     P0107: '2014年版',
     P0108: '2017年版'
   },
-
+  //根据key获取缓存，不建议使用，建议使用ES6默认的方法
   getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key));
   },
+  //设置缓存，不建议使用，建议使用Es6默认方法
   setLocalStorage(key, value) {
     if (typeof value === 'string') {
       window.localStorage.setItem(key, value);
@@ -377,6 +363,7 @@ export default {
       window.localStorage.setItem(key, JSON.stringify(value));
     }
   },
+  //设置session缓存，不建议使用，建议使用ES6默认方法
   setSession(key, value) {
     if (typeof value === 'string') {
       window.sessionStorage.setItem(key, value);
@@ -384,11 +371,8 @@ export default {
       window.sessionStorage.setItem(key, JSON.stringify(value));
     }
   },
-  // getSession(key) {
-  //   return typeof window.sessionStorage.getItem(key) === 'string'
-  //     ? window.sessionStorage.getItem(key)
-  //     : JSON.parse(window.sessionStorage.getItem(key));
-  // },
+
+  //获取字符串长度，区分中英文
   getStrLength(str) {
     var len = 0;
     for (var i = 0; i < str.length; i++) {
@@ -402,28 +386,31 @@ export default {
     }
     return len;
   },
-
+  //获取标红文本的内容
   getKeyword(str) {
     const redReg = /###(.*)\$\$\$/;
     if (str) {
       return redReg.test(str) ? str.match(redReg)[1] : str;
     }
   },
-
+  //从缓存中获取用户信息
   getLocalUserInfo() {
     const userInfo = localStorage.getItem('userInfo')
       ? JSON.parse(localStorage.getItem('userInfo'))
       : null;
     return userInfo;
   },
+  //点击文档链接事件
   clickDoc(docId) {
     request.post(`/doc/clickedDoc`, null, {
       params: { docId }
     });
   },
+  //替换换行符
   ReplaceCLRF(str, nstr = '<br />') {
     return str.replace('\r', nstr).replace('\n', nstr);
   },
+
   GetPreChar(c, p) {
     while (p > 0) {
       if (c[p - 1] === ' ' || c[p - 1] === '$') {
@@ -434,6 +421,7 @@ export default {
     }
     return '';
   },
+  //判断是否是中文字符
   IsChinese(s) {
     var re = /[^\u4E00-\u9FA5]/;
     if (re.test(s)) return false;
@@ -464,6 +452,7 @@ export default {
       ) > -1
     );
   },
+  //句群文本格式优化
   SplitSection(content) {
     if (!content) return '';
     content = '<p>' + content + '</p>';
@@ -493,7 +482,10 @@ export default {
         case ';':
         case '；':
           //判断分号是否是转义字符
-          if(content.substring(i - 3, i + 1) === '&lt;' || content.substring(i - 3, i + 1) === '&gt;'){
+          if (
+            content.substring(i - 3, i + 1) === '&lt;' ||
+            content.substring(i - 3, i + 1) === '&gt;'
+          ) {
             break;
           }
           if (this.CheckContainsNum(content.substring(i, i + 3))) {
