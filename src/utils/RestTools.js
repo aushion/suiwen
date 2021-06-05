@@ -458,10 +458,10 @@ export default {
     content = '<p>' + content + '</p>';
     // content = this.ReplaceCLRF(content, '</p><p>'); //回车换行替换为br
 
-    content = content.replaceAll(';;', ';');
-    content = content.replaceAll('::', ':');
-    content = content.replaceAll('：：', '：');
-    content = content.replaceAll('；；', '；');
+    content = content.replace(/;;/g, ';');
+    content = content.replace(/::/g, ':');
+    content = content.replace(/：：/g, '：');
+    content = content.replace(/；；/g, '；');
 
     let len = content.length;
     let sbContent = '';

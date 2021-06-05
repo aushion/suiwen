@@ -22,11 +22,11 @@ request.interceptors.request.use(
   (config) => {
     // config.headers['X-Token'] = xToken;
     config.params = { ...config.params, timestamp: Date.now() };
-    config.headers['X-Token'] = window.sessionStorage.getItem('TokenKey')
-      ? window.sessionStorage.getItem('TokenKey')
-      : '';
+    // config.headers['X-Token'] = window.sessionStorage.getItem('TokenKey')
+    //   ? window.sessionStorage.getItem('TokenKey')
+    //   : '';
 
-    // config.headers['X-Token'] = `421c0d4b546f48d387b44f1eb040bdff`;
+    config.headers['X-Token'] = `421c0d4b546f48d387b44f1eb040bdff`;
 
     return config;
   },

@@ -35,6 +35,7 @@ import Technology from './components/Technology'; //技术
 import Recommend from './components/Recommend'; //核心技术
 import SgPro from './components/SgPro'; //细粒度知识问答
 import Covid from './components/Covid'; //新冠疫情数据
+import SuiWen from './components/SuiWen'; //测试例子
 import request from '../../utils/request';
 import RestTools from '../../utils/RestTools';
 
@@ -233,6 +234,8 @@ function ResultPage(props) {
         <Row gutter={16}>
           <Col span={17}>
             <div>
+              {/* 这里使用组件 */}
+              {q === '什么是知网随问' ? <SuiWen q={q} /> : null}
               {/* 阅读理解 */}
               {topic === 'YD' ? <SgPro onCollect={handleCollect} q={q} /> : null}
               <Skeleton loading={fetchSemanticData || loading} active>
